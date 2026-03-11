@@ -7,7 +7,7 @@ public class AccountVo {
 
     private String accountNo;
     private String mainAccountNo;
-    private String subaccountNo;
+    private String subAccountNo;
     private String accountName;
     private String useYn;
     private String createdAt;
