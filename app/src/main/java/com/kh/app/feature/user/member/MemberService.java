@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 
 @Service
@@ -74,4 +75,45 @@ public class MemberService {
         return memberMapper.quit(no);
 
     }
+    @Transactional
+    public MemberVo edit(MemberVo vo, MultipartFile profile, String profileChangeName) throws IOException {
+
+        checkEditValidation(vo);
+
+        //비밀번호 암호화
+        if(vo.getEmpPw() != null && !vo.getEmpPw().isEmpty()){
+            String encodedPw = bCryptPasswordEncoder.encode(vo.getEmpPw());
+            vo.setEmpPw(encodedPw);
+        }
+
+        //파일 저장
+        if(profile != null && !profile.isEmpty()){
+            String changeName = FileUploader.upload(profile, filePath);
+            vo.setProfileChangeName(changeName);
+            vo.setProfileOriginName(profile.getOriginalFilename());
+
+            File oldFile = new File(filePath + profileChangeName);
+            oldFile.delete();
+        }
+
+        int result = memberMapper.edit(vo);
+
+        if(result != 1){
+            return null;
+        }
+
+        return memberMapper.selectByNo(vo.getEmpNo());
+    }
+
+
+    private void checkEditValidation(MemberVo vo) {
+        if(vo.getEmpPw() != null && !vo.getEmpPw().isEmpty()){ checkPwValid(vo.getEmpPw()); }
+    }
+
+    public MemberVo selectByNo(String empNo) {
+        return memberMapper.selectByNo(empNo);
+    }
+
+
+
 }

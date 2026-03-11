@@ -77,4 +77,76 @@ public interface MemberMapper {
                     AND QUIT_YN = 'N'
                 """)
         int quit(String empNo);
+
+        @Update("""
+               <script>
+                     UPDATE MEMBER
+                     <set>
+                         UPDATED_AT = SYSDATE
+            
+                         <if test="empPw != null and empPw != ''">
+                             , EMP_PW = #{empPw}
+                         </if>
+            
+                         <if test="empName != null and empName != ''">
+                             , EMP_NAME = #{empName}
+                         </if>
+            
+                         <if test="empPhone != null and empPhone != ''">
+                             , EMP_PHONE = #{empPhone}
+                         </if>
+            
+                         <if test="empEmail != null and empEmail != ''">
+                             , EMP_EMAIL = #{empEmail}
+                         </if>
+            
+                         <if test="empAddress != null and empAddress != ''">
+                             , EMP_ADDRESS = #{empAddress}
+                         </if>
+            
+                         <if test="profileChangeName != null and profileChangeName != ''">
+                             , PROFILE_CHANGE_NAME = #{profileChangeName}
+                         </if>
+            
+                         <if test="profileOriginName != null and profileOriginName != ''">
+                             , PROFILE_ORIGIN_NAME = #{profileOriginName}
+                         </if>
+            
+                         <if test="empStatusNo != null">
+                             , EMP_STATUS_NO = #{empStatusNo}
+                         </if>
+            
+                     </set>
+                     WHERE EMP_NO = #{empNo}
+                 </script>
+            """)
+        int edit(MemberVo vo);
+
+
+
+        @Select("""
+        SELECT 
+                EMP_NO
+                ,EMP_PW
+                ,EMP_NAME
+                ,POS_CODE
+                ,DEPT_CODE
+                ,RESD_NO
+                ,EMP_PHONE
+                ,EMP_EMAIL
+                ,EMP_ADDRESS
+                ,PROFILE_CHANGE_NAME
+                ,PROFILE_ORIGIN_NAME
+                ,HIRE_DATE
+                ,RESIGN_DATE
+                ,CREATED_AT
+                ,UPDATED_AT
+                ,QUIT_YN
+                ,EMP_STATUS_NO
+        FROM MEMBER
+        WHERE EMP_NO = #{empNo}
+    """)
+        MemberVo selectByNo(String empNo);
+
+
 }
