@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("mamber")
+@RequestMapping("member")
 @RestController
 public class MemberRestController {
     private final MemberService memberService;
