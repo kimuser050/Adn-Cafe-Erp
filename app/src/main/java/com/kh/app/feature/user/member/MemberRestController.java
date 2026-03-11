@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("mamber")
+@RequestMapping("member")
 @RestController
 public class MemberRestController {
     private final MemberService memberService;
@@ -39,6 +39,24 @@ public class MemberRestController {
             throw new IllegalArgumentException("[M-200] login err ...");
         }
         session.setAttribute("loginMemberVo" , loginMemberVo);
+        return ResponseEntity.ok();
+    }
+
+    @PostMapping("logout")
+    public void logout(HttpSession session) {
+        session.removeAttribute("loginMemberVo");
+    }
+
+    @DeleteMapping("/quit")
+    public ResponseEntity.BodyBuilder quit(HttpSession session){
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        String no = loginMemberVo.getEmpNo();
+        int result = memberService.quit(no);
+        if(result != 1){
+            throw new IllegalStateException("[M-500]");
+        }
+        session.invalidate();
         return ResponseEntity.ok();
     }
 

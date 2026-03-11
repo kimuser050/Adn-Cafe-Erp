@@ -69,6 +69,9 @@ public class MemberService {
         return isMatch ? dbVo : null;
     }
 
+    @Transactional
+    public int quit(String no) {
+        return memberMapper.quit(no);
 
-
+    }
 }

@@ -3,6 +3,7 @@ package com.kh.app.feature.user.member;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface MemberMapper {
@@ -66,4 +67,14 @@ public interface MemberMapper {
 
 
 
+        @Update("""
+                    UPDATE MEMBER
+                        SET 
+                        QUIT_YN = 'Y'
+                    , UPDATED_AT = SYSDATE
+                    , RESIGN_DATE = SYSDATE
+                    WHERE EMP_NO = #{empNo}
+                    AND QUIT_YN = 'N'
+                """)
+        int quit(String empNo);
 }
