@@ -54,4 +54,21 @@ public class MemberService {
         }
         throw new IllegalArgumentException("[M-102] pw length");
     }
+
+    public MemberVo login(MemberVo vo) {
+        if(vo.getEmpNo() == null || vo.getEmpPw() == null){
+            return null;
+        }
+        MemberVo dbVo = memberMapper.selectByEmpNo(vo.getEmpNo());
+        if(dbVo == null){
+            return null;
+        }
+
+        boolean isMatch = bCryptPasswordEncoder.matches(vo.getEmpPw(), dbVo.getEmpPw());
+
+        return isMatch ? dbVo : null;
+    }
+
+
+
 }
