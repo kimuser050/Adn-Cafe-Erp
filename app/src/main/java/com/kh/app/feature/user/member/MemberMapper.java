@@ -2,6 +2,7 @@ package com.kh.app.feature.user.member;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface MemberMapper {
@@ -38,4 +39,31 @@ public interface MemberMapper {
         )
     """)
         int join(MemberVo vo);
+
+
+        @Select("""
+        SELECT
+            EMP_NO
+            ,EMP_PW
+            ,EMP_NAME
+            ,POS_CODE
+            ,DEPT_CODE
+            ,RESD_NO
+            ,EMP_PHONE
+            ,EMP_EMAIL
+            ,EMP_ADDRESS
+            ,PROFILE_CHANGE_NAME
+            ,PROFILE_ORIGIN_NAME
+            ,CREATED_AT
+            ,UPDATED_AT
+            ,QUIT_YN
+            ,EMP_STATUS_NO
+        FROM MEMBER
+        WHERE EMP_NO = #{empNo}
+        AND QUIT_YN = 'N'
+        """)
+        MemberVo selectByEmpNo(String empNo);
+
+
+
 }
