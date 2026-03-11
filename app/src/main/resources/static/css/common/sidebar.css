@@ -1,0 +1,170 @@
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
+    font-weight: 100;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff2');
+    font-weight: 200;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff2');
+    font-weight: 900;
+    font-display: swap;
+}
+
+
+.sidebar {
+    background: #724930;
+    color: #fff;
+    padding: 18px 0;
+}
+
+.sidebar-logo {
+    text-align: center;
+    padding: 10px 16px 24px;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.nav-main,
+#home {
+    font-family: 'Pretendard';
+    font-weight: 600;
+    display: block;
+    width: 100%;
+    padding: 13px 22px;
+    color: #f6ebdf;
+    font-size: 18px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-link
+ {
+    font-family: 'Pretendard';
+    font-weight: 400;
+    display: block;
+    width: 100%;
+    padding: 13px 22px;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-link:hover,
+.nav-main:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.nav-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-sub {
+    display: none;
+    flex-direction: column;
+    background: rgba(0,0,0,0.08);
+}
+
+.nav-group:hover .nav-sub {
+    display: flex;
+}
+
+.nav-sub a {
+    display: block;
+    padding: 10px 34px;
+    font-size: 13px;
+    color: #fff;
+}
+
+.nav-sub a:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.nav-sub a.active {
+    background: #e5d5c0;
+    color: #5a3927;
+    font-weight: bold;
+}
+
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 5px 5px;
+}
+
+.sidebar-logo-img {
+    width: 150px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.sidebar-logo-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
