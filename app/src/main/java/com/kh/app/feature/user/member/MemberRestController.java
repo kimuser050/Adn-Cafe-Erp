@@ -42,6 +42,11 @@ public class MemberRestController {
         return ResponseEntity.ok();
     }
 
+    @PostMapping("logout")
+    public void logout(HttpSession session) {
+        session.removeAttribute("loginMemberVo");
+    }
+
 
 
 
