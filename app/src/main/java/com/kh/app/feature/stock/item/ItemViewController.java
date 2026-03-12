@@ -10,6 +10,6 @@ public class ItemViewController {
 
     @GetMapping("item")
     public String list() {
-        return "hr/dept/deptList";
+        return "stock/item/home";
     }
 }
