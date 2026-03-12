@@ -59,6 +59,38 @@ public class MemberRestController {
         session.invalidate();
         return ResponseEntity.ok();
     }
+    @PutMapping("/edit")
+    public ResponseEntity<HashMap<String, String>> edit(
+            MemberVo vo,
+            @RequestParam(required = false) MultipartFile profile,
+            HttpSession session
+    ) throws IOException {
+
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if(loginMemberVo == null){
+            throw new IllegalStateException("[M401] need to login");
+        }
+        String no = loginMemberVo.getEmpNo();
+        vo.setEmpNo(no);
+        MemberVo updatedMemberVo = memberService.edit(vo , profile , loginMemberVo.getProfileChangeName());
+
+        HashMap<String, String> map = new HashMap<>();
+
+        if(updatedMemberVo == null){
+            String errMsg = "[M-411] updated fail";
+            log.error(errMsg);
+            throw new IllegalStateException(errMsg);
+        }
+        map.put("msg" , "회원 정보 수정 잘 됨 ~~~");
+
+        session.setAttribute("loginMemberVo" , updatedMemberVo);
+        return ResponseEntity
+                .ok()
+                .body(map);
+    }
+
+
+
 
 
 
