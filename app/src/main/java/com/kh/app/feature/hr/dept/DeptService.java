@@ -21,4 +21,7 @@ public class DeptService {
         return deptMapper.selectList();
     }
 
+    public DeptVo selectOne(String deptCode) {
+        return deptMapper.selectOne();
+    }
 }
