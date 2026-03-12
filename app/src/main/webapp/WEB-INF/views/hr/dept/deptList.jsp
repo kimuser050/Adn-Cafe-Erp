@@ -20,7 +20,25 @@
 
     <main class="page-shell">
         <section class="page-content">
-            <!-- 여기부터 부서관리 내용 -->
+
+            
+            <table>
+    <thead>
+        <tr>
+            <th>NO</th>
+            <th>부서명</th>
+            <th>부서장</th>
+            <th>인원수</th>
+            <th>근무위치</th>
+            <th>등록일</th>
+            <th>상태</th>
+        </tr>
+    </thead>
+
+    <tbody id="dept-list">
+    </tbody>
+
+</table>
         </section>
     </main>
 </div>
