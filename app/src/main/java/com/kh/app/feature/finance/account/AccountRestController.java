@@ -1,4 +1,4 @@
-package com.kh.app.feature.finance.Account;
+package com.kh.app.feature.finance.account;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +18,11 @@ public class AccountRestController {
     private final AccountService accountService;
 
     @PostMapping("/insertAccount")
-    public ResponseEntity<Integer> insertAccount(@RequestBody AccountVo vo){
+    public ResponseEntity<Integer> insertAccount(AccountVo vo){
         int result = accountService.insertAccount(vo);
 
         Map<String, String> map = new HashMap<>();
-        map.put("result" , String.valueOf(result));
+        map.put("result" , result+"");
         return ResponseEntity.ok(result);
     }
 
@@ -38,7 +38,7 @@ public class AccountRestController {
 
     @PostMapping("/list")
     public ResponseEntity<Map<String, Object>> accountList(@RequestParam String mainAccountNo){
-        System.out.println("mainAccountNo = " + mainAccountNo);
+
         List<AccountVo> voList = accountService.accountList(mainAccountNo);
 
         Map<String, Object> map = new HashMap<>();

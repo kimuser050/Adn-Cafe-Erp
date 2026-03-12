@@ -1,4 +1,4 @@
-package com.kh.app.feature.finance.Account;
+package com.kh.app.feature.finance.account;
 
 import lombok.Data;
 
