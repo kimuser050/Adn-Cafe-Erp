@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>부서관리</title>
 
+    <!-- css 공용과 js 연결하기 -->
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
@@ -53,12 +54,12 @@
                     <div class="toolbar-right">
                         <select id="sort-select">
                             <option value="deptCode">부서명</option>
-                            <option value="createdAt">생성일순</option>
+                            <option value="createdAt">상태</option>
                         </select>
 
                         <div class="search-box">
-                            <input type="text" id="keyword" placeholder="경영혁신실">
-                            <button type="button" class="search-btn">⌕</button>
+                            <input type="text" id="keyword" placeholder="검색어를 입력하세요">
+                            <button type="button" class="search-btn">검색</button>
                         </div>
 
                         <button type="button" class="export-btn">EXPORT</button>
@@ -90,6 +91,7 @@
                         <button class="page-btn">3</button>
                         <button class="page-btn">4</button>
                         <button class="page-btn">5</button>
+                        <button class="page-btn">▶</button>
                     </div>
 
                     <button type="button" class="register-btn" onclick="location.href='/dept/insert'">
