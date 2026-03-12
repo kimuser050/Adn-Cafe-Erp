@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,14 +30,17 @@ public class NoticeRestController {
 
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> insert(@RequestBody NoticeVo vo, HttpSession session) {
+    public ResponseEntity<Map<String, String>> insert(
+            @RequestParam(required = false) MultipartFile file,
+            NoticeVo vo,
+            HttpSession session) throws Exception {
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
         if(loginMemberVo == null){
             throw new IllegalStateException("login required");
         }
         String loginMemberNo = loginMemberVo.getEmpNo();
         vo.setWriterNo(loginMemberNo);
-        int result = noticeService.insert(vo);
+        int result = noticeService.insert(vo,file );
 
         if (result != 1) {
             String errMsg = "[B-100] insert err...";
@@ -48,6 +52,7 @@ public class NoticeRestController {
         map.put("result", result + "");
         return ResponseEntity.ok(map);
     }
+
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1") int currentPage) {

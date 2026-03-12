@@ -53,4 +53,25 @@ public interface NoticeMappper {
     List<NoticeVo> selectList(PageVo pvo);
 
 
+    @Insert("""
+            INSERT INTO NOTICE_FILE
+                (
+                FILE_NO
+                ,NOTICE_NO
+                ,ORIGIN_NAME
+                ,CHANGE_NAME
+                ,FILE_PATH
+                )
+                VALUES
+                (
+                SEQ_NOTICE_FILE.NEXTVAL
+                ,#{noticeNo}
+                ,#{originName}
+                ,#{changeName}
+                ,#{filePath}
+                )
+            """)
+    void insertFile(NoticeFileVo fvo);
+
+
 }
