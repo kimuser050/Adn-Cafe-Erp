@@ -100,6 +100,42 @@
                 </div>
 
             </div>
+
+            <!-- 부서 상세조회 모달 -->
+<div id="dept-modal-wrap" class="dept-modal-wrap">
+    <div class="dept-modal">
+        <div class="dept-modal-header">
+            <h2>부서정보</h2>
+            <button type="button" class="modal-close-btn" onclick="closeDeptModal()">✕</button>
+        </div>
+
+          <div class="dept-modal-body">
+               <div class="dept-detail-row">
+                    <div class="dept-detail-label">부서명</div>
+                    <div class="dept-detail-value" id="modal-dept-name"></div>
+               </div>
+
+               <div class="dept-detail-row">
+                    <div class="dept-detail-label">근무위치</div>
+                    <div class="dept-detail-value" id="modal-dept-address"></div>
+               </div>
+
+               <div class="dept-detail-row">
+                    <div class="dept-detail-label">생성일</div>
+                    <div class="dept-detail-value" id="modal-created-at"></div>
+               </div>
+
+               <div class="dept-detail-row">
+                    <div class="dept-detail-label">상태</div>
+                    <div class="dept-detail-value" id="modal-use-yn"></div>
+               </div>
+          </div>
+
+          <div class="dept-modal-footer">
+               <button type="button" class="register-btn" onclick="closeDeptModal()">닫기</button>
+          </div>
+     </div>
+     </div>
         </section>
     </main>
 </div>
