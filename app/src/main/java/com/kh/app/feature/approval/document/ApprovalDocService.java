@@ -14,4 +14,7 @@ public class ApprovalDocService {
     private final ApprovalDocMapper approvalDocMapper;
 
 
+    public int write(ApprovalDocVo vo) {
+        return approvalDocMapper.write(vo);
+    }
 }
