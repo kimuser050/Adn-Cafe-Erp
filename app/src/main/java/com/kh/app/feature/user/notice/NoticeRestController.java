@@ -1,17 +1,16 @@
 package com.kh.app.feature.user.notice;
 
 import com.kh.app.feature.user.member.MemberVo;
+import com.kh.app.feature.util.PageVo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -47,6 +46,20 @@ public class NoticeRestController {
 
         Map<String, String> map = new HashMap<>();
         map.put("result", result + "");
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1") int currentPage) {
+        int listCount = noticeService.selectCount();
+        int pageLimit = this.pageLimit;
+        int boardLimit = this.boardLimit;
+
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+        List<NoticeVo> voList = noticeService.selectList(pvo);
+        Map<String, Object> map = new HashMap<>();
+        map.put("pvo", pvo);
+        map.put("voList", voList);
         return ResponseEntity.ok(map);
     }
 
