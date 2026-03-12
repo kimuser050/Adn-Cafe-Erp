@@ -9,22 +9,22 @@ import java.util.List;
 public interface DeptMapper {
 
     @Select("""
-        SELECT
+            SELECT
             DEPT_CODE
             , DEPT_NAME
             , DEPT_ADDRESS
             , USE_YN
             , CREATED_AT
             , UPDATED_AT
-        FROM DEPT
-        WHERE USE_YN = 'Y'
-        ORDER BY DEPT_CODE ASC
+            FROM DEPT
+            WHERE USE_YN = 'Y'
+            ORDER BY DEPT_CODE ASC
     """)
     List<DeptVo> selectList();
 
 
     @Select("""
-            SELECT 
+            SELECT
             DEPT_CODE
             , DEPT_NAME
             , DEPT_ADDRESS

@@ -247,3 +247,74 @@
     color: #9a8b7e;
     font-size: 13px;
 }
+
+.dept-modal-wrap {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.dept-modal {
+    width: 600px;
+    max-width: 90%;
+    background-color: #fff;
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.dept-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.dept-modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #4b3728;
+}
+
+.modal-close-btn {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    color: #7a614d;
+}
+
+.dept-modal-body {
+    padding: 24px;
+}
+
+.dept-detail-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    gap: 20px;
+}
+
+.dept-detail-label {
+    width: 100px;
+    font-weight: 700;
+    color: #5d4735;
+}
+
+.dept-detail-value {
+    flex: 1;
+    color: #333;
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+.dept-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 24px 20px;
+}

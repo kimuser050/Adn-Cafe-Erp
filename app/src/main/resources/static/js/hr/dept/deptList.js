@@ -16,11 +16,11 @@ async function loadDeptList() {
         alert("부서 목록 조회 중 오류 발생");
     }
 }
-
+// 위에 부서 요약!
 function renderSummary(voList) {
     document.querySelector("#dept-count").innerText = voList.length;
 
-    // 아직 직원 총합 API가 없으니 임시값
+    // [임시] 직원수
     document.querySelector("#member-count").innerText = 0;
 }
 
@@ -48,7 +48,7 @@ function renderTable(voList) {
             <tr>
                 <td>${i + 1}</td>
                 <td class="dept-name-cell">
-                    <a href="/dept/detail/${vo.deptCode}">${vo.deptName}</a>
+                    <span class="dept-link" onclick="openDeptModal('${vo.deptCode}')">${vo.deptName}</span>
                 </td>
                 <td>-</td>
                 <td>0</td>
@@ -79,3 +79,33 @@ function formatDate(value) {
 }
 
 loadDeptList();
+
+//-------------------------------------------------------------------------------------------------
+// 모달 (상세조회)
+async function openDeptModal(deptCode) {
+    try {
+        const resp = await fetch(`/dept/${deptCode}`);
+        if(!resp.ok){
+            throw new Error("dept detail fail...");
+        }
+
+        const data = await resp.json();
+        const vo = data.vo;
+
+        document.querySelector("#modal-dept-name").innerText = vo.deptName ?? "";
+        document.querySelector("#modal-dept-address").innerText = vo.deptAddress ?? "";
+        document.querySelector("#modal-created-at").innerText = formatDate(vo.createdAt);
+
+        const statusText = vo.useYn === "Y" ? "운영" : "비활성화";
+        document.querySelector("#modal-use-yn").innerText = statusText;
+
+        document.querySelector("#dept-modal-wrap").style.display = "flex";
+    } catch (error) {
+        console.log(error);
+        alert("부서 상세조회 실패 ...");
+    }
+}
+
+function closeDeptModal() {
+    document.querySelector("#dept-modal-wrap").style.display = "none";
+}
