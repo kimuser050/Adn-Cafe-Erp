@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("hr/dept")
+@RequestMapping("/hr/dept")
 public class DeptViewController {
 
-    @GetMapping("list")
+    @GetMapping("/list")
     public String list() {
         return "hr/dept/deptList";
     }

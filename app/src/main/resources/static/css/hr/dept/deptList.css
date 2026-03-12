@@ -1,92 +1,155 @@
 .dept-page {
-    width: 100%;
+    min-height: 100%;
+    padding: 26px 34px;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, #bcae8e 0%, #c8bba0 35%, #d9d4cb 100%);
 }
 
-.top-tabs {
+.dept-tab-area {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.tab-btn {
-    padding: 8px 14px;
-    border-radius: 8px;
-    background: #ffffff;
-    color: #5a3927;
-    font-size: 13px;
-}
-
-.tab-btn.active {
-    background: #8a5d3d;
-    color: #fff;
-}
-
-.summary-box-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 22px;
-}
-
-.summary-box {
-    width: 120px;
-    background: #f5f2ec;
-    border-radius: 12px;
-    padding: 16px 14px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
-}
-
-.summary-title {
-    font-size: 13px;
-    color: #7d6956;
-    margin-bottom: 8px;
-}
-
-.summary-value {
-    font-size: 20px;
-    font-weight: bold;
-    color: #2f241d;
-}
-
-.tool-row {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
     gap: 10px;
     margin-bottom: 18px;
 }
 
-.search-area input {
-    width: 240px;
-    height: 36px;
-    padding: 0 14px;
-    border-radius: 18px;
-    border: 1px solid #ddd;
-    background: #fff;
-    font-size: 13px;
-}
-
-.export-btn {
-    height: 36px;
-    padding: 0 14px;
+.tab-btn {
+    border: none;
     border-radius: 8px;
-    background: #6b452f;
-    color: #fff;
+    padding: 10px 16px;
+    background-color: #f6f3ee;
+    color: #6a4b32;
     font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.table-panel {
-    background: #f7f5f1;
-    border-radius: 16px;
-    padding: 16px 18px 20px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+.tab-btn.active {
+    background-color: #b88d68;
+    color: #fff;
+}
+
+.dept-summary-area {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.summary-card {
+    width: 110px;
+    min-height: 76px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.summary-title {
+    font-size: 12px;
+    color: #705843;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.summary-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #2e2118;
+    border-left: 4px solid #7b5538;
+    padding-left: 10px;
+    line-height: 1;
+}
+
+.dept-table-card {
+    margin-top: 10px;
+    padding: 16px 18px 18px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.dept-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+#sort-select {
+    height: 34px;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    padding: 0 12px;
+    background-color: #fff;
+    color: #6c533f;
+    font-size: 12px;
+    outline: none;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background-color: #fff;
+    overflow: hidden;
+    padding-left: 12px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 120px;
+    font-size: 12px;
+    color: #4b3c31;
+    background: transparent;
+}
+
+.search-btn {
+    border: none;
+    background: transparent;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    color: #87674e;
+    font-size: 14px;
+}
+
+.export-btn,
+.register-btn {
+    border: none;
+    background-color: #6f4d34;
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.dept-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .dept-table thead th {
-    background: #d3a679;
-    color: #5a3927;
+    background-color: #d2a980;
+    color: #4b3728;
+    font-size: 12px;
+    font-weight: 700;
     padding: 14px 10px;
-    font-size: 13px;
-    font-weight: bold;
+    text-align: center;
 }
 
 .dept-table thead th:first-child {
@@ -100,79 +163,87 @@
 }
 
 .dept-table tbody td {
-    padding: 12px 10px;
+    padding: 13px 10px;
     text-align: center;
-    font-size: 13px;
-    color: #4a392e;
+    font-size: 12px;
+    color: #57493d;
+    border-bottom: 1px solid #f0ece7;
+    vertical-align: middle;
 }
 
-.link-cell {
-    color: #1f78ff;
-    font-weight: bold;
+.dept-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
-.status {
+.dept-name-cell a {
+    color: #1f77ff;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.dept-name-cell a:hover {
+    text-decoration: underline;
+}
+
+.status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
+    justify-content: center;
 }
 
-.status::before {
-    content: "";
-    width: 8px;
-    height: 8px;
+.status-dot {
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     display: inline-block;
 }
 
-.status.on::before {
-    background: #22b14c;
+.status-on {
+    background-color: #20b455;
 }
 
-.status.off::before {
-    background: #d84a2b;
+.status-off {
+    background-color: #de4829;
 }
 
-.bottom-row {
-    margin-top: 18px;
+.dept-bottom-area {
     position: relative;
-    min-height: 36px;
+    margin-top: 16px;
+    min-height: 40px;
 }
 
-.paging {
+.pagination {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
 }
 
-.page-num {
+.page-btn {
     width: 24px;
     height: 24px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: #3d2d22;
+    border: none;
     background: transparent;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    color: #4d3a2f;
 }
 
-.page-num.active {
-    background: #c99869;
+.page-btn.active {
+    background-color: #d2a980;
     color: #fff;
+    font-weight: 700;
 }
 
-.write-btn-area {
+.register-btn {
     position: absolute;
     right: 0;
     top: 0;
 }
 
-.write-btn {
-    height: 34px;
-    padding: 0 14px;
-    border-radius: 8px;
-    background: #6b452f;
-    color: #fff;
-    font-size: 12px;
+.empty-row td {
+    padding: 40px 0;
+    color: #9a8b7e;
+    font-size: 13px;
 }

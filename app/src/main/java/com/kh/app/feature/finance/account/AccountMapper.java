@@ -1,4 +1,4 @@
-package com.kh.app.feature.finance.Account;
+package com.kh.app.feature.finance.account;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -33,7 +33,7 @@ public interface AccountMapper {
     @Update("""
             UPDATE ACCOUNT
             SET
-            USE_YN = 'N'
+            USE_YN = CASE WHEN USE_YN = 'Y' THEN 'N' ELSE 'Y' END
             WHERE ACCOUNT_NO = #{accountNo}
             """)
     int deleteAccount(String accountNo);
@@ -49,7 +49,6 @@ public interface AccountMapper {
             , CREATED_AT
             FROM ACCOUNT
             WHERE MAIN_ACCOUNT_NO = #{mainAccountNo}
-            AND USE_YN = 'Y'
             """)
     List<AccountVo> accountList(String mainAccountNo);
 }

@@ -1,4 +1,4 @@
-package com.kh.app.feature.finance.DailySales;
+package com.kh.app.feature.finance.dailySales;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

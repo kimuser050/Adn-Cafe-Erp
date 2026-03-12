@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class PageVo {
+
     private int listCount;      //전체 게시글 갯수
     private int currentPage;    //현재 페이지
     private int pageLimit;      //페이징 영역에 나타낼 페이지 버튼 최대갯수
@@ -28,4 +29,5 @@ public class PageVo {
         }
         this.offset = boardLimit * (currentPage-1);
     }
+
 }

@@ -10,4 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/item")
 @RestController
 public class ItemRestController {
+    public void test(int x){
+        System.out.println("test!!");
+
+    }
 }
