@@ -1,4 +1,4 @@
-package com.kh.app.feature.finance.Account;
+package com.kh.app.feature.finance.account;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Service
 public class AccountService {
 
     private final AccountMapper accountMapper;

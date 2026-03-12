@@ -1,0 +1,271 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #c8c1b4;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 사이드바 고려한 메인 영역 */
+
+.page {
+    margin-left: 240px;
+    padding: 60px 80px;
+}
+
+/* 상단 제목 */
+
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.table-header,
+.form-title {
+    text-align: center;
+}
+
+/* 전체 박스 */
+
+.content-box {
+    background: #e5e5e5;
+    border-radius: 12px;
+    padding: 40px;
+
+    display: flex;
+    gap: 40px;
+
+    width: 1100px;
+    max-width: 100%;
+}
+
+/* 왼쪽 계정 영역 */
+
+.account-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.register-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.table-header {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* 계정 테이블 */
+
+.account-wrapper {
+    display: flex;
+    border: 1px solid #ccc;
+    background: white;
+    height: 420px;
+}
+
+.account-main {
+    width: 55%;
+    border-right: 1px solid #ddd;
+}
+
+.account-sub {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+}
+
+.main-row {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.main-row:hover {
+    background: #f4f4f4;
+}
+
+.main-row.active {
+    background: #dfe8ff;
+    font-weight: 600;
+}
+
+/* 하위계정 */
+
+.account-sub {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+}
+
+/* 삭제 버튼 */
+
+.account-footer {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.delete-btn {
+    padding: 9px 18px;
+    border: none;
+    background: #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* 계정등록 */
+
+.register-area {
+    flex: 1;
+}
+
+.form-box {
+    background: #f3f3f3;
+    border: 1px solid #ccc;
+    padding: 30px;
+}
+
+.form-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* form 정렬 */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    align-items: center;
+}
+
+.form-row label {
+    text-align: right;
+    padding-right: 10px;
+    white-space: nowrap;
+}
+
+.form-row input {
+    height: 34px;
+    padding: 6px;
+    width: 100%;
+}
+
+/* 추가 버튼 */
+
+.register-footer {
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add-btn {
+    background: #6a4328;
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* 대분류 선택 highlight */
+
+.main-row.active {
+    background: #dfe8ff;
+    font-weight: 600;
+}
+
+/* 하위계정 행 */
+
+.sub-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.sub-row:hover {
+    background: #f3f6ff;
+}
+
+/* 체크 강조 */
+
+.sub-row input:checked+span {
+    font-weight: 600;
+    color: #2d4ed8;
+}
+
+/* 삭제버튼 비활성 */
+
+.delete-btn {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.delete-btn.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 1. 공통 스타일: 기본적으로 span은 클릭 가능해야 함 */
+.sub-row span {
+    pointer-events: auto !important;
+    /* 기본적으로 클릭 허용 */
+    cursor: default;
+}
+
+/* 2. 비활성화된 행 스타일 (오직 disabled-row 클래스가 있을 때만!) */
+.sub-row.disabled-row {
+    background-color: #f9f9f9 !important;
+    pointer-events: auto;
+    /* 줄 전체는 클릭이 되게 하되 span만 막음 */
+}
+
+/* 3. 비활성화된 행의 span에만 취소선과 클릭 방지 적용 */
+.sub-row.disabled-row span {
+    color: #ccc !important;
+    text-decoration: line-through !important;
+    display: inline-block;
+    /* 취소선이 가끔 안 나올 때 해결책 */
+    pointer-events: none !important;
+    /* 글자 클릭 방지 */
+}
+
+/* 3. 활성화된 행(Y)은 다시 클릭이 되도록 초기화 */
+.sub-row:not(.disabled-row) span {
+    text-decoration: none !important;
+    color: inherit;
+    pointer-events: auto !important;
+}
+
+/* 4. 체크박스는 항상 클릭 가능해야 함 (다시 살려야 하니까) */
+.sub-row input[type="checkbox"] {
+    pointer-events: auto !important;
+}

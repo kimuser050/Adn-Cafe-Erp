@@ -1,4 +1,4 @@
-package com.kh.app.feature.finance.Journal;
+package com.kh.app.feature.finance.journal;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
