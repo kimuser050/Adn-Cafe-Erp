@@ -49,7 +49,6 @@ public class NoticeService {
         return result;
     }
 
-
     public int selectCount() {
         return noticeMapper.selectCount();
     }
@@ -61,15 +60,24 @@ public class NoticeService {
 
     @Transactional
     public NoticeVo selectOne(String no) {
+
         int result = noticeMapper.increaseHit(no);
         if (result != 1) {
             String errMsg = "[B-321] increase hit fail ...";
             log.error(errMsg);
             throw new IllegalStateException(errMsg);
         }
-        return noticeMapper.selectOne(no);
-    }
 
+        NoticeVo vo = noticeMapper.selectOne(no);
+
+        //파일 리스트 조회
+        List<NoticeFileVo> fileList = noticeMapper.selectFileListByNoticeNo(no);
+
+        // vo에 넣기
+        vo.setFileList(fileList);
+
+        return vo;
+    }
 
 
     @Transactional
@@ -110,6 +118,31 @@ public class NoticeService {
 
         return result;
     }
+
+    @Transactional
+    public int deleteByNo(NoticeVo vo) {
+
+        // 1. 파일 목록 조회
+        List<NoticeFileVo> fileList = noticeMapper.selectFileListByNoticeNo(vo.getNoticeNo());
+
+        // 2. 서버 파일 삭제
+        if(fileList != null && !fileList.isEmpty()){
+            for(NoticeFileVo fvo : fileList){
+                File file = new File(fvo.getFilePath(), fvo.getChangeName());
+
+                if(file.exists()){
+                    file.delete();
+                }
+            }
+
+            // 3. DB 파일 soft delete
+            noticeMapper.deleteFile(vo.getNoticeNo());
+        }
+
+        // 4. 공지 soft delete
+        return noticeMapper.deleteNotice(vo);
+    }
+
 
 
 

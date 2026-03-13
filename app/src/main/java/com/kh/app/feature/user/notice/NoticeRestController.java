@@ -55,6 +55,9 @@ public class NoticeRestController {
     }
 
 
+
+
+
     @GetMapping
     public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1") int currentPage) {
         int listCount = noticeService.selectCount();
@@ -68,6 +71,7 @@ public class NoticeRestController {
         map.put("voList", voList);
         return ResponseEntity.ok(map);
     }
+
 
     @GetMapping("/{no}")
     public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String no, HttpSession session) {
@@ -101,6 +105,28 @@ public class NoticeRestController {
         int result = noticeService.updateByNo(vo,file,changeName);
         if (result != 1) {
             String errMsg = "[B-410] update err ...";
+            log.error(errMsg);
+            throw new IllegalStateException(errMsg);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", result);
+        return ResponseEntity.ok(map);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteByNo(@RequestBody NoticeVo vo
+            , HttpSession session
+    )
+    {
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if(loginMemberVo == null){
+            throw new IllegalStateException("login required");
+        }
+        vo.setWriterNo(loginMemberVo.getEmpNo());
+        int result = noticeService.deleteByNo(vo);
+
+        if (result != 1) {
+            String errMsg = "[B-510] delete err ...";
             log.error(errMsg);
             throw new IllegalStateException(errMsg);
         }
