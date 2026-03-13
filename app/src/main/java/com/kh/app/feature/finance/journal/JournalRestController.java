@@ -1,5 +1,6 @@
 package com.kh.app.feature.finance.journal;
 
+import com.kh.app.feature.finance.account.AccountVo;
 import com.kh.app.feature.user.member.MemberVo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -84,5 +85,11 @@ public class JournalRestController {
         List<JournalVo> voList = journalService.selectJournal(journalDate);
 
         return ResponseEntity.ok(voList);
+    }
+
+    @GetMapping("/getAccountList")
+    public List<AccountVo> getAccountList(){
+
+        return journalService.getAccountList();
     }
 }
