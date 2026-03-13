@@ -100,4 +100,23 @@ public interface NoticeMappper {
     NoticeVo selectOne(@Param("noticeNo") String noticeNo );
 
 
+
+    @Update("""
+                UPDATE NOTICE
+                SET
+                    TITLE = #{title}
+                    , CONTENT = #{content}
+                    , UPDATED_AT = SYSDATE
+                WHERE NOTICE_NO = #{noticeNo}
+                AND WRITER_NO = #{writerNo}
+                AND DEL_YN = 'N'
+            """)
+    int updateByNo(NoticeVo vo);
+    @Delete("""
+        DELETE FROM NOTICE_FILE
+        WHERE NOTICE_NO = #{noticeNo}
+        """)
+    int deleteFile(String noticeNo);
+
+
 }
