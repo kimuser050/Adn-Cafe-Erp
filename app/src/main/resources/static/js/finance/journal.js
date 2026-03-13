@@ -15,3 +15,26 @@ async function getAccountList() {
 
     accountList.innerHTML = str;
 }
+
+function addRow() {
+
+    const container = document.querySelector("#entryRowContainer");
+
+    const newRow = document.createElement("div");
+    newRow.className = "entry-row";
+
+    newRow.innerHTML = `
+                    <input type="text" class="account-select" list="accountOptions"
+                        placeholder="계정선택">
+                    <input type="number" class="amount-input debit" oninput="calc()" value="0"
+                        step="10000">
+
+                    <input type="text" class="account-select" list="accountOptions"
+                        placeholder="계정선택">
+                    <input type="number" class="amount-input credit" oninput="calc()" value="0"
+                        step="10000">
+                     `
+        ;
+    container.appendChild(newRow);
+
+}
