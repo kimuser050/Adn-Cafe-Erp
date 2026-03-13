@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/css/common/component.css">
     <link rel="stylesheet" href="/css/hr/dept/deptList.css">
 
-    <script defer src="/js/hr/dept/deptList.js"></script>
+    <script defer src="/js/hr/store/storeList.js"></script>
 </head>
 <body>
 
@@ -26,8 +26,8 @@
 
             <!-- 상단 탭 -->
             <div class="dept-tab-area">
-                <button type="button" class="tab-btn active">부서관리</button>
-                <button type="button" class="tab-btn" onclick="location.href='/hr/store/list'">매장관리</button>
+                <button type="button" class="tab-btn" onclick="location.href='/hr/dept/list'">부서관리</button>
+                <button type="button" class="tab-btn active">매장관리</button>
                 <button type="button" class="tab-btn" onclick="location.href='/hr/pos/list'">직급관리</button>
             </div>
 
