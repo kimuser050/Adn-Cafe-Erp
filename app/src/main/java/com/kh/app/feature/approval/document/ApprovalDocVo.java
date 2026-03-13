@@ -18,4 +18,8 @@ public class ApprovalDocVo {
     private String approverComment;
     private String updatedAt;
     private String delYn;
+    private String workDate;
+    private String workHour;
+    private String startDate;
+    private String endDate;
 }
