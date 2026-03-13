@@ -15,7 +15,6 @@ async function itemVoList(){
                 <td>${vo.stockNo}</td>
                 <td>${vo.stockName}</td>
                 <td>${vo.unitPrice}</td>
-                <td>${vo.orderDate}</td>
                 <td>${vo.stock}</td>
                 <td>${vo.location}</td>
                 <td>${vo.activeYn}</td>
