@@ -64,7 +64,24 @@ public class NoticeCommentRestController {
         return result;
     }
 
+    //댓글 수정
+    @PutMapping
+    public ResponseEntity<HashMap<String, Object>> update(@RequestBody NoticeCommentVo vo, HttpSession session) {
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if (loginMemberVo == null) {
+            throw new IllegalArgumentException("[R-111] login required");
+        }
+        vo.setWriterNo(loginMemberVo.getEmpNo());
 
+        int result = noticeCommentService.update(vo);
+        if (result != 1) {
+            throw new IllegalArgumentException("[R-120] comment update fail ...");
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("result", result);
+        return ResponseEntity.ok(map);
+    }
 
 
 }
