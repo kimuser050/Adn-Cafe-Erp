@@ -56,9 +56,9 @@
          <div class="nav-group">
             <button type="button" class="nav-main">결재관리</button>
                 <div class="nav-sub">
-                    <a href="#">문서작성</a>
-                    <a href="#">내 문서함</a>
-                    <a href="#">결재함</a>
+                    <a href="/approval/document/write">문서작성</a>
+                    <a href="/approval/document/myDocList">내 문서함</a>
+                    <a href="/approval/document/approvalDocList">결재함</a>
                 </div>
         </div>
         <br>

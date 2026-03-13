@@ -3,12 +3,10 @@ package com.kh.app.feature.approval.document;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,6 +29,16 @@ public class ApprovalDocRestController {
 
         Map<String, String> map = new HashMap<>();
         map.put("result" , result + "");
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("selectDocList")
+    public ResponseEntity<HashMap<String, Object>> selectDocList(ApprovalDocVo vo){
+        List<ApprovalDocVo> voList= approvalDocService.selectDocList(vo);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("voList" , voList);
+
         return ResponseEntity.ok(map);
     }
 

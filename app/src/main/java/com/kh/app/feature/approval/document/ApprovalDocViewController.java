@@ -12,5 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class ApprovalDocViewController {
     @GetMapping("write")
-    public void insert(){}
+    public String write(){
+        return "approval/document/write";
+    }
+
+    @GetMapping("myDocList")
+    public String myDocList(){
+        return "approval/document/myDocList";
+    }
+
+    @GetMapping("approvalDocList")
+    public String approvalDocList(){
+        return "approval/document/approvalDocList";
+    }
 }
