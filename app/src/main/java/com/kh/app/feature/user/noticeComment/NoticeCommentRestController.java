@@ -5,12 +5,10 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +40,14 @@ public class NoticeCommentRestController {
         map.put("result", result);
 
         return ResponseEntity.ok(map);
+    }
+
+    //댓글 목록 조회(특정 게시글에 대한)
+    @GetMapping
+    public List<NoticeCommentVo> selectList(NoticeCommentVo vo){
+        List<NoticeCommentVo> voList = noticeCommentService.selectList(vo.getNoticeNo());
+        return voList;
+
     }
 
 
