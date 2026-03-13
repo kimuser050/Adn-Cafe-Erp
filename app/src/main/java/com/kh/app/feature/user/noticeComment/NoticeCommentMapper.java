@@ -52,5 +52,15 @@ public interface NoticeCommentMapper {
             """)
     int del(NoticeCommentVo vo);
 
+    @Update("""
+            UPDATE NOTICE_COMMENT
+            SET COMMENT_CONTENT = #{commentContent}
+            , UPDATED_AT = SYSDATE
+            WHERE COMMENT_NO = #{commentNo}
+            AND WRITER_NO = #{writerNo}
+            """)
+    int update(NoticeCommentVo vo);
+
+
 }
 

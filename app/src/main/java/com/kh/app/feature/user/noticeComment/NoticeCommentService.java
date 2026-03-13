@@ -31,5 +31,11 @@ public class NoticeCommentService {
 
     }
 
+    @Transactional
+    public int update(NoticeCommentVo vo) {
+        return noticeCommentMapper.update(vo);
+    }
+
+
 
 }
