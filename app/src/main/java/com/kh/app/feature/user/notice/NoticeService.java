@@ -57,4 +57,19 @@ public class NoticeService {
 
     }
 
+    @Transactional
+    public NoticeVo selectOne(String no) {
+        int result = noticeMapper.increaseHit(no);
+        if (result != 1) {
+            String errMsg = "[B-321] increase hit fail ...";
+            log.error(errMsg);
+            throw new IllegalStateException(errMsg);
+        }
+        return noticeMapper.selectOne(no);
+    }
+
+
+
+
+
 }

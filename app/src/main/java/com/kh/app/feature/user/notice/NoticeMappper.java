@@ -1,9 +1,7 @@
 package com.kh.app.feature.user.notice;
 
 import com.kh.app.feature.util.PageVo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -72,6 +70,34 @@ public interface NoticeMappper {
                 )
             """)
     void insertFile(NoticeFileVo fvo);
+
+
+    @Update("""
+                UPDATE NOTICE
+                SET
+                    HIT = HIT + 1
+                WHERE NOTICE_NO = #{noticeNo}
+                AND DEL_YN = 'N'
+            """)
+    int increaseHit( String noticeNo);
+
+    @Select("""
+                SELECT
+                    N.NOTICE_NO
+                    ,N.WRITER_NO
+                    ,M.EMP_NAME AS WRITER_NAME
+                    ,N.TITLE
+                    ,N.CONTENT
+                    ,N.HIT
+                    ,N.CREATED_AT
+                    ,N.UPDATED_AT
+                    ,N.DEL_YN
+                FROM NOTICE N
+                JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
+                WHERE N.NOTICE_NO = #{noticeNo} 
+                AND N.DEL_YN = 'N'
+            """)
+    NoticeVo selectOne(@Param("noticeNo") String noticeNo );
 
 
 }
