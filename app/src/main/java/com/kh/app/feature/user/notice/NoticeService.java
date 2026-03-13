@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -66,6 +68,47 @@ public class NoticeService {
             throw new IllegalStateException(errMsg);
         }
         return noticeMapper.selectOne(no);
+    }
+
+
+
+    @Transactional
+    public int updateByNo(NoticeVo vo, MultipartFile file, String changeName) throws IOException {
+
+        int result = noticeMapper.updateByNo(vo);
+
+        if(result != 1){
+            throw new IllegalStateException("[B-410] notice update fail");
+        }
+
+        if(file != null && !file.isEmpty()){
+
+            // 기존 파일 삭제 (서버)
+            if(changeName != null && !changeName.isEmpty()){
+                File oldFile = new File(uploadPath, changeName);
+                if(oldFile.exists()){
+                    oldFile.delete();
+                }
+            }
+
+            // DB 파일 삭제
+            noticeMapper.deleteFile(vo.getNoticeNo());
+
+            // 새 파일 업로드
+            String originName = file.getOriginalFilename();
+            String newChangeName = FileUploader.upload(file, uploadPath);
+
+            NoticeFileVo fvo = new NoticeFileVo();
+            fvo.setNoticeNo(vo.getNoticeNo());
+            fvo.setOriginName(originName);
+            fvo.setChangeName(newChangeName);
+            fvo.setFilePath(uploadPath);
+
+            // 새 파일 DB 저장
+            noticeMapper.insertFile(fvo);
+        }
+
+        return result;
     }
 
 
