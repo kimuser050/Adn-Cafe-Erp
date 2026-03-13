@@ -25,6 +25,11 @@ public class NoticeCommentService {
         return noticeCommentMapper.selectList(noticeNo);
     }
 
+    @Transactional
+    public int del(NoticeCommentVo vo ) {
+        return noticeCommentMapper.del(vo);
+
+    }
 
 
 }

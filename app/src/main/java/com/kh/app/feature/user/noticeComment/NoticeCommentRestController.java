@@ -50,6 +50,21 @@ public class NoticeCommentRestController {
 
     }
 
+    //댓글 삭제
+    @DeleteMapping
+    public int del(@RequestBody NoticeCommentVo vo, HttpSession session){
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if (loginMemberVo == null) {
+            throw new IllegalArgumentException("[R-111] login required");
+        }
+        String loginMemberNo = loginMemberVo.getEmpNo();
+        vo.setWriterNo(loginMemberNo);
+
+        int result =noticeCommentService.del(vo);
+        return result;
+    }
+
+
 
 
 }

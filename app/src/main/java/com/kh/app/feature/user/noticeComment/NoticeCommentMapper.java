@@ -3,6 +3,7 @@ package com.kh.app.feature.user.noticeComment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -41,6 +42,15 @@ public interface NoticeCommentMapper {
             
             """)
     List<NoticeCommentVo> selectList(String noticeNo);
+
+    @Update("""
+            UPDATE NOTICE_COMMENT
+                SET DEL_YN = 'Y'
+            WHERE NOTICE_NO = #{noticeNo}
+            AND COMMENT_NO = #{commentNo} 
+            AND WRITER_NO = #{writerNo}
+            """)
+    int del(NoticeCommentVo vo);
 
 }
 
