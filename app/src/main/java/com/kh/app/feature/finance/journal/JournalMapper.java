@@ -1,8 +1,8 @@
 package com.kh.app.feature.finance.journal;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface JournalMapper {
@@ -32,4 +32,48 @@ public interface JournalMapper {
             """)
     int insertJournal(JournalVo vo);
 
+    @Update("""
+            UPDATE JOURNAL
+            SET
+                ACCOUNT_NO = #{accountNo}
+                , DEBIT = #{debit}
+                , CREDIT = #{credit}
+            WHERE JOURNAL_NO = #{journalNo}
+            AND IS_DELETED = 'N'
+        """)
+    int updateJournal(JournalVo vo);
+
+    @Update("""
+            UPDATE JOURNAL
+            SET
+                IS_DELETED = 'Y'
+            WHERE JOURNAL_NO = #{journalNo}
+            AND WRITER_NO = #{writerNo}
+            AND IS_DELETED = 'N'
+            """)
+    int delJournal(JournalVo vo);
+
+
+    @Delete("""
+            DELETE FROM JOURNAL
+            WHERE JOURNAL_NO = #{sharedNo}
+            """)
+    void delJournalNo(String sharedNo);
+
+
+    @Select("""
+            SELECT
+                J.JOURNAL_NO
+                , J.JOURNAL_DATE
+                , A.ACCOUNT_NAME
+                , J.DEBIT
+                , J.CREDIT
+                , J.WRITER_NO
+            FROM JOURNAL J
+            JOIN ACCOUNT A ON J.ACCOUNT_NO = A.ACCOUNT_NO
+            WHERE J.IS_DELETED = 'N'
+            AND J.JOURNAL_DATE = TO_DATE(#{journalDate}, 'YY/MM/DD')
+            ORDER BY J.JOURNAL_DATE DESC, J.JOURNAL_NO DESC
+            """)
+    List<JournalVo> selectJournal(String journalDate);
 }

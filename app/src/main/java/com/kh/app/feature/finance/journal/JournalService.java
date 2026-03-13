@@ -33,4 +33,37 @@ public class JournalService {
 
         return totalResult;
     }
+
+    @Transactional
+    public int updateJournal(List<JournalVo> voList , String empNo) {
+
+        if (voList == null || voList.size() < 2) {
+            throw new IllegalArgumentException("차변과 대변 내역이 모두 필요합니다.");
+        }
+
+        String originalDate = voList.get(0).getJournalDate();
+        String sharedNo = voList.get(0).getJournalNo();
+        journalMapper.delJournalNo(sharedNo);
+
+        int totalResult = 0;
+
+        for (JournalVo vo : voList) {
+            vo.setJournalNo(sharedNo);
+            vo.setWriterNo(empNo);
+            totalResult += journalMapper.insertJournal(vo);
+        }
+
+        return totalResult;
+    }
+
+
+    @Transactional
+    public int delJournal(JournalVo vo) {
+        return journalMapper.delJournal(vo);
+    }
+
+
+    public List<JournalVo> selectJournal(String journalDate) {
+        return journalMapper.selectJournal(journalDate);
+    }
 }
