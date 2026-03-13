@@ -19,6 +19,7 @@ public class JournalRestController {
     @PostMapping("/insertJournal")
     public ResponseEntity<Integer> insertJournal(@RequestBody List<JournalVo> voList){
         int result = journalService.insertJournal(voList);
+        System.out.println("result = " + result);
         return ResponseEntity.ok(result);
     }
 }
