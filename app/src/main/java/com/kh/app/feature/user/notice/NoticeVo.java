@@ -2,6 +2,8 @@ package com.kh.app.feature.user.notice;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class NoticeVo {
     private  String noticeNo;
@@ -12,4 +14,5 @@ public class NoticeVo {
     private  String createdAt;
     private  String updatedAt;
     private  String delYn;
+    private List<NoticeFileVo> fileList;
 }
