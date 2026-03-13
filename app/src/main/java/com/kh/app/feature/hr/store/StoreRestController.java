@@ -47,5 +47,5 @@ public class StoreRestController {
 
     // 2. 매장 상세조회 하기
 
-    
+
 }
