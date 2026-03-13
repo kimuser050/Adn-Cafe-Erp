@@ -38,8 +38,8 @@
                                         <input type="date" id="journalDate" value="2026-03-12" class="date-input">
                                     </div>
                                     <div class="action-btns">
-                                        <button class="menu-btn-sm">수정하기</button>
-                                        <button class="menu-btn-sm">삭제하기</button>
+                                        <button class="menu-btn-sm" onclick="updateJournal()">수정하기</button>
+                                        <button class="menu-btn-sm" onclick="delJournal()">삭제하기</button>
                                     </div>
                                 </div>
 
@@ -89,25 +89,25 @@
                                     </div>
                                     <div id="entryRowContainer" class="entry-scroll-area">
                                         <div class="entry-row">
-                                            <select class="account-select">
-                                                <option value="">계정선택</option>
-                                            </select>
-                                            <input type="number" class="amount-input debit-val" oninput="calcBalances()"
-                                                value="0">
-                                            <select class="account-select">
-                                                <option value="">계정선택</option>
-                                            </select>
-                                            <input type="number" class="amount-input credit-val"
-                                                oninput="calcBalances()" value="0">
+                                            <input type="text" class="account-select" list="accountOptions"
+                                                placeholder="계정선택">
+                                            <input type="number" class="amount-input debit" oninput="calc()" value="0"
+                                                step="10000">
+
+                                            <input type="text" class="account-select" list="accountOptions"
+                                                placeholder="계정선택">
+                                            <input type="number" class="amount-input credit" oninput="calc()" value="0"
+                                                step="10000">
                                         </div>
                                     </div>
-
-                                    <div class="add-row-wrapper">
-                                        <button type="button" class="btn-add-row" onclick="addRow()">+ 행 추가</button>
-                                    </div>
+                                    <datalist id="accountOptions"></datalist>
+                                </div>
+                                <div class="add-row-wrapper">
+                                    <button type="button" class="btn-add-row" onclick="addRow()">+ 행 추가</button>
                                 </div>
                             </div>
                         </div>
-                    </section>
-                </main>
+        </div>
+        </section>
+        </main>
         </div>

@@ -1,5 +1,6 @@
 package com.kh.app.feature.finance.journal;
 
+import com.kh.app.feature.finance.account.AccountVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,5 +66,10 @@ public class JournalService {
 
     public List<JournalVo> selectJournal(String journalDate) {
         return journalMapper.selectJournal(journalDate);
+    }
+
+
+    public List<AccountVo> getAccountList() {
+        return journalMapper.getAccountList();
     }
 }

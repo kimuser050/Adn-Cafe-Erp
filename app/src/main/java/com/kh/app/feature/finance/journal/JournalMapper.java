@@ -1,5 +1,6 @@
 package com.kh.app.feature.finance.journal;
 
+import com.kh.app.feature.finance.account.AccountVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -76,4 +77,14 @@ public interface JournalMapper {
             ORDER BY J.JOURNAL_DATE DESC, J.JOURNAL_NO DESC
             """)
     List<JournalVo> selectJournal(String journalDate);
+
+
+    @Select("""
+            SELECT
+                ACCOUNT_NO
+                , ACCOUNT_NAME
+            FROM ACCOUNT
+            ORDER BY ACCOUNT_NO ASC
+            """)
+    List<AccountVo> getAccountList();
 }
