@@ -1,3 +1,4 @@
+/* 기본 초기화 및 배경 */
 * {
     box-sizing: border-box;
 }
@@ -5,267 +6,247 @@
 body {
     margin: 0;
     background: #c8c1b4;
-    font-family: Arial, Helvetica, sans-serif;
+    /* 기존 배경색 유지 */
+    font-family: 'Pretendard', Arial, sans-serif;
 }
 
-/* 사이드바 고려한 메인 영역 */
-
+/* 1. 전체를 감싸는 page: 자식들을 중앙으로 모으되, 내부 정렬은 자식들에게 맡김 */
 .page {
-    margin-left: 240px;
-    padding: 60px 80px;
-}
-
-/* 상단 제목 */
-
-.title {
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 25px;
-}
-
-.table-header,
-.form-title {
-    text-align: center;
-}
-
-/* 전체 박스 */
-
-.content-box {
-    background: #e5e5e5;
-    border-radius: 12px;
-    padding: 40px;
-
-    display: flex;
-    gap: 40px;
-
-    width: 1100px;
-    max-width: 100%;
-}
-
-/* 왼쪽 계정 영역 */
-
-.account-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.register-area {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.form-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 15px;
-}
-
-.table-header {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 15px;
-}
-
-/* 계정 테이블 */
-
-.account-wrapper {
-    display: flex;
-    border: 1px solid #ccc;
-    background: white;
-    height: 420px;
-}
-
-.account-main {
-    width: 55%;
-    border-right: 1px solid #ddd;
-}
-
-.account-sub {
-    width: 45%;
+    /* 사이드바 너비를 제외한 나머지 공간에서 중앙 정렬 */
+    margin-left: 100px;
+    padding: 60px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    color: #777;
+    /* 자식 요소들을 가로축 중앙으로 */
+    min-width: 1200px;
+    /* 박스가 커질 것이므로 최소 너비 확보 */
+}
+
+.title {
+    align-self: center;
+    margin-left: 130px;
+    /* 부모의 center를 따름 */
+    width: 100%;
+    max-width: 1300px;
+    /* 아래 content-box와 동일하게 맞춤 */
+
+    display: inline-block;
+    width: fit-content;
+    text-align: left;
+    margin-bottom: 15px;
+
+    /* 왼쪽 정렬을 위해 margin-right만 오토로 지정 */
+    margin-right: auto;
+    /* 만약 박스가 중앙에 있다면, margin-left도 계산되어야 함 */
+
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background-color: #6a4328;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+}
+
+/* 4. 메인 박스: 기존과 동일하게 유지 */
+.content-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    max-width: 1300px;
+    /* 기존 1100px에서 1300px로 확대 */
+    min-height: 600px;
+    /* 세로 크기도 어느 정도 확보 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* 왼쪽 계정 영역 */
+.account-area {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-header {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #6a4328;
+    text-align: left;
+    padding-left: 5px;
+}
+
+/* 계정 테이블 래퍼 */
+.account-wrapper {
+    display: flex;
+    border: 1px solid #eee;
+    background: #fff;
+    height: 450px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.account-main {
+    width: 45%;
+    border-right: 1px solid #eee;
+    overflow-y: auto;
 }
 
 .main-row {
     padding: 14px;
     text-align: center;
+    /* 텍스트 가운데 정렬 */
     border-bottom: 1px solid #eee;
     cursor: pointer;
-}
-
-.main-row:hover {
-    background: #f4f4f4;
-}
-
-.main-row.active {
-    background: #dfe8ff;
-    font-weight: 600;
-}
-
-/* 하위계정 */
-
-.account-sub {
-    flex: 1;
+    /* 수직 중앙 정렬까지 확실하게 */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #777;
 }
 
-/* 삭제 버튼 */
+.main-row:hover {
+    background: #fdfaf8;
+}
 
-.account-footer {
-    margin-top: 15px;
+.main-row.active {
+    background: #6a4328;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* 하위 계정 영역 */
+.account-sub {
+    flex: 1;
+    overflow-y: auto;
+    background: #fcfcfc;
+    padding: 30px;
+}
+
+.sub-placeholder {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 14px;
+}
+
+/* 하단 버튼들 (수정/삭제/추가 버튼 디자인 통일) */
+.account-footer,
+.register-footer {
+    margin-top: 20px;
     display: flex;
     justify-content: flex-end;
 }
 
+.delete-btn,
+.add-btn {
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #6a4328;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
 .delete-btn {
-    padding: 9px 18px;
+    background-color: #fff;
+    color: #6a4328;
+}
+
+.add-btn {
+    background-color: #6a4328;
+    color: #fff;
     border: none;
-    background: #ddd;
-    border-radius: 8px;
+}
+
+/* 버튼 호버 시 커서만 변경 */
+.delete-btn:hover,
+.add-btn:hover {
     cursor: pointer;
 }
 
-/* 계정등록 */
-
+/* 오른쪽 계정 등록 영역 */
 .register-area {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* 박스 자체를 세로 중앙으로 밀어줌 */
 }
 
 .form-box {
     background: #f3f3f3;
     border: 1px solid #ccc;
     padding: 30px;
+    /* 다른 설정은 건드리지 않음 */
 }
 
 .form-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     margin-bottom: 25px;
+    color: #6a4328;
+    text-align: center;
 }
-
-/* form 정렬 */
 
 form {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 15px;
 }
 
 .form-row {
     display: grid;
-    grid-template-columns: 160px 1fr;
+    grid-template-columns: 120px 1fr;
     align-items: center;
 }
 
 .form-row label {
-    text-align: right;
-    padding-right: 10px;
-    white-space: nowrap;
-}
-
-.form-row input {
-    height: 34px;
-    padding: 6px;
-    width: 100%;
-}
-
-/* 추가 버튼 */
-
-.register-footer {
-    margin-top: 25px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.add-btn {
-    background: #6a4328;
-    color: white;
-    border: none;
-    padding: 9px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-/* 대분류 선택 highlight */
-
-.main-row.active {
-    background: #dfe8ff;
+    font-size: 14px;
+    color: #555;
     font-weight: 600;
 }
 
-/* 하위계정 행 */
+/* 입력창을 둥글게 수정 */
+.form-row input {
+    height: 38px;
+    padding: 0 15px;
+    border-radius: 12px;
+    /* 둥근 디자인 */
+    border: 1px solid #ddd;
+    outline: none;
+    transition: 0.2s;
+}
 
+.form-row input:focus {
+    border-color: #6a4328;
+}
+
+/* 하위계정 행 스타일 */
 .sub-row {
     display: flex;
     align-items: center;
+    justify-content: center;
+    /* 텍스트 가운데 정렬 */
     gap: 8px;
     padding: 6px 10px;
-    border-radius: 6px;
 }
 
-.sub-row:hover {
-    background: #f3f6ff;
-}
-
-/* 체크 강조 */
-
-.sub-row input:checked+span {
-    font-weight: 600;
-    color: #2d4ed8;
-}
-
-/* 삭제버튼 비활성 */
-
-.delete-btn {
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-.delete-btn.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* 1. 공통 스타일: 기본적으로 span은 클릭 가능해야 함 */
 .sub-row span {
-    pointer-events: auto !important;
-    /* 기본적으로 클릭 허용 */
-    cursor: default;
+    font-size: 14px;
 }
 
-/* 2. 비활성화된 행 스타일 (오직 disabled-row 클래스가 있을 때만!) */
-.sub-row.disabled-row {
-    background-color: #f9f9f9 !important;
-    pointer-events: auto;
-    /* 줄 전체는 클릭이 되게 하되 span만 막음 */
-}
-
-/* 3. 비활성화된 행의 span에만 취소선과 클릭 방지 적용 */
+/* 비활성화 행 스타일 (취소선) */
 .sub-row.disabled-row span {
     color: #ccc !important;
     text-decoration: line-through !important;
-    display: inline-block;
-    /* 취소선이 가끔 안 나올 때 해결책 */
-    pointer-events: none !important;
-    /* 글자 클릭 방지 */
-}
-
-/* 3. 활성화된 행(Y)은 다시 클릭이 되도록 초기화 */
-.sub-row:not(.disabled-row) span {
-    text-decoration: none !important;
-    color: inherit;
-    pointer-events: auto !important;
-}
-
-/* 4. 체크박스는 항상 클릭 가능해야 함 (다시 살려야 하니까) */
-.sub-row input[type="checkbox"] {
-    pointer-events: auto !important;
 }
