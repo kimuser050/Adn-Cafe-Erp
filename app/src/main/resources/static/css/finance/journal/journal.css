@@ -143,6 +143,11 @@
     align-items: center;
 }
 
+.entry-row {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .grid-h {
     text-align: center;
     font-weight: bold;
