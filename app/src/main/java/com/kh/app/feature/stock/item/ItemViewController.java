@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("stock")
 public class ItemViewController {
 
-    @GetMapping("item")
+    @GetMapping("item/list")
     public String list() {
-        return "stock/item/home";
+        return "stock/item/list";
     }
 }
