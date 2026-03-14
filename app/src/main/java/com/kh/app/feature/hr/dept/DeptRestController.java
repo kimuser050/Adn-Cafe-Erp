@@ -53,7 +53,7 @@ public class DeptRestController {
         return ResponseEntity.ok(map);
     }
 
-    // 3. 부서 비활/활성화 하기
+    // 3. 부서 비활성화 하기
     @PutMapping("/{deptCode}/disable")
     public ResponseEntity<Map<String, Object>> disable(@PathVariable String deptCode) {
         int result = deptService.disable(deptCode);
@@ -64,6 +64,7 @@ public class DeptRestController {
         return ResponseEntity.ok(map);
     }
 
+    //3.1 부서 활성화 하기
     @PutMapping("/{deptCode}/enable")
     public ResponseEntity<Map<String, Object>> enable(@PathVariable String deptCode) {
         int result = deptService.enable(deptCode);

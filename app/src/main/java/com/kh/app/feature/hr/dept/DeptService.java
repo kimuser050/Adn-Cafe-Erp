@@ -23,11 +23,12 @@ public class DeptService {
         return deptMapper.insert(vo);
     }
 
-
+    //1. 부서 전체 조회하기
     public List<DeptVo> selectList() {
         return deptMapper.selectList();
     }
 
+    //2. 부서 상세 조회하기
     public Map<String, Object> selectDetail(String deptCode) {
         DeptVo vo = deptMapper.selectOne(deptCode);
         List<DeptMemberVo> memberList = deptMapper.selectMemberList(deptCode);
@@ -45,25 +46,25 @@ public class DeptService {
         return map;
     }
 
-    //4. 부서 비활성화 하기
+    //3.1 부서 비활성화 하기
     @Transactional
     public int disable(String deptCode) {
         return deptMapper.disable(deptCode);
     }
 
-    //5. 부서 활성화 하기
+    //3.2 부서 활성화 하기
     @Transactional
     public int enable(String deptCode) {
         return deptMapper.enable(deptCode);
     }
 
-    //6. 부서 근무위치 수정하기
+    //4.1 부서 근무위치 수정하기
     @Transactional
     public int editAddress(String deptCode, String deptAddress) {
         return deptMapper.editAddress(deptCode, deptAddress);
     }
 
-    //7. 부서 관리자 수정하기
+    //4.2 부서 관리자 수정하기
     @Transactional
     public int editManager(String deptCode, String managerEmpNo) {
         return deptMapper.editManager(deptCode, managerEmpNo);

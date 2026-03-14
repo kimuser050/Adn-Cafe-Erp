@@ -79,6 +79,7 @@ public interface DeptMapper {
     @Update("""
             UPDATE DEPT
             SET USE_YN = 'N'
+            , UPDATED_AT = SYSTIMESTAMP
             WHERE DEPT_CODE = #{deptCode}
             """)
     int disable(String deptCode);
@@ -87,6 +88,7 @@ public interface DeptMapper {
     @Update("""
             UPDATE DEPT
             SET USE_YN = 'Y'
+            , UPDATED_AT = SYSTIMESTAMP
             WHERE DEPT_CODE = #{deptCode}
             """)
     int enable(String deptCode);
@@ -95,6 +97,7 @@ public interface DeptMapper {
     @Update("""
             UPDATE DEPT
             SET DEPT_ADDRESS = #{deptAddress}
+            , UPDATED_AT = SYSTIMESTAMP
             WHERE DEPT_CODE = #{deptCode}
             """)
     int editAddress(@Param("deptCode") String deptCode, @Param("deptAddress") String deptAddress);
@@ -103,6 +106,7 @@ public interface DeptMapper {
     @Update("""
             UPDATE DEPT
             SET MANAGER_EMP_NO = #{managerEmpNo}
+            , UPDATED_AT = SYSTIMESTAMP
             WHERE DEPT_CODE = #{deptCode}
             """)
     int editManager(@Param("deptCode") String deptCode, @Param("managerEmpNo") String managerEmpNo);
