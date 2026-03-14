@@ -5,16 +5,19 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>부서관리</title>
+    <title>매장관리</title>
 
-    <!-- css 공용과 js 연결하기 -->
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
     <link rel="stylesheet" href="/css/common/component.css">
-    <link rel="stylesheet" href="/css/hr/dept/deptList.css">
+    <link rel="stylesheet" href="/css/hr/store/storeList.css">
 
     <script defer src="/js/hr/store/storeList.js"></script>
+
+    <!-- 다음 우편번호 / 카카오맵 -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오앱키&libraries=services"></script>
 </head>
 <body>
 
@@ -22,39 +25,49 @@
     <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
 
     <main class="page-shell">
-        <section class="page-content dept-page">
+        <section class="page-content store-page">
 
             <!-- 상단 탭 -->
-            <div class="dept-tab-area">
+            <div class="store-tab-area">
                 <button type="button" class="tab-btn" onclick="location.href='/hr/dept/list'">부서관리</button>
                 <button type="button" class="tab-btn active">매장관리</button>
                 <button type="button" class="tab-btn" onclick="location.href='/hr/pos/list'">직급관리</button>
             </div>
 
             <!-- 요약 카드 -->
-            <div class="dept-summary-area">
+            <div class="store-summary-area">
                 <div class="summary-card">
-                    <div class="summary-title">총 부서 수</div>
-                    <div class="summary-value" id="dept-count">0</div>
+                    <div class="summary-title">총 매장 수</div>
+                    <div class="summary-value" id="total-store-count">0</div>
                 </div>
 
                 <div class="summary-card">
-                    <div class="summary-title">총 직원 수</div>
-                    <div class="summary-value" id="member-count">0</div>
+                    <div class="summary-title">운영매장</div>
+                    <div class="summary-value" id="enable-store-count">0</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-title">휴업매장</div>
+                    <div class="summary-value" id="rest-store-count">0</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-title">폐업매장</div>
+                    <div class="summary-value" id="disable-store-count">0</div>
                 </div>
             </div>
 
             <!-- 테이블 카드 -->
-            <div class="dept-table-card">
+            <div class="store-table-card">
 
                 <!-- 툴바 -->
-                <div class="dept-toolbar">
+                <div class="store-toolbar">
                     <div class="toolbar-left"></div>
 
                     <div class="toolbar-right">
                         <select id="sort-select">
-                            <option value="deptCode">부서명</option>
-                            <option value="createdAt">상태</option>
+                            <option value="storeName">매장명</option>
+                            <option value="statusCode">상태</option>
                         </select>
 
                         <div class="search-box">
@@ -67,24 +80,22 @@
                 </div>
 
                 <!-- 테이블 -->
-                <table class="dept-table">
+                <table class="store-table">
                     <thead>
                     <tr>
                         <th>NO</th>
-                        <th>부서명</th>
-                        <th>부서장</th>
-                        <th>인원수</th>
-                        <th>근무위치</th>
+                        <th>매장명</th>
+                        <th>담당자</th>
+                        <th>매장위치</th>
                         <th>등록일</th>
                         <th>상태</th>
                     </tr>
                     </thead>
-
-                    <tbody id="dept-list"></tbody>
+                    <tbody id="store-list"></tbody>
                 </table>
 
-                <!-- 하단(페이징 전) -->
-                <div class="dept-bottom-area">
+                <!-- 하단 -->
+                <div class="store-bottom-area">
                     <div class="pagination">
                         <button class="page-btn active">1</button>
                         <button class="page-btn">2</button>
@@ -94,148 +105,141 @@
                         <button class="page-btn">▶</button>
                     </div>
 
-                    <button type="button" class="register-btn" onclick="openInsertDeptModal()">
-                        부서등록
+                    <button type="button" class="register-btn" onclick="openInsertStoreModal()">
+                        매장등록
                     </button>
                 </div>
 
             </div>
 
-
-<!-- (상세조회) 모달--------------------------------------------------------------------------------- -->
-<div id="dept-modal-wrap" class="dept-modal-wrap">
-    <div class="dept-modal">
-        <div class="dept-modal-header">
-            <h2>부서정보</h2>
-            <button type="button" class="modal-close-btn" onclick="closeDeptModal()">✕</button>
-        </div>
-
-        <!-- 모달안의 정보 -->
-        <div class="dept-modal-body">
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">부서명</div>
-                <div class="dept-detail-value" id="modal-dept-name"></div>
-            </div>
-
-            <!-- 관리자 조회 OR 수정상태에 따라 -->
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">관리자</div>
-
-                <div class="dept-detail-value">
-                    <!-- 조회 상태 -->
-                    <div id="manager-view-area">
-                        <span id="modal-dept-manager"></span>
-                        <button type="button" onclick="startEditManager()">변경</button>
+            <!-- 상세조회 모달 -->
+            <div id="store-modal-wrap" class="store-modal-wrap" style="display:none;">
+                <div class="store-modal" onclick="event.stopPropagation()">
+                    <div class="store-modal-header">
+                        <h2>매장정보</h2>
+                        <button type="button" class="modal-close-btn" onclick="closeStoreModal()">✕</button>
                     </div>
 
-                    <!-- 수정 상태 -->
-                    <div id="manager-edit-area" style="display:none;">
-                        <select id="manager-select"></select>
-                        <button type="button" onclick="saveManager()">V</button>
-                        <button type="button" onclick="cancelEditManager()">X</button>
+                    <div class="store-modal-body">
+                        <div class="store-detail-row">
+                            <div class="store-detail-label">매장명</div>
+                            <div class="store-detail-value" id="modal-store-name"></div>
+                        </div>
+
+                        <!-- 담당자 -->
+                        <div class="store-detail-row">
+                            <div class="store-detail-label">담당자</div>
+
+                            <div class="store-detail-value">
+                                <div id="manager-view-area">
+                                    <span id="modal-store-manager"></span>
+                                    <button type="button" onclick="startEditManager()">변경</button>
+                                </div>
+
+                                <div id="manager-edit-area" style="display:none;">
+                                    <select id="manager-select"></select>
+                                    <button type="button" onclick="saveManager()">V</button>
+                                    <button type="button" onclick="cancelEditManager()">X</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 매장위치 -->
+                        <div class="store-detail-row">
+                            <div class="store-detail-label">매장위치</div>
+
+                            <div class="store-detail-value">
+                                <div id="address-view-area">
+                                    <span id="modal-store-address"></span>
+                                    <button type="button" onclick="startEditAddress()">변경</button>
+                                </div>
+
+                                <div id="address-edit-area" style="display:none;">
+                                    <input type="text" id="address-input" readonly>
+                                    <button type="button" onclick="searchAddress()">주소검색</button>
+                                    <button type="button" onclick="saveAddress()">V</button>
+                                    <button type="button" onclick="cancelEditAddress()">X</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 상태 -->
+                        <div class="store-detail-row">
+                            <div class="store-detail-label">상태</div>
+
+                            <div class="store-detail-value">
+                                <div id="status-view-area">
+                                    <span id="modal-store-status"></span>
+                                    <button type="button" onclick="startEditStatus()">변경</button>
+                                </div>
+
+                                <div id="status-edit-area" style="display:none;">
+                                    <select id="status-select">
+                                        <option value="1">운영</option>
+                                        <option value="2">휴업</option>
+                                        <option value="3">폐업</option>
+                                    </select>
+                                    <button type="button" onclick="saveStatus()">V</button>
+                                    <button type="button" onclick="cancelEditStatus()">X</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="store-detail-row">
+                            <div class="store-detail-label">생성일</div>
+                            <div class="store-detail-value" id="modal-created-at"></div>
+                        </div>
+
+                        <hr>
+
+                        <h3>상세위치</h3>
+                        <div id="store-map" style="width:100%; height:260px; border-radius:12px;"></div>
+                    </div>
+
+                    <div class="store-modal-footer">
+                        <button type="button" class="modal-btn" onclick="closeStoreModal()">닫기</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 근무위치 조회 OR 수정 상태에 따라 -->
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">근무위치</div>
-
-                <div class="dept-detail-value">
-                    <!-- 조회 상태 -->
-                    <div id="address-view-area">
-                        <span id="modal-dept-address"></span>
-                        <button type="button" onclick="startEditAddress()">연필</button>
+            <!-- 매장등록 모달 -->
+            <div id="store-insert-modal-wrap" class="store-modal-wrap" style="display:none;">
+                <div class="store-modal" onclick="event.stopPropagation()">
+                    <div class="store-modal-header">
+                        <h2>매장등록</h2>
+                        <button type="button" class="modal-close-btn" onclick="closeInsertStoreModal()">✕</button>
                     </div>
 
-                    <!-- 수정 상태 -->
-                    <div id="address-edit-area" style="display:none;">
-                        <input type="text" id="address-input">
-                        <button type="button" onclick="saveAddress()">V</button>
-                        <button type="button" onclick="cancelEditAddress()">X</button>
+                    <div class="store-modal-body">
+                        <div class="store-detail-row">
+                            <div class="store-detail-label">매장코드</div>
+                            <div class="store-detail-value">
+                                <input type="text" id="insert-store-code" placeholder="매장코드를 입력하세요">
+                            </div>
+                        </div>
+
+                        <div class="store-detail-row">
+                            <div class="store-detail-label">매장명</div>
+                            <div class="store-detail-value">
+                                <input type="text" id="insert-store-name" placeholder="매장명을 입력하세요">
+                            </div>
+                        </div>
+
+                        <div class="store-detail-row">
+                            <div class="store-detail-label">매장위치</div>
+                            <div class="store-detail-value">
+                                <input type="text" id="insert-store-address" readonly placeholder="주소검색 버튼을 눌러주세요">
+                                <button type="button" onclick="searchInsertAddress()">주소검색</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="store-modal-footer">
+                        <button type="button" class="modal-btn" onclick="insertStore()">등록</button>
+                        <button type="button" class="modal-btn" onclick="closeInsertStoreModal()">닫기</button>
                     </div>
                 </div>
             </div>
-
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">총 인원</div>
-                <div class="dept-detail-value" id="modal-dept-emp"></div>
-            </div>
-
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">생성일</div>
-                <div class="dept-detail-value" id="modal-created-at"></div>
-            </div>
-
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">상태</div>
-                <div class="dept-detail-value" id="modal-use-yn"></div>
-            </div>
-
-            <hr>
-
-            <h3>소속인원</h3>
-            <table class="dept-member-table">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>이름</th>
-                    <th>직급</th>
-                    <th>사번</th>
-                    <th>전화번호</th>
-                    <th>입사일</th>
-                </tr>
-                </thead>
-                <tbody id="modal-member-list"></tbody>
-            </table>
-        </div>
-
-        <div class="dept-modal-footer">
-    <button type="button" id="toggle-use-btn" onclick="toggleDeptUseYn()"></button>
-    <button type="button" class="modal-btn" onclick="closeDeptModal()">닫기</button>
-    
-</div>
-    </div>
-</div>
-
-<!-- (부서등록) 모달--------------------------------------------------------------------------------- -->
-<div id="dept-insert-modal-wrap" class="dept-modal-wrap">
-    <div class="dept-modal" onclick="event.stopPropagation()">
-        <div class="dept-modal-header">
-            <h2>부서등록</h2>
-            <button type="button" class="modal-close-btn" onclick="closeInsertDeptModal()">✕</button>
-        </div>
-
-        <div class="dept-modal-body">
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">부서코드</div>
-                <div class="dept-detail-value">
-                    <input type="text" id="insert-dept-code" placeholder="부서코드를 입력하세요">
-                </div>
-            </div>
-
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">부서명</div>
-                <div class="dept-detail-value">
-                    <input type="text" id="insert-dept-name" placeholder="부서명을 입력하세요">
-                </div>
-            </div>
-
-            <div class="dept-detail-row">
-                <div class="dept-detail-label">근무위치</div>
-                <div class="dept-detail-value">
-                    <input type="text" id="insert-dept-address" placeholder="근무위치를 입력하세요">
-                </div>
-            </div>
-        </div>
-
-        <div class="dept-modal-footer">
-            <button type="button" class="modal-btn" onclick="insertDept()">등록</button>
-            <button type="button" class="modal-btn" onclick="closeInsertDeptModal()">닫기</button>
-        </div>
-    </div>
-</div>
-
 
         </section>
     </main>
