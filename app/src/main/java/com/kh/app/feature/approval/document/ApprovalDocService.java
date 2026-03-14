@@ -51,7 +51,7 @@ public class ApprovalDocService {
         return approvalDocMapper.selectOne(docNo);
     }
 
-    public int updateByNo(ApprovalDocVo vo) {
-        return approvalDocMapper.updateByNo(vo);
-    }
+//    public int updateByNo(ApprovalDocVo vo) {
+//        return approvalDocMapper.updateByNo(vo);
+//    }
 }

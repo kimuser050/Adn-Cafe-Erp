@@ -51,18 +51,18 @@ public class ApprovalDocRestController {
         return ResponseEntity.ok(map);
     }
 
-    @PutMapping
-    public ResponseEntity<Map<String, Object>> updateByNo(ApprovalDocVo vo){
-        int result = approvalDocService.updateByNo(vo);
-
-        if(result != 1){
-            String errMsg = "update error";
-            log.error(errMsg);
-            throw new IllegalStateException(errMsg);
-        }
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("result" , result);
-        return ResponseEntity.ok(map);
-    }
+//    @PutMapping
+//    public ResponseEntity<Map<String, Object>> updateByNo(ApprovalDocVo vo){
+//        int result = approvalDocService.updateByNo(vo);
+//
+//        if(result != 1){
+//            String errMsg = "update error";
+//            log.error(errMsg);
+//            throw new IllegalStateException(errMsg);
+//        }
+//
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result" , result);
+//        return ResponseEntity.ok(map);
+//    }
 }
