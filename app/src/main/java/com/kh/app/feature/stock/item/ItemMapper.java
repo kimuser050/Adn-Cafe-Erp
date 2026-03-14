@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface ItemMapper {
 
-
+//등록
     @Insert("""
         INSERT INTO ITEM
         (
@@ -35,7 +35,7 @@ public interface ItemMapper {
             WHERE ACTIVE_YN = 'Y'
             """)
     int selectCount();
-
+//조회
     @Select("""
             SELECT
                 ITEM_NO
@@ -71,7 +71,7 @@ public interface ItemMapper {
             WHERE ITEM_NO = #{itemNo}
             AND ACTIVE_YN = 'Y'
         """)
-    ItemVo selectOne(String no);
+    ItemVo selectOne(String itemNo);
 
     //삭제
     @Update("""
@@ -93,8 +93,8 @@ public interface ItemMapper {
             , LOCATION = #{location}
             , UPDATED_AT = SYSDATE
         WHERE ITEM_NO = #{itemNo}
-        AND WRITER_NO = #{writerNo}
-        AND DEL_YN = 'N'
     """)
     int updateByNo(ItemVo vo);
+
+
 }
