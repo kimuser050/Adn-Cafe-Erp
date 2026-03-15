@@ -1,41 +1,29 @@
 /* =========================================================
-   매장관리 JS
-   - 매장 목록 조회
+   직급관리 JS
+   - 직급 목록 조회
    - 상세조회 모달
    - 담당자 / 주소 / 상태 수정
-   - 매장 등록
+   - 직급 등록
    - 주소검색 / 지도 표시
    ========================================================= */
 
 /* =========================
-   현재 선택한 매장 정보 저장
+   현재 선택한 직급 정보 저장
    ========================= */
-let currentStoreCode = null;
-let currentStoreVo = null;
-let currentManagerList = [];
+let currentposCode = null;
+let currentposVo = null;
+
 
 /* =========================
    페이지 진입 시 목록 조회
    ========================= */
-loadStoreList();
+loadPosList();
 
 /* =========================
    공통 함수
    ========================= */
 
-// 상태코드를 화면용 텍스트로 변환
-function getStatusInfo(statusCode) {
-    if (statusCode == 1) {
-        return { text: "운영", className: "status-on" };
-    }
-    if (statusCode == 2) {
-        return { text: "휴업", className: "status-rest" };
-    }
-    if (statusCode == 3) {
-        return { text: "폐업", className: "status-off" };
-    }
-    return { text: "-", className: "" };
-}
+
 
 // 날짜를 YYYY-MM-DD 형태로 잘라서 보여줌
 function formatDate(value) {
@@ -51,14 +39,14 @@ function formatDate(value) {
 }
 
 /* =========================
-   매장 목록 조회
+   직급 목록 조회
    ========================= */
-async function loadStoreList() {
+async function loadPosList() {
     try {
-        const resp = await fetch("/store");
+        const resp = await fetch("/pos");
 
         if (!resp.ok) {
-            throw new Error("매장 목록 조회 실패");
+            throw new Error("직급 목록 조회 실패");
         }
 
         const data = await resp.json();
@@ -69,7 +57,7 @@ async function loadStoreList() {
 
     } catch (error) {
         console.log(error);
-        alert("매장 목록 조회 중 오류 발생");
+        alert("직급 목록 조회 중 오류 발생");
     }
 }
 
@@ -91,22 +79,22 @@ function renderSummary(voList) {
         }
     }
 
-    document.querySelector("#total-store-count").innerText = voList.length;
-    document.querySelector("#enable-store-count").innerText = enableCount;
-    document.querySelector("#rest-store-count").innerText = restCount;
-    document.querySelector("#disable-store-count").innerText = disableCount;
+    document.querySelector("#total-pos-count").innerText = voList.length;
+    document.querySelector("#enable-pos-count").innerText = enableCount;
+    document.querySelector("#rest-pos-count").innerText = restCount;
+    document.querySelector("#disable-pos-count").innerText = disableCount;
 }
 
 /* =========================
    목록 테이블 렌더링
    ========================= */
 function renderTable(voList) {
-    const tbodyTag = document.querySelector("#store-list");
+    const tbodyTag = document.querySelector("#pos-list");
 
     if (!voList || voList.length === 0) {
         tbodyTag.innerHTML = `
             <tr class="empty-row">
-                <td colspan="6">조회된 매장이 없습니다.</td>
+                <td colspan="6">조회된 직급이 없습니다.</td>
             </tr>
         `;
         return;
@@ -121,11 +109,11 @@ function renderTable(voList) {
         str += `
             <tr>
                 <td>${i + 1}</td>
-                <td class="store-name-cell">
-                    <span class="store-link" onclick="openStoreModal('${vo.storeCode}')">${vo.storeName}</span>
+                <td class="pos-name-cell">
+                    <span class="pos-link" onclick="openposModal('${vo.posCode}')">${vo.posName}</span>
                 </td>
                 <td>${vo.managerName ?? "-"}</td>
-                <td>${vo.storeAddress ?? "-"}</td>
+                <td>${vo.posAddress ?? "-"}</td>
                 <td>${formatDate(vo.createdAt)}</td>
                 <td>
                     <span class="status-badge">
@@ -143,65 +131,65 @@ function renderTable(voList) {
 /* =========================
    상세조회 모달 열기
    ========================= */
-async function openStoreModal(storeCode) {
+async function openPosModal(posCode) {
     try {
-        const resp = await fetch(`/store/${storeCode}`);
+        const resp = await fetch(`/pos/${posCode}`);
 
         if (!resp.ok) {
-            throw new Error("매장 상세조회 실패");
+            throw new Error("직급 상세조회 실패");
         }
 
         const data = await resp.json();
         const vo = data.vo;
         const managerList = data.managerList ?? [];
 
-        currentStoreCode = storeCode;
-        currentStoreVo = vo;
+        currentPosCode = posCode;
+        currentPosVo = vo;
         currentManagerList = managerList;
 
-        document.querySelector("#modal-store-name").innerText = vo.storeName ?? "-";
-        document.querySelector("#modal-store-manager").innerText = vo.managerName ?? "-";
-        document.querySelector("#modal-store-address").innerText = vo.storeAddress ?? "-";
+        document.querySelector("#modal-pos-name").innerText = vo.posName ?? "-";
+        document.querySelector("#modal-pos-manager").innerText = vo.managerName ?? "-";
+        document.querySelector("#modal-pos-address").innerText = vo.posAddress ?? "-";
         document.querySelector("#modal-created-at").innerText = formatDate(vo.createdAt);
 
         const statusInfo = getStatusInfo(vo.statusCode);
-        document.querySelector("#modal-store-status").innerText = statusInfo.text;
+        document.querySelector("#modal-pos-status").innerText = statusInfo.text;
         document.querySelector("#status-select").value = String(vo.statusCode ?? 1);
 
         cancelEditManager();
         cancelEditAddress();
         cancelEditStatus();
 
-        document.querySelector("#store-modal-wrap").style.display = "flex";
+        document.querySelector("#pos-modal-wrap").style.display = "flex";
 
         // 모달이 열린 뒤 지도를 그려야 해서 약간 늦춤
         setTimeout(() => {
-            renderStoreMap(vo.storeAddress);
+            renderPosMap(vo.posAddress);
         }, 300);
 
     } catch (error) {
         console.log(error);
-        alert("매장 상세조회 실패");
+        alert("직급 상세조회 실패");
     }
 }
 
 /* =========================
    상세조회 모달 닫기
    ========================= */
-function closeStoreModal() {
-    document.querySelector("#store-modal-wrap").style.display = "none";
+function closePosModal() {
+    document.querySelector("#pos-modal-wrap").style.display = "none";
 }
 
 /* =========================
    상태 수정
    ========================= */
 function startEditStatus() {
-    if (!currentStoreVo) {
-        alert("매장 정보가 없습니다.");
+    if (!currentposVo) {
+        alert("직급 정보가 없습니다.");
         return;
     }
 
-    document.querySelector("#status-select").value = String(currentStoreVo.statusCode ?? 1);
+    document.querySelector("#status-select").value = String(currentPosVo.statusCode ?? 1);
     document.querySelector("#status-view-area").style.display = "none";
     document.querySelector("#status-edit-area").style.display = "flex";
 }
@@ -215,12 +203,12 @@ async function saveStatus() {
     try {
         const statusCode = document.querySelector("#status-select").value;
 
-        if (!currentStoreCode) {
-            alert("매장 정보가 없습니다.");
+        if (!currentPosCode) {
+            alert("직급 정보가 없습니다.");
             return;
         }
 
-        const resp = await fetch(`/store/status?storeCode=${currentStoreCode}&statusCode=${statusCode}`, {
+        const resp = await fetch(`/pos/status?posCode=${currentPosCode}&statusCode=${statusCode}`, {
             method: "POST"
         });
 
@@ -236,14 +224,14 @@ async function saveStatus() {
         }
 
         const statusInfo = getStatusInfo(statusCode);
-        document.querySelector("#modal-store-status").innerText = statusInfo.text;
+        document.querySelector("#modal-pos-status").innerText = statusInfo.text;
 
-        if (currentStoreVo) {
-            currentStoreVo.statusCode = Number(statusCode);
+        if (currentPosVo) {
+            currentPosVo.statusCode = Number(statusCode);
         }
 
         cancelEditStatus();
-        loadStoreList();
+        loadPosList();
         alert("상태 변경 완료");
 
     } catch (error) {
@@ -256,7 +244,7 @@ async function saveStatus() {
    주소 수정
    ========================= */
 function startEditAddress() {
-    const currentAddress = document.querySelector("#modal-store-address").innerText;
+    const currentAddress = document.querySelector("#modal-pos-address").innerText;
 
     document.querySelector("#address-input").value = currentAddress;
     document.querySelector("#address-view-area").style.display = "none";
@@ -270,19 +258,19 @@ function cancelEditAddress() {
 
 async function saveAddress() {
     try {
-        const storeAddress = document.querySelector("#address-input").value;
+        const posAddress = document.querySelector("#address-input").value;
 
-        if (!currentStoreCode) {
-            alert("매장 정보가 없습니다.");
+        if (!currentposCode) {
+            alert("직급 정보가 없습니다.");
             return;
         }
 
-        const resp = await fetch(`/store/${currentStoreCode}/address`, {
+        const resp = await fetch(`/pos/${currentposCode}/address`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ storeAddress }),
+            body: JSON.stringify({ posAddress }),
         });
 
         if (!resp.ok) {
@@ -296,19 +284,19 @@ async function saveAddress() {
             return;
         }
 
-        document.querySelector("#modal-store-address").innerText = storeAddress;
+        document.querySelector("#modal-pos-address").innerText = posAddress;
 
-        if (currentStoreVo) {
-            currentStoreVo.storeAddress = storeAddress;
+        if (currentposVo) {
+            currentposVo.posAddress = posAddress;
         }
 
         cancelEditAddress();
-        loadStoreList();
+        loadposList();
         alert("주소 수정 완료");
 
         // 주소가 바뀌었으니 지도 다시 그림
         setTimeout(() => {
-            renderStoreMap(storeAddress);
+            renderposMap(posAddress);
         }, 300);
 
     } catch (error) {
@@ -327,7 +315,7 @@ function startEditManager() {
     for (const manager of currentManagerList) {
         let selected = "";
 
-        if (currentStoreVo && String(manager.empNo) === String(currentStoreVo.ownerEmpNo)) {
+        if (currentposVo && String(manager.empNo) === String(currentposVo.ownerEmpNo)) {
             selected = "selected";
         }
 
@@ -349,12 +337,12 @@ async function saveManager() {
     try {
         const ownerEmpNo = document.querySelector("#manager-select").value;
 
-        if (!currentStoreCode) {
-            alert("매장 정보가 없습니다.");
+        if (!currentposCode) {
+            alert("직급 정보가 없습니다.");
             return;
         }
 
-        const resp = await fetch(`/store/${currentStoreCode}/manager`, {
+        const resp = await fetch(`/pos/${currentposCode}/manager`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -374,15 +362,15 @@ async function saveManager() {
         }
 
         const selectedText = document.querySelector("#manager-select").selectedOptions[0].text;
-        document.querySelector("#modal-store-manager").innerText = selectedText;
+        document.querySelector("#modal-pos-manager").innerText = selectedText;
 
-        if (currentStoreVo) {
-            currentStoreVo.ownerEmpNo = ownerEmpNo;
-            currentStoreVo.managerName = selectedText;
+        if (currentposVo) {
+            currentposVo.ownerEmpNo = ownerEmpNo;
+            currentposVo.managerName = selectedText;
         }
 
         cancelEditManager();
-        loadStoreList();
+        loadposList();
         alert("담당자 수정 완료");
 
     } catch (error) {
@@ -392,71 +380,71 @@ async function saveManager() {
 }
 
 /* =========================
-   매장 등록
+   직급 등록
    ========================= */
-function openInsertStoreModal() {
-    document.querySelector("#insert-store-code").value = "";
-    document.querySelector("#insert-store-name").value = "";
-    document.querySelector("#insert-store-address").value = "";
+function openInsertposModal() {
+    document.querySelector("#insert-pos-code").value = "";
+    document.querySelector("#insert-pos-name").value = "";
+    document.querySelector("#insert-pos-address").value = "";
 
-    document.querySelector("#store-insert-modal-wrap").style.display = "flex";
+    document.querySelector("#pos-insert-modal-wrap").style.display = "flex";
 }
 
-function closeInsertStoreModal() {
-    document.querySelector("#store-insert-modal-wrap").style.display = "none";
+function closeInsertposModal() {
+    document.querySelector("#pos-insert-modal-wrap").style.display = "none";
 }
 
-async function insertStore() {
+async function insertpos() {
     try {
-        const storeCode = document.querySelector("#insert-store-code").value.trim();
-        const storeName = document.querySelector("#insert-store-name").value.trim();
-        const storeAddress = document.querySelector("#insert-store-address").value.trim();
+        const posCode = document.querySelector("#insert-pos-code").value.trim();
+        const posName = document.querySelector("#insert-pos-name").value.trim();
+        const posAddress = document.querySelector("#insert-pos-address").value.trim();
 
-        if (storeCode === "") {
-            alert("매장코드를 입력하세요.");
+        if (posCode === "") {
+            alert("직급코드를 입력하세요.");
             return;
         }
 
-        if (storeName === "") {
-            alert("매장명을 입력하세요.");
+        if (posName === "") {
+            alert("직급명을 입력하세요.");
             return;
         }
 
-        if (storeAddress === "") {
-            alert("매장위치를 입력하세요.");
+        if (posAddress === "") {
+            alert("직급위치를 입력하세요.");
             return;
         }
 
-        const resp = await fetch("/store", {
+        const resp = await fetch("/pos", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                storeCode,
-                storeName,
-                storeAddress,
+                posCode,
+                posName,
+                posAddress,
             }),
         });
 
         if (!resp.ok) {
-            throw new Error("매장 등록 실패");
+            throw new Error("직급 등록 실패");
         }
 
         const data = await resp.json();
 
         if (data.result != 1) {
-            alert("매장 등록 실패");
+            alert("직급 등록 실패");
             return;
         }
 
-        alert("매장 등록 완료");
-        closeInsertStoreModal();
-        loadStoreList();
+        alert("직급 등록 완료");
+        closeInsertposModal();
+        loadposList();
 
     } catch (error) {
         console.log(error);
-        alert("매장 등록 중 오류 발생");
+        alert("직급 등록 중 오류 발생");
     }
 }
 
@@ -466,7 +454,7 @@ async function insertStore() {
 function searchInsertAddress() {
     new daum.Postcode({
         oncomplete: function(data) {
-            document.querySelector("#insert-store-address").value = data.roadAddress;
+            document.querySelector("#insert-pos-address").value = data.roadAddress;
         }
     }).open();
 }
@@ -484,8 +472,8 @@ function searchAddress() {
    - 주소를 좌표로 바꿔서 지도 표시
    - 모달 안 지도는 매번 새로 생성
    ========================= */
-function renderStoreMap(address) {
-    const mapContainer = document.querySelector("#store-map");
+function renderposMap(address) {
+    const mapContainer = document.querySelector("#pos-map");
 
     if (!mapContainer) {
         return;
