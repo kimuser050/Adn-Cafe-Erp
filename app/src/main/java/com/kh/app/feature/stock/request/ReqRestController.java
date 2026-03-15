@@ -3,12 +3,10 @@ package com.kh.app.feature.stock.request;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -19,6 +17,16 @@ import java.util.Map;
 public class ReqRestController {
 
     private final ReqService reqService;
+
+    // 반품조회 확인용
+    @GetMapping("list")
+    public ResponseEntity<Map<String, Object>> list(ReqVo vo){
+        List<ReqVo> voList =reqService.list(vo);
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList",voList);
+        return ResponseEntity.ok(map);
+
+    }
 
     //반품신청
     @PostMapping("insert")

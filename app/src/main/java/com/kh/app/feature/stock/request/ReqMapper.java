@@ -2,6 +2,9 @@ package com.kh.app.feature.stock.request;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface ReqMapper {
@@ -22,4 +25,18 @@ public interface ReqMapper {
         )
     """)
     int reqinsert(ReqVo vo);
+
+    @Select("""
+   SELECT
+           RETURN_NO,
+           PRODUCT_NAME,
+           QUANTITY,
+           REASON,
+           STATUS,
+    TO_CHAR(CREATED_AT, 'YYYY-MM-DD') AS createdAt,
+    STORE_CODE
+    FROM RETURN_REQ
+    ORDER BY RETURN_NO DESC
+    """)
+    List<ReqVo> list(ReqVo vo);
 }
