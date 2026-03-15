@@ -13,11 +13,12 @@
     <link rel="stylesheet" href="/css/common/component.css">
     <link rel="stylesheet" href="/css/hr/store/storeList.css">
 
-    <script defer src="/js/hr/store/storeList.js"></script>
-
     <!-- 다음 우편번호 / 카카오맵 -->
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오앱키&libraries=services"></script>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6f08b265dc5b763e1726860c9621049c&libraries=services"></script>
+
+    <!-- 매장관리 JS -->
+    <script defer src="/js/hr/store/storeList.js"></script>
 </head>
 <body>
 
@@ -57,7 +58,7 @@
                 </div>
             </div>
 
-            <!-- 테이블 카드 -->
+            <!-- 목록 카드 -->
             <div class="store-table-card">
 
                 <!-- 툴바 -->
@@ -109,11 +110,10 @@
                         매장등록
                     </button>
                 </div>
-
             </div>
 
             <!-- 상세조회 모달 -->
-            <div id="store-modal-wrap" class="store-modal-wrap" style="display:none;">
+            <div id="store-modal-wrap" class="store-modal-wrap">
                 <div class="store-modal" onclick="event.stopPropagation()">
                     <div class="store-modal-header">
                         <h2>매장정보</h2>
@@ -126,61 +126,55 @@
                             <div class="store-detail-value" id="modal-store-name"></div>
                         </div>
 
-                        <!-- 담당자 -->
                         <div class="store-detail-row">
                             <div class="store-detail-label">담당자</div>
-
                             <div class="store-detail-value">
                                 <div id="manager-view-area">
                                     <span id="modal-store-manager"></span>
-                                    <button type="button" onclick="startEditManager()">변경</button>
+                                    <button type="button" class="inline-edit-btn" onclick="startEditManager()">변경</button>
                                 </div>
 
-                                <div id="manager-edit-area" style="display:none;">
+                                <div id="manager-edit-area" class="inline-edit-area">
                                     <select id="manager-select"></select>
-                                    <button type="button" onclick="saveManager()">V</button>
-                                    <button type="button" onclick="cancelEditManager()">X</button>
+                                    <button type="button" class="inline-save-btn" onclick="saveManager()">V</button>
+                                    <button type="button" class="inline-cancel-btn" onclick="cancelEditManager()">X</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 매장위치 -->
                         <div class="store-detail-row">
                             <div class="store-detail-label">매장위치</div>
-
                             <div class="store-detail-value">
                                 <div id="address-view-area">
                                     <span id="modal-store-address"></span>
-                                    <button type="button" onclick="startEditAddress()">변경</button>
+                                    <button type="button" class="inline-edit-btn" onclick="startEditAddress()">변경</button>
                                 </div>
 
-                                <div id="address-edit-area" style="display:none;">
+                                <div id="address-edit-area" class="inline-edit-area">
                                     <input type="text" id="address-input" readonly>
-                                    <button type="button" onclick="searchAddress()">주소검색</button>
-                                    <button type="button" onclick="saveAddress()">V</button>
-                                    <button type="button" onclick="cancelEditAddress()">X</button>
+                                    <button type="button" class="inline-search-btn" onclick="searchAddress()">주소검색</button>
+                                    <button type="button" class="inline-save-btn" onclick="saveAddress()">V</button>
+                                    <button type="button" class="inline-cancel-btn" onclick="cancelEditAddress()">X</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 상태 -->
                         <div class="store-detail-row">
                             <div class="store-detail-label">상태</div>
-
                             <div class="store-detail-value">
                                 <div id="status-view-area">
                                     <span id="modal-store-status"></span>
-                                    <button type="button" onclick="startEditStatus()">변경</button>
+                                    <button type="button" class="inline-edit-btn" onclick="startEditStatus()">변경</button>
                                 </div>
 
-                                <div id="status-edit-area" style="display:none;">
+                                <div id="status-edit-area" class="inline-edit-area">
                                     <select id="status-select">
                                         <option value="1">운영</option>
                                         <option value="2">휴업</option>
                                         <option value="3">폐업</option>
                                     </select>
-                                    <button type="button" onclick="saveStatus()">V</button>
-                                    <button type="button" onclick="cancelEditStatus()">X</button>
+                                    <button type="button" class="inline-save-btn" onclick="saveStatus()">V</button>
+                                    <button type="button" class="inline-cancel-btn" onclick="cancelEditStatus()">X</button>
                                 </div>
                             </div>
                         </div>
@@ -190,10 +184,10 @@
                             <div class="store-detail-value" id="modal-created-at"></div>
                         </div>
 
-                        <hr>
+                        <hr class="store-divider">
 
-                        <h3>상세위치</h3>
-                        <div id="store-map" style="width:100%; height:260px; border-radius:12px;"></div>
+                        <h3 class="store-map-title">상세위치</h3>
+                        <div id="store-map"></div>
                     </div>
 
                     <div class="store-modal-footer">
@@ -202,8 +196,8 @@
                 </div>
             </div>
 
-            <!-- 매장등록 모달 -->
-            <div id="store-insert-modal-wrap" class="store-modal-wrap" style="display:none;">
+            <!-- 등록 모달 -->
+            <div id="store-insert-modal-wrap" class="store-modal-wrap">
                 <div class="store-modal" onclick="event.stopPropagation()">
                     <div class="store-modal-header">
                         <h2>매장등록</h2>
@@ -227,16 +221,16 @@
 
                         <div class="store-detail-row">
                             <div class="store-detail-label">매장위치</div>
-                            <div class="store-detail-value">
+                            <div class="store-detail-value insert-address-row">
                                 <input type="text" id="insert-store-address" readonly placeholder="주소검색 버튼을 눌러주세요">
-                                <button type="button" onclick="searchInsertAddress()">주소검색</button>
+                                <button type="button" class="inline-search-btn" onclick="searchInsertAddress()">주소검색</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="store-modal-footer">
                         <button type="button" class="modal-btn" onclick="insertStore()">등록</button>
-                        <button type="button" class="modal-btn" onclick="closeInsertStoreModal()">닫기</button>
+                        <button type="button" class="modal-btn modal-btn-secondary" onclick="closeInsertStoreModal()">닫기</button>
                     </div>
                 </div>
             </div>
