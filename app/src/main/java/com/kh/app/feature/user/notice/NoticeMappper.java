@@ -1,9 +1,7 @@
 package com.kh.app.feature.user.notice;
 
 import com.kh.app.feature.util.PageVo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -26,6 +24,7 @@ public interface NoticeMappper {
                 )
             """)
     int insert(NoticeVo vo);
+
 
     @Select("""
                 SELECT COUNT(*)
@@ -53,6 +52,34 @@ public interface NoticeMappper {
     List<NoticeVo> selectList(PageVo pvo);
 
 
+    @Update("""
+                UPDATE NOTICE
+                SET
+                    HIT = HIT + 1
+                WHERE NOTICE_NO = #{noticeNo}
+                AND DEL_YN = 'N'
+            """)
+    int increaseHit(String noticeNo);
+
+    @Select("""
+        SELECT
+            N.NOTICE_NO
+            ,N.WRITER_NO
+            ,M.EMP_NAME AS WRITER_NAME
+            ,N.TITLE
+            ,N.CONTENT
+            ,N.HIT
+            ,N.CREATED_AT
+            ,N.UPDATED_AT
+            ,N.DEL_YN
+        FROM NOTICE N
+        JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
+        WHERE N.NOTICE_NO = #{noticeNo}
+        AND N.DEL_YN = 'N'
+        """)
+    NoticeVo selectOne(@Param("noticeNo") String noticeNo);
+
+
     @Insert("""
             INSERT INTO NOTICE_FILE
                 (
@@ -73,5 +100,47 @@ public interface NoticeMappper {
             """)
     void insertFile(NoticeFileVo fvo);
 
+    @Update("""
+                UPDATE NOTICE
+                SET
+                    TITLE = #{title}
+                    , CONTENT = #{content}
+                    , UPDATED_AT = SYSDATE
+                WHERE NOTICE_NO = #{noticeNo}
+                AND WRITER_NO = #{writerNo}
+                AND DEL_YN = 'N'
+            """)
+    int updateByNo(NoticeVo vo);
+
+    @Update("""
+                UPDATE NOTICE_FILE
+                SET DEL_YN = 'Y'
+                WHERE NOTICE_NO = #{noticeNo}
+            """)
+    int deleteFile(String noticeNo);
+
+
+
+    @Update("""
+            UPDATE NOTICE
+            SET DEL_YN = 'Y'
+            WHERE NOTICE_NO = #{noticeNo}
+            AND WRITER_NO = #{writerNo}
+            """)
+    int deleteNotice(NoticeVo vo);
+
+
+    @Select("""
+        SELECT
+            FILE_NO
+            ,NOTICE_NO
+            ,ORIGIN_NAME
+            ,CHANGE_NAME
+            ,FILE_PATH
+        FROM NOTICE_FILE
+        WHERE NOTICE_NO = #{noticeNo}
+        AND DEL_YN = 'N'
+        """)
+    List<NoticeFileVo> selectFileListByNoticeNo(String noticeNo);
 
 }
