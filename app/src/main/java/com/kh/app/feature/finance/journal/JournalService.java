@@ -84,4 +84,12 @@ public class JournalService {
     public List<JournalVo> dailyList(String journalDate) {
         return journalMapper.dailyList(journalDate);
     }
+
+    public List<JournalVo> journalState(String journalDate) {
+        return journalMapper.journalState(journalDate);
+    }
+
+    public List<JournalVo> incomeState(String journalDate) {
+        return journalMapper.incomeState(journalDate);
+    }
 }

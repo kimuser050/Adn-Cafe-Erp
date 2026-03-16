@@ -127,4 +127,41 @@ public interface JournalMapper {
             ORDER BY A.ACCOUNT_NO ASC NULLS LAST
             """)
     List<JournalVo> dailyList(String journalDate);
+
+    @Select("""
+            SELECT
+                M.NAME AS mainAccountName
+                ,S.NAME AS subAccountName
+                ,A.ACCOUNT_NO AS accountNo
+                ,A.ACCOUNT_NAME AS accountName
+                ,SUM(NVL(J.CREDIT,0)) AS credit
+                ,SUM(NVL(J.DEBIT,0)) AS debit
+            FROM ACCOUNT A
+            JOIN JOURNAL J ON A.ACCOUNT_NO = J.ACCOUNT_NO
+            JOIN MAIN_ACCOUNT M ON M.MAIN_ACCOUNT_NO = A.MAIN_ACCOUNT_NO
+            LEFT JOIN SUB_ACCOUNT S ON S.SUB_ACCOUNT_NO = A.SUB_ACCOUNT_NO
+            WHERE J.JOURNAL_DATE <= TO_DATE(#{journalDate}, 'YYYY-MM-DD')
+            GROUP BY M.NAME, S.NAME, A.ACCOUNT_NO, A.ACCOUNT_NAME
+            ORDER BY A.ACCOUNT_NO
+            """)
+    List<JournalVo> journalState(String journalDate);
+
+
+    @Select("""
+            SELECT
+                A.ACCOUNT_NAME AS accountName
+                ,SUM(CASE WHEN TO_CHAR(J.JOURNAL_DATE,'YYYY-MM') = #{journalDate}
+                THEN (NVL(J.CREDIT,0)-NVL(J.DEBIT,0)) ELSE 0 END) AS thisMonth
+                ,SUM(CASE WHEN TO_CHAR(J.JOURNAL_DATE,'YYYY-MM') = TO_CHAR(ADD_MONTHS(TO_DATE(#{journalDate}, 'YYYY-MM'),-1),'YYYY-MM')
+                THEN (NVL(J.CREDIT,0)-NVL(J.DEBIT,0)) ELSE 0 END) AS preMonth
+            FROM ACCOUNT A
+            JOIN JOURNAL J ON A.ACCOUNT_NO = J.ACCOUNT_NO
+            JOIN MAIN_ACCOUNT M ON M.MAIN_ACCOUNT_NO = A.MAIN_ACCOUNT_NO
+            WHERE M.MAIN_ACCOUNT_NO IN (4000,5000)
+            AND J.JOURNAL_DATE >= ADD_MONTHS(TO_DATE(#{journalDate}, 'YYYY-MM'),-1)
+            AND J.JOURNAL_DATE < ADD_MONTHS(TO_DATE(#{journalDate}, 'YYYY-MM'),1)
+            GROUP BY A.ACCOUNT_NO, A.ACCOUNT_NAME
+            ORDER BY A.ACCOUNT_NO
+            """)
+    List<JournalVo> incomeState(String journalDate);
 }

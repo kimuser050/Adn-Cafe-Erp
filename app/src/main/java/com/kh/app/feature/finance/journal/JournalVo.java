@@ -7,6 +7,8 @@ public class JournalVo {
 
     private String no;
     private String journalNo;
+    private String mainAccountNo;
+    private String subAccountNo;
     private String accountNo;
     private String accountName;
     private String journalDate;
@@ -15,4 +17,6 @@ public class JournalVo {
     private String writerNo;
     private String createdAt;
     private String isDeleted;
+    private long thisMonth;
+    private long preMonth;
 }
