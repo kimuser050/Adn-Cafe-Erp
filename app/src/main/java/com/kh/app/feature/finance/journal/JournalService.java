@@ -72,4 +72,8 @@ public class JournalService {
     public List<AccountVo> getAccountList() {
         return journalMapper.getAccountList();
     }
+
+    public List<JournalVo> totalList(String accountNo) {
+        return journalMapper.totalList(accountNo);
+    }
 }

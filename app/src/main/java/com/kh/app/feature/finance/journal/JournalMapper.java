@@ -87,4 +87,17 @@ public interface JournalMapper {
             ORDER BY ACCOUNT_NO ASC
             """)
     List<AccountVo> getAccountList();
+
+    @Select("""
+            SELECT
+                A.ACCOUNT_NAME
+                ,TO_CHAR(J.JOURNAL_DATE, 'YY/MM/DD') AS journalDate
+                ,J.CREDIT
+                ,J.DEBIT
+            FROM JOURNAL J
+            JOIN ACCOUNT A ON J.ACCOUNT_NO = A.ACCOUNT_NO
+            WHERE J.ACCOUNT_NO = #{accountNo}
+            ORDER BY J.JOURNAL_DATE DESC
+            """)
+    List<JournalVo> totalList(String accountNo);
 }
