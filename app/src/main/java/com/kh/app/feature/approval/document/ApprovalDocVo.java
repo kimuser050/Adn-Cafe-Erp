@@ -18,8 +18,15 @@ public class ApprovalDocVo {
     private String approverComment;
     private String updatedAt;
     private String delYn;
+    // 조회 전용 필드
     private String workDate;
     private String workHour;
     private String startDate;
     private String endDate;
+    private String categoryName;
+    private String writerName;
+    private String approverName;
+    private String referenceDept;
+    private String writerDept;
+    private String statusName;
 }
