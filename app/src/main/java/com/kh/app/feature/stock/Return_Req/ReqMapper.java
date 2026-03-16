@@ -1,5 +1,6 @@
-package com.kh.app.feature.stock.request;
+package com.kh.app.feature.stock.Return_Req;
 
+import lombok.Data;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -39,4 +40,15 @@ public interface ReqMapper {
     ORDER BY RETURN_NO DESC
     """)
     List<ReqVo> list(ReqVo vo);
+
+    @Data
+    class ReqVo {
+        private String returnNo;
+        private String productName;
+        private String quantity;
+        private String reason;
+        private String status;
+        private String createdAt;
+        private String storeCode;
+    }
 }

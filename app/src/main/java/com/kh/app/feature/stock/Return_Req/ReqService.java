@@ -1,4 +1,4 @@
-package com.kh.app.feature.stock.request;
+package com.kh.app.feature.stock.Return_Req;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +15,11 @@ public class ReqService {
 
     private final ReqMapper reqMapper;
 
-    public int reqinsert(ReqVo vo) {
+    public int reqinsert(ReqMapper.ReqVo vo) {
         return reqMapper.reqinsert(vo);
     }
     @Transactional
-    public List<ReqVo> list(ReqVo vo) {
+    public List<ReqMapper.ReqVo> list(ReqMapper.ReqVo vo) {
         return reqMapper.list(vo);
     }
 }
