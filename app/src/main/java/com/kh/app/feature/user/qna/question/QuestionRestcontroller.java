@@ -6,12 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -29,11 +28,17 @@ public class QuestionRestcontroller {
     private int boardLimit;
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> insert(@RequestBody QuestionVo vo, HttpSession session) {
+    public ResponseEntity<Map<String, String>> insert(
+            QuestionVo vo,
+            @RequestParam(value = "file", required = false) List<MultipartFile> fileList,
+            HttpSession session
+    ) {
+
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
         String loginMemberNo = loginMemberVo.getEmpNo();
         vo.setWriterNo(loginMemberNo);
-        int result = questionService.insert(vo);
+
+        int result = questionService.insert(vo, fileList);
 
         if (result != 1) {
             String errMsg = "[B-100] insert err...";
@@ -42,8 +47,9 @@ public class QuestionRestcontroller {
         }
 
         Map<String, String> map = new HashMap<>();
-        map.put("result", result + "");
+        map.put("result", String.valueOf(result));
         return ResponseEntity.ok(map);
     }
+
 
 }

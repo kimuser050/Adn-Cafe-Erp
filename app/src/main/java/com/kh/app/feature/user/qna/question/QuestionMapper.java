@@ -24,4 +24,23 @@ public interface QuestionMapper {
             
             """)
     int insert(QuestionVo vo);
+
+
+    @Insert("""
+        INSERT INTO QNA_QUESTION_FILE
+        (
+            INQUIRY_NO,
+            ORIGIN_NAME,
+            CHANGE_NAME,
+            FILE_PATH
+        )
+        VALUES
+        (
+            SEQ_QNA_QUESTION.CURRVAL,
+            #{originName},
+            #{changeName},
+            #{filePath}
+        )
+        """)
+    int insertFile(QuestionFileVo vo);
 }
