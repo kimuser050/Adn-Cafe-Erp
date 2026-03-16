@@ -5,10 +5,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>결재문서 작성</title>
+    <title>부서관리</title>
 
-    <script defer src="/js/approval/write.js"></script>
-    <link rel="stylesheet" href="/css/approval/write.css">
+    <script defer src="/js/approval/approvalDocList.js"></script>
+    <link rel="stylesheet" href="/css/approval/approvalDocList.css">
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
@@ -21,7 +21,7 @@
 
     <main class="page-shell">
         <section class="page-content">
-            <div></div>
+            <!-- 여기부터 부서관리 내용 -->
         </section>
     </main>
 </div>

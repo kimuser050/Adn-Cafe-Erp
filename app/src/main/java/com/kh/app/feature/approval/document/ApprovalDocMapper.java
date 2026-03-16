@@ -6,6 +6,10 @@ import java.util.List;
 
 @Mapper
 public interface ApprovalDocMapper {
+
+    @Select("SELECT SEQ_APPROVAL_DOC.NEXTVAL FROM DUAL")
+    String getDocNo();
+
     @Insert("""
          INSERT INTO APPROVAL_DOC
              (
@@ -65,42 +69,68 @@ public interface ApprovalDocMapper {
     int insertOvertimeDoc(ApprovalDocVo vo);
     @Select("""
         SELECT
-            DOC_NO
-            , CATEGORY_NO
-            , WRITER_NO
-            , DEPT_CODE
-            , TITLE
-            , REASON
-            , CONTENT
-            , APPROVER_NO
-            , STATUS_CODE
-            , SUBMITTED_AT
-            , ACTED_AT
-        FROM APPROVAL_DOC
-        WHERE DEL_YN = 'N'
-        AND WRITER_NO = #{writerNo}
-        ORDER BY DOC_NO DESC     
+           A.DOC_NO
+           , C.CATEGORY_NAME
+           , MW.EMP_NAME AS WRITER_NAME
+           , WD.DEPT_NAME AS WRITER_DEPT
+           , RD.DEPT_NAME AS REFERENCE_DEPT
+           , A.TITLE
+           , A.REASON
+           , A.CONTENT
+           , MA.EMP_NAME AS APPROVER_NAME
+           , A.STATUS_CODE AS STATUS_CODE
+           , DS.STATUS_NAME AS STATUS_NAME
+           , A.SUBMITTED_AT
+           , A.ACTED_AT
+           , V.START_DATE
+           , V.END_DATE
+           , O.WORK_DATE
+           , O.WORK_HOUR
+        FROM APPROVAL_DOC A 
+        LEFT JOIN VACATION_DOC V ON (V.DOC_NO = A.DOC_NO)
+        LEFT JOIN OVERTIME_DOC O ON (O.DOC_NO = A.DOC_NO)
+        LEFT JOIN APPROVAL_CATEGORY C ON (A.CATEGORY_NO = C.CATEGORY_NO)
+        LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
+        LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
+        LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
+        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
+        LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
+        WHERE A.DEL_YN = 'N'
+        ORDER BY A.DOC_NO DESC     
     
     """)
     List<ApprovalDocVo> selectMyDocumentList(ApprovalDocVo vo);
 
     @Select("""
         SELECT
-            DOC_NO
-            , CATEGORY_NO
-            , WRITER_NO
-            , DEPT_CODE
-            , TITLE
-            , REASON
-            , CONTENT
-            , APPROVER_NO
-            , STATUS_CODE
-            , SUBMITTED_AT
-            , ACTED_AT
-        FROM APPROVAL_DOC
-        WHERE DEL_YN = 'N'
-        AND APPROVER_NO = #{approverNo}
-        ORDER BY DOC_NO DESC     
+            A.DOC_NO
+            , C.CATEGORY_NAME
+            , MW.EMP_NAME AS WRITER_NAME
+            , WD.DEPT_NAME AS WRITER_DEPT
+            , RD.DEPT_NAME AS REFERENCE_DEPT
+            , A.TITLE
+            , A.REASON
+            , A.CONTENT
+            , MA.EMP_NAME AS APPROVER_NAME
+            , A.STATUS_CODE AS STATUS_CODE
+            , DS.STATUS_NAME AS STATUS_NAME
+            , A.SUBMITTED_AT
+            , A.ACTED_AT
+            , V.START_DATE
+            , V.END_DATE
+            , O.WORK_DATE
+            , O.WORK_HOUR
+        FROM APPROVAL_DOC A 
+        LEFT JOIN VACATION_DOC V ON (V.DOC_NO = A.DOC_NO)
+        LEFT JOIN OVERTIME_DOC O ON (O.DOC_NO = A.DOC_NO)
+        LEFT JOIN APPROVAL_CATEGORY C ON (A.CATEGORY_NO = C.CATEGORY_NO)
+        LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
+        LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
+        LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
+        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
+        LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
+        WHERE A.DEL_YN = 'N'
+        ORDER BY A.DOC_NO DESC     
     
     """)
     List<ApprovalDocVo> selectApproverDocList(ApprovalDocVo vo);
@@ -108,32 +138,37 @@ public interface ApprovalDocMapper {
     @Select("""
         SELECT
             A.DOC_NO
-            ,A.CATEGORY_NO
-            , A.WRITER_NO
-            , A.DEPT_CODE
+            , C.CATEGORY_NAME
+            , MW.EMP_NAME AS WRITER_NAME
+            , WD.DEPT_NAME AS WRITER_DEPT
+            , RD.DEPT_NAME AS REFERENCE_DEPT
             , A.TITLE
             , A.REASON
             , A.CONTENT
-            , A.APPROVER_NO
-            , A.STATUS_CODE
+            , MA.EMP_NAME AS APPROVER_NAME
+            , DS.STATUS_NAME
             , A.SUBMITTED_AT
             , A.ACTED_AT
             , V.START_DATE
             , V.END_DATE
             , O.WORK_DATE
             , O.WORK_HOUR
-        FROM APPROVAL_DOC A  
+        FROM APPROVAL_DOC A 
         LEFT JOIN VACATION_DOC V ON (V.DOC_NO = A.DOC_NO)
         LEFT JOIN OVERTIME_DOC O ON (O.DOC_NO = A.DOC_NO)
-        WHERE A.DOC_NO = #{docNo} 
-        AND A.DEL_YN = 'N'
-    
+        LEFT JOIN APPROVAL_CATEGORY C ON (A.CATEGORY_NO = C.CATEGORY_NO)
+        LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
+        LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
+        LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
+        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
+        LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
+        WHERE A.DEL_YN = 'N'
+        AND A.DOC_NO = #{docNo}
+        ORDER BY A.DOC_NO DESC
     """)
     ApprovalDocVo selectOne(String docNo);
 
 
-    @Select("SELECT SEQ_APPROVAL_DOC.NEXTVAL FROM DUAL")
-    String getDocNo();
 
     @Update("""
         UPDATE APPROVAL_DOC
