@@ -132,5 +132,29 @@ public class AnswerService {
         return result;
     }
 
+    @Transactional
+    public int deleteByNo(AnswerVo vo) {
+
+        // 1. 첨부파일 조회
+        var fileList = answerMapper.selectFileList(vo.getReplyNo());
+
+        // 2. 답변 삭제 (DB DEL_YN = 'Y')
+        int result = answerMapper.deleteByNo(vo);
+        if(result != 1){
+            throw new IllegalStateException("[B-510] 답변 삭제 실패");
+        }
+
+        // 3. 첨부파일 삭제 (DB DEL_YN = 'Y') 및 서버 파일 삭제
+        for(var fvo : fileList){
+            answerMapper.deleteFile(fvo.getFileNo());
+            if(fvo.getChangeName() != null && !fvo.getChangeName().isEmpty()){
+                File file = new File(uploadPath, fvo.getChangeName());
+                if(file.exists()) file.delete();
+            }
+        }
+
+        return result;
+    }
+
 
 }

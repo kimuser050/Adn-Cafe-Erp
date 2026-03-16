@@ -136,5 +136,15 @@ public interface AnswerMapper {
     """)
     int deleteFile(String replyNo);
 
+    // 답변 삭제
+    @Update("""
+        UPDATE QNA_ANSWER
+        SET DEL_YN = 'Y'
+        WHERE REPLY_NO = #{replyNo}
+          AND WRITER_NO = #{writerNo}
+          AND DEL_YN = 'N'
+    """)
+    int deleteByNo(AnswerVo vo);
+
 }
 
