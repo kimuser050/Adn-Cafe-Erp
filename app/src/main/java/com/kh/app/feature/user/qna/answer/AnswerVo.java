@@ -2,6 +2,8 @@ package com.kh.app.feature.user.qna.answer;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class AnswerVo {
 
@@ -15,6 +17,7 @@ public class AnswerVo {
     private String responseAt;
     private String updatedAt;
     private String delYn;
+    private List<AnswerFileVo> fileList;
 
 }
 

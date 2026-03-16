@@ -81,5 +81,16 @@ public class AnswerService {
 
     }
 
+    public AnswerVo selectOne(String no) {
+
+        AnswerVo vo = answerMapper.selectOne(no);
+
+        List<AnswerFileVo> fileList = answerMapper.selectFileList(no);
+
+        vo.setFileList(fileList);
+
+        return vo;
+    }
+
 
 }
