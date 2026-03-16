@@ -2,6 +2,8 @@ package com.kh.app.feature.user.qna.question;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class QuestionVo {
 
@@ -17,4 +19,6 @@ public class QuestionVo {
     private String answerYn;
 
 
+    public void setFileList(List<QuestionFileVo> fileList) {
+    }
 }

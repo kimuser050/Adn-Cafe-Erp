@@ -1,6 +1,7 @@
 package com.kh.app.feature.user.qna.question;
 
 import com.kh.app.feature.util.FileUploader;
+import com.kh.app.feature.util.PageVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,5 +66,27 @@ public class QuestionService {
         }
 
         return result;
+    }
+
+    public int selectCount() {
+        return questionMapper.selectCount();
+    }
+
+
+    public List<QuestionVo> selectList(PageVo pvo) {
+
+        return questionMapper.selectList(pvo);
+
+    }
+
+    public QuestionVo selectOne(String no) {
+
+        QuestionVo vo = questionMapper.selectOne(no);
+
+        List<QuestionFileVo> fileList = questionMapper.selectFileList(no);
+
+        vo.setFileList(fileList);
+
+        return vo;
     }
 }
