@@ -92,4 +92,9 @@ public class JournalRestController {
 
         return journalService.getAccountList();
     }
+
+    @GetMapping("/{accountNo}")
+    public List<JournalVo> totalList(@PathVariable("accountNo") String accountNo){
+        return journalService.totalList(accountNo);
+    }
 }
