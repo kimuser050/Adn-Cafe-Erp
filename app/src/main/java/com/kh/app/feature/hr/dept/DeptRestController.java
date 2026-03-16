@@ -1,5 +1,6 @@
 package com.kh.app.feature.hr.dept;
 
+import com.kh.app.feature.hr.position.PosVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,27 @@ public class DeptRestController {
 
         return ResponseEntity.ok(map);
     }
+
+    @GetMapping("/search/name")
+    public ResponseEntity<Map<String, Object>> selectListByName(@RequestParam String keyword) {
+        List<DeptVo> voList = deptService.selectListByName(keyword);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/search/useYn")
+    public ResponseEntity<Map<String, Object>> selectListByUseYn(@RequestParam String useYn) {
+        List<DeptVo> voList = deptService.selectListByUseYn(useYn);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
+
+        return ResponseEntity.ok(map);
+    }
+
 
     // 2. 부서 상세조회 하기
     @GetMapping("/{deptCode}")

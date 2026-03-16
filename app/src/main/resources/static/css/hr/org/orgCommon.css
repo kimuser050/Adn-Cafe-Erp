@@ -1,0 +1,351 @@
+/* =========================================================
+   인적자원 > 조직관리 공통 스타일
+   - 부서관리 / 매장관리 / 직급관리 공통 UI
+   - 페이지별 CSS에서는 여기 없는 특수기능만 추가
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. 페이지 배경/여백
+   사용법:
+   section 태그에 org-page 클래스 추가
+   --------------------------------------------------------- */
+.org-page {
+    min-height: 100%;
+    padding: 26px 34px;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, #bcae8e 0%, #c8bba0 35%, #d9d4cb 100%);
+}
+
+/* ---------------------------------------------------------
+   2. 상단 탭
+   사용법:
+   .org-tab-area > .tab-btn
+   현재 페이지는 .active 추가
+   --------------------------------------------------------- */
+.org-tab-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.tab-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    background-color: #f6f3ee;
+    color: #6a4b32;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.tab-btn.active {
+    background-color: #b88d68;
+    color: #fff;
+}
+
+/* ---------------------------------------------------------
+   3. 요약 카드
+   --------------------------------------------------------- */
+.org-summary-area {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.summary-card {
+    width: 116px;
+    min-height: 84px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.summary-title {
+    font-size: 12px;
+    color: #705843;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.summary-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #2e2118;
+    border-left: 4px solid #7b5538;
+    padding-left: 10px;
+    line-height: 1;
+}
+
+/* ---------------------------------------------------------
+   4. 목록 패널 / 툴바
+   --------------------------------------------------------- */
+.org-table-card {
+    margin-top: 10px;
+    padding: 16px 18px 18px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.org-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 12px;
+}
+
+.toolbar-left {
+    min-width: 0;
+}
+
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+
+.toolbar-right .form-select {
+    height: 34px;
+    border-radius: 18px;
+    font-size: 12px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background-color: #fff;
+    overflow: hidden;
+    padding-left: 12px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 150px;
+    font-size: 12px;
+    color: #4b3c31;
+    background: transparent;
+}
+
+.search-btn {
+    border: none;
+    background: transparent;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    color: #87674e;
+    font-size: 14px;
+}
+
+/* ---------------------------------------------------------
+   5. 조직관리 공통 테이블
+   사용법:
+   table 클래스에 org-table 추가
+   --------------------------------------------------------- */
+.org-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.org-table thead th {
+    background-color: #d2a980;
+    color: #4b3728;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 14px 10px;
+    text-align: center;
+}
+
+.org-table thead th:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.org-table thead th:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.org-table tbody td {
+    padding: 13px 10px;
+    text-align: center;
+    font-size: 12px;
+    color: #57493d;
+    border-bottom: 1px solid #f0ece7;
+    vertical-align: middle;
+}
+
+.org-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.empty-row td {
+    padding: 40px 0;
+    color: #9a8b7e;
+    font-size: 13px;
+}
+
+/* ---------------------------------------------------------
+   6. 하단 영역 / 페이지네이션 / 등록버튼
+   --------------------------------------------------------- */
+.org-bottom-area {
+    position: relative;
+    margin-top: 16px;
+    min-height: 40px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.page-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    color: #4d3a2f;
+}
+
+.page-btn.active {
+    background-color: #d2a980;
+    color: #fff;
+    font-weight: 700;
+}
+
+.register-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+/* ---------------------------------------------------------
+   7. 공통 모달
+   사용법:
+   .org-modal-wrap > .org-modal
+   --------------------------------------------------------- */
+.org-modal-wrap {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.org-modal {
+    width: 600px;
+    max-width: 90%;
+    background-color: #fff;
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.org-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.org-modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #4b3728;
+}
+
+.modal-close-btn {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    color: #7a614d;
+}
+
+.org-modal-body {
+    padding: 24px;
+}
+
+.org-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 24px 20px;
+}
+
+/* ---------------------------------------------------------
+   8. 상세 조회 행
+   --------------------------------------------------------- */
+.org-detail-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    gap: 20px;
+}
+
+.org-detail-label {
+    width: 100px;
+    font-weight: 700;
+    color: #5d4735;
+    flex-shrink: 0;
+}
+
+.org-detail-value {
+    flex: 1;
+    color: #333;
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+.org-divider {
+    border: none;
+    border-top: 1px solid #ddd6cf;
+    margin: 20px 0 14px;
+}
+
+/* ---------------------------------------------------------
+   9. 인라인 수정 공통
+   --------------------------------------------------------- */
+
+.inline-edit-area {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.inline-edit-area .form-input,
+.inline-edit-area .form-select {
+    min-width: 140px;
+}
+
+.address-input {
+    width: 260px;
+}
+
+.insert-address-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}

@@ -1,5 +1,6 @@
 package com.kh.app.feature.hr.dept;
 
+import com.kh.app.feature.hr.position.PosVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,14 @@ public class DeptService {
     //1. 부서 전체 조회하기
     public List<DeptVo> selectList() {
         return deptMapper.selectList();
+    }
+
+    public List<DeptVo> selectListByName(String keyword) {
+        return deptMapper.selectListByName(keyword);
+    }
+
+    public List<DeptVo> selectListByUseYn(String useYn) {
+        return deptMapper.selectListByUseYn(useYn);
     }
 
     //2. 부서 상세 조회하기

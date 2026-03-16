@@ -1,5 +1,6 @@
 package com.kh.app.feature.hr.dept;
 
+import com.kh.app.feature.hr.position.PosVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -40,6 +41,44 @@ public interface DeptMapper {
             ORDER BY D.CREATED_AT ASC
     """)
     List<DeptVo> selectList();
+
+    @Select("""
+        SELECT
+            D.DEPT_CODE
+                , D.DEPT_NAME
+                , D.DEPT_ADDRESS
+                , D.MANAGER_EMP_NO
+                , M.EMP_NAME AS MANAGER_NAME
+                , D.USE_YN
+                , TO_CHAR(D.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+                , TO_CHAR(D.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+        FROM DEPT D
+        LEFT JOIN MEMBER M
+        ON D.MANAGER_EMP_NO = M.EMP_NO
+        WHERE DEPT_NAME LIKE '%' || #{keyword} || '%'
+        ORDER BY D.CREATED_AT ASC
+        """)
+    List<DeptVo> selectListByName(String keyword);
+
+    @Select("""
+        SELECT
+           D.DEPT_CODE
+                , D.DEPT_NAME
+                , D.DEPT_ADDRESS
+                , D.MANAGER_EMP_NO
+                , M.EMP_NAME AS MANAGER_NAME
+                , D.USE_YN
+                , TO_CHAR(D.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+                , TO_CHAR(D.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+        FROM DEPT D
+        LEFT JOIN MEMBER M
+        ON D.MANAGER_EMP_NO = M.EMP_NO
+        WHERE D.USE_YN = #{useYn}
+        ORDER BY D.CREATED_AT ASC
+        """)
+    List<DeptVo> selectListByUseYn(String useYn);
+
+
 
     //2. 부서 상세조회하기 (MEMBER 랑 DEPT JOIN했음)
     @Select("""

@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>부서관리</title>
+    <title>직원관리</title>
 
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
@@ -19,7 +19,7 @@
 <body>
 
 <div class="app-shell">
-    <%@ include file="/WEB-INF/views/hr/common/orgSidebar.jsp" %>
+    <%@ include file="/WEB-INF/views/hr/common/empSidebar.jsp" %>
 
     <main class="page-shell">
         <section class="page-content org-page dept-page">

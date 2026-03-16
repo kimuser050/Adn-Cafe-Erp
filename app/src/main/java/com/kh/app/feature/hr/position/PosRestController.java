@@ -42,6 +42,26 @@ public class PosRestController {
         return ResponseEntity.ok(map);
     }
 
+    @GetMapping("/search/name")
+    public ResponseEntity<Map<String, Object>> selectListByName(@RequestParam String keyword) {
+        List<PosVo> voList = posService.selectListByName(keyword);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/search/useYn")
+    public ResponseEntity<Map<String, Object>> selectListByUseYn(@RequestParam String useYn) {
+        List<PosVo> voList = posService.selectListByUseYn(useYn);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
+
+        return ResponseEntity.ok(map);
+    }
+
     @GetMapping("/{posCode}")
     public ResponseEntity<Map<String, Object>> selectDetail(@PathVariable String posCode) {
         PosVo vo = posService.selectDetail(posCode);
