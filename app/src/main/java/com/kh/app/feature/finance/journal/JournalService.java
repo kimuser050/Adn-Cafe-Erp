@@ -76,4 +76,8 @@ public class JournalService {
     public List<JournalVo> totalList(String accountNo) {
         return journalMapper.totalList(accountNo);
     }
+
+    public List<JournalVo> monthList(String journalDate) {
+        return journalMapper.monthList(journalDate);
+    }
 }
