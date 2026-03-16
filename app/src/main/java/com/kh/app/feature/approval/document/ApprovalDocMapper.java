@@ -78,10 +78,32 @@ public interface ApprovalDocMapper {
             , ACTED_AT
         FROM APPROVAL_DOC
         WHERE DEL_YN = 'N'
+        AND WRITER_NO = #{writerNo}
         ORDER BY DOC_NO DESC     
     
     """)
-    List<ApprovalDocVo> selectDocList(ApprovalDocVo vo);
+    List<ApprovalDocVo> selectMyDocumentList(ApprovalDocVo vo);
+
+    @Select("""
+        SELECT
+            DOC_NO
+            , CATEGORY_NO
+            , WRITER_NO
+            , DEPT_CODE
+            , TITLE
+            , REASON
+            , CONTENT
+            , APPROVER_NO
+            , STATUS_CODE
+            , SUBMITTED_AT
+            , ACTED_AT
+        FROM APPROVAL_DOC
+        WHERE DEL_YN = 'N'
+        AND APPROVER_NO = #{approverNo}
+        ORDER BY DOC_NO DESC     
+    
+    """)
+    List<ApprovalDocVo> selectApproverDocList(ApprovalDocVo vo);
 
     @Select("""
         SELECT
@@ -112,4 +134,51 @@ public interface ApprovalDocMapper {
 
     @Select("SELECT SEQ_APPROVAL_DOC.NEXTVAL FROM DUAL")
     String getDocNo();
+
+    @Update("""
+        UPDATE APPROVAL_DOC
+            SET
+                DEPT_CODE = #{deptCode}
+                , TITLE = #{title}
+                , REASON = #{reason}
+                , CONTENT = #{content}
+                , APPROVER_NO = #{approverNo}
+                , SUBMITTED_AT = SYSDATE
+            WHERE STATUS_CODE = 1
+            AND WRITER_NO = #{writerNo}
+            AND DEL_YN = 'N'
+                
+    """)
+    int editDocument(ApprovalDocVo vo);
+
+    @Update("""
+        UPDATE APPROVAL_DOC
+            SET
+                STATUS_CODE = #{statusCode}
+                ,ACTED_AT = SYSDATE
+                ,APPROVER_COMMENT = #{approverComment}
+            WHERE DOC_NO = #{docNo}
+            AND APPROVER_NO = #{approverNo}
+            AND DEL_YN = 'N'
+    """)
+    int processApproval(ApprovalDocVo vo);
+
+    @Delete("""
+        DELETE FROM APPROVAL_DOC
+        WHERE WRITER_NO = #{writerNo}
+        AND DOC_NO = #{docNo}
+    """)
+    int deleteDoc(ApprovalDocVo vo);
+
+    @Delete("""
+        DELETE FROM VACATION_DOC
+        WHERE DOC_NO = #{docNo}
+    """)
+    int deleteVacationDoc(String docNo);
+
+    @Delete("""
+        DELETE FROM OVERTIME_DOC
+        WHERE DOC_NO = #{docNo}
+    """)
+    int deleteOvertimeDoc(String docNo);
 }

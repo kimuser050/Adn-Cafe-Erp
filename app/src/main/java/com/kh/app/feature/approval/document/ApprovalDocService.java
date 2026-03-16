@@ -43,15 +43,43 @@ public class ApprovalDocService {
         return 1;
     }
 
-    public List<ApprovalDocVo> selectDocList(ApprovalDocVo vo) {
-        return approvalDocMapper.selectDocList(vo);
+    public List<ApprovalDocVo> selectMyDocumentList(ApprovalDocVo vo) {
+        return approvalDocMapper.selectMyDocumentList(vo);
+    }
+
+    public List<ApprovalDocVo> selectApproverDocList(ApprovalDocVo vo) {
+        return approvalDocMapper.selectApproverDocList(vo);
     }
 
     public ApprovalDocVo selectOne(String docNo) {
         return approvalDocMapper.selectOne(docNo);
     }
 
-    public int updateByNo(ApprovalDocVo vo) {
-        return approvalDocMapper.updateByNo(vo);
+    @Transactional
+    public int editDocument(ApprovalDocVo vo) {
+        if ("1".equals(vo.getStatusCode())){
+            int result = approvalDocMapper.editDocument(vo);
+            if(result != 1){
+                throw new IllegalStateException("문서 수정 실패");
+            }
+        }
+        return 1;
+    }
+    @Transactional
+    public int processApproval(ApprovalDocVo vo) {
+        return approvalDocMapper.processApproval(vo);
+    }
+
+    @Transactional
+    public int deleteDoc(ApprovalDocVo vo) {
+
+        approvalDocMapper.deleteVacationDoc(vo.getDocNo());
+        approvalDocMapper.deleteOvertimeDoc(vo.getDocNo());
+
+        int result = approvalDocMapper.deleteDoc(vo);
+        if (result != 1) {
+            throw new IllegalStateException("delete document error");
+        }
+        return result;
     }
 }
