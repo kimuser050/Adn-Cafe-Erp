@@ -1,6 +1,7 @@
 package com.kh.app.feature.user.qna.question;
 
 import com.kh.app.feature.user.member.MemberVo;
+import com.kh.app.feature.util.PageVo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,20 @@ public class QuestionRestcontroller {
 
         Map<String, String> map = new HashMap<>();
         map.put("result", String.valueOf(result));
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1") int currentPage) {
+        int listCount = questionService.selectCount();
+        int pageLimit = this.pageLimit;
+        int boardLimit = this.boardLimit;
+
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+        List<QuestionVo> voList = questionService.selectList(pvo);
+        Map<String, Object> map = new HashMap<>();
+        map.put("pvo", pvo);
+        map.put("voList", voList);
         return ResponseEntity.ok(map);
     }
 
