@@ -81,5 +81,41 @@ public interface AnswerMapper {
     OFFSET #{offset} ROWS FETCH NEXT #{boardLimit} ROWS ONLY
 """)
     List<AnswerVo> selectList(PageVo pvo);
+
+    @Select("""
+        SELECT
+            A.INQUIRY_NO,
+            Q.TITLE AS questionTitle,
+            QM.EMP_NAME AS questionWriterName,
+            A.WRITER_NO,
+            AM.EMP_NAME AS writerName,
+            A.RESPONSE,
+            A.RESPONSE_AT,
+            A.UPDATED_AT,
+            A.DEL_YN
+        FROM QNA_ANSWER A
+        JOIN QNA_QUESTION Q ON A.INQUIRY_NO = Q.INQUIRY_NO
+        JOIN MEMBER QM ON Q.WRITER_NO = QM.EMP_NO
+        JOIN MEMBER AM ON A.WRITER_NO = AM.EMP_NO
+        WHERE A.INQUIRY_NO = #{inquiryNo}
+          AND A.DEL_YN = 'N'
+    """)
+    AnswerVo selectOne(String inquiryNo);
+
+    // 해당 답변 첨부파일 목록 조회
+    @Select("""
+        SELECT
+            FILE_NO,
+            REPLY_NO,
+            ORIGIN_NAME,
+            CHANGE_NAME,
+            FILE_PATH
+        FROM QNA_ANSWER_FILE
+        WHERE REPLY_NO = #{replyNo}
+          AND DEL_YN = 'N'
+        ORDER BY FILE_NO ASC
+    """)
+    List<AnswerFileVo> selectFileList(String inquiryNo);
+
 }
 

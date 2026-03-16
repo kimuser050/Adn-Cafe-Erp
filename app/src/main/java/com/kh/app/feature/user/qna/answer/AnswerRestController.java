@@ -68,4 +68,20 @@ public class AnswerRestController {
         map.put("voList", voList);
         return ResponseEntity.ok(map);
     }
+
+    @GetMapping("/{no}")
+    public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String no, HttpSession session) {
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if(loginMemberVo == null){
+            throw new IllegalArgumentException("로그인먼저");
+
+        }
+        AnswerVo vo = answerService.selectOne(no);
+        Map<String, Object> map = new HashMap<>();
+        map.put("vo", vo);
+
+
+
+        return ResponseEntity.ok(map);
+    }
 }
