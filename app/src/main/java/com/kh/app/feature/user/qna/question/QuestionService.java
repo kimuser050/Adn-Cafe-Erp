@@ -89,4 +89,16 @@ public class QuestionService {
 
         return vo;
     }
+
+    @Transactional
+    public int deleteByNo(QuestionVo vo) {
+
+        // 1 파일 삭제
+        questionMapper.deleteFile(vo.getInquiryNo());
+
+        // 2 게시글 삭제
+        int result = questionMapper.deleteByNo(vo);
+
+        return result;
+    }
 }

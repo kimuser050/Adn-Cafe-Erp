@@ -4,6 +4,7 @@ import com.kh.app.feature.util.PageVo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -108,4 +109,25 @@ public interface QuestionMapper {
     AND DEL_YN = 'N'
     """)
     List<QuestionFileVo> selectFileList(String no);
+
+
+    @Update("""
+            UPDATE QNA_QUESTION
+                    SET DEL_YN = 'Y'
+                    WHERE INQUIRY_NO = #{inquiryNo}
+                    AND WRITER_NO = #{writerNo}
+            """)
+    int deleteByNo(QuestionVo vo);
+
+
+    @Update("""
+             UPDATE QNA_QUESTION_FILE
+                    SET DEL_YN = 'Y'
+                    WHERE INQUIRY_NO = #{inquiryNo}
+            """)
+    void deleteFile(String inquiryNo);
+
+
+
+
 }
