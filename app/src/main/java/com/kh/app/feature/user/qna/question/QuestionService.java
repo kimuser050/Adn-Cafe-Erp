@@ -78,4 +78,15 @@ public class QuestionService {
         return questionMapper.selectList(pvo);
 
     }
+
+    public QuestionVo selectOne(String no) {
+
+        QuestionVo vo = questionMapper.selectOne(no);
+
+        List<QuestionFileVo> fileList = questionMapper.selectFileList(no);
+
+        vo.setFileList(fileList);
+
+        return vo;
+    }
 }

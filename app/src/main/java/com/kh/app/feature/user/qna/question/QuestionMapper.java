@@ -76,4 +76,36 @@ public interface QuestionMapper {
             OFFSET #{offset} ROWS FETCH NEXT #{boardLimit} ROWS ONLY
         """)
     List<QuestionVo> selectList(PageVo pvo);
+
+    @Select("""
+    SELECT
+        Q.INQUIRY_NO
+        ,Q.WRITER_NO
+        ,M.EMP_NAME AS WRITER_NAME
+        ,Q.TITLE
+        ,Q.CONTENT
+        ,Q.TYPE_CODE
+        ,Q.SECRET_YN
+        ,Q.CREATED_AT
+        ,Q.ANSWER_YN
+    FROM QNA_QUESTION Q
+    JOIN MEMBER M ON (Q.WRITER_NO = M.EMP_NO)
+    WHERE Q.INQUIRY_NO = #{no}
+    AND Q.DEL_YN = 'N'
+""")
+    QuestionVo selectOne(String no);
+
+
+    @Select("""
+    SELECT
+        FILE_NO
+        ,INQUIRY_NO
+        ,ORIGIN_NAME
+        ,CHANGE_NAME
+        ,FILE_PATH
+    FROM QNA_QUESTION_FILE
+    WHERE INQUIRY_NO = #{no}
+    AND DEL_YN = 'N'
+    """)
+    List<QuestionFileVo> selectFileList(String no);
 }
