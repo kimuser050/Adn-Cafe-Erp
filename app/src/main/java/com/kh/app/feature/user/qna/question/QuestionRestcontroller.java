@@ -82,5 +82,27 @@ public class QuestionRestcontroller {
         return ResponseEntity.ok(map);
     }
 
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteByNo(@RequestBody QuestionVo vo
+            , HttpSession session
+    )
+    {
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if(loginMemberVo == null){
+            throw new IllegalStateException("login required");
+        }
+        vo.setWriterNo(loginMemberVo.getEmpNo());
+        int result = questionService.deleteByNo(vo);
+
+        if (result != 1) {
+            String errMsg = "[B-510] delete err ...";
+            log.error(errMsg);
+            throw new IllegalStateException(errMsg);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", result);
+        return ResponseEntity.ok(map);
+    }
+
 
 }
