@@ -53,9 +53,6 @@ public class ItemRestController {
     public ResponseEntity<Map<String, String>> insert(@RequestBody ItemVo vo) {
         int result = itemService.insert(vo);
         System.out.println("vo = " + vo);
-1
-
-
         if (result != 1) {
             String errMsg = "품목 등록 x ~...";
             log.error(errMsg);
