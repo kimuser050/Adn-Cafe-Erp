@@ -1,15 +1,13 @@
 package com.kh.app.feature.user.qna.answer;
 
 import com.kh.app.feature.user.member.MemberVo;
+import com.kh.app.feature.util.PageVo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -54,6 +52,20 @@ public class AnswerRestController {
 
         Map<String, String> map = new HashMap<>();
         map.put("result", String.valueOf(result));
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1") int currentPage) {
+        int listCount = answerService.selectCount();
+        int pageLimit = this.pageLimit;
+        int boardLimit = this.boardLimit;
+
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+        List<AnswerVo> voList = answerService.selectList(pvo);
+        Map<String, Object> map = new HashMap<>();
+        map.put("pvo", pvo);
+        map.put("voList", voList);
         return ResponseEntity.ok(map);
     }
 }
