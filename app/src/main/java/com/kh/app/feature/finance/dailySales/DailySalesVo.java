@@ -1,5 +1,9 @@
 package com.kh.app.feature.finance.dailySales;
 
+import lombok.Data;
+import org.apache.ibatis.annotations.Select;
+
+@Data
 public class DailySalesVo {
 
     private String salesNo;
@@ -9,4 +13,6 @@ public class DailySalesVo {
     private String quantity;
     private String paymentCd;
     private String salesDate;
+    private String totalSales;
+
 }

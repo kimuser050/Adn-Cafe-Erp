@@ -18,22 +18,22 @@ public class AccountRestController {
     private final AccountService accountService;
 
     @PostMapping("/insertAccount")
-    public ResponseEntity<Integer> insertAccount(AccountVo vo){
+    public ResponseEntity<Map<String, String>> insertAccount(AccountVo vo){
         int result = accountService.insertAccount(vo);
 
         Map<String, String> map = new HashMap<>();
         map.put("result" , result+"");
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(map);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Integer> deleteAccount(@RequestParam String accountNo){
+    public ResponseEntity<Map<String, String>> deleteAccount(@RequestParam String accountNo){
 
         int result = accountService.deleteAccount(accountNo);
 
         Map<String, String> map = new HashMap<>();
         map.put("result" , String.valueOf(result));
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(map);
     }
 
     @PostMapping("/list")
@@ -46,4 +46,5 @@ public class AccountRestController {
 
         return ResponseEntity.ok(map);
     }
+
 }
