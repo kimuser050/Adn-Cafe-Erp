@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -90,6 +92,44 @@ public class AnswerService {
         vo.setFileList(fileList);
 
         return vo;
+    }
+
+    @Transactional
+    public int updateByNo(AnswerVo vo, MultipartFile file, String oldChangeName) throws IOException {
+
+        // 1. 답변 내용 수정
+        int result = answerMapper.updateByNo(vo);
+        if(result != 1) {
+            throw new IllegalStateException("[B-410] 답변 수정 실패");
+        }
+
+        // 2. 파일 처리
+        if(file != null && !file.isEmpty()) {
+
+            // 기존 DB 파일 삭제
+            answerMapper.deleteFile(vo.getReplyNo());
+
+            // 기존 서버 파일 삭제
+            if(oldChangeName != null && !oldChangeName.isEmpty()) {
+                File oldFile = new File(uploadPath, oldChangeName);
+                if(oldFile.exists()) oldFile.delete();
+            }
+
+            // 새 파일 업로드
+            String originName = file.getOriginalFilename();
+            String newChangeName = FileUploader.upload(file, uploadPath);
+
+            AnswerFileVo fvo = new AnswerFileVo();
+            fvo.setReplyNo(vo.getReplyNo());
+            fvo.setOriginName(originName);
+            fvo.setChangeName(newChangeName);
+            fvo.setFilePath(uploadPath);
+
+            // DB 저장
+            answerMapper.insertFile(fvo);
+        }
+
+        return result;
     }
 
 

@@ -117,5 +117,24 @@ public interface AnswerMapper {
     """)
     List<AnswerFileVo> selectFileList(String inquiryNo);
 
+    // 답변 수정
+    @Update("""
+        UPDATE QNA_ANSWER
+        SET RESPONSE = #{response},
+            UPDATED_AT = SYSDATE
+        WHERE REPLY_NO = #{replyNo}
+          AND WRITER_NO = #{writerNo}
+          AND DEL_YN = 'N'
+    """)
+    int updateByNo(AnswerVo vo);
+
+    // 기존 파일 삭제
+    @Update("""
+        UPDATE QNA_ANSWER_FILE
+        SET DEL_YN = 'Y'
+        WHERE REPLY_NO = #{replyNo}
+    """)
+    int deleteFile(String replyNo);
+
 }
 
