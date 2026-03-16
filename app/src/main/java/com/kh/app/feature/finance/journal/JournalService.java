@@ -80,4 +80,8 @@ public class JournalService {
     public List<JournalVo> monthList(String journalDate) {
         return journalMapper.monthList(journalDate);
     }
+
+    public List<JournalVo> dailyList(String journalDate) {
+        return journalMapper.dailyList(journalDate);
+    }
 }
