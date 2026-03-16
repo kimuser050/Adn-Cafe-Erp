@@ -100,4 +100,17 @@ public interface JournalMapper {
             ORDER BY J.JOURNAL_DATE DESC
             """)
     List<JournalVo> totalList(String accountNo);
+
+    @Select("""
+            SELECT
+                NVL(A.ACCOUNT_NAME, '총 합계') AS accountName
+                ,SUM(J.CREDIT) AS credit
+                ,SUM(J.DEBIT) AS debit
+            FROM JOURNAL J
+            JOIN ACCOUNT A ON J.ACCOUNT_NO = A.ACCOUNT_NO
+            WHERE TO_CHAR(J.JOURNAL_DATE,'YYYY-MM') = #{journalDate}
+            GROUP BY ROLLUP((A.ACCOUNT_NO , A.ACCOUNT_NAME))
+            ORDER BY A.ACCOUNT_NO ASC NULLS LAST
+            """)
+    List<JournalVo> monthList(String journalDate);
 }

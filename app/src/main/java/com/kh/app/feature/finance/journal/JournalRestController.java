@@ -97,4 +97,9 @@ public class JournalRestController {
     public List<JournalVo> totalList(@PathVariable("accountNo") String accountNo){
         return journalService.totalList(accountNo);
     }
+
+    @GetMapping("/monthList")
+    public List<JournalVo> monthList(@RequestParam String journalDate){
+        return journalService.monthList(journalDate);
+    }
 }
