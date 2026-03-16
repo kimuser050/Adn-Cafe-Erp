@@ -8,7 +8,10 @@ public class EmpVo {
     private String empPw;
     private String empName;
     private String posCode;
+    private String posName;
     private String deptCode;
+    private String deptName;
+    private String orgName;
     private String resdNo;
     private String empPhone;
     private String empEmail;

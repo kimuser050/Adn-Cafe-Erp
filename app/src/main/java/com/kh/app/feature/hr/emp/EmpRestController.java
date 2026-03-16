@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +29,17 @@ public class EmpRestController {
         map.put("voList" , voList);
 
         return ResponseEntity.ok(map);
+    }
+
+    // 검색 넣어야 함 (3개)
+
+
+    //4. 직원 상세조회하기
+    @GetMapping("/{empCode}")
+    public void selectDetail(@PathVariable String empCode){
+//        EmpVo vo = empService.selectDetail(empCode);
+//        List<EmpHistoryVo> empHistoryList = empService.selectEmpHistory();
+
     }
 
 
