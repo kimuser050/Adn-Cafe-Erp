@@ -6,7 +6,7 @@ import lombok.Data;
 public class OderReqVo {
     private String orderNo;
     private String itemNo;                  // FK
-    private String storeCode;
+    private String storeCode;               // FK
     private String quantity;
     private String requestDate;
     private String status;                  // W(대기), C(취소), F(완료)
