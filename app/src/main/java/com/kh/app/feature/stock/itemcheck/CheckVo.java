@@ -13,4 +13,5 @@ public class CheckVo {
     private Long storeCode;
     private String storeName;
     private String createdAt;
+    private String empNo;
 }

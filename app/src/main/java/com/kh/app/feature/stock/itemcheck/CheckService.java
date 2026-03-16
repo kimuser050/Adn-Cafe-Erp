@@ -26,8 +26,8 @@ public class CheckService {
         return checkMapper.selectList(pvo);
     }
 
-    public CheckVo selectOne(String itemreturnNo) {
-        return checkMapper.selectOne(itemreturnNo);
+    public CheckVo selectOne(String returnNo) {
+        return checkMapper.selectOne(returnNo);
     }
 
     public int updateByNo(CheckVo vo) {

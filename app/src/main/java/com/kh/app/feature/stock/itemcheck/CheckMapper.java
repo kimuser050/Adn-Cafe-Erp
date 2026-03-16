@@ -2,6 +2,7 @@ package com.kh.app.feature.stock.itemcheck;
 
 import com.kh.app.feature.stock.item.ItemVo;
 import com.kh.app.feature.util.PageVo;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -39,36 +40,35 @@ public interface CheckMapper {
     List<CheckVo> selectList(PageVo pvo);
 
     //상세조회
-
     @Select("""
-            SELECT
-            C.ITEM_RETURN_NO,
-            C.RETURN_NO,
-            C.STATUS,
-            C.PROCESS_RESULT,
-            R.PRODUCT_NAME,
-            R.STORE_CODE,
-            S.STORE_NAME,
-            R.QUANTITY,
-            R.REASON,
-            R.CREATED_AT
-            FROM
-            ITEM_CHECK C
-            INNER JOIN
-            RETURN_REQ R ON C.ITEM_RETURN_NO = R.RETURN_NO
-            INNER JOIN
-            STORE S ON R.STORE_CODE = S.STORE_CODE
-            WHERE
-            C.ITEM_RETURN_NO = #{no}
-            """)
+    SELECT
+        C.ITEM_RETURN_NO,
+        R.RETURN_NO,
+        R.STATUS,
+        C.PROCESS_RESULT,
+        R.PRODUCT_NAME,
+        R.STORE_CODE,
+        S.STORE_NAME,
+        R.QUANTITY,
+        R.REASON,
+        R.CREATED_AT
+    FROM
+        RETURN_REQ R    /* 기준을 신청 테이블(R)로 변경 */
+    LEFT OUTER JOIN
+        ITEM_CHECK C ON R.RETURN_NO = C.RETURN_NO
+    INNER JOIN
+        STORE S ON R.STORE_CODE = S.STORE_CODE
+    WHERE
+        R.RETURN_NO = #{no}
+""")
     CheckVo selectOne(String no);
 
     @Update("""
-           UPDATE ITEM_CHECK
-            SET 
-            STATUS = #{status}
-            WHERE 
-            ITEM_RETURN_NO = #{itemReturnNo}
-    """)
+    UPDATE RETURN_REQ
+    SET 
+        STATUS = #{status}
+    WHERE 
+        RETURN_NO = #{returnNo}
+""")
     int updateByNo(CheckVo vo);
 }

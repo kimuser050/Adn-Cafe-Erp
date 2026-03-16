@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,27 +25,25 @@ public class OderReqService {
         return oderReqMapper.selectList(pvo);
     }
 
+    public OderReqVo selectOne(String orderNo) {
+        return oderReqMapper.selectOne(orderNo);
+    }
 
-    public int updateByNo(List<OderReqVo> voList) {
-        int totalResult = 0;
-        for (OderReqVo vo : voList) {
-            // 1. 발주 기록 INSERT
-            int insertResult = oderReqMapper.insertOrder(vo);
+    //재고차감
+    @Transactional
+    public int updateStatus(OderReqVo vo) {
 
-            // 2. 재고 차감 UPDATE
-            int updateResult = oderReqMapper.decreaseStock(vo);
+        int result = oderReqMapper.updateByNo(vo);
 
-            // 둘 다 성공했을 때만 결과 카운트 증가
-            if (insertResult > 0 && updateResult > 0) {
-                totalResult++;
-            } else {
-                // 하나라도 실패하면 예외를 던져 전체 롤백
-                throw new RuntimeException("상품 번호 " + vo.getItemNo() + " 처리 중 오류 발생");
-            }
+        if("F".equals(vo.getStatus())){
+            oderReqMapper.decreaseStock(vo.getOrderNo());
         }
-        return totalResult;
+        return result;
+    }
 
 
+    public int orderReq(Map<String, Object> map) {
+        return oderReqMapper.orderReq(map);
     }
 }
 
