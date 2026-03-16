@@ -17,24 +17,25 @@ public interface CheckMapper {
     int selectCount();
 
     @Select("""
-            SELECT
-                C.ITEM_RETURN_NO,
-                C.RETURN_NO,
-                C.STATUS,
-                C.PROCESS_RESULT,
-                R.PRODUCT_NAME,
-                R.STORE_CODE,
-                S.STORE_NAME
-            FROM
-                ITEM_CHECK C
-            INNER JOIN
-                RETURN_REQ R ON C.RETURN_NO = R.RETURN_NO
-            INNER JOIN
-                STORE S ON R.STORE_CODE = S.STORE_CODE
-            ORDER BY C.ITEM_RETURN_NO DESC
-            OFFSET #{offset} ROWS
-            FETCH NEXT #{boardLimit} ROWS ONLY
-        """)
+    SELECT
+        R.RETURN_NO,
+        C.ITEM_RETURN_NO,
+        R.STATUS,                --(W, A, R)
+        C.PROCESS_RESULT,
+        R.PRODUCT_NAME,
+        R.STORE_CODE,
+        S.STORE_NAME,
+        R.CREATED_AT
+    FROM
+        RETURN_REQ R                                   -- 신청 테이블을 기준으로
+    LEFT OUTER JOIN
+        ITEM_CHECK C ON R.RETURN_NO = C.RETURN_NO      -- 검수 내역은 있으면 가져오고 없으면 null
+    INNER JOIN
+        STORE S ON R.STORE_CODE = S.STORE_CODE
+    ORDER BY R.RETURN_NO DESC
+    OFFSET #{offset} ROWS
+    FETCH NEXT #{boardLimit} ROWS ONLY
+""")
     List<CheckVo> selectList(PageVo pvo);
 
     //상세조회
@@ -54,10 +55,10 @@ public interface CheckMapper {
             FROM
             ITEM_CHECK C
             INNER JOIN
-            RETURN_REQ R ON C.RETURN_NO = R.RETURN_NO
+            RETURN_REQ R ON C.ITEM_RETURN_NO = R.RETURN_NO
             INNER JOIN
             STORE S ON R.STORE_CODE = S.STORE_CODE
-            WHERE 
+            WHERE
             C.ITEM_RETURN_NO = #{no}
             """)
     CheckVo selectOne(String no);

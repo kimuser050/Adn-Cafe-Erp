@@ -1,4 +1,4 @@
-package com.kh.app.feature.stock.request;
+package com.kh.app.feature.stock.Return_Req;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
