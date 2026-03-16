@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,4 +85,51 @@ public class AnswerRestController {
 
         return ResponseEntity.ok(map);
     }
+
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateByNo( @RequestParam(required = false) MultipartFile file,
+                                                           @RequestParam(required = false) String changeName,
+                                                           AnswerVo vo,
+                                                           HttpSession session) throws IOException
+    {
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if(loginMemberVo == null){
+            throw new IllegalStateException("login required");
+        }
+
+        vo.setWriterNo(loginMemberVo.getEmpNo());
+        int result = answerService.updateByNo(vo,file,changeName);
+        if (result != 1) {
+            String errMsg = "[B-410] update err ...";
+            log.error(errMsg);
+            throw new IllegalStateException(errMsg);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", result);
+        return ResponseEntity.ok(map);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteByNo(@RequestBody AnswerVo vo
+            , HttpSession session
+    )
+    {
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if(loginMemberVo == null){
+            throw new IllegalStateException("login required");
+        }
+        vo.setWriterNo(loginMemberVo.getEmpNo());
+        int result = answerService.deleteByNo(vo);
+
+        if (result != 1) {
+            String errMsg = "[B-510] delete err ...";
+            log.error(errMsg);
+            throw new IllegalStateException(errMsg);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", result);
+        return ResponseEntity.ok(map);
+    }
+
+
 }
