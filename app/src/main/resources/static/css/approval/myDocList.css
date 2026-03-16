@@ -1,0 +1,29 @@
+#document-list tr td{
+    text-align: center;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    justify-content: center;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-wait{
+    background-color: #d59b18;
+}
+
+.status-ok{
+    background-color: #20b455;
+}
+
+.status-reject{
+    background-color: #de4829;
+}
