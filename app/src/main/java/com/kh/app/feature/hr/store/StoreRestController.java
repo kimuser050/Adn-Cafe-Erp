@@ -18,10 +18,8 @@ public class StoreRestController {
 
     private final StoreService storeService;
 
-
     @PostMapping
     public ResponseEntity<Map<String, Object>> insert(@RequestBody StoreVo vo) {
-
         int result = storeService.insert(vo);
 
         Map<String, Object> map = new HashMap<>();
@@ -29,8 +27,6 @@ public class StoreRestController {
 
         return ResponseEntity.ok(map);
     }
-
-
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> selectList() {
@@ -42,12 +38,29 @@ public class StoreRestController {
         return ResponseEntity.ok(map);
     }
 
+    @GetMapping("/search/name")
+    public ResponseEntity<Map<String, Object>> selectListByName(@RequestParam String keyword) {
+        List<StoreVo> voList = storeService.selectListByName(keyword);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/search/statusName")
+    public ResponseEntity<Map<String, Object>> selectListByStatusName(@RequestParam String statusName) {
+        List<StoreVo> voList = storeService.selectListByStatusName(statusName);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
+
+        return ResponseEntity.ok(map);
+    }
+
     @GetMapping("/{storeCode}")
     public ResponseEntity<Map<String, Object>> selectDetail(@PathVariable String storeCode) {
-
         StoreVo vo = storeService.selectDetail(storeCode);
-
-        // 점주 목록
         List<MemberVo> managerList = storeService.selectManagerList();
 
         Map<String, Object> map = new HashMap<>();
@@ -60,7 +73,6 @@ public class StoreRestController {
     @PostMapping("/status")
     public ResponseEntity<Map<String, Object>> updateStatus(@RequestParam String storeCode,
                                                             @RequestParam int statusCode) {
-
         int result = storeService.updateStatus(storeCode, statusCode);
 
         Map<String, Object> map = new HashMap<>();
@@ -70,12 +82,9 @@ public class StoreRestController {
         return ResponseEntity.ok(map);
     }
 
-    //4. 매장위치 수정하기
     @PutMapping("/{storeCode}/address")
-    public ResponseEntity<Map<String, Object>> editAddress(
-            @PathVariable String storeCode,
-            @RequestBody StoreVo vo
-    ) {
+    public ResponseEntity<Map<String, Object>> editAddress(@PathVariable String storeCode,
+                                                           @RequestBody StoreVo vo) {
         int result = storeService.editAddress(storeCode, vo.getStoreAddress());
 
         Map<String, Object> map = new HashMap<>();
@@ -84,12 +93,9 @@ public class StoreRestController {
         return ResponseEntity.ok(map);
     }
 
-    //5.  매장 관리자 수정하기
     @PutMapping("/{storeCode}/manager")
-    public ResponseEntity<Map<String, Object>> editManager(
-            @PathVariable String storeCode,
-            @RequestBody StoreVo vo
-    ) {
+    public ResponseEntity<Map<String, Object>> editManager(@PathVariable String storeCode,
+                                                           @RequestBody StoreVo vo) {
         int result = storeService.editManager(storeCode, vo.getOwnerEmpNo());
 
         Map<String, Object> map = new HashMap<>();
@@ -97,5 +103,4 @@ public class StoreRestController {
 
         return ResponseEntity.ok(map);
     }
-
 }

@@ -24,6 +24,14 @@ public class PosService {
         return posMapper.selectList();
     }
 
+    public List<PosVo> selectListByName(String keyword) {
+        return posMapper.selectListByName(keyword);
+    }
+
+    public List<PosVo> selectListByUseYn(String useYn) {
+        return posMapper.selectListByUseYn(useYn);
+    }
+
     public PosVo selectDetail(String posCode) {
         return posMapper.selectDetail(posCode);
     }

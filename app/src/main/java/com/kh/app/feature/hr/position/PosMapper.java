@@ -44,6 +44,40 @@ public interface PosMapper {
     List<PosVo> selectList();
 
     @Select("""
+        SELECT
+            POS_CODE
+            , POS_NAME
+            , POS_DESC
+            , BASE_SALARY
+            , BONUS_RATE
+            , (BASE_SALARY + (BASE_SALARY * BONUS_RATE)) AS EXPECTED_SALARY
+            , USE_YN
+            , TO_CHAR(CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+            , TO_CHAR(UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+        FROM POSITION
+        WHERE POS_NAME LIKE '%' || #{keyword} || '%'
+        ORDER BY CREATED_AT ASC
+        """)
+    List<PosVo> selectListByName(String keyword);
+
+    @Select("""
+        SELECT
+            POS_CODE
+            , POS_NAME
+            , POS_DESC
+            , BASE_SALARY
+            , BONUS_RATE
+            , (BASE_SALARY + (BASE_SALARY * BONUS_RATE)) AS EXPECTED_SALARY
+            , USE_YN
+            , TO_CHAR(CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+            , TO_CHAR(UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+        FROM POSITION
+        WHERE USE_YN = #{useYn}
+        ORDER BY CREATED_AT ASC
+        """)
+    List<PosVo> selectListByUseYn(String useYn);
+
+    @Select("""
             SELECT
                 P.POS_CODE
                 , P.POS_NAME

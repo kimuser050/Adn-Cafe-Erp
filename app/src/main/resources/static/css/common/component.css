@@ -1,35 +1,131 @@
+/* =========================================================
+   공통 UI 컴포넌트
+   - 프로젝트 전체에서 재사용할 버튼, 카드, 상태표시, 입력요소
+   - 다른 도메인도 클래스명만 맞추면 동일 스타일 적용 가능
+   ========================================================= */
+
+/* =========================================================
+   프로젝트 공통 색상 토큰
+   - 배경 그라데이션 제외, 핵심 UI 컬러 3종만 사용
+   ========================================================= */
+:root {
+    /* 3종 컬러는 아래 색상만 사용 */
+    --color-dark: #5C3F2A;
+    --color-mid: #9C785D;
+    --color-light: #D9B189;
+
+    --color-white: #ffffff;
+    --color-border: #d8d0c7;
+    --color-text: #3f2f24;
+    --color-muted: #7b6a5c;
+    --color-panel: rgba(255, 255, 255, 0.86);
+}
+
+/* ------------[버튼]------------------------------------- */
 .btn {
     height: 36px;
     padding: 0 14px;
+    border: none;
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.btn:hover {
+    opacity: 0.92;
+}
+
+/* 버튼 크기 */
+.btn-sm {
+    height: 30px;
+    padding: 0 10px;
+    font-size: 11px;
+    border-radius: 7px;
+}
+
+.btn-md {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 12px;
+}
+
+.btn-lg {
+    height: 42px;
+    padding: 0 18px;
     font-size: 13px;
 }
 
-.btn-brown {
-    background: #7b5135;
-    color: #fff;
+/* 버튼 컬러 */
+.btn-dark {
+    background: var(--color-dark);
+    color: var(--color-white);
 }
 
+.btn-mid {
+    background: var(--color-mid);
+    color: var(--color-white);
+}
+
+.btn-light {
+    background: var(--color-light);
+    color: var(--color-dark);
+}
+
+.btn-outline {
+    background: var(--color-white);
+    color: var(--color-dark);
+    border: 1px solid var(--color-mid);
+}
+
+
+/* ------------------------------------------------- */
+
+/* 카드 */
 .card {
-    background: #f7f4ef;
+    background: rgba(255, 255, 255, 0.78);
     border-radius: 14px;
     box-shadow: 0 10px 24px rgba(0,0,0,0.10);
 }
 
-.table-panel {
-    background: #f7f5f1;
+.panel {
+    background: rgba(255, 255, 255, 0.86);
     border-radius: 16px;
-    padding: 16px 18px 20px;
     box-shadow: 0 12px 30px rgba(0,0,0,0.12);
 }
 
+/* 입력요소 */
+.form-input,
+.form-select {
+    height: 38px;
+    border: 1px solid #d8d0c7;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 13px;
+    color: #4b3728;
+    background: #fff;
+    outline: none;
+}
+
+.form-input:focus,
+.form-select:focus {
+    border-color: #b88d68;
+}
+
+/* 상태 표시 */
 .status {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
 }
 
 .status::before {
@@ -38,12 +134,35 @@
     height: 8px;
     border-radius: 50%;
     display: inline-block;
+    flex-shrink: 0;
 }
 
+/* 상태 종류 */
 .status.on::before {
-    background: #22b14c;
+    background: #20b455;
 }
 
 .status.off::before {
-    background: #d84a2b;
+    background: #de4829;
 }
+
+.status.rest::before {
+    background: #d59b18;
+}
+
+/* 링크형 텍스트 */
+.link-text {
+    color: #1f77ff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.link-text:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
