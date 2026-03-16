@@ -38,9 +38,9 @@ public class CheckRestController {
         return ResponseEntity.ok(map);
     }
     //상세조회
-    @GetMapping("{itemreturnNo}")
-    public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String itemreturnNo){
-        CheckVo vo= checkService.selectOne(itemreturnNo);
+    @GetMapping("{returnNo}")
+    public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String returnNo){
+        CheckVo vo= checkService.selectOne(returnNo);
         Map<String, Object>map = new HashMap<>();
         map.put("vo", vo);
         return ResponseEntity.ok(map);
