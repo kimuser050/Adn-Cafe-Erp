@@ -102,4 +102,9 @@ public class JournalRestController {
     public List<JournalVo> monthList(@RequestParam String journalDate){
         return journalService.monthList(journalDate);
     }
+
+    @GetMapping("/dailyList")
+    public List<JournalVo> dailyList(@RequestParam String journalDate){
+        return journalService.dailyList(journalDate);
+    }
 }
