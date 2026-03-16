@@ -1,0 +1,231 @@
+/* =========================================================
+   직원관리 전용 스타일
+   - org 공용 CSS 위에 덧씌우는 전용 스타일
+   - 상단 탭 대신 빈 공간 유지
+   - 직원 목록 / 상태 / 상세모달 전용
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. 상단 빈 공간
+   - 부서/매장/직급관리의 탭영역 대신 여백만 유지
+   --------------------------------------------------------- */
+.emp-top-spacer {
+    height: 44px;
+    margin-bottom: 18px;
+}
+
+/* ---------------------------------------------------------
+   2. 직원 페이지 요약 카드 보정
+   --------------------------------------------------------- */
+.emp-page .org-summary-area {
+    margin-bottom: 18px;
+}
+
+.emp-page .summary-card {
+    width: 128px;
+    min-height: 86px;
+}
+
+/* ---------------------------------------------------------
+   3. 툴바 / 검색영역 보정
+   --------------------------------------------------------- */
+.emp-page .org-toolbar {
+    margin-bottom: 16px;
+}
+
+.emp-page .toolbar-right {
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.emp-page .toolbar-right .form-select {
+    min-width: 84px;
+}
+
+.emp-page .search-box {
+    min-width: 210px;
+}
+
+.emp-page .search-box input {
+    width: 160px;
+}
+
+/* ---------------------------------------------------------
+   4. 직원 테이블 전용
+   --------------------------------------------------------- */
+.emp-table {
+    table-layout: fixed;
+}
+
+.emp-table th:nth-child(1),
+.emp-table td:nth-child(1) {
+    width: 60px;
+}
+
+.emp-table th:nth-child(2),
+.emp-table td:nth-child(2) {
+    width: 120px;
+}
+
+.emp-table th:nth-child(3),
+.emp-table td:nth-child(3) {
+    width: 110px;
+}
+
+.emp-table th:nth-child(4),
+.emp-table td:nth-child(4) {
+    width: 100px;
+}
+
+.emp-table th:nth-child(5),
+.emp-table td:nth-child(5) {
+    width: 220px;
+}
+
+.emp-table th:nth-child(6),
+.emp-table td:nth-child(6) {
+    width: 160px;
+}
+
+.emp-table th:nth-child(7),
+.emp-table td:nth-child(7) {
+    width: 110px;
+}
+
+.emp-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.emp-table .link-text {
+    color: #1a73e8;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.emp-table .link-text:hover {
+    text-decoration: underline;
+}
+
+/* ---------------------------------------------------------
+   5. 상태 뱃지
+   --------------------------------------------------------- */
+.status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b3728;
+    white-space: nowrap;
+}
+
+.status::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.status.working::before {
+    background-color: #22c55e;   /* 재직 */
+}
+
+.status.retired::before {
+    background-color: #ef4444;   /* 퇴직 */
+}
+
+.status.leave::before {
+    background-color: #facc15;   /* 휴직 */
+}
+
+.status.trip::before {
+    background-color: #3b82f6;   /* 출장 */
+}
+
+.status.training::before {
+    background-color: #8b5cf6;   /* 교육 */
+}
+
+.status.unknown::before {
+    background-color: #9ca3af;
+}
+
+/* ---------------------------------------------------------
+   6. 빈 데이터 행
+   --------------------------------------------------------- */
+.emp-table .empty-row td {
+    height: 120px;
+    text-align: center;
+    color: #9a8b7e;
+    font-size: 13px;
+}
+
+/* ---------------------------------------------------------
+   7. 상세조회 모달 전용
+   --------------------------------------------------------- */
+#emp-modal-wrap .org-modal {
+    width: 640px;
+}
+
+#emp-modal-wrap .org-modal-body {
+    padding: 24px 24px 10px;
+}
+
+#emp-modal-wrap .org-detail-row {
+    margin-bottom: 14px;
+    gap: 18px;
+}
+
+#emp-modal-wrap .org-detail-label {
+    width: 110px;
+    font-size: 14px;
+}
+
+#emp-modal-wrap .org-detail-value {
+    font-size: 14px;
+    color: #4b3728;
+}
+
+/* ---------------------------------------------------------
+   8. 페이지네이션 영역
+   --------------------------------------------------------- */
+.emp-page .org-bottom-area {
+    margin-top: 18px;
+    min-height: 34px;
+}
+
+/* ---------------------------------------------------------
+   9. 카드 전체가 너무 위로 붙어보이지 않게 보정
+   --------------------------------------------------------- */
+.emp-page .org-table-card {
+    margin-top: 6px;
+    min-height: 420px;
+}
+
+/* ---------------------------------------------------------
+   10. 반응형 대응
+   --------------------------------------------------------- */
+@media (max-width: 1400px) {
+    .emp-page .org-table-card {
+        overflow-x: auto;
+    }
+
+    .emp-table {
+        min-width: 980px;
+    }
+}
+
+@media (max-width: 900px) {
+    .emp-top-spacer {
+        height: 20px;
+        margin-bottom: 14px;
+    }
+
+    .emp-page .toolbar-right {
+        justify-content: flex-start;
+    }
+}

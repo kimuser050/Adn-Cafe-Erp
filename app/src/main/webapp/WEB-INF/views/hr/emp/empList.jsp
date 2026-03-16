@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="/css/common/sidebar.css">
     <link rel="stylesheet" href="/css/common/component.css">
     <link rel="stylesheet" href="/css/hr/org/orgCommon.css">
-    <link rel="stylesheet" href="/css/hr/dept/deptList.css">
+    <link rel="stylesheet" href="/css/hr/emp/empList.css">
 
-    <script defer src="/js/hr/dept/deptList.js"></script>
+    <script defer src="/js/hr/emp/empList.js"></script>
 </head>
 <body>
 
@@ -22,25 +22,31 @@
     <%@ include file="/WEB-INF/views/hr/common/empSidebar.jsp" %>
 
     <main class="page-shell">
-        <section class="page-content org-page dept-page">
+        <section class="page-content org-page emp-page">
 
-            <!-- 상단 탭 -->
-            <div class="org-tab-area">
-                <button type="button" class="tab-btn active">부서관리</button>
-                <button type="button" class="tab-btn" onclick="location.href='/hr/store/list'">매장관리</button>
-                <button type="button" class="tab-btn" onclick="location.href='/hr/pos/list'">직급관리</button>
-            </div>
+            <!-- 아무것도 없지만 비우는 공간으로 쓸려고 함 -->
+            <div class="emp-top-spacer"></div>
 
             <!-- 요약 카드 -->
             <div class="org-summary-area">
                 <div class="summary-card">
-                    <div class="summary-title">총 부서 수</div>
-                    <div class="summary-value" id="dept-count">0</div>
+                    <div class="summary-title">재직</div>
+                    <div class="summary-value" id="working-count">0</div>
                 </div>
 
                 <div class="summary-card">
-                    <div class="summary-title">총 직원 수</div>
-                    <div class="summary-value" id="member-count">0</div>
+                    <div class="summary-title">휴직</div>
+                    <div class="summary-value" id="leave-count">0</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-title">출장</div>
+                    <div class="summary-value" id="business-trip-count">0</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-title">교육</div>
+                    <div class="summary-value" id="training-count">0</div>
                 </div>
             </div>
 
@@ -54,13 +60,14 @@
                     <div class="toolbar-right">
                         <select id="search-type" class="form-select">
                             <option value="all">전체</option>
-                            <option value="deptName">부서명</option>
-                            <option value="useYn">사용여부</option>
+                            <option value="empName">이름</option>
+                            <option value="posName">직급</option>
+                            <option value="status">상태</option>
                         </select>
 
                         <div class="search-box">
                             <input type="text" id="keyword" placeholder="검색어를 입력하세요">
-                            <button type="button" class="btn btn-sm btn-mid" onclick="searchDept()">검색</button>
+                            <button type="button" class="search-btn" onclick="searchEmp()">검색</button>
                         </div>
 
                         <button type="button" class="btn btn-sm btn-dark">EXPORT</button>
@@ -68,19 +75,19 @@
                 </div>
 
                 <!-- 테이블 -->
-                <table class="org-table dept-table">
+                <table class="org-table emp-table">
                     <thead>
                     <tr>
                         <th>NO</th>
-                        <th>부서명</th>
-                        <th>부서장</th>
-                        <th>인원수</th>
-                        <th>근무위치</th>
-                        <th>등록일</th>
+                        <th>이름</th>
+                        <th>사번</th>
+                        <th>직급</th>
+                        <th>소속</th>
+                        <th>연락처</th>
                         <th>상태</th>
                     </tr>
                     </thead>
-                    <tbody id="dept-list"></tbody>
+                    <tbody id="emp-list"></tbody>
                 </table>
 
                 <!-- 하단 -->
@@ -93,133 +100,72 @@
                         <button class="page-btn">5</button>
                         <button class="page-btn">▶</button>
                     </div>
-
-                    <button type="button" class="btn btn-sm btn-dark register-btn" onclick="openInsertDeptModal()">
-                        부서등록
-                    </button>
                 </div>
             </div>
 
             <!-- 상세조회 모달 -->
-            <div id="dept-modal-wrap" class="org-modal-wrap">
+            <div id="emp-modal-wrap" class="org-modal-wrap">
                 <div class="org-modal">
                     <div class="org-modal-header">
-                        <h2>부서정보</h2>
-                        <button type="button" class="modal-close-btn" onclick="closeDeptModal()">✕</button>
+                        <h2>직원 정보</h2>
+                        <button type="button" class="modal-close-btn" onclick="closeEmpModal()">✕</button>
                     </div>
 
                     <div class="org-modal-body">
                         <div class="org-detail-row">
-                            <div class="org-detail-label">부서명</div>
-                            <div class="org-detail-value" id="modal-dept-name"></div>
+                            <div class="org-detail-label">이름</div>
+                            <div class="org-detail-value" id="modal-emp-name">-</div>
                         </div>
 
                         <div class="org-detail-row">
-                            <div class="org-detail-label">관리자</div>
-                            <div class="org-detail-value">
-                                <div id="manager-view-area">
-                                    <span id="modal-dept-manager"></span>
-                                    <button type="button" class="btn btn-sm btn-mid" onclick="startEditManager()">변경</button>
-                                </div>
-
-                                <div id="manager-edit-area" style="display:none;">
-                                    <select id="manager-select"></select>
-                                    <button type="button" class="btn btn-sm btn-dark" onclick="saveManager()">저장</button>
-                                    <button type="button" class="btn btn-sm btn-outline" onclick="cancelEditManager()">취소</button>
-                                </div>
-                            </div>
+                            <div class="org-detail-label">사번</div>
+                            <div class="org-detail-value" id="modal-emp-no">-</div>
                         </div>
 
                         <div class="org-detail-row">
-                            <div class="org-detail-label">근무위치</div>
-                            <div class="org-detail-value">
-                                <div id="address-view-area">
-                                    <span id="modal-dept-address"></span>
-                                    <button type="button" class="btn btn-sm btn-mid" onclick="startEditAddress()">변경</button>
-                                </div>
-
-                                <div id="address-edit-area" style="display:none;">
-                                    <input type="text" id="address-input">
-                                    <button type="button" class="btn btn-sm btn-dark" onclick="saveAddress()">저장</button>
-                                    <button type="button" class="btn btn-sm btn-outline" onclick="cancelEditAddress()">취소</button>
-                                </div>
-                            </div>
+                            <div class="org-detail-label">직급</div>
+                            <div class="org-detail-value" id="modal-pos-name">-</div>
                         </div>
 
                         <div class="org-detail-row">
-                            <div class="org-detail-label">총 인원</div>
-                            <div class="org-detail-value" id="modal-dept-emp"></div>
+                            <div class="org-detail-label">소속</div>
+                            <div class="org-detail-value" id="modal-org-name">-</div>
                         </div>
 
                         <div class="org-detail-row">
-                            <div class="org-detail-label">생성일</div>
-                            <div class="org-detail-value" id="modal-created-at"></div>
+                            <div class="org-detail-label">연락처</div>
+                            <div class="org-detail-value" id="modal-emp-phone">-</div>
+                        </div>
+
+                        <div class="org-detail-row">
+                            <div class="org-detail-label">이메일</div>
+                            <div class="org-detail-value" id="modal-emp-email">-</div>
+                        </div>
+
+                        <div class="org-detail-row">
+                            <div class="org-detail-label">주소</div>
+                            <div class="org-detail-value" id="modal-emp-address">-</div>
+                        </div>
+
+                        <div class="org-detail-row">
+                            <div class="org-detail-label">입사일</div>
+                            <div class="org-detail-value" id="modal-hire-date">-</div>
+                        </div>
+
+                        <div class="org-detail-row">
+                            <div class="org-detail-label">퇴사일</div>
+                            <div class="org-detail-value" id="modal-resign-date">-</div>
                         </div>
 
                         <div class="org-detail-row">
                             <div class="org-detail-label">상태</div>
-                            <div class="org-detail-value" id="modal-use-yn"></div>
-                        </div>
-
-                        <hr>
-
-                        <h3>소속인원</h3>
-                        <table class="dept-member-table">
-                            <thead>
-                            <tr>
-                                <th>번호</th>
-                                <th>이름</th>
-                                <th>직급</th>
-                                <th>사번</th>
-                                <th>전화번호</th>
-                                <th>입사일</th>
-                            </tr>
-                            </thead>
-                            <tbody id="modal-member-list"></tbody>
-                        </table>
-                    </div>
-
-                    <div class="org-modal-footer">
-                        <button type="button"  class="btn btn-sm btn-dark" id="toggle-use-btn" onclick="toggleDeptUseYn()"></button>
-                        <button type="button" class="btn btn-sm btn-dark" onclick="closeDeptModal()">닫기</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 등록 모달 -->
-            <div id="dept-insert-modal-wrap" class="org-modal-wrap">
-                <div class="org-modal" onclick="event.stopPropagation()">
-                    <div class="org-modal-header">
-                        <h2>부서등록</h2>
-                        <button type="button" class="modal-close-btn" onclick="closeInsertDeptModal()">✕</button>
-                    </div>
-
-                    <div class="org-modal-body">
-                        <div class="org-detail-row">
-                            <div class="org-detail-label">부서코드</div>
-                            <div class="org-detail-value">
-                                <input type="text" id="insert-dept-code" placeholder="부서코드를 입력하세요">
-                            </div>
-                        </div>
-
-                        <div class="org-detail-row">
-                            <div class="org-detail-label">부서명</div>
-                            <div class="org-detail-value">
-                                <input type="text" id="insert-dept-name" placeholder="부서명을 입력하세요">
-                            </div>
-                        </div>
-
-                        <div class="org-detail-row">
-                            <div class="org-detail-label">근무위치</div>
-                            <div class="org-detail-value">
-                                <input type="text" id="insert-dept-address" placeholder="근무위치를 입력하세요">
-                            </div>
+                            <div class="org-detail-value" id="modal-emp-status">-</div>
                         </div>
                     </div>
 
                     <div class="org-modal-footer">
-                        <button type="button" class="btn btn-sm btn-dark" onclick="insertDept()">등록</button>
-                        <button type="button" class="btn btn-sm btn-dark" onclick="closeInsertDeptModal()">닫기</button>
+                        <button type="button" class="btn btn-sm btn-mid" onclick="editEmpModal()">닫기</button>
+                        <button type="button" class="btn btn-sm btn-mid" onclick="closeEmpModal()">닫기</button>
                     </div>
                 </div>
             </div>
