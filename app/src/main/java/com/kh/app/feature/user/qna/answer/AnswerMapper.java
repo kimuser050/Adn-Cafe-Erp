@@ -1,8 +1,12 @@
 package com.kh.app.feature.user.qna.answer;
 
+import com.kh.app.feature.util.PageVo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface AnswerMapper {
@@ -50,5 +54,32 @@ public interface AnswerMapper {
             WHERE INQUIRY_NO = #{inquiryNo}
             """)
     int updateAnswerYn(String inquiryNo);
+
+    @Select("""
+                SELECT COUNT(*)
+                FROM QNA_ANSWER
+                WHERE DEL_YN = 'N'
+            """)
+    int selectCount();
+
+    @Select("""
+    SELECT
+        A.INQUIRY_NO,
+        Q.TITLE AS questionTitle,                  -- 문의 제목
+        QM.EMP_NAME AS questionWriterName,        -- 문의 작성자 이름
+        A.WRITER_NO ,
+        AM.EMP_NAME AS writerName,          -- 답변 작성자 이름
+        A.RESPONSE,
+        A.RESPONSE_AT,
+        A.UPDATED_AT
+    FROM QNA_ANSWER A
+    JOIN QNA_QUESTION Q ON A.INQUIRY_NO = Q.INQUIRY_NO
+    JOIN MEMBER QM ON Q.WRITER_NO = QM.EMP_NO   -- 문의 작성자
+    JOIN MEMBER AM ON A.WRITER_NO = AM.EMP_NO  -- 답변 작성자
+    WHERE A.DEL_YN = 'N'
+    ORDER BY A.INQUIRY_NO DESC
+    OFFSET #{offset} ROWS FETCH NEXT #{boardLimit} ROWS ONLY
+""")
+    List<AnswerVo> selectList(PageVo pvo);
 }
 
