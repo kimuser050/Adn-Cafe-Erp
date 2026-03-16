@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>부서관리</title>
+    <title>결재문서 작성</title>
 
     <script defer src="/js/approval/write.js"></script>
     <link rel="stylesheet" href="/css/approval/write.css">
@@ -21,7 +21,7 @@
 
     <main class="page-shell">
         <section class="page-content">
-            <!-- 여기부터 부서관리 내용 -->
+            <div></div>
         </section>
     </main>
 </div>

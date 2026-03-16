@@ -19,7 +19,7 @@ public class ApprovalDocRestController {
 
     private final ApprovalDocService approvalDocService;
 
-    // 문서 장석
+    // 문서 작성
     @PostMapping("write")
     public ResponseEntity<Map<String, String>> insert(@RequestBody ApprovalDocVo vo){
         int result = approvalDocService.insert(vo);
@@ -72,9 +72,9 @@ public class ApprovalDocRestController {
         return ResponseEntity.ok(map);
     }
 
-    // 문서 수정
+    // 문서 수정 (기안자)
     @PutMapping("/edit")
-    public ResponseEntity<Map<String, Object>> editDocument(ApprovalDocVo vo){
+    public ResponseEntity<Map<String, Object>> editDocument(@RequestBody ApprovalDocVo vo){
         int result = approvalDocService.editDocument(vo);
 
         if(result != 1){
@@ -88,7 +88,7 @@ public class ApprovalDocRestController {
         return ResponseEntity.ok(map);
     }
 
-    //결재 처리
+    // 결재 처리
     @PutMapping("/processApproval")
     public ResponseEntity<Map<String, Object>> processApproval(@RequestBody ApprovalDocVo vo){
         int result = approvalDocService.processApproval(vo);
@@ -104,6 +104,7 @@ public class ApprovalDocRestController {
         return ResponseEntity.ok(map);
     }
 
+    // 결재 문서 삭제 (기안자)
     @DeleteMapping
     public ResponseEntity<Map<String, Object>> deleteDoc(@RequestBody ApprovalDocVo vo){
         int result = approvalDocService.deleteDoc(vo);
