@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
     <link rel="stylesheet" href="/css/common/component.css">
-    <link rel="stylesheet" href="/css/hr/dept/deptList.css">
 </head>
 <body>
 
