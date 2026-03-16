@@ -53,7 +53,7 @@ public class ItemRestController {
     public ResponseEntity<Map<String, String>> insert(@RequestBody ItemVo vo) {
         int result = itemService.insert(vo);
         System.out.println("vo = " + vo);
-
+1
 
 
         if (result != 1) {
