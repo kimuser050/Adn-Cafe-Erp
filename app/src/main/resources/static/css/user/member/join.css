@@ -158,3 +158,29 @@
     border: 2px solid #71513d;
     margin-bottom: 10px;
 }
+/* 프로필 영역 컨테이너 */
+.profile-preview-container {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    gap: 15px; /* 사진과 버튼 사이 간격 */
+    width: 100%; /* 부모 너비에 맞춤 */
+}
+
+/* 프로필 이미지 (너무 크게 나오는 부분 해결) */
+.profile-img-large {
+    width: 150px; /* 원하는 가로 크기 지정 (예: 150px) */
+    height: 150px; /* 세로 크기도 동일하게 지정 */
+    border-radius: 50%; /* 완전한 원형으로 만들기 */
+    object-fit: cover; /* 이미지가 비율 유지하며 영역을 꽉 채우도록 함 */
+    border: 3px solid #71513d; /* 테마 컬러 테두리 추가 */
+    background-color: #fdfdfd; /* 이미지가 로드되지 않을 때 배경색 */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* 살짝 그림자 추가 */
+}
+
+/* 파일 업로드 디자인 (참고용) */
+.file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

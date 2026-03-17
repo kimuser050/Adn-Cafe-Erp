@@ -82,7 +82,11 @@
 
                                 <div class="form-group">
                                     <label>프로필사진</label>
-                                    <input type="file" name="profile" class="form-file">
+                                    <div class="profile-preview-area" style="margin-bottom: 10px;">
+                                        <img id="profile-preview" src="/img/common/default-profile.png"
+                                             style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #71513d; display: none;">
+                                    </div>
+                                    <input type="file" name="profile" class="form-file" onchange="previewImage(this)">
                                 </div>
 
                                 <div class="join-btn-area full-width">
