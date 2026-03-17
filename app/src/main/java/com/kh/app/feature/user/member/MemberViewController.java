@@ -17,6 +17,11 @@ public class MemberViewController {
 
     private final MemberService memberService;
 
+    @GetMapping("join")
+    public String join(){
+        return "user/member/join";
+    }
+
     @GetMapping("/{empNo}")
     public ResponseEntity<MemberVo> getMember(@PathVariable String empNo) {
         MemberVo member = memberService.selectByNo(empNo);
