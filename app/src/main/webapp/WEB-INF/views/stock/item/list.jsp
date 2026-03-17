@@ -7,7 +7,7 @@
         <meta charset="UTF-8">
         <title>품목</title>
 
-        <script defer src="/js/approval/write.js"></script>
+
         <script defer src="/js/stock/item.js"></script>
 
         <link rel="stylesheet" href="/css/approval/write.css">
@@ -22,7 +22,7 @@
     <body>
 
         <div class="app-shell">
-            <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
+            <%@ include file="/WEB-INF/views/stock/common/itemSidebar.jsp" %>
 
                 <main class="page-shell">
                     <section class="page-content">

@@ -11,15 +11,15 @@
 
     <nav class="sidebar-nav">
 
-        
+
         <a href="/" id="home">HOME</a>
-        
+
 
         <div class="nav-group">
             <button type="button" class="nav-main">인적관리</button>
             <div class="nav-sub">
-                <a href="/hr/dept/list" class="active">조직관리</a>
-                <a href="#">직원관리</a>
+                <a href="/hr/dept/list">조직관리</a>
+                <a href="/hr/emp/list"  class="active">직원관리</a>
                 <a href="#">근태관리</a>
                 <a href="#">급여관리</a>
             </div>
@@ -41,7 +41,7 @@
                 <a href="#">발주신청</a>
                 <a href="#">반품신청</a>
                 <a href="#">반품검수</a>
-                <a href="/stock/item/list" class="active" >본사품목</a>
+                <a href="/stock/item" class="active">본사품목</a>
                 <a href="#">상품관리</a>
             </div>
         </div>
