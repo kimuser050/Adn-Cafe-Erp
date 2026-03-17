@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("stock")
 public class ItemViewController {
 
-    @GetMapping("item/list")
+    @GetMapping("item")
     public String list() {
         return "stock/item/list";
     }
