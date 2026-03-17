@@ -11,12 +11,7 @@ public class ItemViewController {
     //품목 조회
     @GetMapping("item")
     public String list() {
-        return "stock/item/list";
+        return "stock/item/itemList";
     }
 
-    //품목수정
-
-    //품목 삭제
-
-    //품목 등록
 }

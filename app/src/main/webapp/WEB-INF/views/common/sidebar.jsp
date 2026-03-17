@@ -41,7 +41,7 @@
                 <a href="#">발주신청</a>
                 <a href="#">반품신청</a>
                 <a href="#">반품검수</a>
-                <a href="/stock/item/list" class="active" >본사품목</a>
+                <a href="/stock/item" class="active" >본사품목</a>
                 <a href="#">상품관리</a>
             </div>
         </div>
