@@ -1,0 +1,236 @@
+/* 전체 레이아웃 설정 */
+.app-shell {
+    display: flex; /* 사이드바와 page-shell을 가로로 배치 */
+    width: 100%;
+    height: 100vh;
+}
+
+.page-shell {
+    flex: 1; /* 사이드바를 제외한 나머지 공간을 모두 차지 */
+    position: relative;
+    overflow: hidden;
+}
+
+.home-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* 1. 사이드바 옆 나머지 영역을 꽉 채우는 배경 */
+.home-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/img/common/homeMain.png') no-repeat center;
+    background-size: cover; /* 영역에 맞게 꽉 채움 */
+    z-index: 1;
+}
+
+/* 2. 콘텐츠 레이어 (배경 위에 뜨게 함) */
+.home-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+}
+
+/* 로그인 박스 위치 조정 */
+.login-section {
+    position: absolute;
+    right: 50px;
+    top: 45%;
+    transform: translateY(-50%);
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 하단 카드 배치 */
+.home-card-wrap {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.card-item {
+    flex: 1;
+    max-width: 350px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 카드 제목 배지 스타일 */
+.card-badge {
+    background-color: #71513d; /* 갈색 톤 */
+    color: white;
+    padding: 8px 25px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    position: absolute;
+    top: -15px;
+    z-index: 3;
+}
+
+/* 카드 박스 */
+.home-card {
+    width: 100%;
+    height: 200px;
+    background-color: rgba(255, 255, 255, 0.7); /* 반투명 화이트 */
+    border-radius: 15px;
+    backdrop-filter: blur(8px); /* 투명감 있는 효과 */
+    margin-top: 10px;
+}
+
+/* 로그인 박스 전체 스타일링 */
+.login-section {
+    position: absolute;
+    right: 80px; /* 오른쪽 여백 살짝 조절 */
+    top: 45%;
+    transform: translateY(-50%);
+    width: 320px; /* 너비를 살짝 키움 */
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.85); /* 반투명 배경 추가 */
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 10;
+}
+
+/* 입력창 스타일 */
+.login-section input {
+    width: 100%;
+    height: 45px;
+    border: 1.5px solid #d1c7bc;
+    border-radius: 10px;
+    padding: 0 15px;
+    font-size: 14px;
+    background-color: white;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.login-section input:focus {
+    outline: none;
+    border-color: #71513d; /* 테마 갈색 */
+    box-shadow: 0 0 5px rgba(113, 81, 61, 0.2);
+}
+
+/* 로그인 버튼 영역 */
+.login-btn-area {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+/* 공통 버튼 높이 맞춤 */
+.login-btn-area .btn {
+    flex: 1;
+    height: 45px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-outline {
+    background-color: white;
+    border: 1.5px solid #71513d !important;
+    color: #71513d;
+}
+
+.btn-dark {
+    background-color: #71513d;
+    color: white;
+}
+
+.btn:hover {
+    filter: brightness(90%);
+}
+/* 사용자 정보 영역 전체 박스 (로그인 박스와 동일한 디자인 유지) */
+.user-info-area {
+    position: absolute;
+    right: 80px;
+    top: 45%;
+    transform: translateY(-50%);
+    width: 300px;
+    padding: 30px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 중앙 정렬 */
+    gap: 20px;
+    z-index: 10;
+}
+
+/* 프로필 이미지 스타일 */
+.profile-img {
+    width: 120px; /* 크기 적절히 조절 */
+    height: 120px;
+    border-radius: 50%; /* 완전한 원형 */
+    object-fit: cover; /* 이미지 비율 유지하며 꽉 채움 */
+    border: 3px solid #71513d; /* 테마 컬러 테두리 */
+    transition: transform 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.profile-img:hover {
+    transform: scale(1.05); /* 마우스 올리면 살짝 커짐 */
+}
+
+/* 텍스트 및 상세 영역 */
+.user-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.user-name {
+    font-size: 18px;
+    color: #444;
+    letter-spacing: -0.5px;
+}
+
+.user-name b {
+    color: #71513d;
+    font-weight: 800;
+}
+
+/* 로그아웃 버튼 */
+.btn-logout {
+    width: 100%;
+    height: 45px;
+    background-color: #71513d;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-logout:hover {
+    background-color: #5d4037;
+    box-shadow: 0 4px 12px rgba(113, 81, 61, 0.3);
+}
