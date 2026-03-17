@@ -1,0 +1,160 @@
+/* 1. 회원가입 전체 컨테이너 */
+.join-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px; /* 좌우 여백 확보 */
+    min-height: 100vh;
+}
+
+/* 2. 카드 박스 - 너비를 대폭 키우고 여백 조정 */
+.join-card {
+    background-color: rgba(255, 255, 255, 0.95);
+    width: 100%;
+    max-width: 1100px;  /* 카드의 가로 크기를 1100px까지 확장 */
+    padding: 60px 80px; /* 내부 여백을 늘려 입력창이 답답하지 않게 함 */
+    border-radius: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
+}
+
+/* 3. 그리드 레이아웃 - 튀어나가지 않게 설정 */
+.join-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 좌우 1:1 비율 */
+    column-gap: 80px;  /* 열 사이 간격을 넓게 벌려 시원하게 만듦 */
+    row-gap: 25px;
+    width: 100%;       /* 그리드가 카드 너비를 넘지 않게 고정 */
+}
+
+/* 4. 라벨과 입력창 세로 정렬 */
+.form-group {
+    display: flex;
+    align-items: center;
+    width: 100%;       /* 부모 너비 안에서만 작동하도록 제한 */
+}
+
+.form-group label {
+    width: 130px;      /* 라벨 너비를 고정하여 시작점 통일 */
+    font-size: 20px;
+    font-weight: 800;
+    flex-shrink: 0;    /* 자리가 좁아도 라벨이 찌그러지지 않음 */
+}
+
+.form-input {
+    flex: 1;           /* 라벨을 제외한 남은 공간을 정확히 꽉 채움 */
+    height: 48px;
+    border: 1.5px solid #d1c7bc;
+    border-radius: 25px;
+    padding: 0 20px;
+    font-size: 16px;
+    box-sizing: border-box; /* 너비 계산 오류 방지 */
+}
+
+/* 5. 주소창 (전체 너비 차지) */
+.full-width {
+    grid-column: span 2;
+}
+
+/* 6. 파일 첨부 정렬 */
+.form-file {
+    font-size: 14px;
+    color: #666;
+}
+
+
+/* 1. 사원명 인풋창 스타일 (라인 맞추기의 기준) */
+.form-group .form-input {
+    flex: 1; /* 라벨을 제외한 남은 공간을 다 차지함 */
+    /* ... 둥근 테두리, 패딩 등 기존 스타일 ... */
+}
+
+/* 2. 주민번호 수정을 위한 핵심 CSS */
+
+/* 주민번호 그룹 전체를 Flex로 설정 */
+.resd-input-area {
+    display: flex;
+    align-items: center; /* 라벨 및 하이픈과 수직 중앙 정렬 */
+    gap: 10px; /* 인풋창과 하이픈 사이의 간격 */
+    flex: 1; /* 주민번호 영역 전체가 '사원명' 인풋창과 똑같은 너비를 가짐 */
+}
+
+/* 앞자리, 뒷자리 인풋창 각각의 스타일 */
+.resd-no {
+    flex: 1; /* 남은 가로 공간을 1:1 비율로 균등하게 나눔 (이 부분이 중요!) */
+    width: 0; /* flex 속성이 제대로 작동하기 위한 기초 설정 */
+    height: 48px; /* 다른 인풋창과 높이 통일 */
+    border: 1.5px solid #d1c7bc; /* 연한 갈색빛 테두리 */
+    border-radius: 25px; /* 둥근 테두리 */
+    padding: 0 15px;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
+}
+
+/* 하이픈 스타일 */
+.hyphen {
+    font-size: 20px;
+    font-weight: bold;
+    color: #444;
+}
+
+/* 버튼 컨테이너: 전체 너비를 사용하며 중앙 정렬 */
+.join-btn-area {
+    grid-column: span 2; /* 그리드 2칸을 모두 차지 */
+    display: flex;
+    justify-content: center;
+    margin-top: 40px; /* 위 요소와 확실한 간격 */
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* 구분선 추가로 더 깔끔하게 */
+}
+
+/* 회원가입 버튼 스타일 */
+.btn-submit {
+    width: 300px; /* 버튼을 가로로 길게 */
+    height: 60px;
+    background-color: #6d4c41; /* 메인 컬러 (진한 갈색) */
+    color: white;
+    font-size: 20px;
+    font-weight: 800;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(109, 76, 65, 0.3);
+}
+
+.btn-submit:hover {
+    background-color: #5d4037;
+    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+    box-shadow: 0 8px 20px rgba(109, 76, 65, 0.4);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+/* 사용자 정보 내 버튼 그룹 정렬 */
+.btn-group {
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    gap: 10px;               /* 버튼 사이 간격 */
+    width: 100%;             /* 부모 너비에 맞춤 */
+}
+
+/* 버튼 크기를 균등하게 배분 */
+.btn-group .btn {
+    flex: 1;                 /* 버튼들이 동일한 너비를 가짐 */
+    white-space: nowrap;     /* 텍스트 줄바꿈 방지 */
+    padding: 10px 5px;       /* 내부 여백 조절 */
+    font-size: 14px;         /* 폰트 크기 살짝 조절 (두 개가 들어가야 하므로) */
+}
+
+/* (참고) 프로필 이미지를 둥글게 유지하려면 */
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #71513d;
+    margin-bottom: 10px;
+}
