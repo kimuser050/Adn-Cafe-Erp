@@ -40,7 +40,7 @@ public class ItemRestController {
 
     }
     //상세조회
-    @GetMapping("{itemNo}")
+    @GetMapping("/{itemNo}")
     public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String itemNo){
         ItemVo vo = itemService.selectOne(itemNo);
         Map<String, Object> map = new HashMap<>();
