@@ -36,5 +36,13 @@ public class MemberViewController {
         return "redirect:/";  // 메인 페이지로 리다이렉트
     }
 
+    @GetMapping("mypage")
+    public String update(){
+        return "user/member/mypage";
+    }
+
+
+
+
 
 }
