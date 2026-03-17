@@ -18,4 +18,31 @@ public class EmpService {
     public List<EmpVo> selectList() {
         return empMapper.selectList();
     }
+
+    public EmpVo selectDetail(String empNo) {
+        return empMapper.selectDetail(empNo);
+    }
+
+    public List<EmpHistoryVo> selectEmpHistory(String empNo) {
+        return empMapper.selectEmpHistory(empNo);
+    }
+
+    @Transactional
+    public int edit(EmpVo vo) {
+        return empMapper.edit(vo);
+    }
+
+    @Transactional
+    public int insertEmpHistory(EmpHistoryVo vo) {
+        return empMapper.insertEmpHistory(vo);
+    }
+
+    @Transactional
+    public int editEmpHistory(EmpHistoryVo vo) {
+        return empMapper.editEmpHistory(vo);
+    }
+
+    public List<CurrentStatusVo> selectStatusList() {
+        return empMapper.selectStatusList();
+    }
 }

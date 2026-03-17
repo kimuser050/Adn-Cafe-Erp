@@ -110,7 +110,9 @@ public interface StoreMapper {
     StoreVo selectDetail(String storeCode);
 
     @Select("""
-        SELECT EMP_NO , EMP_NAME
+        SELECT 
+        EMP_NO 
+        , EMP_NAME
         FROM MEMBER
         WHERE POS_CODE = '100011'
         AND QUIT_YN = 'N'
@@ -126,6 +128,8 @@ public interface StoreMapper {
     int updateStatus(@Param("storeCode") String storeCode,
                      @Param("statusCode") int statusCode);
 
+
+    //수정 왜 두개로 나눠놓은거지? 합칠수있다면 합치자
     @Update("""
         UPDATE STORE
         SET STORE_ADDRESS = #{storeAddress}

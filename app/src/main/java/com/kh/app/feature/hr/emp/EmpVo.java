@@ -11,8 +11,14 @@ public class EmpVo {
     private String posName;
     private String deptCode;
     private String deptName;
+    private String storeName;
     private String orgName;
-    private String resdNo;
+
+    //급여관련 기본정보 (직급에서 가져오는 거임)
+    private String baseSalary;
+    private String bonusRate;
+    private String expectedSalary;
+
     private String empPhone;
     private String empEmail;
     private String empAddress;
@@ -24,4 +30,5 @@ public class EmpVo {
     private String updatedAt;
     private String quitYn;
     private String empStatusNo;
+    private String statusName;
 }
