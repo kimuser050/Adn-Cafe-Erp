@@ -51,7 +51,28 @@ public class DailySalesRestController {
         List<DailySalesVo> voList = dailySalesService.listDaily(vo);
 
         Map<Object, Object> map = new HashMap<>();
-        map.put("vo" , vo);
+        map.put("voList" , voList);
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/storeIncome")
+    public ResponseEntity<Map<Object, Object>> storeIncome(@RequestParam String salesDate) throws Exception {
+
+        List<DailySalesVo> voList = dailySalesService.storeIncome(salesDate);
+
+        Map<Object, Object> map = new HashMap<>();
+        map.put("voList" , voList);
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/productIncome")
+    public ResponseEntity<Map<Object, Object>> productIncome(String salesDate) throws Exception {
+
+        List<DailySalesVo> voList = dailySalesService.productIncome(salesDate);
+
+        Map<Object, Object> map = new HashMap<>();
         map.put("voList" , voList);
 
         return ResponseEntity.ok(map);

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -64,11 +65,41 @@ public class DailySalesService {
         return dailySalesMapper.delDaily(vo, tableName);
     }
 
-    public List<DailySalesVo> listDaily(@ModelAttribute DailySalesVo vo) throws Exception {
+    public List<DailySalesVo> listDaily(DailySalesVo vo) throws Exception {
         String koreanStoreName = dailySalesMapper.getkoreanStoreName(vo.getStoreNo());
 
         String tableName = engStoreName(koreanStoreName) + "_DAILY_SALES";
 
         return dailySalesMapper.listDaily(vo, tableName);
+    }
+
+
+    public List<DailySalesVo> storeIncome(String salesDate) throws Exception {
+
+        List<DailySalesVo> total = new ArrayList<>();
+
+        List<DailySalesVo> allstores = dailySalesMapper.getStoreList();
+        for (DailySalesVo store : allstores) {
+            String tableName = engStoreName(store.getStoreName()) + "_DAILY_SALES";
+
+            List<DailySalesVo> dailySales = dailySalesMapper.storeIncome(store, tableName, salesDate);
+
+            total.addAll(dailySales);
+        }
+
+        return total;
+    }
+
+
+    public List<DailySalesVo> productIncome(String salesDate) throws Exception {
+
+        List<DailySalesVo> total = new ArrayList<>();
+        List<DailySalesVo> allstores = dailySalesMapper.getStoreList();
+            for (DailySalesVo store : allstores) {
+                String tableName = engStoreName(store.getStoreName()) + "_DAILY_SALES";
+                List<DailySalesVo> dailySales = dailySalesMapper.productIncome(tableName, salesDate);
+                total.addAll(dailySales);
+            }
+        return total;
     }
 }

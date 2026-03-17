@@ -8,7 +8,9 @@ public class DailySalesVo {
 
     private String salesNo;
     private String storeNo;
+    private String storeName;
     private String productNo;
+    private String productName;
     private String unitPrice;
     private String quantity;
     private String paymentCd;
