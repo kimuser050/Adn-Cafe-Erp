@@ -8,8 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("stock")
 public class ItemViewController {
 
+    //품목 조회
     @GetMapping("item")
     public String list() {
         return "stock/item/list";
     }
+
+    //품목수정
+
+    //품목 삭제
+
+    //품목 등록
 }
