@@ -74,6 +74,7 @@ async function findAccount() {
                 <td>${vo.journalDate}</td>
                 <td>${vo.credit}</td>
                 <td>${vo.debit}</td>
+                <td>${vo.accountName}</td>
             </tr>
         `
         tbody.innerHTML = str;
@@ -88,6 +89,27 @@ async function findMonthAccount() {
     const journalDate = document.querySelector("#journalDate").value;
 
     const resp = await fetch(`/journal/monthListData?journalDate=${journalDate}`);
+    const voList = await resp.json();
+
+    const tbody = document.querySelector("#journalListBody");
+
+    let str = "";
+    for (const vo of voList) {
+        str += `
+            <tr>
+                <td>${vo.credit}</td>
+                <td>${vo.accountName}</td>
+                <td>${vo.debit}</td>
+            </tr>
+        `
+    }
+    tbody.innerHTML = str;
+}
+
+async function findDailyAccount() {
+    const journalDate = document.querySelector("#journalDate").value;
+
+    const resp = await fetch(`/journal/dailyListData?journalDate=${journalDate}`);
     const voList = await resp.json();
 
     const tbody = document.querySelector("#journalListBody");

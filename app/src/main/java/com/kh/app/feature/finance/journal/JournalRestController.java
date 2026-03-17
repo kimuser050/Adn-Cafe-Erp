@@ -103,17 +103,17 @@ public class JournalRestController {
         return journalService.monthList(journalDate);
     }
 
-    @GetMapping("/dailyList")
+    @GetMapping("/dailyListData")
     public List<JournalVo> dailyList(@RequestParam String journalDate){
         return journalService.dailyList(journalDate);
     }
 
-    @GetMapping("/journalState")
+    @GetMapping("/journalStateData")
     public List<JournalVo> journalState(@RequestParam String journalDate){
         return journalService.journalState(journalDate);
     }
 
-    @GetMapping("/incomeState")
+    @GetMapping("/incomeStateData")
     public List<JournalVo> incomeState(@RequestParam String journalDate){
         return journalService.incomeState(journalDate);
     }
