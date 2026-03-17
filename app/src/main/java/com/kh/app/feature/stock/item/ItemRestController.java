@@ -27,17 +27,24 @@ public class ItemRestController {
 
     //품목 조회
     @GetMapping("itemList")
-    public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false , defaultValue = "1")int currentPage){
-        int listCount = itemService.selectCount();
+    public ResponseEntity<Map<String, Object>> selectList(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false) String keyword // [추가] 검색어 받기
+    ){
+        // [수정] 검색어에 따른 전체 개수 조회 (Service/Mapper 수정 필요)
+        int listCount = itemService.selectCount(keyword);
+
         int pageLimit = this.pageLimit;
         int boardLimit = this.boardLimit;
         PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
-        List<ItemVo> voList = itemService.selectList(pvo);
+
+        // [수정] 목록 조회 시 검색어 함께 전달
+        List<ItemVo> voList = itemService.selectList(pvo, keyword);
+
         Map<String, Object> map = new HashMap<>();
         map.put("pvo", pvo);
         map.put("voList", voList);
         return ResponseEntity.ok(map);
-
     }
     //상세조회
     @GetMapping("/{itemNo}")

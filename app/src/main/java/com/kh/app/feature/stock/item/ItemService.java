@@ -25,13 +25,14 @@ public class ItemService {
     }
 
     @Transactional
-    public int selectCount() {
-        return itemMapper.selectCount();
+    public int selectCount(String keyword) {
+        return itemMapper.selectCount(keyword);
     }
     @Transactional
-    public List<ItemVo> selectList(PageVo pvo) {
-        return itemMapper.selectList(pvo);
+    public List<ItemVo> selectList(PageVo pvo, String keyword) {
+        return itemMapper.selectList(pvo, keyword);
     }
+
 
     public ItemVo selectOne(String no) {
         return itemMapper.selectOne(no);
@@ -41,5 +42,6 @@ public class ItemService {
         System.out.println("service = "+ vo);
         return itemMapper.updateByNo(vo);
     }
+
 
 }
