@@ -39,7 +39,8 @@
                             <div class="journal-card">
                                 <div class="card-header">
                                     <div class="date-picker-wrap">
-                                        <input type="date" id="journalDate" value="2026-03-12" class="date-input">
+                                        <input type="date" id="journalDate" value="2026-03-12" class="date-input"
+                                            onchange="selectJournal();">
                                     </div>
                                     <div class="action-btns">
                                         <button class="menu-btn-sm" onclick="updateJournal()">수정하기</button>
@@ -51,7 +52,7 @@
                                     <table class="summary-table">
                                         <thead>
                                             <tr>
-                                                <th width="40"><input type="checkbox"></th>
+                                                <th width="40"><input type="checkbox" readonly></th>
                                                 <th>날짜</th>
                                                 <th>번호</th>
                                                 <th>계정과목</th>
@@ -59,16 +60,7 @@
                                                 <th>작성자</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="journalListBody">
-                                            <tr>
-                                                <td><input type="checkbox"></td>
-                                                <td>2026-03-12</td>
-                                                <td>1024</td>
-                                                <td>보통예금 외</td>
-                                                <td>1,200,000</td>
-                                                <td>김관리</td>
-                                            </tr>
-                                        </tbody>
+                                        <tbody id="journalListBody"></tbody>
                                     </table>
                                 </div>
 
@@ -81,7 +73,7 @@
                                         <div class="bal-item">차이금액 <input type="text" id="diffAmount" value="0"
                                                 class="text-danger" readonly></div>
                                     </div>
-                                    <button class="menu-btn-sm btn-dark" onclick="submitJournal()">등록</button>
+                                    <button class="menu-btn-sm btn-dark" onclick="insertJournal()">등록</button>
                                 </div>
 
                                 <div class="entry-section">
@@ -93,21 +85,16 @@
                                     </div>
                                     <div id="entryRowContainer" class="entry-scroll-area">
                                         <div class="entry-row">
-                                            <input type="text" class="account-select" list="accountOptions"
+                                            <input type="text" class="debitInput account-select" list="accountOptions"
                                                 placeholder="계정선택">
-                                            <input type="number" class="amount-input debit" oninput="calc()" value="0"
-                                                step="10000">
+                                            <input type="text" id="debit" class="amount-input debit">
 
-                                            <input type="text" class="account-select" list="accountOptions"
+                                            <input type="text" class="creditInput account-select" list="accountOptions"
                                                 placeholder="계정선택">
-                                            <input type="number" class="amount-input credit" oninput="calc()" value="0"
-                                                step="10000">
+                                            <input type="text" id="credit" class="amount-input credit">
                                         </div>
                                     </div>
                                     <datalist id="accountOptions"></datalist>
-                                </div>
-                                <div class="add-row-wrapper">
-                                    <button type="button" class="btn-add-row" onclick="addRow()">+ 행 추가</button>
                                 </div>
                             </div>
                         </div>

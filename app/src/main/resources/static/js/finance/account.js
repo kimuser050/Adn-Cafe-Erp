@@ -41,14 +41,7 @@ async function loadSub(element, mainAccountNo) {
             </div>
         `
     }
-    //데이터셋(Dataset) :  
-    //현재 이 계정이 어떤 상태인지 JS가 즉시 기억하기 위해서
-    //HTML 태그에 data-로 시작하는 속성을 넣으면, 
-    //화면에 보이지는 않지만 특정 데이터를 몰래 숨겨둘 수 있음
-
     subArea.innerHTML = subList;
-
-
 }
 
 // 체크한 박스들 삭제
@@ -93,7 +86,6 @@ async function statusAccount() {
 }
 
 
-// 계정등록 form데이터로 받아서 입력
 async function insertAccount() {
 
     const accountName = document.querySelector("input[name=accountName]").value;

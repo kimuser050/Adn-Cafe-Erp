@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="/css/common/sidebar.css">
         <link rel="stylesheet" href="/css/common/component.css">
         <link rel="stylesheet" href="/css/hr/dept/deptList.css">
-        <link rel="stylesheet" href="/css/finance/journal/totalList.css">
+        <link rel="stylesheet" href="/css/finance/journal/monthList.css">
         <script defer src="/js/finance/journal.js"></script>
     </head>
 
@@ -28,36 +28,34 @@
                             <div class="main-tab-group">
                                 <button class="menu-btn"
                                     onclick="location.href=`http://127.0.0.1/journal/insertJournal`">분개장</button>
-                                <button class="menu-btn active"
+                                <button class="menu-btn"
                                     onclick="location.href=`http://127.0.0.1/journal/totalList`">총계정원장</button>
                                 <button class="menu-btn"
                                     onclick="location.href=`http://127.0.0.1/journal/monthList`">월계표</button>
-                                <button class="menu-btn"
+                                <button class="menu-btn active"
                                     onclick="location.href=`http://127.0.0.1/journal/dailyList`">일계표</button>
                             </div>
                             <div class="journal-card">
                                 <div class="search-wrapper">
-                                    <input type="text" id="accountInput" class="account-select" list="accountOptions"
-                                        placeholder="계정입력">
-                                    <button class="menu-btn active" onclick="findAccount()">검색</button>
+                                    <input type="date" id="journalDate" value="2026-03" class="month-input">
+                                    <button class="menu-btn active" onclick="findDailyAccount()">검색</button>
                                 </div>
 
                                 <datalist id="accountOptions"></datalist>
-                                <div>
-                                    <div class="list-container">
-                                        <table class="summary-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>날짜</th>
-                                                    <th>차변금액</th>
-                                                    <th>대변금액</th>
-                                                    <th>상세계정명</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="journalListBody"></tbody>
-                                        </table>
-                                    </div>
+
+                                <div class="list-container">
+                                    <table class="summary-table">
+                                        <thead>
+                                            <tr>
+                                                <th>차변금액</th>
+                                                <th>계정명</th>
+                                                <th>대변금액</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="journalListBody"></tbody>
+                                    </table>
                                 </div>
+
                             </div>
 
                     </section>

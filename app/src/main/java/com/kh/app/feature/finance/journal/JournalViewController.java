@@ -24,4 +24,9 @@ public class JournalViewController {
     public String monthList(){
         return "finance/journal/monthList";
     }
+
+    @GetMapping("/dailyList")
+    public String dailyList(){
+        return "finance/journal/dailyList";
+    }
 }

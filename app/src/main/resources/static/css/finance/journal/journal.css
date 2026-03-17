@@ -92,14 +92,21 @@
     color: #fff;
 }
 
-/* 상단 리스트 및 하단 입력 50:50 비율 */
-.list-container,
-.entry-section {
-    flex: 1;
+.list-container {
+    flex: 3;
     overflow-y: auto;
     border: 1px solid #eee;
     border-radius: 12px;
     padding: 15px;
+}
+
+.entry-section {
+    flex: 1;
+    /* overflow-y: hidden; */
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 15px;
+    background-color: #fcfcfc;
 }
 
 /* 가로 합계바 */
@@ -165,31 +172,6 @@
     padding: 0 12px;
 }
 
-/* 3. 행 추가 버튼: 실선 박스 + 가운데 정렬 */
-.add-row-wrapper {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-}
-
-.btn-add-row {
-    background: #fff;
-    border: 1px solid #6a4328;
-    color: #6a4328;
-    padding: 6px 25px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.btn-add-row:hover {
-    background: #6a4328;
-    color: #fff;
-}
 
 /* 날짜 박스 스타일 수정: 더 둥글고 간격 있게 */
 .date-input {
