@@ -12,4 +12,5 @@ public class EmpViewController {
     public String list() {
         return "hr/emp/empList";
     }
+
 }

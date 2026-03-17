@@ -19,7 +19,7 @@
 <body>
 
 <div class="app-shell">
-    <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
+    <%@ include file="/WEB-INF/views/hr/common/orgSidebar.jsp" %>
 
     <main class="page-shell">
         <section class="page-content org-page pos-page">

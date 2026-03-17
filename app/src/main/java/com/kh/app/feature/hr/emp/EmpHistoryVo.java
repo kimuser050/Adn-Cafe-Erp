@@ -6,6 +6,7 @@ import lombok.Data;
 public class EmpHistoryVo {
     private String hisNo;
     private String empNo;
+    private String empName;
     private String hisDate;
     private String hisEvent;
     private String hisContent;
