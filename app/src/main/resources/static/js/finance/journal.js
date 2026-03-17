@@ -10,7 +10,7 @@ async function getAccountList() {
 
     let str = "";
     for (const vo of data) {
-        str += `<option value="${vo.accountName}">${vo.accountNo}</option>`;
+        str += `<option value="${vo.accountName}" data-no="${vo.accountNo}"></option>`;
     }
 
     accountList.innerHTML = str;
@@ -37,4 +37,70 @@ function addRow() {
         ;
     container.appendChild(newRow);
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// 총계정원장
+async function findAccount() {
+    const selectAccount = document.querySelector("#accountInput").value;
+    const option = document.querySelectorAll("#accountOptions option");
+    let accountNo = "";
+    for (let opt of option) {
+        if (opt.value === selectAccount) {
+            accountNo = opt.dataset.no;
+            break;
+        }
+    }
+
+    const resp = await fetch(`/journal/${accountNo}`)
+    const voList = await resp.json();
+
+    const tbody = document.querySelector("#journalListBody");
+
+    let str = "";
+    for (const vo of voList) {
+        str += `
+            <tr>
+                <td>${vo.journalDate}</td>
+                <td>${vo.credit}</td>
+                <td>${vo.debit}</td>
+            </tr>
+        `
+        tbody.innerHTML = str;
+    }
+}
+
+
+//월계표
+
+async function findMonthAccount() {
+
+    const journalDate = document.querySelector("#journalDate").value;
+
+    const resp = await fetch(`/journal/monthListData?journalDate=${journalDate}`);
+    const voList = await resp.json();
+
+    const tbody = document.querySelector("#journalListBody");
+
+    let str = "";
+    for (const vo of voList) {
+        str += `
+            <tr>
+                <td>${vo.credit}</td>
+                <td>${vo.accountName}</td>
+                <td>${vo.debit}</td>
+            </tr>
+        `
+    }
+    tbody.innerHTML = str;
 }

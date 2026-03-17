@@ -6,12 +6,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/account")
+@RequestMapping("/journal")
 @Slf4j
 public class JournalViewController {
 
     @GetMapping("/insertJournal")
     public String insertJournal(){
         return "/finance/journal/journal";
+    }
+
+    @GetMapping("/totalList")
+    public String totalList(){
+        return "finance/journal/totalList";
+    }
+
+    @GetMapping("/monthList")
+    public String monthList(){
+        return "finance/journal/monthList";
     }
 }
