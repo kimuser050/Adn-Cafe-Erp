@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="/css/common/sidebar.css">
         <link rel="stylesheet" href="/css/common/component.css">
         <link rel="stylesheet" href="/css/hr/dept/deptList.css">
-        <link rel="stylesheet" href="/css/finance/journal/totalList.css">
+        <link rel="stylesheet" href="/css/finance/journal/monthList.css">
         <script defer src="/js/finance/journal.js"></script>
     </head>
 
@@ -37,25 +37,25 @@
                             </div>
                             <div class="journal-card">
                                 <div class="search-wrapper">
-                                    <input type="date" id="journalDate" value="2026-03" class="date-input">
-                                    <button class="menu-btn active" onclick="findAccount()">검색</button>
+                                    <input type="month" id="journalDate" value="2026-03" class="month-input">
+                                    <button class="menu-btn active" onclick="findMonthAccount()">검색</button>
                                 </div>
 
                                 <datalist id="accountOptions"></datalist>
-                                <div>
-                                    <div class="list-container">
-                                        <table class="summary-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>날짜</th>
-                                                    <th>차변금액</th>
-                                                    <th>대변금액</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="journalListBody"></tbody>
-                                        </table>
-                                    </div>
+
+                                <div class="list-container">
+                                    <table class="summary-table">
+                                        <thead>
+                                            <tr>
+                                                <th>차변금액</th>
+                                                <th>계정명</th>
+                                                <th>대변금액</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="journalListBody"></tbody>
+                                    </table>
                                 </div>
+
                             </div>
 
                     </section>

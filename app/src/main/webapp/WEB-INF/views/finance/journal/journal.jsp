@@ -26,11 +26,11 @@
                         <div class="page">
 
                             <div class="main-tab-group">
-                                <button class="menu-btn"
+                                <button class="menu-btn active"
                                     onclick="location.href=`http://127.0.0.1/journal/insertJournal`">분개장</button>
                                 <button class="menu-btn"
                                     onclick="location.href=`http://127.0.0.1/journal/totalList`">총계정원장</button>
-                                <button class="menu-btn active"
+                                <button class="menu-btn"
                                     onclick="location.href=`http://127.0.0.1/journal/monthList`">월계표</button>
                                 <button class="menu-btn"
                                     onclick="location.href=`http://127.0.0.1/journal/dailyList`">일계표</button>

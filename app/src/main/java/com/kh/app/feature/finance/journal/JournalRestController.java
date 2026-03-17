@@ -98,7 +98,7 @@ public class JournalRestController {
         return journalService.totalList(accountNo);
     }
 
-    @GetMapping("/monthList")
+    @GetMapping("/monthListData")
     public List<JournalVo> monthList(@RequestParam String journalDate){
         return journalService.monthList(journalDate);
     }

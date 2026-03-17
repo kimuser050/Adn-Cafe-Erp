@@ -20,4 +20,8 @@ public class JournalViewController {
         return "finance/journal/totalList";
     }
 
+    @GetMapping("/monthList")
+    public String monthList(){
+        return "finance/journal/monthList";
+    }
 }
