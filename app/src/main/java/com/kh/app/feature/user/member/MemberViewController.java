@@ -1,6 +1,7 @@
 package com.kh.app.feature.user.member;
 
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,12 @@ public class MemberViewController {
         if (member == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(member);
     }
+
+    @GetMapping("logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("loginMemberVo");
+        return "redirect:/";  // 메인 페이지로 리다이렉트
+    }
+
 
 }
