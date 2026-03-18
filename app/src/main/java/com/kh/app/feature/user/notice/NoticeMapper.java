@@ -121,19 +121,19 @@ public interface NoticeMapper {
 
     @Insert("""
             INSERT INTO NOTICE_FILE
-                (
-                NOTICE_NO
-                ,ORIGIN_NAME
-                ,CHANGE_NAME
-                ,FILE_PATH
-                )
-                VALUES
-                (
-                SEQ_NOTICE.CURRVAL 
-                ,#{originName}
-                ,#{changeName}
-                ,#{filePath}
-                )
+            (
+            NOTICE_NO
+            ,ORIGIN_NAME
+            ,CHANGE_NAME
+            ,FILE_PATH
+            )
+            VALUES
+            (
+            #{noticeNo}
+            ,#{originName}
+            ,#{changeName}
+            ,#{filePath}
+            )
             """)
     void insertFile(NoticeFileVo fvo);
 
@@ -180,4 +180,9 @@ public interface NoticeMapper {
             """)
     List<NoticeFileVo> selectFileListByNoticeNo(String noticeNo);
 
+    @Select("SELECT SEQ_NOTICE.CURRVAL FROM DUAL")
+    String selectCurrentSeq();
+
 }
+
+
