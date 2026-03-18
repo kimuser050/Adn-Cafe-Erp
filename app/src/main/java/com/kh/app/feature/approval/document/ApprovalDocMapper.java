@@ -75,20 +75,12 @@ public interface ApprovalDocMapper {
            , WD.DEPT_NAME AS WRITER_DEPT
            , RD.DEPT_NAME AS REFERENCE_DEPT
            , A.TITLE
-           , A.REASON
-           , A.CONTENT
            , MA.EMP_NAME AS APPROVER_NAME
            , A.STATUS_CODE AS STATUS_CODE
            , DS.STATUS_NAME AS STATUS_NAME
            , A.SUBMITTED_AT
            , A.ACTED_AT
-           , V.START_DATE
-           , V.END_DATE
-           , O.WORK_DATE
-           , O.WORK_HOUR
         FROM APPROVAL_DOC A 
-        LEFT JOIN VACATION_DOC V ON (V.DOC_NO = A.DOC_NO)
-        LEFT JOIN OVERTIME_DOC O ON (O.DOC_NO = A.DOC_NO)
         LEFT JOIN APPROVAL_CATEGORY C ON (A.CATEGORY_NO = C.CATEGORY_NO)
         LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
         LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
@@ -102,27 +94,18 @@ public interface ApprovalDocMapper {
     List<ApprovalDocVo> selectMyDocumentList(ApprovalDocVo vo);
 
     @Select("""
-        SELECT
-            A.DOC_NO
-            , C.CATEGORY_NAME
-            , MW.EMP_NAME AS WRITER_NAME
-            , WD.DEPT_NAME AS WRITER_DEPT
-            , RD.DEPT_NAME AS REFERENCE_DEPT
-            , A.TITLE
-            , A.REASON
-            , A.CONTENT
-            , MA.EMP_NAME AS APPROVER_NAME
-            , A.STATUS_CODE AS STATUS_CODE
-            , DS.STATUS_NAME AS STATUS_NAME
-            , A.SUBMITTED_AT
-            , A.ACTED_AT
-            , V.START_DATE
-            , V.END_DATE
-            , O.WORK_DATE
-            , O.WORK_HOUR
+        A.DOC_NO
+           , C.CATEGORY_NAME
+           , MW.EMP_NAME AS WRITER_NAME
+           , WD.DEPT_NAME AS WRITER_DEPT
+           , RD.DEPT_NAME AS REFERENCE_DEPT
+           , A.TITLE
+           , MA.EMP_NAME AS APPROVER_NAME
+           , A.STATUS_CODE AS STATUS_CODE
+           , DS.STATUS_NAME AS STATUS_NAME
+           , A.SUBMITTED_AT
+           , A.ACTED_AT
         FROM APPROVAL_DOC A 
-        LEFT JOIN VACATION_DOC V ON (V.DOC_NO = A.DOC_NO)
-        LEFT JOIN OVERTIME_DOC O ON (O.DOC_NO = A.DOC_NO)
         LEFT JOIN APPROVAL_CATEGORY C ON (A.CATEGORY_NO = C.CATEGORY_NO)
         LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
         LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
@@ -216,4 +199,52 @@ public interface ApprovalDocMapper {
         WHERE DOC_NO = #{docNo}
     """)
     int deleteOvertimeDoc(String docNo);
+
+    @Select("""
+        <script>
+        SELECT
+           A.DOC_NO
+           , C.CATEGORY_NAME
+           , MW.EMP_NAME AS WRITER_NAME
+           , WD.DEPT_NAME AS WRITER_DEPT
+           , RD.DEPT_NAME AS REFERENCE_DEPT
+           , A.TITLE
+           , MA.EMP_NAME AS APPROVER_NAME
+           , A.STATUS_CODE AS STATUS_CODE
+           , DS.STATUS_NAME AS STATUS_NAME
+           , A.SUBMITTED_AT
+           , A.ACTED_AT
+        FROM APPROVAL_DOC A 
+        LEFT JOIN APPROVAL_CATEGORY C ON (A.CATEGORY_NO = C.CATEGORY_NO)
+        LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
+        LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
+        LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
+        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
+        LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
+        WHERE A.DEL_YN = 'N'
+        
+        <if test="statusCode != null and statusCode != ''">
+            AND A.STATUS_CODE = #{statusCode}
+        </if>
+    
+        <if test="categoryNo != null and categoryNo != ''">
+            AND A.CATEGORY_NO = #{categoryNo}
+        </if>
+        
+        <if test="docNo != null and docNo != ''">
+            AND A.DOC_NO = #{docNo}
+        </if>
+        
+        <if test="startDate != null and startDate != ''">
+            AND SUBMITTED_AT >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+        </if>
+        
+        <if test="endDate != null and endDate != ''">
+            AND SUBMITTED_AT &lt;= TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+        </if>
+        
+        ORDER BY A.DOC_NO DESC
+        </script>
+    """)
+    List<ApprovalDocVo> searchDoc(ApprovalDocVo vo);
 }
