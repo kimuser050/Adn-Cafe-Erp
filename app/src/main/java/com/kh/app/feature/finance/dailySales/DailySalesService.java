@@ -1,5 +1,7 @@
 package com.kh.app.feature.finance.dailySales;
 
+import com.kh.app.feature.hr.store.StoreVo;
+import com.kh.app.feature.stock.Products.ProductVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -101,5 +103,14 @@ public class DailySalesService {
                 total.addAll(dailySales);
             }
         return total;
+    }
+
+    public List<ProductVo> getProductList() {
+        return dailySalesMapper.getProductList();
+    }
+
+
+    public List<DailySalesVo> getStoreList() {
+        return dailySalesMapper.getStoreList();
     }
 }
