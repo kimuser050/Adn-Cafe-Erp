@@ -15,8 +15,8 @@ import java.util.List;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class NoticeService {
 
     private final NoticeMapper noticeMapper;
@@ -49,14 +49,6 @@ public class NoticeService {
         return result;
     }
 
-    public int selectCount() {
-        return noticeMapper.selectCount();
-    }
-
-    public List<NoticeVo> selectList(PageVo pvo) {
-        return noticeMapper.selectList(pvo);
-
-    }
 
     @Transactional
     public NoticeVo selectOne(String no) {
@@ -143,7 +135,13 @@ public class NoticeService {
         return noticeMapper.deleteNotice(vo);
     }
 
+    public int selectCount(String searchType, String searchValue) {
+        return noticeMapper.selectCount(searchType, searchValue);
+    }
 
+    public List<NoticeVo> selectList(PageVo pvo, String searchType, String searchValue) {
+        return noticeMapper.selectList(pvo, searchType, searchValue);
+    }
 
 
 

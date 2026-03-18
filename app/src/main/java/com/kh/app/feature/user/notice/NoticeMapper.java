@@ -29,30 +29,65 @@ public interface NoticeMapper {
 
 
     @Select("""
-                SELECT COUNT(*)
-                FROM NOTICE
-                WHERE DEL_YN = 'N'
+            <script>
+            SELECT COUNT(*)
+            FROM NOTICE N
+            JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
+            WHERE N.DEL_YN = 'N'
+            
+            <if test="searchValue != null and searchValue != ''">
+                <choose>
+                    <when test="searchType == 'title'">
+                        AND N.TITLE LIKE '%' || #{searchValue} || '%'
+                    </when>
+                    <when test="searchType == 'writer'">
+                        AND M.EMP_NAME LIKE '%' || #{searchValue} || '%'
+                    </when>
+                </choose>
+            </if>
+            
+            </script>
             """)
-    int selectCount();
+    int selectCount(@Param("searchType") String searchType,
+                    @Param("searchValue") String searchValue);
 
 
     @Select("""
+            <script>
             SELECT
-                NOTICE_NO
-                ,WRITER_NO
-                ,TITLE
-                ,CONTENT
-                ,HIT
-                ,CREATED_AT
-                ,UPDATED_AT
-                ,DEL_YN
-                ,CATEGORY
-            FROM NOTICE
-            WHERE DEL_YN = 'N'
-            ORDER BY  NOTICE_NO DESC
-            OFFSET #{offset} ROWS FETCH NEXT #{boardLimit} ROWS ONLY
+                N.NOTICE_NO
+                ,N.WRITER_NO
+                ,M.EMP_NAME AS WRITER_NAME
+                ,N.TITLE
+                ,N.CONTENT
+                ,N.HIT
+                ,N.CREATED_AT
+                ,N.UPDATED_AT
+                ,N.DEL_YN
+                ,N.CATEGORY
+            FROM NOTICE N
+            JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
+            WHERE N.DEL_YN = 'N'
+            
+            <if test="searchValue != null and searchValue != ''">
+                <choose>
+                    <when test="searchType == 'title'">
+                        AND N.TITLE LIKE '%' || #{searchValue} || '%'
+                    </when>
+                    <when test="searchType == 'writer'">
+                        AND M.EMP_NAME LIKE '%' || #{searchValue} || '%'
+                    </when>
+                </choose>
+            </if>
+            
+            ORDER BY N.NOTICE_NO DESC
+            OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
+            
+            </script>
             """)
-    List<NoticeVo> selectList(PageVo pvo);
+    List<NoticeVo> selectList(@Param("pvo") PageVo pvo,
+                              @Param("searchType") String searchType,
+                              @Param("searchValue") String searchValue);
 
 
     @Update("""
@@ -146,4 +181,3 @@ public interface NoticeMapper {
     List<NoticeFileVo> selectFileListByNoticeNo(String noticeNo);
 
 }
-
