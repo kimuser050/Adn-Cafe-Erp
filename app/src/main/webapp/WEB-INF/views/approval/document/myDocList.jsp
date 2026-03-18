@@ -21,9 +21,29 @@
 
     <main class="page-shell">
         <section class="page-content">
-            <!--  -->
+            <!-- 검색바 -->
             <div id="search-area">
+                <form id="search-form">
+                    <select name="statusCode" class="form-select" id="statusCode">
+                        <option value="">전체</option>
+                        <option value="1">대기</option>
+                        <option value="2">승인</option>
+                        <option value="3">반려</option>
+                    </select>
+                    
+                    <select name="category" class="form-select" id="categoryNo">
+                        <option value="">전체</option>
+                        <option value="1">휴가</option>
+                        <option value="2">연장근무</option>
+                    </select>
+                    
+                    <input type="text" name="docNo" id="docNo" class="form-input" placeholder="문서번호">
 
+                    <input type="date" name="startDate" id="startDate" class="form-input">
+                    <input type="date" name="endDate" id="endDate" class="form-input">
+
+                    <button type="button" class="btn" onclick="searchDoc();">검색</button>
+                </form>
             </div>
 
             <!-- 결재문서 테이블 -->
@@ -37,6 +57,7 @@
                             <th>기안자</th>
                             <th>기안자 부서</th>
                             <th>상태</th>
+                            <th>결재자</th>
                             <th>상신일</th>
                             <th>처리일</th>
                         </tr>

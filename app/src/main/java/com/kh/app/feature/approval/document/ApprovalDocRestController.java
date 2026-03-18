@@ -1,6 +1,5 @@
 package com.kh.app.feature.approval.document;
 
-import com.kh.app.feature.user.member.MemberVo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +21,7 @@ public class ApprovalDocRestController {
     // 문서 작성
     @PostMapping("write")
     public ResponseEntity<Map<String, String>> insert(@RequestBody ApprovalDocVo vo){
+        System.out.println("vo = " + vo);
         int result = approvalDocService.insert(vo);
 
         if(result != 1){
@@ -62,9 +62,21 @@ public class ApprovalDocRestController {
         return ResponseEntity.ok(map);
     }
 
+    // 검색
+    @GetMapping("searchDoc")
+    public ResponseEntity<HashMap<String, Object>> searchDoc(ApprovalDocVo vo){
+        List<ApprovalDocVo> voList = approvalDocService.searchDoc(vo);
+        System.out.println("voList = " + voList);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("voList" , voList);
+
+        return ResponseEntity.ok(map);
+    }
+
+
     // 상세조회
     @GetMapping("/{docNo}")
-    public ResponseEntity<Map<String, Object>> selectByNo(@PathVariable String docNo){
+    public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String docNo){
         ApprovalDocVo vo = approvalDocService.selectOne(docNo);
         Map<String, Object> map = new HashMap<>();
         map.put("vo", vo);

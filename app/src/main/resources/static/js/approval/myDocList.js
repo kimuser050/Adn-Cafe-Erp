@@ -11,6 +11,13 @@ async function loadDocList(){
     const data = await resp.json();
     const voList = data.voList;
 
+    renderDocList(voList);
+}
+
+loadDocList();
+
+// 렌더링 테이블 
+function renderDocList(voList) {
     const tbodyTag = document.querySelector("#document-list");
 
     if (!voList || voList.length === 0) {
@@ -49,9 +56,6 @@ async function loadDocList(){
     tbodyTag.innerHTML = str;
 }
 
-loadDocList();
-
-
 function formatDate(value) {
     if (!value) {
         return "-";
@@ -63,3 +67,28 @@ function formatDate(value) {
 
     return value;
 }
+
+async function searchDoc(){
+    const statusCode = document.querySelector("#statusCode").value;
+    const categoryNo = document.querySelector("#categoryNo").value;
+    const docNo = document.querySelector("#docNo").value;
+    const startDate = document.querySelector("#startDate").value;
+    const endDate = document.querySelector("#endDate").value;
+
+    const params = new URLSearchParams({
+        statusCode,
+        categoryNo,
+        docNo,
+        startDate,
+        endDate,
+
+    });
+
+    const resp = await fetch(`/api/approval/document/searchDoc?${params.toString()}`);
+    const data = await resp.json();
+    const voList = data.voList;
+
+
+    renderDocList(voList);
+}
+

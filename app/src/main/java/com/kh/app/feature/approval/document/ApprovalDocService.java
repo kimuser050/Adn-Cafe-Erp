@@ -51,6 +51,10 @@ public class ApprovalDocService {
         return approvalDocMapper.selectApproverDocList(vo);
     }
 
+    public List<ApprovalDocVo> searchDoc(ApprovalDocVo vo) {
+        return approvalDocMapper.searchDoc(vo);
+    }
+
     public ApprovalDocVo selectOne(String docNo) {
         return approvalDocMapper.selectOne(docNo);
     }
@@ -82,4 +86,5 @@ public class ApprovalDocService {
         }
         return result;
     }
+
 }
