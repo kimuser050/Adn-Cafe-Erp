@@ -94,7 +94,7 @@ public interface NoticeMapper {
                 )
                 VALUES
                 (
-                #{noticeNo}
+                SEQ_NOTICE.CURRVAL 
                 ,#{originName}
                 ,#{changeName}
                 ,#{filePath}
@@ -146,3 +146,4 @@ public interface NoticeMapper {
     List<NoticeFileVo> selectFileListByNoticeNo(String noticeNo);
 
 }
+
