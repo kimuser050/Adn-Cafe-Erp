@@ -15,11 +15,12 @@ import java.util.List;
 public class InboundService {
     private final InboundMapper inboundMapper;
 
-    public int selectCount() {
-        return inboundMapper.selectCount();
-    }
 
-    public List<InboundVo> selectList(PageVo pvo) {
-        return inboundMapper.selectList(pvo);
+    public List<InboundVo> selectList(PageVo pvo, String keyword) {
+        return inboundMapper.selectList(pvo, keyword);
        }
+
+    public int selectCount(String keyword) {
+        return inboundMapper.selectCount(keyword);
+    }
 }

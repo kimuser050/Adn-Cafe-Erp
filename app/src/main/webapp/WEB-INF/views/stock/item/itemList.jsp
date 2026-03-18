@@ -18,7 +18,7 @@
             <section class="page-content">
                 <div class="tab-wrapper">
                     <a href="/stock/item" class="tab-btn active">본사 품목</a>
-                    <a href="/stock/history" class="tab-btn">입고 내역</a>
+                    <a href="/stock/inbound" class="tab-btn">입고 내역</a>
                 </div>
 
                 <div class="content-container">
@@ -43,7 +43,7 @@
                                     <th>단가</th>
                                     <th>등록일</th>
                                     <th>재고</th>
-                                    <th >위치</th>
+                                    <th>위치</th>
                                     <th>상태</th>
                                 </tr>
                             </thead>
