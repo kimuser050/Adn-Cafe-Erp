@@ -38,18 +38,9 @@ public class JournalRestController {
 
     @PutMapping("/updateJournal")
     public ResponseEntity<Integer> updateJournal(
-            @RequestBody List<JournalVo> voList
-            , HttpSession session){
+            @RequestBody List<JournalVo> voList){
 
-        String empNo = "200001";
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//        if (loginMemberVo != null) {
-//            for (JournalVo vo : voList) {
-//                vo.setWriterNo(loginMemberVo.getEmpNo());
-//            }
-//        }
-
-        int result = journalService.updateJournal(voList, empNo); //vo.getEmpNo()
+        int result = journalService.updateJournal(voList); //vo.getEmpNo()
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("result" , result);
@@ -58,15 +49,8 @@ public class JournalRestController {
     }
 
     @DeleteMapping("/delJournal")
-    public ResponseEntity<Integer> delJournal(
-            @RequestBody JournalVo vo
-            , HttpSession session){
-        String empNo = "200001";
-        vo.setWriterNo(empNo);
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//        vo.setWriterNo(loginMemberVo.getEmpNo());
-
-        int result = journalService.delJournal(vo);
+    public ResponseEntity<Integer> delJournal(String journalNo){
+        int result = journalService.delJournal(journalNo);
         if(result < 1){
             String errMsg = "전표 삭제 실패";
             log.error(errMsg);
@@ -83,6 +67,10 @@ public class JournalRestController {
     public ResponseEntity<List<JournalVo>> selectJournal(@RequestParam String journalDate){
 
         List<JournalVo> voList = journalService.selectJournal(journalDate);
+
+        for(JournalVo vo : voList) {
+            System.out.println("번호: " + vo.getJournalNo() + " | 차변: " + vo.getDebit() + " | 대변: " + vo.getCredit());
+        }
 
         return ResponseEntity.ok(voList);
     }
