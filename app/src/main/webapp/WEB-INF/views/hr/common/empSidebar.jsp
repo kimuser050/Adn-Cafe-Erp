@@ -21,7 +21,7 @@
                 <a href="/hr/dept/list">조직관리</a>
                 <a href="/hr/emp/list"  class="active">직원관리</a>
                 <a href="#">근태관리</a>
-                <a href="#">급여관리</a>
+                <a href="/hr/pay/list">급여관리</a>
             </div>
         </div>
 

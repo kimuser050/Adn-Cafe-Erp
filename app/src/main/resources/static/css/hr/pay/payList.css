@@ -1,0 +1,203 @@
+/* =========================================================
+   급여관리 전용 스타일 - 목록 화면
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. 상단 여백
+   --------------------------------------------------------- */
+.pay-top-spacer {
+    height: 44px;
+    margin-bottom: 18px;
+}
+
+/* ---------------------------------------------------------
+   2. 페이지 / 요약카드 / 툴바
+   --------------------------------------------------------- */
+.pay-page .org-summary-area {
+    margin-bottom: 18px;
+}
+
+.pay-page .summary-card {
+    width: 128px;
+    min-height: 86px;
+}
+
+.pay-page .summary-card-wide {
+    width: 210px;
+}
+
+.pay-page .org-toolbar {
+    margin-bottom: 16px;
+}
+
+.pay-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pay-page .toolbar-right {
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.pay-page .toolbar-right .form-select {
+    min-width: 92px;
+}
+
+.pay-page .search-box {
+    min-width: 220px;
+}
+
+.pay-page .search-box input {
+    width: 170px;
+}
+
+.month-input {
+    width: 140px;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid #d8c8b8;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #4b3728;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------
+   3. 목록 카드
+   --------------------------------------------------------- */
+.pay-page .org-table-card {
+    margin-top: 6px;
+    min-height: 420px;
+}
+
+.pay-page .org-bottom-area {
+    margin-top: 18px;
+    min-height: 40px;
+}
+
+/* ---------------------------------------------------------
+   4. 급여 테이블
+   --------------------------------------------------------- */
+.pay-table {
+    table-layout: fixed;
+}
+
+.pay-table th:nth-child(1),
+.pay-table td:nth-child(1) {
+    width: 60px;
+}
+
+.pay-table th:nth-child(2),
+.pay-table td:nth-child(2) {
+    width: 110px;
+}
+
+.pay-table th:nth-child(3),
+.pay-table td:nth-child(3) {
+    width: 100px;
+}
+
+.pay-table th:nth-child(4),
+.pay-table td:nth-child(4) {
+    width: 90px;
+}
+
+.pay-table th:nth-child(5),
+.pay-table td:nth-child(5) {
+    width: 220px;
+}
+
+.pay-table th:nth-child(6),
+.pay-table td:nth-child(6) {
+    width: 100px;
+}
+
+.pay-table th:nth-child(7),
+.pay-table td:nth-child(7) {
+    width: 140px;
+}
+
+.pay-table th:nth-child(8),
+.pay-table td:nth-child(8) {
+    width: 110px;
+}
+
+.pay-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pay-table .link-text {
+    color: #1a73e8;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pay-table .link-text:hover {
+    text-decoration: underline;
+}
+
+.pay-table .empty-row td {
+    height: 120px;
+    text-align: center;
+    color: #9a8b7e;
+    font-size: 13px;
+}
+
+/* ---------------------------------------------------------
+   5. 상태 뱃지
+   --------------------------------------------------------- */
+.confirm-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b3728;
+    white-space: nowrap;
+}
+
+.confirm-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.confirm-badge.unconfirmed::before {
+    background-color: #facc15;
+}
+
+.confirm-badge.confirmed::before {
+    background-color: #22c55e;
+}
+
+/* ---------------------------------------------------------
+   6. 반응형
+   --------------------------------------------------------- */
+@media (max-width: 1400px) {
+    .pay-page .org-table-card {
+        overflow-x: auto;
+    }
+
+    .pay-table {
+        min-width: 980px;
+    }
+}
+
+@media (max-width: 900px) {
+    .pay-top-spacer {
+        height: 20px;
+        margin-bottom: 14px;
+    }
+
+    .pay-page .toolbar-right {
+        justify-content: flex-start;
+    }
+}
