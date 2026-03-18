@@ -26,7 +26,7 @@ function renderTable(voList) {
     } else {
         voList.forEach(vo => {
             str += `
-            <tr onclick="location.href='/notice/detail/${vo.noticeNo}'">
+            <tr onclick="location.href='/notice/detail?no=${vo.noticeNo}'">
                 <td>${vo.noticeNo}</td>
                 <td>${vo.category}</td>
                 <td class="text-left">${vo.title}</td> <td>${vo.writerName || '관리자'}</td>
