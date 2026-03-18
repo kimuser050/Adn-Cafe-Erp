@@ -43,7 +43,8 @@ public class DailySalesRestController {
     }
 
     @DeleteMapping("/delDaily")
-    public ResponseEntity<Map<String, String>> delDaily(@RequestBody DailySalesVo vo) throws Exception {
+    public ResponseEntity<Map<String, String>> delDaily(DailySalesVo vo) throws Exception {
+
         int result = dailySalesService.delDaily(vo);
 
         Map<String, String> map = new HashMap<>();
@@ -52,8 +53,8 @@ public class DailySalesRestController {
     }
 
     //매출조회
-    @GetMapping("/listDaily")
-    public ResponseEntity<Map<Object, Object>> listDaily(@RequestParam DailySalesVo vo) throws Exception {
+    @GetMapping("/listDailyData")
+    public ResponseEntity<Map<Object, Object>> listDaily(DailySalesVo vo) throws Exception {
         List<DailySalesVo> voList = dailySalesService.listDaily(vo);
 
         Map<Object, Object> map = new HashMap<>();

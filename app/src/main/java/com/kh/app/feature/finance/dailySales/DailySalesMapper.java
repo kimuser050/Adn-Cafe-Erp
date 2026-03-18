@@ -56,7 +56,7 @@ public interface DailySalesMapper {
     int editDaily(@Param("vo") DailySalesVo vo, @Param("tableName") String tableName);
 
     @Delete("""
-            DELETE ${tableName}
+            DELETE FROM ${tableName}
             WHERE SALES_NO = #{vo.salesNo}
             """)
     int delDaily(@Param("vo") DailySalesVo vo, @Param("tableName") String tableName);
@@ -64,14 +64,21 @@ public interface DailySalesMapper {
 
     @Select("""
             SELECT
-            S.STORE_NAME
-            ,TO_CHAR(D.SALES_DATE,'YYYY-MM-DD') as salesDate
-            ,SUM(D.UNIT_PRICE*D.QUANTITY) as totalSales
+            D.SALES_NO AS salesNo
+            , S.STORE_NAME AS storeName
+            , P.PRODUCTS_NAME AS productName
+            , P.PRODUCTS_NO AS productNo
+            , D.UNIT_PRICE AS unitPrice
+            , D.QUANTITY AS quantity
+            , D.PAYMENT_CD AS paymentCd
+            , TO_CHAR(D.SALES_DATE, 'YYYY-MM-DD') AS salesDate
+            , (D.UNIT_PRICE * D.QUANTITY) AS totalSales
             FROM ${tableName} D
             JOIN STORE S ON S.STORE_CODE = D.STORE_NO
+            JOIN PRODUCTS P ON P.PRODUCTS_NO = D.PRODUCT_NO
             WHERE STORE_NO = #{vo.storeNo}
-            GROUP BY TO_CHAR(D.SALES_DATE,'YYYY-MM-DD'), S.STORE_NAME
-            ORDER BY salesDate DESC
+            AND TO_CHAR(D.SALES_DATE, 'YYYY-MM-DD') = #{vo.salesDate}
+            ORDER BY D.SALES_NO DESC
             """)
     List<DailySalesVo> listDaily(@Param("vo")DailySalesVo vo, @Param("tableName")String tableName);
 
