@@ -7,6 +7,10 @@ import java.util.List;
 
 @Mapper
 public interface OderReqMapper {
+    /* ==========================================
+       1. 발주 신청 (ITEM 테이블 기준)
+       ========================================== */
+
     // 품목 전체 개수 조회
     @Select("""
             SELECT COUNT(*) 
@@ -15,7 +19,7 @@ public interface OderReqMapper {
             """)
     int selectCount(@Param("keyword") String keyword);
 
-    // 품목 리스트 조회 (페이징)
+    // 품목 리스트 조회 (페이징) - OFFSET/FETCH 사용
     @Select("""
             SELECT 
                 ITEM_NO, ITEM_NAME, UNIT_PRICE, LOCATION 
@@ -26,7 +30,8 @@ public interface OderReqMapper {
             """)
     List<OderReqVo> selectList(@Param("pvo") PageVo pvo, @Param("keyword") String keyword);
 
-    // [중요] 발주 신청 실행 (ORDER_REQ 테이블에 이력 생성)
+    // 발주 신청 실행 (단건 인서트)
+    // 서비스에서 루프를 돌려 이 메서드를 반복 호출하게 됩니다.
     @Insert("""
             INSERT INTO ORDER_REQ (
                 ORDER_NO, ITEM_NO, QUANTITY, STORE_CODE, STATUS, REQUEST_DATE
@@ -79,11 +84,11 @@ public interface OderReqMapper {
                 O.ORDER_NO, O.QUANTITY, O.STATUS, O.REQUEST_DATE
             FROM ITEM I
             LEFT JOIN ORDER_REQ O ON I.ITEM_NO = O.ITEM_NO
-            WHERE O.ORDER_NO = #{orderNo} OR I.ITEM_NO = #{orderNo}
+            WHERE O.ORDER_NO = #{orderNo}
             """)
     OderReqVo selectOne(String orderNo);
 
-    // 상태값 업데이트 (W, A, R, F 등)
+    // 상태값 업데이트 (W: 대기, C: 취소, F: 완료 등)
     @Update("""
             UPDATE ORDER_REQ
             SET STATUS = #{status}, REQUEST_DATE = SYSDATE 
@@ -93,9 +98,10 @@ public interface OderReqMapper {
 
     // 입고 완료 시 해당 아이템 재고 증가
     @Update("""
-            UPDATE ITEM 
-            SET STOCK = STOCK + (SELECT QUANTITY FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
-            WHERE ITEM_NO = (SELECT ITEM_NO FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
-            """)
+    UPDATE ITEM 
+    SET STOCK = STOCK - (SELECT QUANTITY FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
+    WHERE ITEM_NO = (SELECT ITEM_NO FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
+      AND STOCK >= (SELECT QUANTITY FROM ORDER_REQ WHERE ORDER_NO = #{orderNo}) 
+    """)
     int decreaseStock(String orderNo);
 }

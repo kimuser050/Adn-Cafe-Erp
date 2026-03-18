@@ -15,84 +15,69 @@
     <div class="app-shell">
         <%@ include file="/WEB-INF/views/stock/common/orderSidebar.jsp" %>
 
-
         <main class="page-shell">
+            <div class="top-profile">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=5D4037&color=fff" alt="profile">
+            </div>
+
             <section class="page-content">
+                
                 <div class="tab-wrapper">
-                    <a href="/stock/order" class="tab-btn active">발주 신청</a>
-                    <a href="#" class="tab-btn">발주 상태</a>
+                    <button type="button" id="tabApply" class="tab-btn active" onclick="switchTab('apply')">발주 신청</button>
+                    <button type="button" id="tabStatus" class="tab-btn" onclick="switchTab('status')">발주 상태</button>
                 </div>
 
                 <div class="content-container">
                     <div class="search-section">
                         <div class="search-inner">
-                            <label for="productName">상품 명</label>
-                            <input type="text" id="productName" placeholder="검색어를 입력하세요">
+                            <label>상품 명</label>
+                            <input type="text" id="orderKeyword" placeholder="검색어를 입력하세요">
                             <button class="btn-brown-search" onclick="loadOrderList(1)">검색</button>
                         </div>
 
-                        <div class="action-inner">
-                            <button type="button" class="btn-action-brown" onclick="openInsertModal()">신규 품목 등록</button>
-                            <button type="button" class="btn-action-brown" style="background-color: #4a382e;" onclick="submitBulkOrder()">선택 상품 주문</button>
+                        <div class="action-inner" id="orderFooter">
+                            <button type="button" class="btn-action-brown" onclick="submitBulkOrder()">선택 상품 주문</button>
                         </div>
                     </div>
 
                     <div class="table-wrapper">
                         <table class="item-table">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
-                                    <th>번호</th>
-                                    <th>이름</th>
-                                    <th>단가</th>
-                                    <th>수량 조절</th>
-                                    <th>위치</th>
-                                    <th>상태</th>
-                                </tr>
-                            </thead>
-                            <tbody id="itemList">
-                                </tbody>
+                            <thead id="orderHead"></thead>
+                            <tbody id="orderBody"></tbody>
                         </table>
                     </div>
 
-                    <div id="paginationArea" class="pagination-wrapper"></div>
+                    <div id="pagination" class="coffee-pagination"></div>
                 </div>
             </section>
         </main>
     </div>
 
-    <div id="itemDetailModal" class="modal">
+    <div id="orderDetailModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>품목 상세 정보 및 상태 관리</h3>
-                <span class="close-modal" onclick="closeDetailModal()">&times;</span>
+                <h3>발주 상세 정보</h3>
+                <span class="close-modal" onclick="closeOrderModal()">&times;</span>
             </div>
-            <form id="itemDetailForm">
-                <input type="hidden" id="modalItemNo">
-                <div class="modal-body">
-                    <div class="form-row"><label>품목 명</label><input type="text" id="modalItemName" readonly></div>
-                    <div class="form-row"><label>단가</label><input type="number" id="modalUnitPrice"></div>
-                    <div class="form-row">
-                        <label>현재 상태</label>
-                        <select id="modalStatus">
-                            <option value="WAIT">대기 (WAIT)</option>
-                            <option value="APPROVE">승인 (APPROVE)</option>
-                            <option value="REJECT">거절 (REJECT)</option>
-                            <option value="COMPLETED">입고완료 (COMPLETED)</option>
-                        </select>
-                    </div>
-                    <div class="form-row"><label>위치</label><input type="text" id="modalLocation"></div>
-                    <div class="form-row"><label>비고</label><textarea id="modalReason" style="width:100%; height:60px;"></textarea></div>
+            <div class="modal-body">
+                <div class="form-row"><label>품목 명</label><input type="text" id="detailItemName" readonly class="readonly-input"></div>
+                <div class="form-row"><label>단가</label><input type="text" id="detailUnitPrice" readonly class="readonly-input"></div>
+                <div class="form-row"><label>수량</label><input type="number" id="detailQuantity" readonly class="readonly-input"></div>
+                <div class="form-row">
+                    <label>상태 관리</label>
+                    <select id="detailStatus">
+                        <option value="W">대기</option>
+                        <option value="F">완료</option>
+                        <option value="C">취소</option>
+                    </select>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-action-brown" onclick="updateItemStatus()">변경사항 저장</button>
-                    <button type="button" class="btn-gray-close-modal" onclick="closeDetailModal()">닫기</button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-save" onclick="updateOrderStatus()">저장</button>
+                <button type="button" class="btn-close" onclick="closeOrderModal()">닫기</button>
+            </div>
         </div>
     </div>
-
-    <div id="itemInsertModal" class="modal">
-        </div>
 </body>
+</html>
 </html>
