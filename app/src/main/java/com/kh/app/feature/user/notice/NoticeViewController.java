@@ -20,4 +20,9 @@ public class NoticeViewController {
         }
         return "user/notice/insert";
     }
+
+    @GetMapping("list")
+    public String list(){
+        return "user/notice/list";
+    }
 }

@@ -59,16 +59,22 @@ public class NoticeRestController {
 
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1") int currentPage) {
-        int listCount = noticeService.selectCount();
-        int pageLimit = this.pageLimit;
-        int boardLimit = this.boardLimit;
+    public ResponseEntity<Map<String, Object>> selectList(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchValue
+    ) {
+
+        int listCount = noticeService.selectCount(searchType, searchValue);
 
         PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
-        List<NoticeVo> voList = noticeService.selectList(pvo);
+
+        List<NoticeVo> voList = noticeService.selectList(pvo, searchType, searchValue);
+
         Map<String, Object> map = new HashMap<>();
         map.put("pvo", pvo);
         map.put("voList", voList);
+
         return ResponseEntity.ok(map);
     }
 
@@ -134,6 +140,7 @@ public class NoticeRestController {
         map.put("result", result);
         return ResponseEntity.ok(map);
     }
+
 
 
 
