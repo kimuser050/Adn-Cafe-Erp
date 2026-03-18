@@ -2,7 +2,6 @@
 
 window.onload = function () {
     getAccountList();
-    selectJournal();
 }
 
 async function getAccountList() {
@@ -85,7 +84,7 @@ async function insertJournal() {
     clear();
 }
 
-// 전표새로고침
+// 전표등록 새로고침
 
 function clear() {
     document.querySelector(".debitInput").value = "";
@@ -254,7 +253,22 @@ async function updateJournal() {
     }
 }
 
+// 전표삭제
 
+async function deleteJournal(no) {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    const resp = await fetch(`/journal/delJournal?journalNo=${no}`, {
+        method: "put"
+    });
+
+    if (resp.ok) {
+        alert("전표 삭제 성공");
+        selectJournal();
+    } else {
+        alert("전표 삭제 실패");
+    }
+}
 
 
 

@@ -48,8 +48,8 @@ public class JournalRestController {
         return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping("/delJournal")
-    public ResponseEntity<Integer> delJournal(String journalNo){
+    @PutMapping("/delJournal")
+    public ResponseEntity<Integer> delJournal(@RequestParam String journalNo){
         int result = journalService.delJournal(journalNo);
         if(result < 1){
             String errMsg = "전표 삭제 실패";

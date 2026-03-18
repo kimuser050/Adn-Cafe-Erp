@@ -39,7 +39,7 @@
                             <div class="journal-card">
                                 <div class="card-header">
                                     <div class="date-picker-wrap">
-                                        <input type="date" id="journalDate" value="2026-03-12" class="date-input"
+                                        <input type="date" id="journalDate" class="date-input"
                                             onchange="selectJournal();">
                                     </div>
                                 </div>
