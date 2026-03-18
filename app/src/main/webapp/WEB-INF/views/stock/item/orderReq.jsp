@@ -3,22 +3,24 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>품목관리 | Coffee Prince ERP</title>
+    <title>발주관리 | Coffee Prince ERP</title>
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
     <link rel="stylesheet" href="/css/stock/item/main.css">
-    <script defer src="/js/stock/item.js"></script>
+    <link rel="stylesheet" href="/css/stock/item/order.css">
+    <script defer src="/js/stock/order.js"></script>
 </head>
 <body>
     <div class="app-shell">
-        <%@ include file="/WEB-INF/views/stock/common/itemSidebar.jsp" %>
+        <%@ include file="/WEB-INF/views/stock/common/orderSidebar.jsp" %>
+
 
         <main class="page-shell">
             <section class="page-content">
                 <div class="tab-wrapper">
-                    <a href="/stock/item" class="tab-btn active">본사 품목</a>
-                    <a href="/stock/inbound" class="tab-btn">입고 내역</a>
+                    <a href="/stock/order" class="tab-btn active">발주 신청</a>
+                    <a href="#" class="tab-btn">발주 상태</a>
                 </div>
 
                 <div class="content-container">
@@ -26,11 +28,12 @@
                         <div class="search-inner">
                             <label for="productName">상품 명</label>
                             <input type="text" id="productName" placeholder="검색어를 입력하세요">
-                            <button class="btn-brown-search">검색</button>
+                            <button class="btn-brown-search" onclick="loadOrderList(1)">검색</button>
                         </div>
-                        
+
                         <div class="action-inner">
                             <button type="button" class="btn-action-brown" onclick="openInsertModal()">신규 품목 등록</button>
+                            <button type="button" class="btn-action-brown" style="background-color: #4a382e;" onclick="submitBulkOrder()">선택 상품 주문</button>
                         </div>
                     </div>
 
@@ -38,11 +41,11 @@
                         <table class="item-table">
                             <thead>
                                 <tr>
+                                    <th><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
                                     <th>번호</th>
                                     <th>이름</th>
                                     <th>단가</th>
-                                    <th>등록일</th>
-                                    <th>재고</th>
+                                    <th>수량 조절</th>
                                     <th>위치</th>
                                     <th>상태</th>
                                 </tr>
@@ -61,50 +64,35 @@
     <div id="itemDetailModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>품목 상세 정보</h3>
-                <span class="close-modal">&times;</span>
+                <h3>품목 상세 정보 및 상태 관리</h3>
+                <span class="close-modal" onclick="closeDetailModal()">&times;</span>
             </div>
             <form id="itemDetailForm">
                 <input type="hidden" id="modalItemNo">
                 <div class="modal-body">
-                    <div class="form-row"><label>품목 명</label><input type="text" id="modalItemName"></div>
+                    <div class="form-row"><label>품목 명</label><input type="text" id="modalItemName" readonly></div>
                     <div class="form-row"><label>단가</label><input type="number" id="modalUnitPrice"></div>
-                    <div class="form-row"><label>재고</label><input type="number" id="modalStock"></div>
-                    <div class="form-row"><label>위치</label><input type="text" id="modalLocation"></div>
                     <div class="form-row">
-                        <label>상태</label>
-                        <select id="modalActiveYn">
-                            <option value="Y">활성 (Y)</option>
-                            <option value="N">비활성 (N)</option>
+                        <label>현재 상태</label>
+                        <select id="modalStatus">
+                            <option value="WAIT">대기 (WAIT)</option>
+                            <option value="APPROVE">승인 (APPROVE)</option>
+                            <option value="REJECT">거절 (REJECT)</option>
+                            <option value="COMPLETED">입고완료 (COMPLETED)</option>
                         </select>
                     </div>
+                    <div class="form-row"><label>위치</label><input type="text" id="modalLocation"></div>
+                    <div class="form-row"><label>비고</label><textarea id="modalReason" style="width:100%; height:60px;"></textarea></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-action-brown" onclick="updateItem()">저장하기</button>
-                    <button type="button" class="btn-gray-close-modal">닫기</button>
+                    <button type="button" class="btn-action-brown" onclick="updateItemStatus()">변경사항 저장</button>
+                    <button type="button" class="btn-gray-close-modal" onclick="closeDetailModal()">닫기</button>
                 </div>
             </form>
         </div>
     </div>
 
     <div id="itemInsertModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>신규 품목 등록</h3>
-                <span class="close-insert-modal" style="cursor:pointer; font-size:24px;">&times;</span>
-            </div>
-            <form id="itemInsertForm">
-                <div class="modal-body">
-                    <div class="form-row"><label>품목 명</label><input type="text" id="insertItemName"></div>
-                    <div class="form-row"><label>단가</label><input type="number" id="insertUnitPrice" value="0"></div>
-                    <div class="form-row"><label>위치</label><input type="text" id="insertLocation" placeholder="예: A-101"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-action-brown" onclick="insertItem()">등록하기</button>
-                    <button type="button" class="btn-gray-close-modal close-insert-modal">취소</button>
-                </div>
-            </form>
         </div>
-    </div>
 </body>
 </html>
