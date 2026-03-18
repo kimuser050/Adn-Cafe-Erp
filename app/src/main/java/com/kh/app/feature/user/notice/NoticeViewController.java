@@ -25,4 +25,10 @@ public class NoticeViewController {
     public String list(){
         return "user/notice/list";
     }
+
+    @GetMapping("detail")
+    public String detail() {
+        return "user/notice/detail";
+    }
+
 }

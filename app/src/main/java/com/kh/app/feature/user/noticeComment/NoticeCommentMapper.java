@@ -37,18 +37,18 @@ public interface NoticeCommentMapper {
                 ,C.CREATED_AT
             FROM NOTICE_COMMENT C
             JOIN MEMBER M ON (M.EMP_NO = C.WRITER_NO)
-            WHERE C.NOTICE_NO = #{noticeNo} 
+            WHERE C.NOTICE_NO = #{noticeNo}
+            AND C.DEL_YN = 'N'
             ORDER BY C.COMMENT_NO DESC
             
             """)
     List<NoticeCommentVo> selectList(String noticeNo);
 
     @Update("""
-            UPDATE NOTICE_COMMENT
-                SET DEL_YN = 'Y'
-            WHERE NOTICE_NO = #{noticeNo}
-            AND COMMENT_NO = #{commentNo} 
-            AND WRITER_NO = #{writerNo}
+                UPDATE NOTICE_COMMENT
+                    SET DEL_YN = 'Y'
+                WHERE COMMENT_NO = #{commentNo}
+                AND WRITER_NO = #{writerNo}
             """)
     int del(NoticeCommentVo vo);
 

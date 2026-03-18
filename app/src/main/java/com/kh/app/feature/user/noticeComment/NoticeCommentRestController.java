@@ -54,6 +54,7 @@ public class NoticeCommentRestController {
     @DeleteMapping
     public int del(@RequestBody NoticeCommentVo vo, HttpSession session){
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
         if (loginMemberVo == null) {
             throw new IllegalArgumentException("[R-111] login required");
         }
