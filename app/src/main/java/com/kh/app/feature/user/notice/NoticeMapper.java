@@ -94,7 +94,7 @@ public interface NoticeMapper {
                 )
                 VALUES
                 (
-                #{noticeNo}
+                SEQ_NOTICE.CURRVAL 
                 ,#{originName}
                 ,#{changeName}
                 ,#{filePath}
