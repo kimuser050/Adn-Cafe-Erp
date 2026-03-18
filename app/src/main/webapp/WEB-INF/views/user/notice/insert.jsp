@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="/css/common/layout.css">
         <link rel="stylesheet" href="/css/common/sidebar.css">
         <link rel="stylesheet" href="/css/common/component.css">
-        <link rel="stylesheet" href="/css/notice/insert.css">
+        <link rel="stylesheet" href="/css/user/notice/insert.css">
 
         <script defer src="/js/user/notice/insert.js"></script>
 

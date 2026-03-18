@@ -37,12 +37,10 @@ public class MemberViewController {
     }
 
     @GetMapping("mypage")
-    public String update(){
+    public String update(HttpSession session){
+        if (session.getAttribute("loginMemberVo") == null) {
+            throw new IllegalStateException("login plz..");
+        }
         return "user/member/mypage";
     }
-
-
-
-
-
 }
