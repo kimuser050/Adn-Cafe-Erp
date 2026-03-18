@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface NoticeMappper {
+public interface NoticeMapper {
 
 
     @Insert("""
@@ -15,12 +15,14 @@ public interface NoticeMappper {
                     TITLE
                     ,CONTENT
                     ,WRITER_NO
+                    ,CATEGORY
                 )
                 VALUES
                 (
                     #{title}
                     ,#{content}
                     ,#{writerNo}
+                    ,#{category}
                 )
             """)
     int insert(NoticeVo vo);
@@ -44,6 +46,7 @@ public interface NoticeMappper {
                 ,CREATED_AT
                 ,UPDATED_AT
                 ,DEL_YN
+                ,CATEGORY
             FROM NOTICE
             WHERE DEL_YN = 'N'
             ORDER BY  NOTICE_NO DESC
@@ -62,37 +65,36 @@ public interface NoticeMappper {
     int increaseHit(String noticeNo);
 
     @Select("""
-        SELECT
-            N.NOTICE_NO
-            ,N.WRITER_NO
-            ,M.EMP_NAME AS WRITER_NAME
-            ,N.TITLE
-            ,N.CONTENT
-            ,N.HIT
-            ,N.CREATED_AT
-            ,N.UPDATED_AT
-            ,N.DEL_YN
-        FROM NOTICE N
-        JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
-        WHERE N.NOTICE_NO = #{noticeNo}
-        AND N.DEL_YN = 'N'
-        """)
+            SELECT
+                N.NOTICE_NO
+                ,N.WRITER_NO
+                ,M.EMP_NAME AS WRITER_NAME
+                ,N.TITLE
+                ,N.CONTENT
+                ,N.HIT
+                ,N.CREATED_AT
+                ,N.UPDATED_AT
+                ,N.DEL_YN
+                ,N.CATEGORY
+            FROM NOTICE N
+            JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
+            WHERE N.NOTICE_NO = #{noticeNo}
+            AND N.DEL_YN = 'N'
+            """)
     NoticeVo selectOne(@Param("noticeNo") String noticeNo);
 
 
     @Insert("""
             INSERT INTO NOTICE_FILE
                 (
-                FILE_NO
-                ,NOTICE_NO
+                NOTICE_NO
                 ,ORIGIN_NAME
                 ,CHANGE_NAME
                 ,FILE_PATH
                 )
                 VALUES
                 (
-                SEQ_NOTICE_FILE.NEXTVAL
-                ,#{noticeNo}
+                #{noticeNo}
                 ,#{originName}
                 ,#{changeName}
                 ,#{filePath}
@@ -102,10 +104,11 @@ public interface NoticeMappper {
 
     @Update("""
                 UPDATE NOTICE
-                SET
-                    TITLE = #{title}
-                    , CONTENT = #{content}
-                    , UPDATED_AT = SYSDATE
+                        SET
+                          TITLE = #{title}
+                          , CONTENT = #{content}
+                          , CATEGORY = #{category}
+                          , UPDATED_AT = SYSDATE
                 WHERE NOTICE_NO = #{noticeNo}
                 AND WRITER_NO = #{writerNo}
                 AND DEL_YN = 'N'
@@ -120,7 +123,6 @@ public interface NoticeMappper {
     int deleteFile(String noticeNo);
 
 
-
     @Update("""
             UPDATE NOTICE
             SET DEL_YN = 'Y'
@@ -131,16 +133,16 @@ public interface NoticeMappper {
 
 
     @Select("""
-        SELECT
-            FILE_NO
-            ,NOTICE_NO
-            ,ORIGIN_NAME
-            ,CHANGE_NAME
-            ,FILE_PATH
-        FROM NOTICE_FILE
-        WHERE NOTICE_NO = #{noticeNo}
-        AND DEL_YN = 'N'
-        """)
+            SELECT
+                FILE_NO
+                ,NOTICE_NO
+                ,ORIGIN_NAME
+                ,CHANGE_NAME
+                ,FILE_PATH
+            FROM NOTICE_FILE
+            WHERE NOTICE_NO = #{noticeNo}
+            AND DEL_YN = 'N'
+            """)
     List<NoticeFileVo> selectFileListByNoticeNo(String noticeNo);
 
 }

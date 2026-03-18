@@ -19,7 +19,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class NoticeService {
 
-    private final NoticeMappper noticeMapper;
+    private final NoticeMapper noticeMapper;
 
     @Value("${file.upload.path.notice}")
     private String uploadPath;
