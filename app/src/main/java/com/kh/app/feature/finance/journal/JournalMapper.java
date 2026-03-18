@@ -36,23 +36,11 @@ public interface JournalMapper {
     @Update("""
             UPDATE JOURNAL
             SET
-                ACCOUNT_NO = #{accountNo}
-                , DEBIT = #{debit}
-                , CREDIT = #{credit}
-            WHERE JOURNAL_NO = #{journalNo}
-            AND IS_DELETED = 'N'
-        """)
-    int updateJournal(JournalVo vo);
-
-    @Update("""
-            UPDATE JOURNAL
-            SET
                 IS_DELETED = 'Y'
             WHERE JOURNAL_NO = #{journalNo}
-            AND WRITER_NO = #{writerNo}
             AND IS_DELETED = 'N'
             """)
-    int delJournal(JournalVo vo);
+    int delJournal(String journalNo);
 
 
     @Delete("""
@@ -74,7 +62,7 @@ public interface JournalMapper {
             JOIN ACCOUNT A ON J.ACCOUNT_NO = A.ACCOUNT_NO
             WHERE J.IS_DELETED = 'N'
             AND J.JOURNAL_DATE = TO_DATE(#{journalDate}, 'YY/MM/DD')
-            ORDER BY J.JOURNAL_DATE DESC, J.JOURNAL_NO DESC
+            ORDER BY JOURNAL_NO DESC, DEBIT DESC
             """)
     List<JournalVo> selectJournal(String journalDate);
 

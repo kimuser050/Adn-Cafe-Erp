@@ -102,20 +102,39 @@ async function selectJournal() {
     const resp = await fetch(`/journal/selectJournal?journalDate=${journalDate}`);
 
     const voList = await resp.json();
+
     if (resp.ok) {
         const tbody = document.querySelector("#journalListBody");
         let str = "";
-        for (const vo of voList) {
+        for (let i = 0; i < voList.length; i += 2) {
+            const debitVo = voList[i];
+            const creditVo = voList[i + 1];
             str += `
                 <tr>
-                    <td><input type="checkbox"></td>
-                    <td>${vo.journalDate}</td>
-                    <td>${vo.journalNo}</td>
-                    <td>${vo.accountName}</td>
-                    <td>${vo.credit || vo.debit}</td>
-                    <td>${vo.writerName}</td>
+                    <td rowspan="2"><input type="checkbox"></td>
+                    <td rowspan="2">${debitVo.journalDate.substring(0, 10)}</td>
+                    <td rowspan="2">${debitVo.journalNo}</td>
+                    <td>${debitVo.accountName}</td>
+                    <td>${Number(debitVo.debit)}</td>
+                    <td rowspan="2">${debitVo.writerName}</td>
+                    <td rowspan="2">
+                        <button type="button" class="menu-btn-sm" 
+                        onclick="openUpdateModal(
+                        '${debitVo.journalNo}'
+                        , '${debitVo.accountName}', '${Number(debitVo.debit)}'
+                        , '${creditVo.accountName}', '${Number(creditVo.credit)}'
+                        , '${debitVo.journalDate}'
+                        )">수정</button>
+                
+                        <button type="button" class="menu-btn-sm" 
+                        onclick="deleteJournal('${debitVo.journalNo}')">삭제</button>
+                    </td>
                 </tr>
-        `
+                <tr>
+                    <td>${creditVo.accountName}</td>
+                    <td>${Number(creditVo.credit)}</td>
+                </tr>
+                `;
         }
 
         tbody.innerHTML = str;
@@ -125,6 +144,7 @@ async function selectJournal() {
     }
 }
 
+// 총금액 보여주기
 
 function total(voList) {
 
@@ -147,6 +167,93 @@ function total(voList) {
     diffAmount.value = diff;
 
 }
+
+// 수정 모달창
+
+function openUpdateModal(no, debitname, debit, creditname, credit, date) {
+    document.querySelector("#modalJournalNo").value = no;
+    document.querySelector("#modalDebitAccountName").value = debitname;
+    document.querySelector("#modalDebit").value = debit;
+    document.querySelector("#modalCreditAccountName").value = creditname;
+    document.querySelector("#modalCredit").value = credit;
+    document.querySelector("#modalDate").value = date.substring(0, 10);
+
+    document.querySelector("#updateModal").classList.add("active");
+}
+
+// 수정 모달창 닫기
+
+function closeModal() {
+    document.querySelector("#updateModal").classList.remove("active");
+}
+
+//전표 수정
+
+async function updateJournal() {
+    const journalNo = document.querySelector("#modalJournalNo").value;
+    const journalDate = document.querySelector("#modalDate").value;
+
+    const modalDebitAccountName = document.querySelector("#modalDebitAccountName").value;
+    const option = document.querySelectorAll("#accountOptions option");
+    let accountNo = "";
+    for (let opt of option) {
+        if (opt.value === modalDebitAccountName) {
+            accountNo = opt.dataset.no;
+            break;
+        }
+    }
+    const debit = document.querySelector("#modalDebit").value;
+
+    const modalCreditAccountName = document.querySelector("#modalCreditAccountName").value;
+    const option2 = document.querySelectorAll("#accountOptions option");
+    let accountNo2 = "";
+    for (let opt of option2) {
+        if (opt.value === modalCreditAccountName) {
+            accountNo2 = opt.dataset.no;
+            break;
+        }
+    }
+    const credit = document.querySelector("#modalCredit").value;
+
+    const data = [
+        {
+            journalNo: journalNo,
+            accountNo: accountNo,
+            journalDate: journalDate,
+            debit: debit,
+            credit: 0,
+            writerNo: "200001"
+        },
+        {
+            journalNo: journalNo,
+            accountNo: accountNo2,
+            journalDate: journalDate,
+            debit: 0,
+            credit: credit,
+            writerNo: "200001"
+        }
+    ]
+
+    console.log("전송 데이터:", data);
+
+    const resp = await fetch(`/journal/updateJournal`, {
+        method: "put",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+
+    if (resp.ok) {
+        alert("전표 수정 성공");
+        closeModal();
+        selectJournal();
+        clear();
+    } else {
+        alert("전표 수정 실패");
+    }
+}
+
 
 
 

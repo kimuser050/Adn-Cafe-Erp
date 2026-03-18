@@ -42,10 +42,6 @@
                                         <input type="date" id="journalDate" value="2026-03-12" class="date-input"
                                             onchange="selectJournal();">
                                     </div>
-                                    <div class="action-btns">
-                                        <button class="menu-btn-sm" onclick="updateJournal()">수정하기</button>
-                                        <button class="menu-btn-sm" onclick="delJournal()">삭제하기</button>
-                                    </div>
                                 </div>
 
                                 <div class="list-container">
@@ -58,6 +54,7 @@
                                                 <th>계정과목</th>
                                                 <th>금액</th>
                                                 <th>작성자</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody id="journalListBody"></tbody>
@@ -98,6 +95,41 @@
                                 </div>
                             </div>
                         </div>
+        </div>
+        <div id="updateModal" class="modal">
+            <div class="modalContainer">
+                <div class="modalHeader">
+                    <h3>전표 수정 (번호:<input type="text" id="modalJournalNo" readonly>)
+                    </h3>
+                    <input type="date" id="modalDate">
+                </div>
+
+                <div class="modalBody">
+                    <div class="inputGroup">
+                        <label>계정과목</label>
+                        <input type="text" id="modalDebitAccountName" list="accountOptions" placeholder="계정과목 선택">
+                    </div>
+                    <div class="inputGroup">
+                        <label for="modalDebit">차변금액</label>
+                        <input type="text" id="modalDebit" placeholder="금액 입력">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label>계정과목</label>
+                        <input type="text" id="modalCreditAccountName" list="accountOptions" placeholder="계정과목 선택">
+                        <datalist id="accountOptions"></datalist>
+                    </div>
+                    <div class="inputGroup">
+                        <label for="modalCredit">대변금액</label>
+                        <input type="text" id="modalCredit" placeholder="금액 입력">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="menu-btn-sm btn-dark" onclick="updateJournal()">수정완료</button>
+                    <button type="button" class="menu-btn-sm" onclick="closeModal()">취소</button>
+                </div>
+            </div>
         </div>
         </section>
         </main>
