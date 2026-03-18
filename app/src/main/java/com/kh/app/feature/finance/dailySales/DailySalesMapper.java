@@ -1,5 +1,6 @@
 package com.kh.app.feature.finance.dailySales;
 
+import com.kh.app.feature.stock.Products.ProductVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface DailySalesMapper {
                 )
             VALUES
                 (
-                #{vo.salesNo}
+                SEQ_${tableName}.NEXTVAL
                 ,#{vo.storeNo}
                 ,#{vo.productNo}
                 ,#{vo.unitPrice}
@@ -102,11 +103,11 @@ public interface DailySalesMapper {
 
     @Select("""
             SELECT
-            PRODUCTS_NO AS productNo
-            ,PRODUCTS_NAME AS productName
+            PRODUCTS_NO AS productsNo
+            ,PRODUCTS_NAME AS productsName
             FROM PRODUCTS
             """)
-    List<DailySalesVo> getProductList();
+    List<ProductVo> getProductList();
 
     @Select("""
             SELECT
@@ -121,4 +122,6 @@ public interface DailySalesMapper {
     List<DailySalesVo> productIncome(
             @Param("tableName") String tableName
             ,@Param("salesDate") String salesDate);
+
+
 }

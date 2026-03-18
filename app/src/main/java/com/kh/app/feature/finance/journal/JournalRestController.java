@@ -68,10 +68,6 @@ public class JournalRestController {
 
         List<JournalVo> voList = journalService.selectJournal(journalDate);
 
-        for(JournalVo vo : voList) {
-            System.out.println("번호: " + vo.getJournalNo() + " | 차변: " + vo.getDebit() + " | 대변: " + vo.getCredit());
-        }
-
         return ResponseEntity.ok(voList);
     }
 
