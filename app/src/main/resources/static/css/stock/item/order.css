@@ -1,0 +1,41 @@
+.page-content { padding: 30px; background-color: #fdfaf7; min-height: 100vh; position: relative; }
+        .tab-wrapper { display: flex; gap: 4px; }
+        .tab-btn { 
+            padding: 12px 28px; border: none; cursor: pointer; font-size: 16px; font-weight: bold;
+            border-radius: 10px 10px 0 0; background-color: #a68b7c; color: white;
+        }
+        .tab-btn.active { background-color: #4a382e; }
+        
+        .content-container { 
+            background: white; border: 1px solid #e0e0e0; border-radius: 0 15px 15px 15px; 
+            padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 500px;
+        }
+
+        .search-section { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .search-section label { font-weight: bold; color: #444; }
+        .search-section input[type="text"] { padding: 10px; border: 1px solid #ddd; border-radius: 4px; width: 350px; }
+        
+        .btn-brown { background-color: #4a382e; color: white; border: none; padding: 10px 25px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+
+        /* 테이블 디자인 */
+        .item-table { width: 100%; border-collapse: collapse; }
+        .item-table th { background-color: #efefef; padding: 15px; border-bottom: 2px solid #ddd; color: #666; }
+        .item-table td { padding: 15px; border-bottom: 1px solid #f0f0f0; text-align: center; vertical-align: middle; }
+
+        /* 수량 조절기 (- 1 +) */
+        .qty-control { 
+            display: inline-flex; align-items: center; border: 1px solid #888; border-radius: 20px; padding: 2px 10px; 
+        }
+        .qty-btn { background: none; border: none; cursor: pointer; font-weight: bold; padding: 0 8px; font-size: 18px; }
+        .qty-val { border: none; text-align: center; width: 30px; font-weight: bold; pointer-events: none; }
+
+        /* 하단 주문 버튼 (이미지 우측 하단) */
+        .order-footer { display: flex; justify-content: flex-end; margin-top: 30px; }
+        .btn-order-main { 
+            background-color: #4a382e; color: white; border: none; 
+            padding: 15px 40px; font-size: 20px; font-weight: bold; border-radius: 6px; cursor: pointer;
+        }
+        
+        /* 상태 배지 */
+        .badge { padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+        .badge-w { background: #f0f0f0; color: #777; }
