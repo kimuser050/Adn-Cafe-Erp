@@ -19,5 +19,5 @@ public class AnswerVo {
     private String delYn;
     private List<AnswerFileVo> fileList;
 
-}
 
+}
