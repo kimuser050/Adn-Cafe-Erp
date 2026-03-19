@@ -19,8 +19,8 @@
             <button type="button" class="nav-main">인적관리</button>
             <div class="nav-sub">
                 <a href="/hr/dept/list">조직관리</a>
-                <a href="/hr/emp/list"  class="active">직원관리</a>
-                <a href="/hr/att/list">근태관리</a>
+                <a href="/hr/emp/list">직원관리</a>
+                <a href="/hr/att/list" class="active">근태관리</a>
                 <a href="/hr/pay/list">급여관리</a>
             </div>
         </div>
