@@ -64,7 +64,7 @@ public class DailySalesRestController {
     }
 
     //지점별매출
-    @GetMapping("/storeIncome")
+    @GetMapping("/storeIncomeData")
     public ResponseEntity<Map<Object, Object>> storeIncome(@RequestParam String salesDate) throws Exception {
 
         List<DailySalesVo> voList = dailySalesService.storeIncome(salesDate);
@@ -76,7 +76,7 @@ public class DailySalesRestController {
     }
 
     //상품별매출
-    @GetMapping("/productIncome")
+    @GetMapping("/productIncomeData")
     public ResponseEntity<Map<Object, Object>> productIncome(@RequestParam String salesDate) throws Exception {
 
         List<DailySalesVo> voList = dailySalesService.productIncome(salesDate);

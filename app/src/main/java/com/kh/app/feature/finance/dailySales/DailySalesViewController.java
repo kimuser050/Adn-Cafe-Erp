@@ -17,4 +17,14 @@ public class DailySalesViewController {
     public String listDaily(){
         return "/finance/dailySales/dailyList";
     }
+
+    @GetMapping("/productIncome")
+    public String productIncome(){
+        return "/finance/dailySales/productIncome";
+    }
+
+    @GetMapping("/storeIncome")
+    public String storeIncome(){
+        return "/finance/dailySales/storeIncome";
+    }
 }
