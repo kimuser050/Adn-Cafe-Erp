@@ -9,46 +9,38 @@ import java.util.List;
 
 @Mapper
 public interface ReqMapper {
-   @Insert("""
-    INSERT INTO RETURN_REQ
-            (
-                    PRODUCT_NAME
-                    , QUANTITY
-                    , REASON
-                    , STORE_CODE
-                    )
-    VALUES
-            (
-            #{productName}
-            , #{quantity}
-            , #{reason}
-            , #{storeCode}
-        )
-    """)
+    // [반품 신청] 기본값이 설정된 컬럼은 제외하고 인서트
+    @Insert("""
+            INSERT INTO RETURN_REQ (
+                PRODUCT_NAME, 
+                QUANTITY, 
+                REASON, 
+                STORE_CODE, 
+                STATUS
+            ) VALUES (
+                #{productName}, 
+                #{quantity}, 
+                #{reason}, 
+                #{storeCode}, 
+                NVL(#{status}, 'W')
+            )
+            """)
     int reqinsert(ReqVo vo);
 
+    // [반품 조회] STORE 테이블과 JOIN하여 매장 이름 가져오기
     @Select("""
-   SELECT
-           RETURN_NO,
-           PRODUCT_NAME,
-           QUANTITY,
-           REASON,
-           STATUS,
-    TO_CHAR(CREATED_AT, 'YYYY-MM-DD') AS createdAt,
-    STORE_CODE
-    FROM RETURN_REQ
-    ORDER BY RETURN_NO DESC
-    """)
+            SELECT 
+                R.RETURN_NO, 
+                R.PRODUCT_NAME, 
+                S.STORE_NAME, 
+                R.QUANTITY, 
+                R.REASON, 
+                R.STATUS, 
+                R.CREATED_AT
+            FROM RETURN_REQ R
+            JOIN STORE S ON R.STORE_CODE = S.STORE_CODE
+            ORDER BY R.RETURN_NO DESC
+            """)
     List<ReqVo> list(ReqVo vo);
 
-    @Data
-    class ReqVo {
-        private String returnNo;
-        private String productName;
-        private String quantity;
-        private String reason;
-        private String status;
-        private String createdAt;
-        private String storeCode;
-    }
 }
