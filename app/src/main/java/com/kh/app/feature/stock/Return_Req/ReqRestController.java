@@ -20,8 +20,8 @@ public class ReqRestController {
 
     // 반품조회 확인용
     @GetMapping("list")
-    public ResponseEntity<Map<String, Object>> list(ReqMapper.ReqVo vo){
-        List<ReqMapper.ReqVo> voList =reqService.list(vo);
+    public ResponseEntity<Map<String, Object>> list(ReqVo vo){
+        List<ReqVo> voList =reqService.list(vo);
         Map<String, Object> map = new HashMap<>();
         map.put("voList",voList);
         return ResponseEntity.ok(map);
@@ -30,7 +30,7 @@ public class ReqRestController {
 
     //반품신청
     @PostMapping("insert")
-    public ResponseEntity<Map<String, String>> reinsert(@RequestBody ReqMapper.ReqVo vo){
+    public ResponseEntity<Map<String, String>> reinsert(@RequestBody ReqVo vo){
         int result = reqService.reqinsert(vo);
         if(result != 1){
             String errMsg = "반품신청 안됨";

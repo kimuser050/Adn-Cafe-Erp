@@ -15,11 +15,11 @@ public class ReqService {
 
     private final ReqMapper reqMapper;
 
-    public int reqinsert(ReqMapper.ReqVo vo) {
-        return reqMapper.reqinsert(vo);
-    }
-    @Transactional
-    public List<ReqMapper.ReqVo> list(ReqMapper.ReqVo vo) {
+    public List<ReqVo> list(ReqVo vo) {
         return reqMapper.list(vo);
+    }
+
+    public int reqinsert(ReqVo vo) {
+        return reqMapper.reqinsert(vo);
     }
 }
