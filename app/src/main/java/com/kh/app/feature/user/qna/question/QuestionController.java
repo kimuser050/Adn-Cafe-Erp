@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 @RequestMapping("qna/question")
 @Controller
-public class QuestionViewController {
+public class QuestionController {
 
     @GetMapping("insert")
     public String insert(HttpSession session, RedirectAttributes ra) {
