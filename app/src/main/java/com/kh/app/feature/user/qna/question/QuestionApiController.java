@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("qna/question")
 @RestController
-public class QuestionRestController {
+public class QuestionApiController {
 
     private final QuestionService questionService;
 
