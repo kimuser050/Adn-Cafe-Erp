@@ -59,33 +59,38 @@ public class NoticeRestController {
 
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1") int currentPage) {
-        int listCount = noticeService.selectCount();
-        int pageLimit = this.pageLimit;
-        int boardLimit = this.boardLimit;
+    public ResponseEntity<Map<String, Object>> selectList(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchValue
+    ) {
+
+        int listCount = noticeService.selectCount(searchType, searchValue);
 
         PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
-        List<NoticeVo> voList = noticeService.selectList(pvo);
+
+        List<NoticeVo> voList = noticeService.selectList(pvo, searchType, searchValue);
+
         Map<String, Object> map = new HashMap<>();
         map.put("pvo", pvo);
         map.put("voList", voList);
+
         return ResponseEntity.ok(map);
     }
+
 
 
     @GetMapping("/{no}")
     public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String no, HttpSession session) {
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-        if(loginMemberVo == null){
+        if (loginMemberVo == null) {
             throw new IllegalArgumentException("로그인먼저");
-
         }
+
         NoticeVo vo = noticeService.selectOne(no);
         Map<String, Object> map = new HashMap<>();
         map.put("vo", vo);
-
-
-
+        map.put("loginEmpNo", loginMemberVo.getEmpNo());
         return ResponseEntity.ok(map);
     }
 
@@ -134,6 +139,7 @@ public class NoticeRestController {
         map.put("result", result);
         return ResponseEntity.ok(map);
     }
+
 
 
 

@@ -45,19 +45,23 @@
                                 <% } else { %>
                                     <div class="user-info-area login-section">
                                         <img src="http://192.168.20.2:5500/member/${loginMemberVo.profileChangeName}"
-                                            alt="${loginMemberVo.profileOriginName}" class="profile-img"> <span
-                                            style="text-align:center; font-weight:bold; font-size:18px;">
-                                            ${loginMemberVo.empName}
-                                        </span>
+                                             alt="${loginMemberVo.profileOriginName}" class="profile-img">
 
-                                        <div class="btn-group">
-                                            <button class="btn btn-dark"
-                                                onclick="location.href='/member/mypage'">마이페이지</button>
-                                            <button class="btn btn-dark"
-                                                onclick="location.href='/member/logout'">로그아웃</button>
+                                        <div class="user-details" style="margin-bottom: 5px;">
+                                            <span class="user-name"><b>${loginMemberVo.empName}</b> 님</span>
+                                        </div>
+
+                                        <div class="attendance-btn-group" style="display: flex; gap: 10px; width: 100%;">
+                                            <button type="button" id="btn-work-in" class="btn btn-mid" style="flex: 1;">출근</button>
+                                            <button type="button" id="btn-work-out" class="btn btn-outline" style="flex: 1;">퇴근</button>
+                                        </div>
+
+                                        <div class="btn-group" style="display: flex; gap: 10px; width: 100%;">
+                                            <button type="button" class="btn btn-dark" style="flex: 1;" onclick="location.href='/member/mypage'">마이페이지</button>
+                                            <button type="button" class="btn btn-dark" style="flex: 1;" onclick="location.href='/member/logout'">로그아웃</button>
                                         </div>
                                     </div>
-                                    <% } %>
+                                <% } %>
 
                                         <div class="home-card-wrap">
                                             <div class="card-item">
@@ -82,3 +86,10 @@
     </body>
 
     </html>
+
+    <script>
+        const msg = "${alertMsg}";
+        if (msg && msg.length > 0) {
+            alert(msg);
+        }
+    </script>

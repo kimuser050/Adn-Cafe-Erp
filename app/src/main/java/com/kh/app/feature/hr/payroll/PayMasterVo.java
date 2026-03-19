@@ -17,5 +17,10 @@ public class PayMasterVo {
     private String createdAt;
     private String updatedAt;
 
-    private List<PayHisVo> detailList;
+    // 목록 / 상세조회 화면용
+    private String empName;
+    private String deptName;
+    private String posName;
+
+    private List<PayDetailVo> detailList;
 }

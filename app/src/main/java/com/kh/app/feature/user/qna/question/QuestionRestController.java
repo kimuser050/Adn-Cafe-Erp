@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("qna/question")
 @RestController
-@Slf4j
-public class QuestionRestcontroller {
+public class QuestionRestController {
 
     private final QuestionService questionService;
 
@@ -53,16 +53,21 @@ public class QuestionRestcontroller {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1") int currentPage) {
-        int listCount = questionService.selectCount();
-        int pageLimit = this.pageLimit;
-        int boardLimit = this.boardLimit;
+    public ResponseEntity<Map<String, Object>> selectList(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchKeyword
+    ) {
+        // 전체 게시글 수가 아닌 '검색된 게시글 수'를 가져와야 페이징이 정확합니다.
+        int listCount = questionService.selectCount(searchType, searchKeyword);
 
         PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
-        List<QuestionVo> voList = questionService.selectList(pvo);
+        List<QuestionVo> voList = questionService.selectList(pvo, searchType, searchKeyword);
+
         Map<String, Object> map = new HashMap<>();
         map.put("pvo", pvo);
         map.put("voList", voList);
+
         return ResponseEntity.ok(map);
     }
 
@@ -103,6 +108,19 @@ public class QuestionRestcontroller {
         map.put("result", result);
         return ResponseEntity.ok(map);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

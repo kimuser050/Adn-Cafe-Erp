@@ -1,82 +1,101 @@
 package com.kh.app.feature.user.qna.question;
 
 import com.kh.app.feature.util.PageVo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface QuestionMapper {
 
+
+
+
+    // 2. INSERT 쿼리 수정 (시퀀스 대신 전달받은 inquiryNo 사용)
     @Insert("""
-            INSERT INTO QNA_QUESTION
-            (
-                WRITER_NO
-                ,TITLE
-                ,CONTENT
-                ,TYPE_CODE
-            )
-            VALUES
-            (
-                #{writerNo}
-                ,#{title}
-                ,#{content}
-                ,#{typeCode}
-            )
-            
-            """)
+        INSERT INTO QNA_QUESTION (
+            WRITER_NO
+            ,TITLE
+            ,CONTENT
+            ,TYPE_CODE
+        ) VALUES (
+            #{writerNo}
+            ,#{title}
+            ,#{content}
+            ,#{typeCode}
+        )
+    """)
     int insert(QuestionVo vo);
 
 
+    // 3. 파일 INSERT (여기서도 #{inquiryNo}를 그대로 사용)
     @Insert("""
-        INSERT INTO QNA_QUESTION_FILE
-        (
+        INSERT INTO QNA_QUESTION_FILE (
             INQUIRY_NO,
             ORIGIN_NAME,
             CHANGE_NAME,
             FILE_PATH
-        )
-        VALUES
-        (
-            SEQ_QNA_QUESTION.CURRVAL,
+        ) VALUES (
+            #{inquiryNo},
             #{originName},
             #{changeName},
             #{filePath}
         )
-        """)
+    """)
     int insertFile(QuestionFileVo vo);
 
-    @Select("""
-                SELECT COUNT(*)
-                FROM QNA_QUESTION
-                WHERE DEL_YN = 'N'
-            """)
-    int selectCount();
-
-
+    // 1. 방금 생성된 시퀀스 번호(현재 값) 가져오기
+    @Select("SELECT SEQ_QNA_QUESTION.CURRVAL FROM DUAL")
+    String getCurrentSequence();
 
     @Select("""
-            SELECT
-                Q.INQUIRY_NO
-                ,Q.WRITER_NO
-                ,M.EMP_NAME AS WRITER_NAME
-                ,Q.TITLE
-                ,Q.CONTENT
-                ,Q.TYPE_CODE
-                ,Q.SECRET_YN
-                ,Q.CREATED_AT
-                ,Q.DEL_YN
-                ,Q.ANSWER_YN
+            <script>
+            SELECT COUNT(*)
             FROM QNA_QUESTION Q
             JOIN MEMBER M ON (Q.WRITER_NO = M.EMP_NO)
             WHERE Q.DEL_YN = 'N'
-            ORDER BY Q.INQUIRY_NO DESC
-            OFFSET #{offset} ROWS FETCH NEXT #{boardLimit} ROWS ONLY
+            <if test="searchType == 'title'">
+                AND Q.TITLE LIKE '%' || #{searchKeyword} || '%'
+            </if>
+            <if test="searchType == 'writer'">
+                AND M.EMP_NAME LIKE '%' || #{searchKeyword} || '%'
+            </if>
+            </script>
         """)
-    List<QuestionVo> selectList(PageVo pvo);
+    int selectCount(@Param("searchType") String searchType, @Param("searchKeyword") String searchKeyword);
+
+
+
+    @Select("""
+        <script>
+        SELECT
+            Q.INQUIRY_NO
+            ,Q.WRITER_NO
+            ,M.EMP_NAME AS WRITER_NAME
+            ,Q.TITLE
+            ,Q.CONTENT
+            ,Q.TYPE_CODE
+            ,Q.SECRET_YN
+            ,Q.CREATED_AT
+            ,Q.DEL_YN
+            ,Q.ANSWER_YN
+        FROM QNA_QUESTION Q
+        JOIN MEMBER M ON (Q.WRITER_NO = M.EMP_NO)
+        WHERE Q.DEL_YN = 'N'
+        <if test="searchType == 'title'">
+            AND Q.TITLE LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchType == 'writer'">
+            AND M.EMP_NAME LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        ORDER BY Q.INQUIRY_NO DESC
+        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
+        </script>
+    """)
+    List<QuestionVo> selectList(@Param("pvo") PageVo pvo, @Param("searchType") String searchType, @Param("searchKeyword") String searchKeyword);
+
+
+
 
     @Select("""
     SELECT
@@ -105,10 +124,12 @@ public interface QuestionMapper {
         ,CHANGE_NAME
         ,FILE_PATH
     FROM QNA_QUESTION_FILE
-    WHERE INQUIRY_NO = #{no}
+    WHERE INQUIRY_NO = #{inquiryNo}
     AND DEL_YN = 'N'
     """)
     List<QuestionFileVo> selectFileList(String no);
+
+
 
 
     @Update("""
@@ -126,8 +147,6 @@ public interface QuestionMapper {
                     WHERE INQUIRY_NO = #{inquiryNo}
             """)
     void deleteFile(String inquiryNo);
-
-
-
-
 }
+
+

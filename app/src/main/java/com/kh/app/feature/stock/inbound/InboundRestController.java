@@ -27,21 +27,28 @@ public class InboundRestController {
     @Value("${page.boardLimit}")
     private int boardLimit;
 
-    //입고 내역 조회만
+    /**
+     * 입고 내역 조회 (페이징 + 검색)
+     */
     @GetMapping("selectList")
-    public ResponseEntity<Map<String, Object>> selectList(@RequestParam(required = false, defaultValue = "1")int currentPage){
-        int listCount = inboundService.selectCount();
-        int pageLimit = this.pageLimit;
-        int boardLimit = this.boardLimit;
-        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
-        List<InboundVo> voList = inboundService.selectList(pvo);
-        Map<String, Object>map = new HashMap<>();
-        map.put("pvo",pvo);
-        map.put("voList",voList);
+    public ResponseEntity<Map<String, Object>> selectList(
+            @RequestParam(value = "currentPage", required = false, defaultValue = "1") int currentPage,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+
+        // 1. 검색 조건이 반영된 전체 데이터 개수 조회
+        int listCount = inboundService.selectCount(keyword);
+
+        // 2. 페이징 객체 생성
+        PageVo pvo = new PageVo(listCount, currentPage, this.pageLimit, this.boardLimit);
+
+        // 3. 해당 페이지의 목록 조회
+        List<InboundVo> voList = inboundService.selectList(pvo, keyword);
+
+        // 4. 결과 반환
+        Map<String, Object> map = new HashMap<>();
+        map.put("pvo", pvo);
+        map.put("voList", voList);
+
         return ResponseEntity.ok(map);
-
     }
-
-
-
 }

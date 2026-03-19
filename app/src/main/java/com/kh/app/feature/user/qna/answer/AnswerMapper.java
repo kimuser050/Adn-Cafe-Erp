@@ -11,42 +11,47 @@ import java.util.List;
 @Mapper
 public interface AnswerMapper {
 
+    // 1. 답변용 시퀀스 번호 미리 따오기
+    @Select("SELECT SEQ_QNA_ANSWER.NEXTVAL FROM DUAL")
+    String getNextReplyNo();
 
-
+    // 2. 답변 본문 등록 (파라미터로 받은 replyNo 사용)
     @Insert("""
             INSERT INTO QNA_ANSWER
             (
-                INQUIRY_NO
+                REPLY_NO
+                ,INQUIRY_NO
                 ,WRITER_NO
                 ,RESPONSE
             )
             VALUES
             (
-                #{inquiryNo}
+                #{replyNo}
+                ,#{inquiryNo}
                 ,#{writerNo}
                 ,#{response}
             )
             """)
     int insert(AnswerVo vo);
 
+    // 3. 답변 파일 등록 (REPLY_NO 컬럼 사용)
     @Insert("""
         INSERT INTO QNA_ANSWER_FILE
         (
-            ANSWER_NO
+            REPLY_NO
             ,ORIGIN_NAME
             ,CHANGE_NAME
             ,FILE_PATH
         )
         VALUES
         (
-            SEQ_QNA_ANSWER.CURRVAL
+            #{replyNo}
             ,#{originName}
             ,#{changeName}
             ,#{filePath}
         )
         """)
     int insertFile(AnswerFileVo vo);
-
 
     @Update("""
             UPDATE QNA_QUESTION
@@ -82,8 +87,11 @@ public interface AnswerMapper {
 """)
     List<AnswerVo> selectList(PageVo pvo);
 
+
     @Select("""
+    SELECT * FROM (
         SELECT
+            A.REPLY_NO,
             A.INQUIRY_NO,
             Q.TITLE AS questionTitle,
             QM.EMP_NAME AS questionWriterName,
@@ -97,9 +105,11 @@ public interface AnswerMapper {
         JOIN QNA_QUESTION Q ON A.INQUIRY_NO = Q.INQUIRY_NO
         JOIN MEMBER QM ON Q.WRITER_NO = QM.EMP_NO
         JOIN MEMBER AM ON A.WRITER_NO = AM.EMP_NO
-        WHERE A.INQUIRY_NO = #{inquiryNo}
+        WHERE A.INQUIRY_NO = #{inquiryNo} -- 파라미터 명과 일치
           AND A.DEL_YN = 'N'
-    """)
+        ORDER BY A.REPLY_NO DESC            -- 최신 답변 우선
+    ) WHERE ROWNUM = 1                      -- 중복 에러 방지(딱 1개만)
+""")
     AnswerVo selectOne(String inquiryNo);
 
     // 해당 답변 첨부파일 목록 조회
@@ -115,7 +125,7 @@ public interface AnswerMapper {
           AND DEL_YN = 'N'
         ORDER BY FILE_NO ASC
     """)
-    List<AnswerFileVo> selectFileList(String inquiryNo);
+    List<AnswerFileVo> selectFileList(String replyNo);
 
     // 답변 수정
     @Update("""
@@ -136,6 +146,7 @@ public interface AnswerMapper {
     """)
     int deleteFile(String replyNo);
 
+
     // 답변 삭제
     @Update("""
         UPDATE QNA_ANSWER
@@ -146,5 +157,10 @@ public interface AnswerMapper {
     """)
     int deleteByNo(AnswerVo vo);
 
+
 }
+
+
+
+
 

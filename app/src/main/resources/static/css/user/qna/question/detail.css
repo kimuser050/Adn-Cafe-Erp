@@ -1,0 +1,25 @@
+/* 기본 구조는 작성(insert.css)과 통일 */
+.qna-wrap { padding: 40px; background-color: #eee9e4; min-height: 100vh; }
+.qna-title-text { font-size: 22px; font-weight: bold; margin-bottom: 25px; }
+.qna-form-box { background-color: #fff; padding: 50px; border-radius: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+
+/* 상세 상단 정보 레이아웃 */
+.detail-header-row { display: flex; align-items: center; gap: 30px; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+.info-item { display: flex; align-items: center; gap: 10px; }
+.info-item .label { font-weight: bold; color: #888; font-size: 14px; }
+.info-item .value { color: #333; }
+.info-item .value-title { font-size: 18px; font-weight: bold; color: #5a4a3c; }
+.flex-fill { flex: 1; }
+
+/* 라운드 디스플레이 영역 (내용 보기) */
+.round-display-area {
+    width: 100%; min-height: 250px; padding: 30px; border: 1.5px solid #dcd1c5; border-radius: 40px;
+    background-color: #fff; line-height: 1.8; color: #444; margin-top: 10px;
+}
+.answer-style { background-color: #fdfaf7; border-color: #c8a992; }
+
+/* 버튼 및 파일 */
+.btn-area { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+.btn-custom { background-color: #8c7361; color: #fff; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.btn-danger { background-color: #a55d5d; }
+.file-item { display: block; margin-bottom: 5px; color: #666; text-decoration: none; font-size: 14px; }

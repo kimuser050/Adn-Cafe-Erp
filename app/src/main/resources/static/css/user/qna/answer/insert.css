@@ -1,0 +1,81 @@
+.qna-wrap { padding: 40px; background-color: #eee9e4; min-height: calc(100vh - 60px); }
+.qna-title-text { font-size: 18px; font-weight: bold; margin-bottom: 30px; color: #333; padding-left: 10px; }
+
+.qna-form-box { background-color: #f7f3f0; padding: 40px 60px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+/* 상단 문의 정보 요약 (번호, 카테고리, 제목, 작성자) */
+.question-summary-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    padding: 0 40px; /* 양옆 여백 확대 */
+    /* 항목들이 등간격으로 배치되도록 설정 */
+    justify-content: flex-start;
+    gap: 60px; /* 요소들 사이의 기본 간격을 60px로 고정 (원하는 만큼 조절 가능) */
+}
+.info-val {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+    white-space: nowrap; /* 줄바꿈 방지 */
+}
+/* 제목 부분만 남는 공간을 다 차지하게 해서 작성자를 오른쪽으로 밀어냄 */
+.title-flex {
+    flex: 1;
+    text-align: center;
+    margin: 0 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold; /* 제목은 좀 더 강조 */
+}
+/* 답변 입력 영역 */
+.content-group { background-color: #ffffff; padding: 50px; border-radius: 10px; }
+.content-group label { display: block; margin-bottom: 20px; font-size: 16px; font-weight: bold; color: #333; }
+
+.textarea-container {
+    position: relative;
+    border: 1px solid #d3c4b9;
+    border-radius: 40px;
+    padding: 30px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+}
+
+textarea#response {
+    width: 100%;
+    flex: 1;
+    border: none;
+    resize: none;
+    outline: none;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* 파일 첨부 버튼 (텍스트박스 내부 하단) */
+.file-upload-row { margin-top: 15px; display: flex; align-items: center; }
+.btn-file {
+    background-color: #7a6a5e;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+}
+.file-name-display { margin-left: 10px; font-size: 13px; color: #888; }
+
+/* 하단 등록 버튼 */
+.btn-area { display: flex; justify-content: center; margin-top: 30px; }
+.btn-submit {
+    background-color: #7a6a5e;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+.btn-submit:hover { background-color: #5f5249; }

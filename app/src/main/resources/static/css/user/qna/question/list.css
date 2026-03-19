@@ -1,0 +1,140 @@
+.qna-list-wrap {
+    padding: 40px;
+    background-color: #eee9e4;
+    min-height: calc(100vh - 60px);
+}
+
+.qna-header-text {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.qna-table-container {
+    background-color: #fff;
+    padding: 30px;
+    min-height: 500px;
+    position: relative;
+}
+
+.qna-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.qna-table th {
+    padding: 15px 0;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.qna-table td {
+    padding: 20px 0;
+    border-bottom: 1px solid #f9f9f9;
+    cursor: pointer;
+}
+
+.title-cell {
+    text-align: left;
+    padding-left: 20px !important;
+}
+
+/* 답변 아이콘 스타일 */
+.answer-tag {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 페이징 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 10px;
+}
+
+.page-num {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.page-num.active {
+    background-color: #d8b49b;
+    color: white;
+    border-radius: 5px;
+}
+
+/* 하단 푸터 (검색 & 버튼) */
+.list-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-label {
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.search-input {
+    width: 350px;
+    padding: 10px 20px;
+    border: 1px solid #c8a992;
+    border-radius: 30px;
+    outline: none;
+}
+
+.btn-search {
+    background-color: #8c7361;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-write {
+    position: absolute;
+    right: 0;
+    background-color: #8c7361;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+.search-select {
+    padding: 10px 15px;
+    border: 1px solid #c8a992;
+    border-radius: 30px; /* 입력창과 통일감 */
+    outline: none;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 요소 간 간격 */
+}

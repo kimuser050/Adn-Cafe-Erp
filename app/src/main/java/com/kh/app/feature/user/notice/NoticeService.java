@@ -15,8 +15,8 @@ import java.util.List;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class NoticeService {
 
     private final NoticeMapper noticeMapper;
@@ -31,14 +31,16 @@ public class NoticeService {
 
         int result = noticeMapper.insert(vo);
 
+        // INSERT 직후 같은 트랜잭션/세션에서 CURRVAL 조회
+        String noticeNo = noticeMapper.selectCurrentSeq();
+        vo.setNoticeNo(noticeNo);
+
         if(file != null && !file.isEmpty()){
-
             String originName = file.getOriginalFilename();
-
             String changeName = FileUploader.upload(file, uploadPath);
 
             NoticeFileVo fvo = new NoticeFileVo();
-            fvo.setNoticeNo(vo.getNoticeNo());
+            fvo.setNoticeNo(vo.getNoticeNo()); // ← 이제 noticeNo 있음
             fvo.setOriginName(originName);
             fvo.setChangeName(changeName);
             fvo.setFilePath(uploadPath);
@@ -49,14 +51,6 @@ public class NoticeService {
         return result;
     }
 
-    public int selectCount() {
-        return noticeMapper.selectCount();
-    }
-
-    public List<NoticeVo> selectList(PageVo pvo) {
-        return noticeMapper.selectList(pvo);
-
-    }
 
     @Transactional
     public NoticeVo selectOne(String no) {
@@ -143,7 +137,13 @@ public class NoticeService {
         return noticeMapper.deleteNotice(vo);
     }
 
+    public int selectCount(String searchType, String searchValue) {
+        return noticeMapper.selectCount(searchType, searchValue);
+    }
 
+    public List<NoticeVo> selectList(PageVo pvo, String searchType, String searchValue) {
+        return noticeMapper.selectList(pvo, searchType, searchValue);
+    }
 
 
 

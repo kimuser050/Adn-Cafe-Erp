@@ -12,4 +12,10 @@ public class PayViewController {
     public String list() {
         return "hr/pay/payList";
     }
+
+    @GetMapping("insert")
+    public String insert() {
+        return "hr/pay/payInsert";
+    }
+
 }
