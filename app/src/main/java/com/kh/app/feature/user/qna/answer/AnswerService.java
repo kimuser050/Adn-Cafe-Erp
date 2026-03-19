@@ -25,50 +25,40 @@ public class AnswerService {
     private String uploadPath;
 
     @Transactional
-    public int insert(AnswerVo vo, List<MultipartFile> fileList) {
+    public int insert(AnswerVo vo, List<MultipartFile> fList) { // 파라미터 2개로 축소
 
-        // 1. 답변 INSERT
+        String nextReplyNo = answerMapper.getNextReplyNo();
+        vo.setReplyNo(nextReplyNo);
+
         int result = answerMapper.insert(vo);
+        if(result != 1) throw new RuntimeException("답변 등록 실패");
 
-        if(result != 1){
-            throw new RuntimeException("답변 등록 실패");
-        }
-
-        // 2. 문의글 ANSWER_YN = 'Y'
         answerMapper.updateAnswerYn(vo.getInquiryNo());
 
-        // 3. 파일 처리
-        if(fileList != null && !fileList.isEmpty()){
+        if(fList != null && !fList.isEmpty()) {
+            for(MultipartFile f : fList) {
+                if(!f.isEmpty()) {
+                    try {
+                        // 필드에 선언된 this.uploadPath를 명시적으로 사용
+                        File dir = new File(this.uploadPath);
+                        if(!dir.exists()) dir.mkdirs();
 
-            for(MultipartFile file : fileList){
+                        String changeName = FileUploader.upload(f, this.uploadPath);
 
-                if(file.isEmpty()){
-                    continue;
+                        AnswerFileVo fileVo = new AnswerFileVo();
+                        fileVo.setOriginName(f.getOriginalFilename());
+                        fileVo.setChangeName(changeName);
+                        fileVo.setFilePath(this.uploadPath);
+                        fileVo.setReplyNo(nextReplyNo);
+
+                        answerMapper.insertFile(fileVo);
+                    } catch (Exception e) {
+                        log.error("파일 저장 중 진짜 에러: ", e); // 에러 원인을 로그로 찍어보세요!
+                        throw new RuntimeException("파일 업로드 오류");
+                    }
                 }
-
-                try {
-
-                    // 파일 업로드
-                    String changeName = FileUploader.upload(file , uploadPath);
-
-                    // 파일 VO 생성
-                    AnswerFileVo fvo = new AnswerFileVo();
-                    fvo.setOriginName(file.getOriginalFilename());
-                    fvo.setChangeName(changeName);
-                    fvo.setFilePath(uploadPath);
-
-                    // DB 저장
-                    answerMapper.insertFile(fvo);
-
-                } catch (Exception e){
-                    log.error("파일 업로드 실패", e);
-                    throw new RuntimeException("파일 업로드 실패");
-                }
-
             }
-
         }
-
         return result;
     }
 
@@ -87,7 +77,8 @@ public class AnswerService {
 
         AnswerVo vo = answerMapper.selectOne(no);
 
-        List<AnswerFileVo> fileList = answerMapper.selectFileList(no);
+        // replyNo 기준으로 파일 조회
+        List<AnswerFileVo> fileList = answerMapper.selectFileList(vo.getReplyNo());
 
         vo.setFileList(fileList);
 
@@ -156,5 +147,8 @@ public class AnswerService {
         return result;
     }
 
-
 }
+
+
+
+

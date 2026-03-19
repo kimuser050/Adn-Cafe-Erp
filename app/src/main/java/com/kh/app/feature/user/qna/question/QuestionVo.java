@@ -17,5 +17,6 @@ public class QuestionVo {
     private String createdAt;
     private String delYn;
     private String answerYn;
+    private com.kh.app.feature.user.qna.answer.AnswerVo answerVo;
     private List<QuestionFileVo> fileList;
 }

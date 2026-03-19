@@ -69,7 +69,6 @@ public class AnswerRestController {
         map.put("voList", voList);
         return ResponseEntity.ok(map);
     }
-
     @GetMapping("/{no}")
     public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String no, HttpSession session) {
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
@@ -86,50 +85,58 @@ public class AnswerRestController {
         return ResponseEntity.ok(map);
     }
 
-    @PutMapping
-    public ResponseEntity<Map<String, Object>> updateByNo( @RequestParam(required = false) MultipartFile file,
-                                                           @RequestParam(required = false) String changeName,
-                                                           AnswerVo vo,
-                                                           HttpSession session) throws IOException
+    @PostMapping("/update")
+    public ResponseEntity<Map<String, Object>> updateByNo(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "oldChangeName", required = false) String oldChangeName, // JS의 키값과 일치시킴
+            AnswerVo vo, // replyNo, response 등을 담음
+            HttpSession session) throws IOException
     {
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
         if(loginMemberVo == null){
-            throw new IllegalStateException("login required");
+            throw new IllegalStateException("로그인이 필요합니다.");
         }
 
         vo.setWriterNo(loginMemberVo.getEmpNo());
-        int result = answerService.updateByNo(vo,file,changeName);
+
+        // Service 메서드 호출 (기존 인자 순서 확인 필요: vo, file, oldChangeName)
+        int result = answerService.updateByNo(vo, file, oldChangeName);
+
         if (result != 1) {
-            String errMsg = "[B-410] update err ...";
-            log.error(errMsg);
-            throw new IllegalStateException(errMsg);
+            log.error("[B-410] 답변 수정 실패 - 대상 없음 또는 권한 없음");
+            throw new IllegalStateException("[B-410] 답변 수정 실패");
         }
+
         Map<String, Object> map = new HashMap<>();
         map.put("result", result);
         return ResponseEntity.ok(map);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Map<String, Object>> deleteByNo(@RequestBody AnswerVo vo
-            , HttpSession session
-    )
-    {
+    @PostMapping("/delete")
+    public ResponseEntity<Map<String, Object>> deleteByNo(
+            @RequestBody AnswerVo vo, // JSON으로 보낼 경우 유지
+            HttpSession session
+    ) {
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
         if(loginMemberVo == null){
-            throw new IllegalStateException("login required");
+            throw new IllegalStateException("로그인이 필요합니다.");
         }
+
         vo.setWriterNo(loginMemberVo.getEmpNo());
         int result = answerService.deleteByNo(vo);
 
         if (result != 1) {
-            String errMsg = "[B-510] delete err ...";
-            log.error(errMsg);
-            throw new IllegalStateException(errMsg);
+            log.error("[B-510] 답변 삭제 실패");
+            throw new IllegalStateException("[B-510] 답변 삭제 실패");
         }
+
         Map<String, Object> map = new HashMap<>();
         map.put("result", result);
         return ResponseEntity.ok(map);
     }
-
-
 }
+
+
+
+
+
