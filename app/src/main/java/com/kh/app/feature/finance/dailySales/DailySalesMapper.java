@@ -96,16 +96,13 @@ public interface DailySalesMapper {
             SELECT
             S.STORE_NAME AS storeName
             ,SUM(T.UNIT_PRICE*T.QUANTITY) AS totalSales
-            FROM ${tableName} T
+            FROM TOTAL_SALES T
             JOIN STORE S ON T.STORE_NO = S.STORE_CODE
             WHERE TO_CHAR(T.SALES_DATE, 'YYYY-MM') = #{salesDate}
-            AND T.STORE_NO = #{store.storeNo}
             GROUP BY S.STORE_NAME
+            ORDER BY totalSales DESC
             """)
-    List<DailySalesVo> storeIncome(
-            @Param("store") DailySalesVo store
-            , @Param("tableName") String tableName
-            , @Param("salesDate") String salesDate);
+    List<DailySalesVo> storeIncome(@Param("salesDate") String salesDate);
 
 
     @Select("""
@@ -120,15 +117,24 @@ public interface DailySalesMapper {
             SELECT
             P.PRODUCTS_NAME AS productName
             , SUM(T.UNIT_PRICE*T.QUANTITY) AS totalSales
-            FROM ${tableName} T
+            FROM TOTAL_SALES T
             JOIN PRODUCTS P ON P.PRODUCTS_NO = T.PRODUCT_NO
             WHERE TO_CHAR(T.SALES_DATE, 'YYYY-MM') = #{salesDate}
             GROUP BY P.PRODUCTS_NAME
-            ORDER BY P.PRODUCTS_NAME
+            ORDER BY totalSales DESC
             """)
-    List<DailySalesVo> productIncome(
-            @Param("tableName") String tableName
-            ,@Param("salesDate") String salesDate);
+    List<DailySalesVo> productIncome(@Param("salesDate") String salesDate);
 
 
+    @Select("""
+            SELECT
+                P.PRODUCTS_NAME AS productName,
+                SUM(T.UNIT_PRICE * T.QUANTITY) AS totalSales
+            FROM TOTAL_SALES T
+            JOIN PRODUCTS P ON P.PRODUCTS_NO = T.PRODUCT_NO
+            WHERE TO_CHAR(T.SALES_DATE, 'YYYY-MM') = #{salesDate}
+            GROUP BY P.PRODUCTS_NAME
+            ORDER BY totalSales DESC
+            """)
+    int insertTotalSales(DailySalesVo vo);
 }

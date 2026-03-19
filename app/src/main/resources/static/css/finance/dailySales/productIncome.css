@@ -1,0 +1,124 @@
+/* 1. 기본 레이아웃 (보내주신 가이드 기준) */
+.page {
+    margin-left: 100px;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 1200px;
+}
+
+/* 2. 상단 탭 그룹 */
+.main-tab-group {
+    width: 100%;
+    max-width: 1300px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: flex-start;
+}
+
+.menu-btn {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #6a4328;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+}
+
+.menu-btn.active {
+    background-color: #6a4328;
+    color: #fff;
+    border: none;
+}
+
+/* 3. 검색 영역 (보내주신 header 스타일 계승) */
+.search-wrapper {
+    width: 100%;
+    max-width: 1300px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background-color: #fcfcfc;
+    /* 보내주신 header 배경색 */
+    border-radius: 15px;
+    border: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.search-wrapper label {
+    font-weight: bold;
+    color: #666;
+    font-size: 15px;
+}
+
+.month-input {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.month-input:focus {
+    border-color: #6a4328;
+    box-shadow: 0 0 0 2px rgba(106, 67, 40, 0.1);
+}
+
+/* 4. 대시보드 메인 박스 (막대그래프 크기 최적화) */
+.sales-dashboard {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    /* 중앙 정렬 */
+    align-items: stretch;
+    /* 자식 높이를 동일하게 맞춤 */
+    gap: 50px;
+    /* 차트 사이 간격 확대 */
+    width: 100%;
+    max-width: 1300px;
+    min-height: 600px;
+    /* 전체적인 높이감 확보 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.chart-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 도넛 차트 영역 (고정 폭 유지로 예쁜 원형 유지) */
+.chart-item.donut {
+    flex: 1;
+    max-width: 450px;
+}
+
+/* 막대 차트 영역 (flex를 높여서 더 넓게 확장) */
+.chart-item.bar {
+    flex: 1.5;
+}
+
+.chart-item h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #6a4328;
+    text-align: center;
+}
+
+/* 차트 컨테이너 높이 */
+.chart-container {
+    flex: 1;
+    position: relative;
+    min-height: 450px;
+}

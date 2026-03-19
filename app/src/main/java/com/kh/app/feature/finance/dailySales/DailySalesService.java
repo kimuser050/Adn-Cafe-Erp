@@ -45,7 +45,9 @@ public class DailySalesService {
 
         int total = 0;
         for(DailySalesVo vo : voList){
+            vo.setStoreNo(storeNo);
             total += dailySalesMapper.insertDaily(vo, tableName);
+            total += dailySalesMapper.insertTotalSales(vo);
         }
 
         return total;
@@ -80,33 +82,13 @@ public class DailySalesService {
     }
 
 
-    public List<DailySalesVo> storeIncome(String salesDate) throws Exception {
-
-        List<DailySalesVo> total = new ArrayList<>();
-
-        List<DailySalesVo> allstores = dailySalesMapper.getStoreList();
-        for (DailySalesVo store : allstores) {
-            String tableName = engStoreName(store.getStoreName()) + "_DAILY_SALES";
-
-            List<DailySalesVo> dailySales = dailySalesMapper.storeIncome(store, tableName, salesDate);
-
-            total.addAll(dailySales);
-        }
-
-        return total;
+    public List<DailySalesVo> storeIncome(String salesDate) {
+        return dailySalesMapper.storeIncome(salesDate);
     }
 
 
-    public List<DailySalesVo> productIncome(String salesDate) throws Exception {
-
-        List<DailySalesVo> total = new ArrayList<>();
-        List<DailySalesVo> allstores = dailySalesMapper.getStoreList();
-            for (DailySalesVo store : allstores) {
-                String tableName = engStoreName(store.getStoreName()) + "_DAILY_SALES";
-                List<DailySalesVo> dailySales = dailySalesMapper.productIncome(tableName, salesDate);
-                total.addAll(dailySales);
-            }
-        return total;
+    public List<DailySalesVo> productIncome(String salesDate) {
+        return dailySalesMapper.productIncome(salesDate);
     }
 
     public List<ProductVo> getProductList() {
