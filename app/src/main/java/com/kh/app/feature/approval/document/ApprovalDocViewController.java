@@ -16,13 +16,13 @@ public class ApprovalDocViewController {
         return "approval/document/write";
     }
 
-    @GetMapping("myDocList")
+    @GetMapping("myDocList/{pno}")
     public String myDocList(){
         return "approval/document/myDocList";
     }
 
-    @GetMapping("approvalDocList")
+    @GetMapping("approverDocList")
     public String approvalDocList(){
-        return "approval/document/approvalDocList";
+        return "approval/document/approverDocList";
     }
 }

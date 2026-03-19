@@ -29,4 +29,10 @@ public class ApprovalDocVo {
     private String referenceDept;
     private String writerDept;
     private String statusName;
+    // 상세조회 전용 필드
+    private String writerPosition;
+    private String approverPosition;
+    private String attachmentName;
+    private boolean canEdit;
+    private boolean canApprove;
 }
