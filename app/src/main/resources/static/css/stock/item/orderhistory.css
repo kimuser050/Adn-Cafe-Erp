@@ -133,27 +133,29 @@ html, body {
     z-index: 1000; 
 }
 
-/* [7] 모달 컨텐츠 박스 */
+/* [7] 모달 컨텐츠 박스 (완전 해결판) */
 .modal-content { 
     background: #fff; 
     width: 420px; 
-    margin: 8% auto; 
+    margin: 10% auto; /* 위에서 10% 띄우고 중앙 정렬 */
     padding: 0; 
     border-radius: 8px; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
-    overflow: hidden; 
-    display: flex;
-    flex-direction: column;
+    
+    /* 💡 핵심: 꼬여있던 flex를 버리고 block으로 설정해 내용물 높이에 딱 맞춤 */
+    display: block !important; 
     height: auto !important; 
+    min-height: auto !important;
+    overflow: hidden; 
 }
 
-/* ⭐ 아래 코드를 새로 추가하세요! ⭐ */
-/* 컨텐츠 박스 바로 밑에 있는 form이 높이를 꽉 채우도록 설정 */
+/* 💡 form 태그 역시 늘어나지 않게 block으로 설정 */
 .modal-content > form {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    display: block !important;
+    height: auto !important;
+    margin: 0;
 }
+
 .modal-header { 
     background-color: #614e41; 
     color: #fff; 
@@ -169,6 +171,7 @@ html, body {
 /* 모달 바디 (정렬 유지) */
 .modal-body { 
     padding: 25px 30px; 
+    background-color: #fff; /* 혹시 모를 배경 투명화 방지 */
 }
 
 .form-row { 
@@ -176,6 +179,7 @@ html, body {
     align-items: center; 
     margin-bottom: 15px; 
 }
+.form-row:last-child { margin-bottom: 0; } /* 마지막 줄 여백 제거 */
 
 .form-row label { 
     width: 80px; 
@@ -202,7 +206,7 @@ html, body {
     justify-content: center; 
     gap: 10px; 
     border-top: 1px solid #eee;
-    margin-top: 0;
+    margin: 0;
 }
 
 /* [8] 버튼 공통 스타일 */
@@ -223,3 +227,27 @@ html, body {
 
 .btn-action-brown:hover { background-color: #4a382e; }
 .btn-gray-close-modal:hover { background-color: #666; }
+
+
+/* --- 모달 하단 빈 공간 강제 절단 코드 --- */
+
+/* 1. JS로 모달이 열릴 때 세로로 길게 늘어나는 현상 완벽 차단 */
+#orderDetailModal.modal {
+    align-items: center !important;     /* 세로로 늘어나지 말고 정중앙에 모여라 */
+    justify-content: center !important; /* 가로 정중앙 정렬 */
+}
+
+/* 2. 하얀색 모달 배경을 내용물 크기에 딱 맞게 재단 */
+#orderDetailModal .modal-content {
+    height: fit-content !important;     /* 무조건 내용물만큼만 짤라라! (핵심) */
+    min-height: 0 !important;           /* 쓸데없는 최소 높이 제거 */
+    margin: 0 !important;               /* 부모가 중앙정렬 하므로 엉뚱한 마진 제거 */
+    display: block !important;          
+}
+
+/* 3. Form 태그도 빈 공간을 만들지 않게 딱 맞춤 */
+#orderDetailModal form {
+    height: fit-content !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}

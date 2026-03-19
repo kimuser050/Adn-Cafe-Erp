@@ -15,25 +15,19 @@
     <div class="app-shell">
         <%@ include file="/WEB-INF/views/stock/common/orderSidebar.jsp" %>
 
-
         <main class="page-shell">
             <section class="page-content">
                 <div class="tab-wrapper">
-                    <a href="/stock/order" class="tab-btn active">발주 신청</a>
-                    <a href="#" class="tab-btn">발주 상태</a>
+                    <button type="button" class="tab-btn active">발주 신청</button>
+                    <button type="button" class="tab-btn" onclick="location.href='/stock/history'">발주 상태</button>
                 </div>
 
                 <div class="content-container">
                     <div class="search-section">
                         <div class="search-inner">
-                            <label for="productName">상품 명</label>
-                            <input type="text" id="productName" placeholder="검색어를 입력하세요">
-                            <button class="btn-brown-search" onclick="loadOrderList(1)">검색</button>
-                        </div>
-
-                        <div class="action-inner">
-                            <button type="button" class="btn-action-brown" onclick="openInsertModal()">신규 품목 등록</button>
-                            <button type="button" class="btn-action-brown" style="background-color: #4a382e;" onclick="submitBulkOrder()">선택 상품 주문</button>
+                            <label for="orderKeyword">상품 명</label>
+                            <input type="text" id="orderKeyword" placeholder="검색어를 입력하세요">
+                            <button class="btn-brown-search" onclick="loadOrderItems(1)">검색</button>
                         </div>
                     </div>
 
@@ -41,58 +35,28 @@
                         <table class="item-table">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
-                                    <th>번호</th>
+                                    <th style="width: 60px;"><input type="checkbox" id="checkAll"></th>
+                                    <th style="width: 80px;">번호</th>
                                     <th>이름</th>
-                                    <th>단가</th>
-                                    <th>수량 조절</th>
-                                    <th>위치</th>
-                                    <th>상태</th>
+                                    <th>매장이름</th>
+                                    <th style="width: 150px;">수량</th>
+                                    <th>요청일</th>
                                 </tr>
                             </thead>
-                            <tbody id="itemList">
+                            <tbody id="orderBody">
                                 </tbody>
                         </table>
                     </div>
 
-                    <div id="paginationArea" class="pagination-wrapper"></div>
+                    <div id="pagination" class="pagination-wrapper"></div>
+                </div>
+
+                <div class="order-action-bar">
+                    <button type="button" class="btn-final-order" onclick="submitBulkOrder()">주 문</button>
                 </div>
             </section>
         </main>
     </div>
-
-    <div id="itemDetailModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>품목 상세 정보 및 상태 관리</h3>
-                <span class="close-modal" onclick="closeDetailModal()">&times;</span>
-            </div>
-            <form id="itemDetailForm">
-                <input type="hidden" id="modalItemNo">
-                <div class="modal-body">
-                    <div class="form-row"><label>품목 명</label><input type="text" id="modalItemName" readonly></div>
-                    <div class="form-row"><label>단가</label><input type="number" id="modalUnitPrice"></div>
-                    <div class="form-row">
-                        <label>현재 상태</label>
-                        <select id="modalStatus">
-                            <option value="WAIT">대기 (WAIT)</option>
-                            <option value="APPROVE">승인 (APPROVE)</option>
-                            <option value="REJECT">거절 (REJECT)</option>
-                            <option value="COMPLETED">입고완료 (COMPLETED)</option>
-                        </select>
-                    </div>
-                    <div class="form-row"><label>위치</label><input type="text" id="modalLocation"></div>
-                    <div class="form-row"><label>비고</label><textarea id="modalReason" style="width:100%; height:60px;"></textarea></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-action-brown" onclick="updateItemStatus()">변경사항 저장</button>
-                    <button type="button" class="btn-gray-close-modal" onclick="closeDetailModal()">닫기</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="itemInsertModal" class="modal">
-        </div>
 </body>
+</html>
 </html>
