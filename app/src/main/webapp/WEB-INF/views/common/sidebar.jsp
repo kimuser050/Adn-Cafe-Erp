@@ -64,7 +64,7 @@
         <br>
         <a href="/member/mypage" class="nav-link">마이페이지</a>
         <a href="/notice/list" class="nav-link">공지사항</a>
-        <a href="/qna/questionlist" class="nav-link">문의게시판</a>
+        <a href="/qna/question/list" class="nav-link">문의게시판</a>
 
     </nav>
 </aside>
