@@ -6,7 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,5 +36,17 @@ public class QuestionViewController {
         return "user/qna/question/list";
     }
 
+    // 상세 조회 화면 이동
+    @GetMapping("detail")
+    public String detail(@RequestParam("no") String no, HttpSession session) {
+        // 보안을 위해 여기서도 로그인 체크를 미리 하면 좋습니다.
+        if (session.getAttribute("loginMemberVo") == null) {
+            return "redirect:/"; // 로그인이 안 되어 있으면 홈으로
+        }
 
+        return "user/qna/question/detail";
+    }
 }
+
+
+

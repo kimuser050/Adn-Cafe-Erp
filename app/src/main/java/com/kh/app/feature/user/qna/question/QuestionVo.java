@@ -17,8 +17,5 @@ public class QuestionVo {
     private String createdAt;
     private String delYn;
     private String answerYn;
-
-
-    public void setFileList(List<QuestionFileVo> fileList) {
-    }
+    private List<QuestionFileVo> fileList;
 }
