@@ -9,6 +9,8 @@ async function submitQuestion() {
     const content = document.querySelector("#content").value;
     const fileInput = document.querySelector("#file-input");
     const files = fileInput.files;
+    const secretYn = document.querySelector("#secretYn").checked ? "Y" : "N";
+
 
     // 2. 유효성 검사
     if (!title.trim()) {
@@ -28,6 +30,7 @@ async function submitQuestion() {
     fd.append("title", title);
     fd.append("typeCode", typeCode);
     fd.append("content", content);
+    fd.append("secretYn", secretYn);
 
     // 다중 파일 처리 (fileList가 List<MultipartFile>이므로 반복문 사용)
     if (files.length > 0) {

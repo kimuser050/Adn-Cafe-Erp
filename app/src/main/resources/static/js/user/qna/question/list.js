@@ -35,15 +35,29 @@ function renderTable(list) {
         html = "<tr><td colspan='4'>등록된 문의사항이 없습니다.</td></tr>";
     } else {
         list.forEach(vo => {
+            // 권한 체크: 본인이거나 관리자(인사팀 310100)인 경우
+            const isSecret = vo.secretYn === 'Y';
+            const hasPermission = (loginMemberNo === vo.writerNo) || (loginDeptCode === '310100');
+
+            // 제목 표시 로직
+            let displayTitle = vo.title;
+            let clickEvent = `location.href='/qna/question/detail?no=${vo.inquiryNo}'`;
+            let lockIcon = isSecret ? ' <img src="/img/icon_lock.png" style="width:14px; vertical-align:middle;">' : '';
+
+            if(isSecret && !hasPermission) {
+                displayTitle = "🔒 비밀글입니다. 장성자와 담당자만 볼 수 있습니다.";
+                clickEvent = "alert('작성자 본인만 열람 가능합니다.');";
+            }
+
             html += `
-                <tr onclick="location.href='/qna/question/detail?no=${vo.inquiryNo}'">
+                <tr onclick="${clickEvent}">
                     <td>${vo.inquiryNo}</td>
                     <td>${getCategoryName(vo.typeCode)}</td>
                     <td class="title-cell">
-                        ${vo.title}
-                        ${vo.answerYn === 'Y' ? '<div class="answer-tag"><img src="/img/icon_answer.png"> 답변 완료 제목</div>' : ''}
+                        ${displayTitle} ${lockIcon}
+                        ${vo.answerYn === 'Y' ? '<div class="answer-tag"><img src="/img/icon_answer.png" style="width:12px;"> 답변 완료</div>' : ''}
                     </td>
-                    <td>${vo.writerName}</td>
+                    <td>${isSecret && !hasPermission ? '비공개' : vo.writerName}</td>
                 </tr>
             `;
         });
