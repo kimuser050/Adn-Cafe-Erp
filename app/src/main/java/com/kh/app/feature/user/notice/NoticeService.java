@@ -31,14 +31,16 @@ public class NoticeService {
 
         int result = noticeMapper.insert(vo);
 
+        // INSERT 직후 같은 트랜잭션/세션에서 CURRVAL 조회
+        String noticeNo = noticeMapper.selectCurrentSeq();
+        vo.setNoticeNo(noticeNo);
+
         if(file != null && !file.isEmpty()){
-
             String originName = file.getOriginalFilename();
-
             String changeName = FileUploader.upload(file, uploadPath);
 
             NoticeFileVo fvo = new NoticeFileVo();
-            fvo.setNoticeNo(vo.getNoticeNo());
+            fvo.setNoticeNo(vo.getNoticeNo()); // ← 이제 noticeNo 있음
             fvo.setOriginName(originName);
             fvo.setChangeName(changeName);
             fvo.setFilePath(uploadPath);
