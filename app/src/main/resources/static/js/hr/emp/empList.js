@@ -368,7 +368,7 @@ function renderEditSelectOptions() {
     const posTag = document.querySelector("#edit-pos-code");
     const deptTag = document.querySelector("#edit-dept-code");
     const statusTag = document.querySelector("#edit-emp-status-no");
-
+    
     if (posTag) {
         let posStr = "";
         for (const vo of posList) {
