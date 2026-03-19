@@ -1,0 +1,40 @@
+/* 기존 스타일 유지 */
+.qna-wrap { padding: 40px; background-color: #eee9e4; min-height: calc(100vh - 60px); }
+.qna-title-text { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #333; }
+.qna-form-box { background-color: #ffffff; padding: 40px; border-radius: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.form-row { display: flex; justify-content: space-between; margin-bottom: 25px; gap: 40px; }
+.form-group { display: flex; align-items: center; flex: 1; }
+.form-group label { width: 80px; font-weight: 600; color: #333; }
+.form-group input, .form-group select { flex: 1; padding: 8px 15px; border: 1px solid #c8a992; border-radius: 20px; outline: none; }
+
+.content-group { display: flex; flex-direction: column; align-items: flex-start; }
+.content-group label { margin-bottom: 10px; font-weight: 600; }
+.content-group textarea { width: 100%; height: 350px; padding: 20px; border: 1px solid #c8a992; border-radius: 20px; resize: none; outline: none; box-sizing: border-box; }
+
+.btn-area { display: flex; justify-content: space-between; margin-top: 20px; align-items: center; }
+
+/* 버튼 스타일 */
+.btn-custom {
+    background-color: #8c7361;
+    color: #fff;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-secondary {
+    background-color: #bbb;
+    color: #fff;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 10px;
+}
+.btn-custom:hover { background-color: #715b4b; }
+.btn-secondary:hover { background-color: #999; }
+
+#file-input { display: none; }
+.file-name-display { margin-left: 15px; font-size: 14px; color: #666; }
