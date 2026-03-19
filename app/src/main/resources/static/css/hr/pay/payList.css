@@ -201,3 +201,34 @@
         justify-content: flex-start;
     }
 }
+
+
+/* ---------------------------------------------------------
+   7. 수정 불가 항목 / 잠김 버튼
+   --------------------------------------------------------- */
+
+/* 수정 불가 항목 (기본급 / 보너스) */
+.fixed-input {
+    background-color: #f3f4f6;
+    color: #666;
+    cursor: not-allowed;
+    border: 1px solid #dcdfe6;
+}
+
+.fixed-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+tr[data-fixed="Y"] td {
+    background-color: #fafafa;
+}
+
+/* 확정 상태에서 수정 / 삭제 버튼 잠김 느낌 */
+.btn-locked {
+    background-color: #e5e7eb !important;
+    color: #8b8b8b !important;
+    border-color: #d1d5db !important;
+    cursor: not-allowed !important;
+    opacity: 0.9;
+}

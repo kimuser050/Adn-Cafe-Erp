@@ -72,7 +72,8 @@
                                         class="page-btn">4</button> <button class="page-btn">5</button> <button
                                         class="page-btn">▶</button> </div>
                             </div>
-                        </div> <!-- ========================= 1) 상세조회 모달 ========================= -->
+                        </div>
+ <!-- ========================= 1) 상세조회 모달 ========================= -->
                         <div id="emp-modal-wrap" class="org-modal-wrap">
                             <div class="org-modal emp-detail-modal">
                                 <div class="org-modal-header">
@@ -156,7 +157,8 @@
                                         onclick="openEditModal()">수정하기</button> <button type="button"
                                         class="btn btn-sm btn-mid" onclick="closeEmpModal()">닫기</button> </div>
                             </div>
-                        </div> <!-- ========================= 2) 수정 모달 ========================= -->
+                        </div> 
+<!-- ========================= 2) 수정 모달 ========================= -->
                         <div id="emp-edit-modal-wrap" class="org-modal-wrap">
                             <div class="org-modal emp-edit-modal">
                                 <div class="org-modal-header">
@@ -181,6 +183,7 @@
                                                     id="edit-hire-date" readonly> </div>
                                         </div>
                                     </div>
+
                                     <div class="detail-section">
                                         <div class="history-header-row">
                                             <h3 class="detail-section-title">인사이력 수정</h3> <button type="button"
@@ -212,4 +215,3 @@
 
 
     <!--  -->
- 
