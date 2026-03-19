@@ -82,3 +82,10 @@
     </body>
 
     </html>
+
+    <script>
+        const msg = "${alertMsg}";
+        if (msg && msg.length > 0) {
+            alert(msg);
+        }
+    </script>

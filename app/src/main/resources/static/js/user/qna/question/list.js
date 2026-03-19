@@ -88,13 +88,6 @@ function renderPagination(pvo) {
  * 작성하기 버튼 클릭 시 실행
  */
 function checkLogin() {
-    // JSP 상단에 선언된 loginMemberVo 변수가 있는지 확인
-    // 문자열로 들어오는 경우를 대비해 "" 체크도 함께 수행합니다.
-    if (typeof loginMemberVo === "undefined" || loginMemberVo === null || loginMemberVo === "" || loginMemberVo === "null") {
-        alert("로그인을 먼저 해주세요.");
-        location.href = "/"; // 홈 화면으로 이동
-        return false;
-    }
 
     // 로그인 상태라면 작성 페이지로 이동
     location.href = "/qna/question/insert";
