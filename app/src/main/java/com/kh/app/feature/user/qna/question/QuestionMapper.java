@@ -11,43 +11,42 @@ public interface QuestionMapper {
 
 
 
+    // 2. INSERT 쿼리 수정 (시퀀스 대신 전달받은 inquiryNo 사용)
     @Insert("""
-            INSERT INTO QNA_QUESTION
-            (
-                WRITER_NO
-                ,TITLE
-                ,CONTENT
-                ,TYPE_CODE
-            )
-            VALUES
-            (
-                #{writerNo}
-                ,#{title}
-                ,#{content}
-                ,#{typeCode}
-            )
-            
-            """)
+        INSERT INTO QNA_QUESTION (
+            WRITER_NO
+            ,TITLE
+            ,CONTENT
+            ,TYPE_CODE
+        ) VALUES (
+            #{writerNo}
+            ,#{title}
+            ,#{content}
+            ,#{typeCode}
+        )
+    """)
     int insert(QuestionVo vo);
 
 
+    // 3. 파일 INSERT (여기서도 #{inquiryNo}를 그대로 사용)
     @Insert("""
-        INSERT INTO QNA_QUESTION_FILE
-        (
+        INSERT INTO QNA_QUESTION_FILE (
             INQUIRY_NO,
             ORIGIN_NAME,
             CHANGE_NAME,
             FILE_PATH
-        )
-        VALUES
-        (
-            SEQ_QNA_QUESTION.CURRVAL,
+        ) VALUES (
+            #{inquiryNo},
             #{originName},
             #{changeName},
             #{filePath}
         )
-        """)
+    """)
     int insertFile(QuestionFileVo vo);
+
+    // 1. 방금 생성된 시퀀스 번호(현재 값) 가져오기
+    @Select("SELECT SEQ_QNA_QUESTION.CURRVAL FROM DUAL")
+    String getCurrentSequence();
 
     @Select("""
             <script>
@@ -125,7 +124,7 @@ public interface QuestionMapper {
         ,CHANGE_NAME
         ,FILE_PATH
     FROM QNA_QUESTION_FILE
-    WHERE INQUIRY_NO = #{no}
+    WHERE INQUIRY_NO = #{inquiryNo}
     AND DEL_YN = 'N'
     """)
     List<QuestionFileVo> selectFileList(String no);
@@ -149,6 +148,5 @@ public interface QuestionMapper {
             """)
     void deleteFile(String inquiryNo);
 }
-
 
 
