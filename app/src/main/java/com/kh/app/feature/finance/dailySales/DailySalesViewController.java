@@ -12,4 +12,9 @@ public class DailySalesViewController {
     public String insertDaily(){
         return "/finance/dailySales/dailySales";
     }
+
+    @GetMapping("/listDaily")
+    public String listDaily(){
+        return "/finance/dailySales/dailyList";
+    }
 }

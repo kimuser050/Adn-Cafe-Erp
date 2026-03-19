@@ -59,6 +59,43 @@
                             </div>
                         </div>
 
+                        <div id="updateModal" class="modal">
+                            <div class="modalContainer">
+                                <div class="modalHeader">
+                                    <h3>매출 수정 (번호:<input type="text" id="modalSalesNo" readonly>)
+                                    </h3>
+                                    <input type="date" id="modalSalesDate">
+                                </div>
+
+                                <div class="modalBody">
+                                    <div class="inputGroup">
+                                        <label>제품이름</label>
+                                        <input type="text" id="modalProductName" list="productOptions"
+                                            placeholder="제품선택">
+                                        <datalist id="productOptions"></datalist>
+                                    </div>
+                                    <div class="inputGroup">
+                                        <label>단가</label>
+                                        <input type="text" id="modalUnitPrice" placeholder="금액 입력">
+                                    </div>
+                                    <div class="inputGroup">
+                                        <label>수량</label>
+                                        <input type="text" id="modalQuantity" placeholder="수량 입력">
+                                    </div>
+                                    <div class="inputGroup">
+                                        <label>결제방법</label>
+                                        <input type="text" id="modalPayment" list="paymentOptions" placeholder="결제방법선택">
+                                        <datalist id="paymentOptions"></datalist>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="menu-btn-sm btn-dark"
+                                        onclick="editSales()">수정완료</button>
+                                    <button type="button" class="menu-btn-sm" onclick="closeModal()">취소</button>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 </main>
         </div>
