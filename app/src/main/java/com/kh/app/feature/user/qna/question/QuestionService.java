@@ -68,15 +68,12 @@ public class QuestionService {
         return result;
     }
 
-    public int selectCount() {
-        return questionMapper.selectCount();
+    public int selectCount(String searchType, String searchKeyword) {
+        return questionMapper.selectCount(searchType, searchKeyword);
     }
 
-
-    public List<QuestionVo> selectList(PageVo pvo) {
-
-        return questionMapper.selectList(pvo);
-
+    public List<QuestionVo> selectList(PageVo pvo, String searchType, String searchKeyword) {
+        return questionMapper.selectList(pvo, searchType, searchKeyword);
     }
 
     public QuestionVo selectOne(String no) {
