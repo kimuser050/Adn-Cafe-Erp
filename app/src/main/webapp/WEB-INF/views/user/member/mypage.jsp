@@ -75,6 +75,7 @@
                         </div>
 
                         <div class="join-btn-area full-width">
+                            <button type="button" class="btn-submit back-btn" onclick="location.href='/'">이전으로</button>
                             <button type="button" class="btn-submit edit-btn" onclick="edit();">정보 수정 완료</button>
                             <button type="button" class="btn-submit quit-btn" onclick="quit();">회원 탈퇴</button>
                         </div>

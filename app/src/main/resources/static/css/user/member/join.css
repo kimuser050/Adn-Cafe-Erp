@@ -184,3 +184,48 @@
     align-items: center;
     gap: 10px;
 }
+/* 1. 버튼 컨테이너: 3개의 버튼이 나란히 정렬되도록 수정 */
+.join-btn-area {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+    gap: 15px;       /* 버튼 사이 간격 */
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* 2. 공통 버튼 스타일: 3개가 들어가야 하므로 너비(width)를 flex로 변경 */
+.btn-submit {
+    flex: 1;            /* 3개 버튼이 동일한 너비를 가짐 */
+    max-width: 250px;   /* 너무 커지지 않게 제한 */
+    height: 55px;
+    font-size: 18px;
+    font-weight: 800;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 3. [추가] '이전으로' 버튼 전용 색상 (연한 베이지/그레이) */
+.back-btn {
+    background-color: #d1c7bc;
+    color: #5d4037;
+}
+
+.back-btn:hover {
+    background-color: #bcaaa4;
+    transform: translateY(-2px);
+}
+
+/* 4. 수정 및 탈퇴 버튼 색상 유지 */
+.edit-btn {
+    background-color: #6d4c41;
+    color: white;
+}
+
+.quit-btn {
+    background-color: #4e342e; /* 탈퇴는 조금 더 어두운 톤 */
+    color: #d1c7bc;
+}
