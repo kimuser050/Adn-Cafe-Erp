@@ -8,7 +8,9 @@ public class JournalVo {
     private String no;
     private String journalNo;
     private String mainAccountNo;
+    private String mainAccountName;
     private String subAccountNo;
+    private String subAccountName;
     private String accountNo;
     private String accountName;
     private String journalDate;

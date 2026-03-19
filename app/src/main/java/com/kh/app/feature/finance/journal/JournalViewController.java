@@ -29,4 +29,16 @@ public class JournalViewController {
     public String dailyList(){
         return "finance/journal/dailyList";
     }
+
+    @GetMapping("/journalState")
+    public String journalState(){
+        return "finance/journal/journalState";
+    }
+
+    @GetMapping("/incomeState")
+    public String incomeState(){
+        return "finance/journal/incomeState";
+    }
+
+
 }
