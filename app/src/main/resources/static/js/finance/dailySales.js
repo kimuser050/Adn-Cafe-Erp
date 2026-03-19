@@ -118,46 +118,64 @@ async function insertDaily() {
 
     const salesDate = document.querySelector("#salesDate").value;
 
-    const productInput = document.querySelector(".productInput").value;
-    const productOption = document.querySelectorAll("#productOptions option");
-    let productsNo = "";
-    for (let opt of productOption) {
-        if (opt.value === productInput) {
-            productsNo = opt.dataset.no;
-            break;
+    const dataRow = document.querySelectorAll("tbody tr");
+    const dataList = [];
+    for (let i = 0; i < dataRow.length; i++) {
+        const row = dataRow[i];
+
+        const productInput = row.querySelector(".productInput").value.trim();
+        if (productInput !== "") {
+            const productOption = document.querySelectorAll("#productOptions option");
+            let productsNo = "";
+            for (let opt of productOption) {
+                if (opt.value === productInput) {
+                    productsNo = opt.dataset.no;
+                    break;
+                }
+            }
+
+            if (!productsNo) {
+                alert(`${i + 1}번째 줄에 입력하신 '${productInput}' 제품을 목록에서 찾을 수 없습니다. 목록에 있는 이름을 정확히 선택해 주세요.`);
+                return;
+            }
+
+            const paymentInput = row.querySelector(".paymentInput").value;
+            const paymentOption = document.querySelectorAll("#paymentOptions option");
+            let paymentCd = "";
+            for (let opt of paymentOption) {
+                if (opt.value === paymentInput) {
+                    paymentCd = opt.dataset.name;
+                    break;
+                }
+            }
+
+            const unitPrice = row.querySelector(".unitPrice").value;
+            const quantity = row.querySelector(".quantity").value;
+
+            dataList.push({
+                storeNo: storeNo,
+                salesDate: salesDate,
+                productNo: productsNo,
+                unitPrice: unitPrice,
+                quantity: quantity,
+                paymentCd: paymentCd,
+            });
         }
     }
 
-
-
-    const unitPrice = document.querySelector("#unitPrice").value;
-    const quantity = document.querySelector("#quantity").value;
-
-    const paymentInput = document.querySelector(".paymentInput").value;
-    const paymentOption = document.querySelectorAll("#paymentOptions option");
-    let paymentCd = "";
-    for (let opt of paymentOption) {
-        if (opt.value === paymentInput) {
-            paymentCd = opt.dataset.name;
-            break;
-        }
-    }
-
-    const resp = await fetch(`/dailySales/insertDailyData`, {
+    const resp = await fetch(`/dailySales/insertDaily`, {
         method: "post",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-            storeNo,
-            productNo: productsNo, unitPrice, quantity, paymentCd, salesDate
-        })
+        body: JSON.stringify(dataList)
     });
 
     if (resp.ok) {
         alert("매출 등록 성공");
-        clear();
-        salesList();
+        location.href = `/dailySales/listDaily`
+    } else {
+        alert("매출 등록 실패");
     }
 }
 
@@ -165,8 +183,8 @@ async function insertDaily() {
 
 function clear() {
     document.querySelector(".productInput").value = "";
-    document.querySelector("#unitPrice").value = "";
-    document.querySelector("#quantity").value = "";
+    document.querySelector(".unitPrice").value = "";
+    document.querySelector(".quantity").value = "";
     document.querySelector(".paymentInput").value = "";
 }
 
