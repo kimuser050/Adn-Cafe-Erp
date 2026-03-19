@@ -38,3 +38,39 @@
 
 #file-input { display: none; }
 .file-name-display { margin-left: 15px; font-size: 14px; color: #666; }
+
+/* 제목은 길게, 카테고리는 적당히, 비밀글은 필요한 만큼만 */
+.title-group { flex: 2; }
+.type-group { flex: 1.2; }
+
+/* 비밀글 설정 영역 스타일링 */
+.secret-group {
+    flex: 0.8; /* 다른 요소보다 좁게 차지 */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 중앙 정렬 */
+    gap: 8px; /* 글자와 체크박스 사이 간격 고정 */
+}
+
+.secret-group label {
+    width: auto !important; /* 기존의 width: 80px 해제 */
+    margin-bottom: 0;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap; /* 글자가 줄바꿈되지 않게 */
+}
+
+.secret-group input[type="checkbox"] {
+    flex: none !important; /* 부모 flex 영향을 받지 않게 */
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* 폼 로우 간격 미세 조정 */
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 요소들 사이의 간격을 명시적으로 설정 */
+}

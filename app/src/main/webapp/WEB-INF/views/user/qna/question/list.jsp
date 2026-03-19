@@ -11,6 +11,12 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script defer src="/js/user/qna/question/list.js"></script>
+
+    <script>
+        // 세션의 로그인 정보 전달
+        const loginMemberNo = "${loginMemberVo.empNo}";
+        const loginDeptCode = "${loginMemberVo.deptCode}";
+    </script>
 </head>
 <body>
     <div class="app-shell">

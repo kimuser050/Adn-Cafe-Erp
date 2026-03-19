@@ -27,11 +27,17 @@
                 <div class="qna-form-box">
                     <form id="insertForm" enctype="multipart/form-data">
                         <div class="form-row">
-                            <div class="form-group">
+                            <div class="form-group title-group">
                                 <label for="title">제목</label>
                                 <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
                             </div>
-                            <div class="form-group">
+
+                            <div class="form-group secret-group">
+                                <input type="checkbox" id="secretYn" name="secretYn" value="Y">
+                                <label for="secretYn">비밀글 설정</label>
+                            </div>
+
+                            <div class="form-group type-group">
                                 <label for="typeCode">카테고리</label>
                                 <select id="typeCode" name="typeCode">
                                     <option value="1">시스템</option>
