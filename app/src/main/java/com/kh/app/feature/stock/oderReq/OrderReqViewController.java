@@ -12,7 +12,6 @@ public class OrderReqViewController {
         return "stock/item/orderReq";
     }
 
-
     @GetMapping("history")
     public String history(){
         return "stock/item/orderhistory";

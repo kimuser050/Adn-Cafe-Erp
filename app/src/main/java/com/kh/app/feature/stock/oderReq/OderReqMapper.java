@@ -7,19 +7,16 @@ import java.util.List;
 
 @Mapper
 public interface OderReqMapper {
-    /* ==========================================
+
+/* ==========================================
        1. 발주 신청 (ITEM 테이블 기준)
        ========================================== */
 
-    // 품목 전체 개수 조회
-    @Select("""
-            SELECT COUNT(*) 
-            FROM ITEM 
-            WHERE ITEM_NAME LIKE '%' || #{keyword} || '%'
-            """)
+    // [발주 신청] 품목 전체 개수 조회
+    @Select("SELECT COUNT(*) FROM ITEM WHERE ITEM_NAME LIKE '%' || #{keyword} || '%'")
     int selectCount(@Param("keyword") String keyword);
 
-    // 품목 리스트 조회 (페이징) - OFFSET/FETCH 사용
+    // [발주 신청] 품목 리스트 조회 (페이징)
     @Select("""
             SELECT 
                 ITEM_NO, ITEM_NAME, UNIT_PRICE, LOCATION 
@@ -30,13 +27,13 @@ public interface OderReqMapper {
             """)
     List<OderReqVo> selectList(@Param("pvo") PageVo pvo, @Param("keyword") String keyword);
 
-    // 발주 신청 실행 (단건 인서트)
-    // 서비스에서 루프를 돌려 이 메서드를 반복 호출하게 됩니다.
+    // [발주 실행] ITEM 데이터를 ORDER_REQ로 복사 (상태 'W' 고정)
+    // ★ 시퀀스명을 SEQ_ORDER_REQ로 수정했습니다.
     @Insert("""
             INSERT INTO ORDER_REQ (
                 ORDER_NO, ITEM_NO, QUANTITY, STORE_CODE, STATUS, REQUEST_DATE
             ) VALUES (
-                SEQ_ORDER_NO.NEXTVAL, #{itemNo}, #{quantity}, #{storeCode}, 'W', SYSDATE
+                SEQ_ORDER_REQ.NEXTVAL, #{itemNo}, #{quantity}, #{storeCode}, 'W', SYSDATE
             )
             """)
     int insertOrder(OderReqVo vo);
@@ -46,7 +43,7 @@ public interface OderReqMapper {
        2. 발주 상태/이력 (ORDER_REQ 테이블 기준)
        ========================================== */
 
-    // 발주 이력 전체 개수 조회
+    // [발주 상태] 발주 이력 전체 개수 조회
     @Select("""
             SELECT COUNT(*) 
             FROM ORDER_REQ O
@@ -55,19 +52,15 @@ public interface OderReqMapper {
             """)
     int selectHistoryCount(@Param("keyword") String keyword);
 
-    // 발주 이력 목록 조회 (상태값 포함)
+    // [발주 상태] 발주 이력 목록 조회 (상태값 포함)
     @Select("""
             SELECT 
-                O.ORDER_NO,
-                I.ITEM_NAME,
-                O.STORE_CODE, 
-                O.QUANTITY,
-                O.STATUS,
-                O.REQUEST_DATE
+                O.ORDER_NO, I.ITEM_NAME, O.STORE_CODE, 
+                O.QUANTITY, O.STATUS, O.REQUEST_DATE
             FROM ORDER_REQ O
             JOIN ITEM I ON O.ITEM_NO = I.ITEM_NO
             WHERE I.ITEM_NAME LIKE '%' || #{keyword} || '%'
-            ORDER BY O.ORDER_NO DESC
+            ORDER BY TO_NUMBER(O.ORDER_NO) DESC
             OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
             """)
     List<OderReqVo> selectHistory(@Param("pvo") PageVo pvo, @Param("keyword") String keyword);
@@ -77,7 +70,7 @@ public interface OderReqMapper {
        3. 상세 조회 및 상태 변경
        ========================================== */
 
-    // 단건 상세 조회 (ITEM + ORDER_REQ 결합)
+    // [상세 조회] 단건 상세 조회 (ITEM + ORDER_REQ 결합)
     @Select("""
             SELECT
                 I.ITEM_NO, I.ITEM_NAME, I.UNIT_PRICE, I.LOCATION,
@@ -86,9 +79,9 @@ public interface OderReqMapper {
             LEFT JOIN ORDER_REQ O ON I.ITEM_NO = O.ITEM_NO
             WHERE O.ORDER_NO = #{orderNo}
             """)
-    OderReqVo selectOne(String orderNo);
+    OderReqVo selectOne(@Param("orderNo") String orderNo);
 
-    // 상태값 업데이트 (W: 대기, C: 취소, F: 완료 등)
+    // [상태 수정] 상태값 업데이트 (W: 대기, C: 취소, F: 완료 등)
     @Update("""
             UPDATE ORDER_REQ
             SET STATUS = #{status}, REQUEST_DATE = SYSDATE 
@@ -96,12 +89,12 @@ public interface OderReqMapper {
             """)
     int updateByNo(OderReqVo vo);
 
-    // 입고 완료 시 해당 아이템 재고 증가
+    // [재고 차감] 상태 'F' 완료 시 해당 아이템 재고 감소
     @Update("""
-    UPDATE ITEM 
-    SET STOCK = STOCK - (SELECT QUANTITY FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
-    WHERE ITEM_NO = (SELECT ITEM_NO FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
-      AND STOCK >= (SELECT QUANTITY FROM ORDER_REQ WHERE ORDER_NO = #{orderNo}) 
-    """)
-    int decreaseStock(String orderNo);
+            UPDATE ITEM 
+            SET STOCK = STOCK - (SELECT QUANTITY FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
+            WHERE ITEM_NO = (SELECT ITEM_NO FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
+              AND STOCK >= (SELECT QUANTITY FROM ORDER_REQ WHERE ORDER_NO = #{orderNo})
+            """)
+    int decreaseStock(@Param("orderNo") String orderNo);
 }

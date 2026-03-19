@@ -1,32 +1,253 @@
-html, body { height: 100%; margin: 0; overflow: hidden; background-color: #C0B7A2; font-family: 'Pretendard', sans-serif; }
-.app-shell { display: flex; height: 100vh; }
-.page-shell { flex: 1; padding: 40px; display: flex; justify-content: center; align-items: center; }
-.page-content { width: 100%; max-width: 1200px; height: 88vh; display: flex; flex-direction: column; }
+/* [1] 레이아웃 및 브라우저 스크롤 차단 */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    background-color: #f2f0eb;
+    font-family: 'Pretendard', sans-serif;
+}
 
-/* 탭 스타일 */
-.tab-wrapper { display: flex; gap: 4px; }
-.tab-btn { padding: 12px 28px; border: none; cursor: pointer; background-color: #A1887F; color: #fff; border-radius: 8px 8px 0 0; font-weight: bold; }
-.tab-btn.active { background-color: #FDFCFB; color: #5D4037; }
+.app-shell {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
 
-/* 화이트 카드 컨테이너 */
-.content-container { background-color: #FDFCFB; flex: 1; display: flex; flex-direction: column; padding: 30px; border-radius: 0 20px 20px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; }
+.page-shell {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto; 
+    padding: 20px 40px; 
+    box-sizing: border-box;
+}
 
-/* 검색 및 테이블 */
-.search-section { display: flex; margin-bottom: 25px; }
-.search-inner input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 250px; margin: 0 10px; }
-.btn-brown-search, .btn-action-brown, .btn-gray-close-modal { background-color: #5D4037; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+/* [2] 탭 디자인 */
+.tab-wrapper { 
+    display: flex; 
+    gap: 2px; 
+    margin-bottom: -1px; 
+}
 
-.table-wrapper { flex: 1; overflow-y: auto; border-top: 1px solid #eee; margin-bottom: 20px; }
-.item-table { width: 100%; border-collapse: collapse; }
-.item-table th { position: sticky; top: 0; background-color: #E8E2D9; padding: 12px; font-size: 14px; border-bottom: 1px solid #ddd; }
-.item-table td { padding: 15px; text-align: center; border-bottom: 1px solid #f2f2f2; font-size: 14px; }
-.item-table tbody tr:hover { background-color: #f9f7f2; cursor: pointer; }
+.tab-btn {
+    display: inline-block;
+    padding: 12px 30px; 
+    border: 1px solid #dcdcdc;
+    border-bottom: none;
+    cursor: pointer;
+    background-color: #614e41; 
+    color: #ffffff !important; 
+    font-size: 15px;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px 5px 0 0;
+    transition: 0.2s;
+}
 
-/* 페이징 */
-.pagination-wrapper { display: flex; justify-content: center; gap: 8px; padding-top: 15px; border-top: 1px solid #eee; }
-.page-btn { border: 1px solid #ccc; background: #fff; padding: 6px 12px; cursor: pointer; border-radius: 4px; }
-.page-btn.active { background: #5D4037; color: #fff; border-color: #5D4037; }
+.tab-btn.active { 
+    background-color: #f9f7f2; 
+    color: #614e41 !important; 
+    font-weight: bold; 
+    border-bottom: 1px solid #f9f7f2; 
+    position: relative;
+    z-index: 2;
+}
 
-/* 모달 */
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
-.modal-content { background: #fff; width: 400px; padding: 30px; border-radius: 15px; }
+/* [3] 컨테이너 및 검색창 */
+.content-container {
+    background-color: #f9f7f2; 
+    border: 1px solid #dcdcdc;
+    padding: 30px; 
+    border-radius: 0 5px 5px 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.search-section { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 25px; 
+}
+
+.search-inner { display: flex; align-items: center; gap: 15px; }
+.search-inner label { font-weight: bold; color: #333; }
+.search-inner input { border: 1px solid #ccc; padding: 6px; width: 250px; }
+.btn-brown-search { background-color: #5d4037; color: #fff; border: none; padding: 6px 20px; cursor: pointer; }
+
+/* [4] 테이블 영역 */
+.table-wrapper {
+    min-height: 200px;
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #eee;
+}
+
+.item-table { width: 100%; border-collapse: collapse; background: #fff; table-layout: fixed; }
+.item-table th { 
+    background-color: #d9d9d9; padding: 12px; border-bottom: 1px solid #ccc; 
+    font-size: 14px; position: sticky; top: 0; z-index: 10; 
+}
+.item-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; color: #555; }
+
+/* [5] 페이징 디자인 (버튼 밀착형) */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0 !important; 
+    padding: 20px 0;
+}
+
+.pagination-wrapper button, 
+.pagination-wrapper a {
+    border: 1px solid #ccc !important; 
+    background-color: #fff !important;
+    color: #333 !important;
+    padding: 6px 14px;
+    cursor: pointer;
+    border-radius: 0 !important; 
+    margin-left: -1px !important; 
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.pagination-wrapper button.active,
+.pagination-wrapper .active {
+    background-color: #614e41 !important;
+    color: #fff !important;
+    border-color: #614e41 !important;
+    font-weight: bold;
+    z-index: 1; 
+}
+
+/* [6] 모달 배경 */
+.modal { 
+    display: none; 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    background: rgba(0, 0, 0, 0.4); 
+    z-index: 1000; 
+}
+
+/* [7] 모달 컨텐츠 박스 (완전 해결판) */
+.modal-content { 
+    background: #fff; 
+    width: 420px; 
+    margin: 10% auto; /* 위에서 10% 띄우고 중앙 정렬 */
+    padding: 0; 
+    border-radius: 8px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+    
+    /* 💡 핵심: 꼬여있던 flex를 버리고 block으로 설정해 내용물 높이에 딱 맞춤 */
+    display: block !important; 
+    height: auto !important; 
+    min-height: auto !important;
+    overflow: hidden; 
+}
+
+/* 💡 form 태그 역시 늘어나지 않게 block으로 설정 */
+.modal-content > form {
+    display: block !important;
+    height: auto !important;
+    margin: 0;
+}
+
+.modal-header { 
+    background-color: #614e41; 
+    color: #fff; 
+    padding: 15px 20px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.modal-header h3 { margin: 0; font-size: 18px; }
+.close-modal { font-size: 24px; cursor: pointer; color: #fff; line-height: 1; }
+
+/* 모달 바디 (정렬 유지) */
+.modal-body { 
+    padding: 25px 30px; 
+    background-color: #fff; /* 혹시 모를 배경 투명화 방지 */
+}
+
+.form-row { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 15px; 
+}
+.form-row:last-child { margin-bottom: 0; } /* 마지막 줄 여백 제거 */
+
+.form-row label { 
+    width: 80px; 
+    font-weight: bold; 
+    color: #444; 
+    font-size: 14px;
+}
+
+.form-row input, 
+.form-row select { 
+    flex: 1; 
+    padding: 8px 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+    font-size: 14px;
+    outline: none;
+}
+
+/* 모달 푸터 (하단 밀착) */
+.modal-footer { 
+    padding: 15px 20px; 
+    background-color: #f9f7f2; 
+    display: flex; 
+    justify-content: center; 
+    gap: 10px; 
+    border-top: 1px solid #eee;
+    margin: 0;
+}
+
+/* [8] 버튼 공통 스타일 */
+.btn-action-brown, 
+.btn-gray-close-modal { 
+    min-width: 90px;
+    padding: 10px 0; 
+    border: none; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.btn-action-brown { background-color: #614e41; color: #fff; }
+.btn-gray-close-modal { background-color: #888; color: #fff; }
+
+.btn-action-brown:hover { background-color: #4a382e; }
+.btn-gray-close-modal:hover { background-color: #666; }
+
+
+/* --- 모달 하단 빈 공간 강제 절단 코드 --- */
+
+/* 1. JS로 모달이 열릴 때 세로로 길게 늘어나는 현상 완벽 차단 */
+#orderDetailModal.modal {
+    align-items: center !important;     /* 세로로 늘어나지 말고 정중앙에 모여라 */
+    justify-content: center !important; /* 가로 정중앙 정렬 */
+}
+
+/* 2. 하얀색 모달 배경을 내용물 크기에 딱 맞게 재단 */
+#orderDetailModal .modal-content {
+    height: fit-content !important;     /* 무조건 내용물만큼만 짤라라! (핵심) */
+    min-height: 0 !important;           /* 쓸데없는 최소 높이 제거 */
+    margin: 0 !important;               /* 부모가 중앙정렬 하므로 엉뚱한 마진 제거 */
+    display: block !important;          
+}
+
+/* 3. Form 태그도 빈 공간을 만들지 않게 딱 맞춤 */
+#orderDetailModal form {
+    height: fit-content !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
