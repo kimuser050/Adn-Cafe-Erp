@@ -1,109 +1,97 @@
-/* 메인 배경 및 레이아웃 */
+/* 전체 배경색 통일 */
+.app-shell {
+    background-color: #E8E2D9; /* 사이드바 외 영역 전체 색상 */
+    display: flex;
+}
+
 .main-content {
+    flex-grow: 1;
     margin-left: 250px;
     background-color: #E8E2D9;
     min-height: 100vh;
-    padding: 100px 80px;
-}
-
-/* 상단 갈색 박스 */
-.return-title-tag {
-    background-color: #725B48;
-    color: white;
-    display: inline-block;
-    padding: 10px 30px;
-    font-weight: bold;
-    border-radius: 4px 4px 0 0;
-    margin-left: 10px;
-    font-size: 18px;
-}
-
-/* 흰색 메인 카드 */
-.return-form-card {
-    background-color: #F8F4F0;
-    border-radius: 12px;
-    padding: 80px;
-    width: 100%;
-    max-width: 1000px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-}
-
-/* 가로 배치 로직 */
-.form-row {
+    padding: 80px 0;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 45px;
+    justify-content: center;
     align-items: flex-start;
 }
 
-.input-group { display: flex; flex-direction: column; }
-.width-60 { flex: 0 0 60%; }
-.width-30 { flex: 0 0 32%; }
+.return-container {
+    width: 900px;
+    position: relative;
+}
 
-.input-group label {
+/* 갈색 타이틀 태그 */
+.return-title-tag {
+    background-color: #725B48;
+    color: white;
+    padding: 10px 30px;
+    font-weight: bold;
+    border-radius: 6px 6px 0 0;
+    position: absolute;
+    top: -42px;
+    left: 0;
+}
+
+/* 흰색 카드 박스 */
+.return-form-card {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 60px 80px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* 행 정렬: 라벨은 중앙, 인풋은 아래로 */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.input-group-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 라벨과 인풋을 중앙으로 */
+    width: 45%;
+}
+
+.input-group-row label {
     color: #725B48;
     font-weight: bold;
-    font-size: 19px;
+    font-size: 18px;
     margin-bottom: 15px;
 }
 
-/* 입력 필드 디자인 */
-.form-control {
+/* 인풋창들 */
+.form-control, .form-textarea, .qty-pill {
     width: 100%;
-    height: 48px;
-    border: 1.5px solid #AAA;
+    border: 1px solid #AAA;
     border-radius: 8px;
-    padding: 0 15px;
-    font-size: 16px;
-    background: white;
+    height: 45px;
 }
 
-.form-textarea {
-    width: 100%;
-    height: 200px;
-    border: 1.5px solid #AAA;
-    border-radius: 8px;
-    padding: 20px;
-    font-size: 16px;
-    resize: none;
-}
+.form-textarea { height: 180px; padding: 15px; resize: none; }
 
-/* 시안의 수량 조절기 (+ 1 -) */
+/* 수량 조절기 디자인 */
 .qty-pill {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    border: 2px solid #333;
-    border-radius: 10px;
-    background: white;
-    width: fit-content;
+    padding: 0 10px;
 }
 
-.qty-pill button {
-    background: none; border: none; padding: 5px 20px;
-    font-size: 22px; cursor: pointer; font-weight: bold;
-}
+.qty-pill button { background: none; border: none; font-size: 20px; cursor: pointer; }
+.qty-pill input { width: 50px; border: none; text-align: center; font-weight: bold; font-size: 18px; }
 
-.qty-pill input {
-    width: 50px; border: none; text-align: center;
-    font-size: 20px; font-weight: bold; outline: none;
-}
-
-/* 신청하기 버튼 */
+/* 신청하기 버튼 우측 하단 */
+.button-row { justify-content: flex-end; }
 .btn-submit {
     background-color: #725B48;
     color: white;
     border: none;
     padding: 15px 50px;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 22px;
     font-weight: bold;
     cursor: pointer;
-    width: 100%;
-    margin-top: 30px;
 }
-
-/* 기타 유틸리티 */
-.text-center { text-align: center; }
-.align-end { align-items: flex-end; }
-.label-right { text-align: right; padding-right: 40px; width: 100%; }
-.date-box { margin-top: 25px; }

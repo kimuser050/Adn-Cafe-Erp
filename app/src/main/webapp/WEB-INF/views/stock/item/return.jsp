@@ -15,20 +15,25 @@
     <div class="app-shell">
         <%@ include file="/WEB-INF/views/stock/common/returnSidebar.jsp" %>
 
-        <main class="main-content">
-            <div class="return-title-tag">반품 신청</div>
+       <main class="main-content">
+    <div class="return-container">
+        <div class="return-title-tag">반품 신청</div>
 
-            <div class="return-form-card">
-                <div class="form-row">
-                    <div class="input-group width-60">
-                        <label>상품이름</label>
+        <div class="return-form-card">
+            
+            <div class="form-row">
+                <div class="input-group-row">
+                    <label>상품이름</label>
+                    <div class="input-wrap">
                         <select id="productName" class="form-control">
                             <option value="우유2L">우유2L</option>
                             <option value="원두커피">원두 커피</option>
                         </select>
                     </div>
-                    <div class="input-group width-30 align-end">
-                        <label class="label-right">수량</label>
+                </div>
+                <div class="input-group-row label-left">
+                    <label>수량</label>
+                    <div class="input-wrap">
                         <div class="qty-pill">
                             <button type="button" onclick="changeQty(1)">+</button>
                             <input type="text" id="quantity" value="1" readonly>
@@ -36,31 +41,41 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-row middle-section">
-                    <div class="input-group width-60">
-                        <label>사유</label>
-                        <textarea id="reason" class="form-textarea" placeholder="사유를 입력하세요"></textarea>
-                    </div>
-                    <div class="input-group width-30 date-box">
-                        <label>접수일</label>
-                        <input type="text" id="enrollDate" class="form-control text-center" value="2026-03-03" readonly>
+            <div class="form-row align-top">
+                <div class="input-group-row vertical-stack">
+                    <label>사유</label>
+                    <div class="textarea-wrap">
+                        <textarea id="reason" class="form-textarea"></textarea>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    <div class="input-group width-60">
-                        <label>매장이름</label>
-                        <select id="storeCode" class="form-control">
-                            <option value="강남지점">▲ &nbsp;&nbsp;&nbsp; 강남지점 &nbsp;&nbsp;&nbsp; ▼</option>
-                        </select>
-                    </div>
-                    <div class="btn-group width-30">
-                        <button type="button" class="btn-submit" onclick="submitReturn()">신청하기</button>
+                <div class="input-group-row vertical-stack label-left">
+                    <label>접수일</label>
+                    <div class="input-wrap date-box">
+                        <input type="text" id="enrollDate" class="form-control text-center date-input" value="2026-03-03" readonly>
                     </div>
                 </div>
             </div>
-        </main>
+
+            <div class="form-row full-width">
+                <div class="input-group-row full-width">
+                    <label>매장이름</label>
+                    <div class="input-wrap">
+                        <select id="storeCode" class="form-control store-select">
+                            <option value="강남지점">▲ &nbsp;&nbsp;&nbsp; 강남지점 &nbsp;&nbsp;&nbsp; ▼</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row button-row">
+                <div class="btn-container">
+                    <button type="button" class="btn-submit" onclick="submitReturn()">신청하기</button>
+                </div>
+            </div>
+
+        </div> </div> </main>
     </div>
 </body>
 </html>
