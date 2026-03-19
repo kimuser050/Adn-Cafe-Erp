@@ -37,14 +37,18 @@ public class DailySalesService {
 
 
     @Transactional
-    public int insertDaily(DailySalesVo vo) throws Exception {
+    public int insertDaily(List<DailySalesVo> voList) throws Exception {
 
-        String koreanStoreName = dailySalesMapper.getkoreanStoreName(vo.getStoreNo());
-
+        String storeNo = voList.get(0).getStoreNo();
+        String koreanStoreName = dailySalesMapper.getkoreanStoreName(storeNo);
         String tableName = engStoreName(koreanStoreName) + "_DAILY_SALES";
 
-        return dailySalesMapper.insertDaily(vo, tableName);
+        int total = 0;
+        for(DailySalesVo vo : voList){
+            total += dailySalesMapper.insertDaily(vo, tableName);
+        }
 
+        return total;
     }
 
     @Transactional

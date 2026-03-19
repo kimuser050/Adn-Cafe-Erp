@@ -23,9 +23,9 @@ public class DailySalesRestController {
     private final DailySalesService dailySalesService;
 
     @PostMapping("/insertDaily")
-    public ResponseEntity<HashMap<String, String>> insertDaily(@RequestBody DailySalesVo vo) throws Exception {
+    public ResponseEntity<HashMap<String, String>> insertDaily(@RequestBody List<DailySalesVo> voList) throws Exception {
 
-        int result = dailySalesService.insertDaily(vo);
+        int result = dailySalesService.insertDaily(voList);
 
         HashMap<String, String> map = new HashMap<>();
         map.put("result" , result+"");

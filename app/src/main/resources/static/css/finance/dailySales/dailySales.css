@@ -1,0 +1,125 @@
+/* 1. 페이지 전체 레이아웃 */
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    padding: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 2. 상단 타이틀 */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #6a4328;
+    align-self: flex-start;
+    padding-left: 10px;
+    border-left: 5px solid #6a4328;
+}
+
+/* 3. 헤더 (날짜 및 매장 선택 영역) */
+.header {
+    width: 100%;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.header input {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.header input:focus {
+    border-color: #6a4328;
+    box-shadow: 0 0 0 2px rgba(106, 67, 40, 0.1);
+}
+
+.storeInput {
+    width: 250px;
+}
+
+.header button {
+    margin-left: auto;
+    padding: 10px 25px;
+    background-color: #6a4328;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.header button:hover {
+    background-color: #865f42;
+}
+
+/* 4. 바디 (테이블 입력 영역) */
+.body {
+    width: 100%;
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    background-color: #f9f7f6;
+    color: #6a4328;
+    font-weight: 700;
+    padding: 15px;
+    border-bottom: 2px solid #e8e1dd;
+    text-align: center;
+}
+
+tbody td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+/* 테이블 내부 입력창 스타일 */
+tbody td input {
+    width: 90%;
+    padding: 8px 12px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #444;
+    transition: all 0.2s;
+}
+
+tbody td input:focus {
+    border-color: #6a4328;
+    background-color: #fffaf7;
+    outline: none;
+}
+
+/* 수량, 단가 등 숫자 입력창 정렬 */
+#unitPrice,
+#quantity {
+    text-align: right;
+}
+
+/* 행 hover 효과 */
+tbody tr:hover {
+    background-color: #fcfcfc;
+}
