@@ -3,7 +3,7 @@ package com.kh.app.feature.hr.att;
 import lombok.Data;
 
 @Data
-public class attStatusVo {
+public class AttVo {
     private String attNo;
     private String statusCode;
     private String empNo;
