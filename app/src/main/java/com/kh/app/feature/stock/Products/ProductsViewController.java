@@ -1,4 +1,4 @@
-package com.kh.app.feature.stock.itemcheck;
+package com.kh.app.feature.stock.Products;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("stock")
-public class CheckViewController {
+public class ProductsViewController {
 
-    @GetMapping("check")
-    public String check() {
-        return "stock/item/itemCheck";
+    @GetMapping("products")
+    public String products(){
+        return "/stock/item/products";
     }
-
 }
-

@@ -15,50 +15,58 @@
     <div class="app-shell">
         <%@ include file="/WEB-INF/views/stock/common/returnSidebar.jsp" %>
 
-        <main class="main-content">
-            <div class="return-title-tag">반품 신청</div>
-
-            <div class="return-form-card">
-                <div class="form-row">
-                    <div class="input-group width-60">
-                        <label>상품이름</label>
-                        <select id="productName" class="form-control">
-                            <option value="우유2L">우유2L</option>
-                            <option value="원두커피">원두 커피</option>
-                        </select>
-                    </div>
-                    <div class="input-group width-30 align-end">
-                        <label class="label-right">수량</label>
-                        <div class="qty-pill">
-                            <button type="button" onclick="changeQty(1)">+</button>
-                            <input type="text" id="quantity" value="1" readonly>
-                            <button type="button" onclick="changeQty(-1)">-</button>
+        <main class="content-container">
+            <div class="return-box">
+                <div class="box-header">반품 신청</div>
+                
+                <form id="returnForm" class="return-grid">
+                    <div class="column">
+                        <div class="input-item">
+                            <label>매장 명</label>
+                            <input type="text" value="강남 지점" readonly class="readonly-input">
+                            <input type="hidden" id="storeCode" value="S001"> 
+                        </div>
+                        
+                        <div class="input-item">
+                            <label>상품 명</label>
+                            <input type="text" id="productName" value="원두 커피" placeholder="상품명을 입력하세요">
+                        </div>
+                        
+                        <div class="input-item">
+                            <label>사유</label>
+                            <textarea id="reason" placeholder="내용을 입력하세요">맘에 안듬 걍 암튼 안들어요</textarea>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-row middle-section">
-                    <div class="input-group width-60">
-                        <label>사유</label>
-                        <textarea id="reason" class="form-textarea" placeholder="사유를 입력하세요"></textarea>
-                    </div>
-                    <div class="input-group width-30 date-box">
-                        <label>접수일</label>
-                        <input type="text" id="enrollDate" class="form-control text-center" value="2026-03-03" readonly>
-                    </div>
-                </div>
+                    <div class="column">
+                        <div class="input-item">
+                            <label>수량</label>
+                            <div class="qty-wrapper">
+                                <button type="button" onclick="changeQty(-1)">-</button>
+                                <input type="number" id="quantity" value="10" readonly>
+                                <button type="button" onclick="changeQty(1)">+</button>
+                            </div>
+                        </div>
 
-                <div class="form-row">
-                    <div class="input-group width-60">
-                        <label>매장이름</label>
-                        <select id="storeCode" class="form-control">
-                            <option value="강남지점">▲ &nbsp;&nbsp;&nbsp; 강남지점 &nbsp;&nbsp;&nbsp; ▼</option>
-                        </select>
+                        <div class="input-item">
+                            <label>접수일</label>
+                            <input type="text" id="enrollDate" value="2026-03-19" readonly class="readonly-input">
+                        </div>
+
+                        <div class="input-item">
+                            <label>상태</label>
+                            <select id="status">
+                                <option value="W" selected>정상</option>
+                                <option value="R">반품진행</option>
+                                <option value="C">완료</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="btn-group width-30">
-                        <button type="button" class="btn-submit" onclick="submitReturn()">신청하기</button>
+
+                    <div class="button-area">
+                        <button type="button" class="btn-save" onclick="submitReturn()">저장</button>
                     </div>
-                </div>
+                </form>
             </div>
         </main>
     </div>

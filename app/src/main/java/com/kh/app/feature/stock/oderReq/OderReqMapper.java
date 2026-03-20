@@ -27,6 +27,8 @@ public interface OderReqMapper {
             """)
     List<OderReqVo> selectList(@Param("pvo") PageVo pvo, @Param("keyword") String keyword);
 
+
+
     // [발주 실행] ITEM 데이터를 ORDER_REQ로 복사 (상태 'W' 고정)
     // ★ 시퀀스명을 SEQ_ORDER_REQ로 수정했습니다.
     @Insert("""

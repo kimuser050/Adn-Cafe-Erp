@@ -26,12 +26,13 @@ public interface ItemMapper {
     int insert(ItemVo vo);
 
 
+    // 검색 결과 개수 조회 (중요: @Param 추가)
     @Select("""
-            SELECT COUNT(ITEM_NO)
-            FROM ITEM
-            WHERE ITEM_NAME LIKE '%' || #{keyword} || '%'
-            """)
-    int selectCount(String keyword);
+    SELECT COUNT(ITEM_NO)
+    FROM ITEM
+    WHERE ITEM_NAME LIKE '%' || #{keyword} || '%'
+    """)
+    int selectCount(@Param("keyword") String keyword);
 //조회
 @Select("""
         <script>
@@ -73,7 +74,6 @@ List<ItemVo> selectList(@Param("pvo") PageVo pvo, @Param("keyword") String keywo
                 ,ORDER_DATE
             FROM ITEM
             WHERE ITEM_NO = #{itemNo}
-            AND ACTIVE_YN = 'Y'
         """)
     ItemVo selectOne(String itemNo);
 

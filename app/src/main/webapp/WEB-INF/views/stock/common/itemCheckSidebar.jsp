@@ -38,9 +38,9 @@
         <div class="nav-group">
             <button type="button" class="nav-main">품질관리</button>
             <div class="nav-sub">
-                <a href="/stock/order" class="active">발주신청</a>
-                <a href="/stock/return">반품신청</a>
-                <a href="/stock/check">반품검수</a>
+                <a href="/stock/order" >발주신청</a>
+                <a href="/stock/return" >반품신청</a>
+                <a href="/stock/check" class="active">반품검수</a>
                 <a href="/stock/item">본사품목</a>
                 <a href="/stock/products">상품관리</a>
             </div>
