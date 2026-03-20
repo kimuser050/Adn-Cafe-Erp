@@ -1,11 +1,16 @@
 package com.kh.app.feature.finance.journal;
 
 import com.kh.app.feature.finance.account.AccountVo;
+import com.kh.app.feature.finance.dailySales.DailySalesVo;
+import com.kh.app.feature.hr.payroll.PayMasterVo;
+import com.kh.app.feature.user.member.MemberVo;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -90,4 +95,92 @@ public class JournalService {
     public List<JournalVo> incomeState(String journalDate) {
         return journalMapper.incomeState(journalDate);
     }
+
+    @Transactional
+    public int autoPayrollInsert(PayMasterVo Pvo){
+
+        String sharedNo = journalMapper.getJournalNo();
+
+        //리스트생성
+        List<JournalVo> jVoList = new ArrayList<>();
+
+        //차변
+        JournalVo debitVo = new JournalVo();
+        debitVo.setJournalNo(sharedNo);
+        debitVo.setAccountNo("5010");
+        debitVo.setDebit(Pvo.getNetAmount());
+        debitVo.setCredit("0");
+        debitVo.setWriterNo(Pvo.getEmpNo());
+        debitVo.setJournalDate(Pvo.getUpdatedAt());
+        jVoList.add(debitVo);
+
+        //대변
+        JournalVo creditVo = new JournalVo();
+        creditVo.setJournalNo(sharedNo);
+        creditVo.setAccountNo("1120");
+        creditVo.setDebit("0");
+        creditVo.setCredit(Pvo.getNetAmount());
+        creditVo.setWriterNo(Pvo.getEmpNo());
+        creditVo.setJournalDate(Pvo.getUpdatedAt());
+        jVoList.add(creditVo);
+
+        int totalResult = 0;
+        for (JournalVo vo : jVoList) {
+            totalResult += journalMapper.insertJournal(vo);
+        }
+
+        if (totalResult != jVoList.size()) {
+            throw new RuntimeException("전표 저장 중 일부 데이터가 누락되었습니다.");
+        }
+
+        return totalResult;
+    }
+
+    public int autoSalesInsert(DailySalesVo Dvo, HttpSession session){
+
+        //작성자 사번 받아오기
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if (loginMemberVo == null) {
+            throw new RuntimeException("로그인 세션이 만료되었습니다.");
+        }
+
+        //리스트생성
+        String sharedNo = journalMapper.getJournalNo();
+
+        int totalResult = 0;
+
+        //차변
+        JournalVo debitVo = new JournalVo();
+        debitVo.setJournalNo(sharedNo);
+        if ("D".equals(Dvo.getPaymentCd())) {
+            debitVo.setAccountNo("1130"); // 외상매출금(카드결제)
+        } else {
+            debitVo.setAccountNo("1120"); // 보통예금(현금결제)
+        }
+        debitVo.setDebit(Dvo.getTotalSales());
+        debitVo.setCredit("0");
+        debitVo.setWriterNo(loginMemberVo.getEmpNo());
+        debitVo.setJournalDate(Dvo.getSalesDate());
+        totalResult += journalMapper.insertJournal(debitVo);
+
+        //대변
+        JournalVo creditVo = new JournalVo();
+        creditVo.setJournalNo(sharedNo);
+        creditVo.setAccountNo("4010"); //제품매출
+        creditVo.setDebit("0");
+        creditVo.setCredit(Dvo.getTotalSales());
+        creditVo.setWriterNo(loginMemberVo.getEmpNo());
+        creditVo.setJournalDate(Dvo.getSalesDate());
+        totalResult += journalMapper.insertJournal(creditVo);
+
+        if (totalResult != 2 ) {
+            throw new RuntimeException("전표 저장 중 일부 데이터가 누락되었습니다.");
+        }
+
+        return totalResult;
+    }
+
 }
+
+

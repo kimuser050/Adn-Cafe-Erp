@@ -1,6 +1,7 @@
 package com.kh.app.feature.finance.dailySales;
 
 import com.kh.app.feature.finance.account.AccountVo;
+import com.kh.app.feature.finance.journal.JournalService;
 import com.kh.app.feature.hr.store.StoreVo;
 import com.kh.app.feature.stock.Products.ProductVo;
 import com.kh.app.feature.user.member.MemberVo;
@@ -23,9 +24,11 @@ public class DailySalesRestController {
     private final DailySalesService dailySalesService;
 
     @PostMapping("/insertDaily")
-    public ResponseEntity<HashMap<String, String>> insertDaily(@RequestBody List<DailySalesVo> voList) throws Exception {
+    public ResponseEntity<HashMap<String, String>> insertDaily(
+            @RequestBody List<DailySalesVo> voList,
+            HttpSession session) throws Exception {
 
-        int result = dailySalesService.insertDaily(voList);
+        int result = dailySalesService.insertDaily(voList, session);
 
         HashMap<String, String> map = new HashMap<>();
         map.put("result" , result+"");
@@ -96,6 +99,18 @@ public class DailySalesRestController {
     @GetMapping("/getStoreList")
     public List<DailySalesVo> getStoreList(){
         return dailySalesService.getStoreList();
+    }
+
+    @GetMapping("/getMyStoreData")
+    public ResponseEntity<DailySalesVo> getMyStoreData(HttpSession session) {
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if (loginMemberVo == null) {
+            return ResponseEntity.ok(null);
+        }
+
+        DailySalesVo storeVo = dailySalesService.getMyStore(loginMemberVo.getEmpNo());
+        return ResponseEntity.ok(storeVo);
     }
 
 }

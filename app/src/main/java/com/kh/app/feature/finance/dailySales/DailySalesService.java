@@ -1,7 +1,9 @@
 package com.kh.app.feature.finance.dailySales;
 
+import com.kh.app.feature.finance.journal.JournalService;
 import com.kh.app.feature.hr.store.StoreVo;
 import com.kh.app.feature.stock.Products.ProductVo;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.List;
 @Service
 public class DailySalesService {
 
+    private final JournalService journalService;
     private final DailySalesMapper dailySalesMapper;
 
     public String engStoreName(String koreanStoreName) throws Exception {
@@ -37,7 +40,7 @@ public class DailySalesService {
 
 
     @Transactional
-    public int insertDaily(List<DailySalesVo> voList) throws Exception {
+    public int insertDaily(List<DailySalesVo> voList, HttpSession session) throws Exception {
 
         String storeNo = voList.get(0).getStoreNo();
         String koreanStoreName = dailySalesMapper.getkoreanStoreName(storeNo);
@@ -46,8 +49,15 @@ public class DailySalesService {
         int total = 0;
         for(DailySalesVo vo : voList){
             vo.setStoreNo(storeNo);
+
+            if(vo.getUnitPrice() != null && vo.getQuantity() != null) {
+                int calcTotal = Integer.parseInt(vo.getUnitPrice()) * Integer.parseInt(vo.getQuantity());
+                vo.setTotalSales(String.valueOf(calcTotal));
+            }
+
             total += dailySalesMapper.insertDaily(vo, tableName);
-            total += dailySalesMapper.insertTotalSales(vo);
+            total += dailySalesMapper.insertTotalSalesReal(vo);
+            journalService.autoSalesInsert(vo, session);
         }
 
         return total;
@@ -98,5 +108,9 @@ public class DailySalesService {
 
     public List<DailySalesVo> getStoreList() {
         return dailySalesMapper.getStoreList();
+    }
+
+    public DailySalesVo getMyStore(String empNo) {
+        return dailySalesMapper.getMyStore(empNo);
     }
 }

@@ -27,9 +27,8 @@
                             <div class="page-content-box">
                                 <div class="title">매출 조회</div>
                                 <div class="header">
-                                    <input type="date" name="salesDate" id="salesDate">
-                                    <input type="text" class="storeInput" list="storeOptions" placeholder="매장명 선택"
-                                        onchange="salesList();">
+                                    <input type="date" name="salesDate" id="salesDate" onchange="salesList();">
+                                    <input type="text" class="storeInput" list="storeOptions" placeholder="매장명 선택">
                                     <datalist id="storeOptions"></datalist>
                                     <button onclick="location.href='/dailySales/insertDaily'">매출 등록</button>
                                 </div>
