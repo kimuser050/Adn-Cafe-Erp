@@ -54,35 +54,42 @@ public interface NoticeMapper {
 
     @Select("""
             <script>
-            SELECT
-                N.NOTICE_NO
-                ,N.WRITER_NO
-                ,M.EMP_NAME AS WRITER_NAME
-                ,N.TITLE
-                ,N.CONTENT
-                ,N.HIT
-                ,N.CREATED_AT
-                ,N.UPDATED_AT
-                ,N.DEL_YN
-                ,N.CATEGORY
-            FROM NOTICE N
-            JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
-            WHERE N.DEL_YN = 'N'
+            SELECT * FROM (
+                /* 1. 조회수 상위 3개 추출 (TOP 공지) */
+                SELECT * FROM (
+                    SELECT 
+                        N.NOTICE_NO, N.WRITER_NO, M.EMP_NAME AS WRITER_NAME, N.TITLE, N.CONTENT, 
+                        N.HIT, N.CREATED_AT, N.UPDATED_AT, N.DEL_YN, N.CATEGORY,
+                        'Y' AS IS_TOP
+                    FROM NOTICE N
+                    JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
+                    WHERE N.DEL_YN = 'N'
+                    ORDER BY N.HIT DESC
+                ) WHERE ROWNUM &lt;= 3
             
-            <if test="searchValue != null and searchValue != ''">
-                <choose>
-                    <when test="searchType == 'title'">
-                        AND N.TITLE LIKE '%' || #{searchValue} || '%'
-                    </when>
-                    <when test="searchType == 'writer'">
-                        AND M.EMP_NAME LIKE '%' || #{searchValue} || '%'
-                    </when>
-                </choose>
-            </if>
+                UNION ALL
             
-            ORDER BY N.NOTICE_NO DESC
+                /* 2. 일반 리스트 (페이징 및 검색 적용) */
+                SELECT 
+                    N.NOTICE_NO, N.WRITER_NO, M.EMP_NAME AS WRITER_NAME, N.TITLE, N.CONTENT, 
+                    N.HIT, N.CREATED_AT, N.UPDATED_AT, N.DEL_YN, N.CATEGORY,
+                    'N' AS IS_TOP
+                FROM NOTICE N
+                JOIN MEMBER M ON (N.WRITER_NO = M.EMP_NO)
+                WHERE N.DEL_YN = 'N'
+                <if test="searchValue != null and searchValue != ''">
+                    <choose>
+                        <when test="searchType == 'title'">
+                            AND N.TITLE LIKE '%' || #{searchValue} || '%'
+                        </when>
+                        <when test="searchType == 'writer'">
+                            AND M.EMP_NAME LIKE '%' || #{searchValue} || '%'
+                        </when>
+                    </choose>
+                </if>
+            )
+            ORDER BY IS_TOP DESC, NOTICE_NO DESC  -- 합쳐진 결과 전체를 정렬
             OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
-            
             </script>
             """)
     List<NoticeVo> selectList(@Param("pvo") PageVo pvo,

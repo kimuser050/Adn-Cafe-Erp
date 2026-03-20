@@ -157,3 +157,12 @@
 .qna-table tbody tr:hover .answer-tag {
     color: #333;
 }
+/* 상위 공지사항 행 스타일 */
+.notice-row[style*="font-weight: bold"] {
+    border-left: 4px solid #8c7361; /* 왼쪽에 포인트 줄 주기 */
+}
+
+/* 호버 시 색상은 동일하게 유지하거나 조금 더 진하게 */
+.notice-row:hover {
+    background-color: #f7f3f0 !important;
+}

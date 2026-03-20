@@ -122,3 +122,38 @@
     color: #8c7361; /* 호버 시 제목 텍스트 색상 변경 */
     font-weight: 500;
 }
+/* TOP 공지사항 전용 스타일 */
+.notice-row.is-top {
+    background-color: #fdfaf4 !important; /* 아주 연한 오렌지/베이지빛 */
+    font-weight: 600;
+}
+
+/* TOP 공지 왼쪽 포인트 강조 선 */
+.notice-row.is-top td:first-child {
+    border-left: 4px solid #8c7361;
+}
+
+/* TOP 배지 스타일 */
+.top-badge {
+    background: #8c7361;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px; /* 둥근 모양 */
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 8px;
+    display: inline-block;
+    vertical-align: middle;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 불꽃 아이콘 스타일 */
+.top-icon {
+    font-size: 1.1em;
+    filter: drop-shadow(0 0 2px rgba(255, 69, 0, 0.3));
+}
+
+/* TOP 행 호버 시 색상 (일반 행보다 약간 더 진하게) */
+.notice-row.is-top:hover {
+    background-color: #f7f1e9 !important;
+}

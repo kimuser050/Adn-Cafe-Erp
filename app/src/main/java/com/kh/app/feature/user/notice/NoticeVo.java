@@ -18,5 +18,7 @@ public class NoticeVo {
     private  String delYn;
     private List<NoticeFileVo> fileList;
     private String category;
+    private String isTop;
 
 }
+
