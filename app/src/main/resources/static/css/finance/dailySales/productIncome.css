@@ -37,19 +37,94 @@
     border: none;
 }
 
-/* 3. 검색 영역 (보내주신 header 스타일 계승) */
+/* 부모 컨테이너: 두 요소를 나란히 배치 */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    /* 양 끝으로 배치 */
+    width: 1300px;
+    align-items: center;
+    /* 세로 중앙 정렬 */
+    max-width: 100%;
+    margin: 0 auto 20px auto;
+    box-sizing: border-box;
+}
+
+/* 검색 영역: 스타일 유지 */
 .search-wrapper {
-    width: 100%;
-    max-width: 1300px;
+    /* 남은 공간을 차지하도록 설정 (필요에 따라 조정 가능) */
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 20px;
+    padding: 15px 35px;
     background-color: #fcfcfc;
-    /* 보내주신 header 배경색 */
     border-radius: 15px;
     border: 1px solid #eee;
-    margin-bottom: 20px;
+    /* margin-right: 20px; */
+    /* 프로필 박스와의 간격 */
+}
+
+/* 프로필 박스: 크기 지정 및 스타일 적용 */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #fcfcfc;
+    border-radius: 15px;
+    border: 1px solid #eee;
+
+    /* 원하는 크기로 지정 (예시) */
+    width: 250px;
+    height: 70px;
+    box-sizing: border-box;
+}
+
+/* 나머지 스타일 유지 */
+.profile-img-box {
+    flex-shrink: 0;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.4;
+    font-size: 14px;
+    color: #333;
+}
+
+.user-dept {
+    font-size: 12px;
+    color: #888;
+}
+
+.logout-btn {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f9f9f9;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.logout-btn:hover {
+    background: #eee;
 }
 
 .search-wrapper label {
@@ -57,6 +132,7 @@
     color: #666;
     font-size: 15px;
 }
+
 
 .month-input {
     border: 1px solid #ddd;

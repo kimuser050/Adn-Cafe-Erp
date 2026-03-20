@@ -22,9 +22,10 @@ public class JournalRestController {
     @PostMapping("/insertJournal")
     public ResponseEntity<Integer> insertJournal(
             @RequestBody List<JournalVo> voList
-            , HttpSession session){
+            , HttpSession session) throws Exception {
 
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
         if (loginMemberVo != null) {
             for (JournalVo vo : voList) {
                 vo.setWriterNo(loginMemberVo.getEmpNo());

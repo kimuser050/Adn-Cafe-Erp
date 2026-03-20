@@ -26,12 +26,12 @@
             </div>
 
             <div class="nav-group">
-                <button type="button" class="nav-main" onclick="location.href=`/account`">재무관리</button>
+                <button type="button" class="nav-main">재무관리</button>
                 <div class="nav-sub">
-                    <a href="/account/insertAccount">계정</a>
-                    <a href="/journal/insertJournal">장부</a>
-                    <a href="/journal/journalState">재무현황</a>
-                    <a href="/dailySales/storeIncome">매출분석</a>
+                    <a href="/dailySales/storeIncome">재무현황</a>
+                    <a href="/account/insertAccount">계정과목</a>
+                    <a href="/journal/insertJournal">장부조회</a>
+                    <a href="/journal/journalState">재무제표</a>
                 </div>
             </div>
 
