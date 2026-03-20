@@ -27,6 +27,9 @@ async function loadList(page) {
 /**
  * 테이블 렌더링
  */
+/**
+ * 테이블 렌더링
+ */
 function renderTable(list) {
     const tbody = document.querySelector("#qna-list-body");
     let html = "";
@@ -35,27 +38,46 @@ function renderTable(list) {
         html = "<tr><td colspan='4'>등록된 문의사항이 없습니다.</td></tr>";
     } else {
         list.forEach(vo => {
-            // 권한 체크: 본인이거나 관리자(인사팀 310100)인 경우
             const isSecret = vo.secretYn === 'Y';
-            const hasPermission = (loginMemberNo === vo.writerNo) || (loginDeptCode === '310100');
+
+            // --- 🔥 비밀글 권한 체크 로직 수정 ---
+            let hasPermission = false;
+
+            // 1. 작성자 본인인가?
+            if (String(loginMemberNo) === String(vo.writerNo)) {
+                hasPermission = true;
+            }
+            // 2. 경영혁신실(마스터 부서)인가?
+            else if (loginDeptCode === '310100') {
+                hasPermission = true;
+            }
+            // 3. 해당 카테고리의 담당 부서원인가?
+            else {
+                // vo.typeCode(카테고리)와 loginDeptCode(부서) 매칭
+                if (vo.typeCode === '3' && loginDeptCode === '310101') hasPermission = true; // 인사
+                else if (vo.typeCode === '2' && loginDeptCode === '310102') hasPermission = true; // 재무
+                else if (vo.typeCode === '4' && loginDeptCode === '310103') hasPermission = true; // 품질
+                else if (vo.typeCode === '1' && loginDeptCode === '310104') hasPermission = true; // 시스템(예시)
+            }
 
             // 제목 표시 로직
             let displayTitle = vo.title;
             let clickEvent = `location.href='/qna/question/detail?no=${vo.inquiryNo}'`;
             let lockIcon = isSecret ? ' <img src="/img/icon_lock.png" style="width:14px; vertical-align:middle;">' : '';
 
+            // 권한이 없는 비밀글인 경우 처리
             if(isSecret && !hasPermission) {
-                displayTitle = "🔒 비밀글입니다. 장성자와 담당자만 볼 수 있습니다.";
-                clickEvent = "alert('작성자 본인만 열람 가능합니다.');";
+                displayTitle = "🔒 비밀글입니다. 작성자와 담당자만 볼 수 있습니다.";
+                clickEvent = "alert('해당 부서 담당자 또는 작성자만 열람 가능합니다.');";
             }
 
             html += `
-                <tr onclick="${clickEvent}">
+                <tr onclick="${clickEvent}" style="cursor:pointer;">
                     <td>${vo.inquiryNo}</td>
                     <td>${getCategoryName(vo.typeCode)}</td>
                     <td class="title-cell">
                         ${displayTitle} ${lockIcon}
-                        ${vo.answerYn === 'Y' ? '<div class="answer-tag"><img src="/img/icon_answer.png" style="width:12px;"> 답변 완료</div>' : ''}
+                        ${vo.answerYn === 'Y' ? '<span class="answer-tag">답변 완료</span>' : ''}
                     </td>
                     <td>${isSecret && !hasPermission ? '비공개' : vo.writerName}</td>
                 </tr>
