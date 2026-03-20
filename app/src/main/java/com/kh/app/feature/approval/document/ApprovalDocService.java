@@ -139,6 +139,8 @@ public class ApprovalDocService {
 
         if (result != 1) {
             throw new IllegalStateException("문서 승인 처리 실패");
+
+
         }
     }
 

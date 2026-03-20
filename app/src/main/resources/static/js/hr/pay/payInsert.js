@@ -209,14 +209,17 @@ async function insertPay() {
     }
 
     const month = document.querySelector("#pay-month").value;
-
     const rows = document.querySelectorAll("#pay-item-body tr");
 
     const detailList = [];
 
+    let totalEarnAmount = 0;
+    let totalDeductAmount = 0;
+
     rows.forEach(function (row) {
 
         const amount = Number(row.querySelector(".amount").value || 0);
+        const type = row.dataset.type;
 
         if (amount > 0) {
             detailList.push({
@@ -224,6 +227,12 @@ async function insertPay() {
                 amount: String(amount),
                 payNote: row.querySelector(".note").value
             });
+
+            if (type === "지급") {
+                totalEarnAmount += amount;
+            } else {
+                totalDeductAmount += amount;
+            }
         }
     });
 
@@ -232,15 +241,20 @@ async function insertPay() {
         return;
     }
 
+    const netAmount = totalEarnAmount - totalDeductAmount;
+
     const payload = {
         empNo: selectedEmp.empNo,
         payMonth: month + "-01",
+        totalEarnAmount: String(totalEarnAmount),
+        totalDeductAmount: String(totalDeductAmount),
+        netAmount: String(netAmount),
         detailList: detailList
     };
 
     const resp = await fetch("/pay", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
     });
 
