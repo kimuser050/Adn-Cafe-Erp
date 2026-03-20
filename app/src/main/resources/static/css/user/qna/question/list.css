@@ -138,3 +138,22 @@
     align-items: center;
     gap: 10px; /* 요소 간 간격 */
 }
+/* 테이블 행(tr) 호버 효과 추가 */
+.qna-table tbody tr {
+    transition: background-color 0.2s ease; /* 색상이 부드럽게 바뀌도록 설정 */
+}
+
+.qna-table tbody tr:hover {
+    background-color: #f7f3f0; /* 커피 프린스 테마에 어울리는 연한 베이지색 */
+}
+
+/* 호버 시 제목 텍스트에 변화를 주고 싶다면 추가 */
+.qna-table tbody tr:hover .title-cell {
+    color: #8c7361; /* 갈색 톤으로 강조 */
+    font-weight: 500;
+}
+
+/* 비밀글 아이콘이나 답변 태그가 호버 시 더 잘 보이게 조정 */
+.qna-table tbody tr:hover .answer-tag {
+    color: #333;
+}
