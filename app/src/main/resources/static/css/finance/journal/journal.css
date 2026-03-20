@@ -35,6 +35,7 @@
 
     margin: 0 auto;
     /* 본인 스스로 가운데 정렬 */
+    overflow: hidden;
 }
 
 /* 1. 상단 탭 버튼: 메인박스와 분리 */

@@ -17,6 +17,7 @@ public class JournalVo {
     private String debit;
     private String credit;
     private String writerNo;
+    private String writerName;
     private String createdAt;
     private String isDeleted;
     private long thisMonth;

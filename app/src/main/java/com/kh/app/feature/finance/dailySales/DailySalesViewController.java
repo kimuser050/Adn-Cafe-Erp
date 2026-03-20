@@ -14,13 +14,13 @@ public class DailySalesViewController {
     @GetMapping("/insertDaily")
     public String insertDaily(HttpSession session, RedirectAttributes ra){
 
-//       MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//
-//        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
-//                && !"310100".equals(loginMemberVo.getDeptCode()))){
-//            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
-//            return "redirect:/home";
-//        }
+       MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
+                && !"310100".equals(loginMemberVo.getDeptCode()))){
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/home";
+        }
 
         return "/finance/dailySales/dailySales";
     }
@@ -36,7 +36,16 @@ public class DailySalesViewController {
     }
 
     @GetMapping("/storeIncome")
-    public String storeIncome(){
+    public String storeIncome(HttpSession session, RedirectAttributes ra){
+
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
+                && !"310100".equals(loginMemberVo.getDeptCode()))){
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/home";
+        }
+
         return "/finance/dailySales/storeIncome";
     }
 }
