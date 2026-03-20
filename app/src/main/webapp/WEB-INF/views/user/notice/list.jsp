@@ -17,6 +17,20 @@
             <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
                 <div class="page-shell">
                     <div class="home-container">
+                                <c:if test="${not empty sessionScope.loginMemberVo}">
+                                    <div class="top-user-bar">
+
+                                        <a href="/member/mypage">
+                                            <img src="http://192.168.20.2:5500/member/${loginMemberVo.profileChangeName}"
+                                                 class="top-profile-img">
+                                        </a>
+
+                                        <span class="top-user-name">${loginMemberVo.empName}</span>
+
+
+                                        <button onclick="location.href='/member/logout'">로그아웃</button>
+                                    </div>
+                                </c:if>
                         <div class="home-hero-bg"></div>
                         <div class="home-content">
                             <div class="notice-wrap">

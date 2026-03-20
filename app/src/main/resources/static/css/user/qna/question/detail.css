@@ -1,25 +1,128 @@
-/* 기본 구조는 작성(insert.css)과 통일 */
-.qna-wrap { padding: 40px; background-color: #eee9e4; min-height: 100vh; }
-.qna-title-text { font-size: 22px; font-weight: bold; margin-bottom: 25px; }
-.qna-form-box { background-color: #fff; padding: 50px; border-radius: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-
-/* 상세 상단 정보 레이아웃 */
-.detail-header-row { display: flex; align-items: center; gap: 30px; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
-.info-item { display: flex; align-items: center; gap: 10px; }
-.info-item .label { font-weight: bold; color: #888; font-size: 14px; }
-.info-item .value { color: #333; }
-.info-item .value-title { font-size: 18px; font-weight: bold; color: #5a4a3c; }
-.flex-fill { flex: 1; }
-
-/* 라운드 디스플레이 영역 (내용 보기) */
-.round-display-area {
-    width: 100%; min-height: 250px; padding: 30px; border: 1.5px solid #dcd1c5; border-radius: 40px;
-    background-color: #fff; line-height: 1.8; color: #444; margin-top: 10px;
+/* ===== 전체 레이아웃 ===== */
+.qna-wrap {
+    padding: 40px;
+    background-color: #eee9e4;
+    min-height: calc(100vh - 60px);
+    position: relative; /* 🔥 상단바 기준 */
+    font-family: 'Pretendard', sans-serif;
 }
-.answer-style { background-color: #fdfaf7; border-color: #c8a992; }
 
-/* 버튼 및 파일 */
-.btn-area { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
-.btn-custom { background-color: #8c7361; color: #fff; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-.btn-danger { background-color: #a55d5d; }
-.file-item { display: block; margin-bottom: 5px; color: #666; text-decoration: none; font-size: 14px; }
+/* ===== 상단 사용자 바 ===== */
+.top-user-bar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    background: rgba(255,255,255,0.95);
+    padding: 6px 12px;
+    border-radius: 30px;
+
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.top-profile-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.top-user-name {
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+}
+
+.top-user-bar button {
+    border: none;
+    background: #8c7361;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.top-user-bar button:hover {
+    background: #6d5a47;
+}
+
+/* ===== 제목 ===== */
+.qna-title-text {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* ===== 박스 ===== */
+.qna-form-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* ===================== */
+/* 🔥 상세 페이지 영역 */
+/* ===================== */
+
+/* 상단 정보 */
+.detail-header-row {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-item .label {
+    font-weight: bold;
+    color: #888;
+    font-size: 13px;
+}
+
+.info-item .value {
+    color: #333;
+}
+
+.value-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #5a4a3c;
+}
+
+.flex-fill {
+    flex: 1;
+}
+
+/* 내용 박스 */
+.round-display-area {
+    width: 100%;
+    min-height: 250px;
+    padding: 25px;
+    border: 1.5px solid #dcd1c5;
+    border-radius: 30px;
+    background-color: #fff;
+    line-height: 1.7;
+    color: #444;
+    margin-top: 10px;
+}
+
+.answer-style {
+    background-color: #fdfaf7;
+    border-color: #c8a992;
+}

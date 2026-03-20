@@ -1,0 +1,9 @@
+diff a/app/src/main/webapp/WEB-INF/views/home.jsp b/app/src/main/webapp/WEB-INF/views/home.jsp	(rejected hunks)
+@@ -63,7 +63,6 @@
+                                     </div>
+                                 <% } %>
+ 
+-                                                <div class="home-card"></div>
+                                         
+                         </div>
+ 

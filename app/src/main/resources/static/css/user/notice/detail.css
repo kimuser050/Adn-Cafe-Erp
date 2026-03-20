@@ -374,3 +374,52 @@
     margin-top: 6px;
     justify-content: flex-end;
 }
+/* 상단 유저 바 */
+.top-user-bar {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    background: rgba(255, 255, 255, 0.85);
+    padding: 8px 15px;
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+    z-index: 20;
+}
+
+/* 프로필 이미지 (핵심) */
+.top-profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;        /* 동그랗게 */
+    object-fit: cover;         /* 찌그러짐 방지 */
+    cursor: pointer;
+    border: 2px solid #71513d;
+}
+
+/* 이름 */
+.top-user-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 버튼 */
+.top-user-bar button {
+    border: none;
+    background: #71513d;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.top-user-bar button:hover {
+    background: #5d4037;
+}
