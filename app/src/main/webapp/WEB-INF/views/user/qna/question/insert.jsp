@@ -34,7 +34,10 @@
                         <div class="form-group type-group">
                             <label>카테고리</label>
                             <select>
-                                <option>시스템</option>
+                                <option>공통</option>
+                                <option>재무</option>
+                                <option>인사</option>
+                                <option>품질</option>
                             </select>
                         </div>
 
