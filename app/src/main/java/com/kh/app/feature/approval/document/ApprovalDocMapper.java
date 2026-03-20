@@ -22,6 +22,7 @@ public interface ApprovalDocMapper {
         , TO_CHAR(A.SUBMITTED_AT, 'YYYY-MM-DD') AS SUBMITTED_AT
         , TO_CHAR(A.ACTED_AT, 'YYYY-MM-DD') AS ACTED_AT
         , C.CATEGORY_NAME
+        , C.CATEGORY_NO
         , MW.EMP_NAME AS WRITER_NAME
         , WD.DEPT_NAME AS WRITER_DEPT
         , PW.POS_NAME AS WRITER_POSITION

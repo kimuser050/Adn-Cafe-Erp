@@ -190,7 +190,7 @@ public class ApprovalDocRestController {
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
         String loginEmpNo = loginMemberVo.getEmpNo();
 
-        ApprovalDocVo detailVo = approvalDocService.selectDocDetail(docNo , loginEmpNo); //, loginMemberVo.getEmpNo()
+        ApprovalDocVo detailVo = approvalDocService.selectDocDetail(docNo , loginEmpNo);
         return ResponseEntity.ok(detailVo);
     }
 
