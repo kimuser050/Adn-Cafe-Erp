@@ -141,18 +141,30 @@
 
 /* 대변 */
 
-/* 마지막 행(총 합계) 강조 스타일 */
 
-.summary-table tr:last-child td {
-    /* background: #6a4328 !important;
-    color: #fff !important;
-    font-size: 16px;
-    border-top: 2px solid #555; */
+/* 맨 마지막 줄 (자본총계) */
+.summary-table tr:nth-last-child(3) td {
+    color: #166e83 !important;
+    font-size: 17px;
+    border-top: 2px solid rgb(167, 165, 165);
+}
+
+/* 뒤에서 두 번째 줄 (부채총계) */
+.summary-table tr:nth-last-child(2) td {
+    color: #166e83 !important;
+    font-size: 17px;
+    border-top: 1px solid rgb(167, 165, 165);
+}
+
+/* 뒤에서 세 번째 줄 (자산총계) */
+.summary-table tr:nth-last-child(1) td {
     color: #a10808 !important;
     font-size: 18px;
     border-top: 2px solid rgb(167, 165, 165);
     border-bottom: 2px solid rgb(167, 165, 165);
 }
+
+
 
 
 
