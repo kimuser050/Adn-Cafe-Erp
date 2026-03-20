@@ -1,0 +1,404 @@
+/* =========================================================
+   문서상태
+   ========================================================= */
+
+#document-list tr td{
+    text-align: center;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    justify-content: center;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-wait{
+    background-color: #d59b18;
+}
+
+.status-ok{
+    background-color: #20b455;
+}
+
+.status-reject{
+    background-color: #de4829;
+}
+
+/* =========================================================
+   요약 카드 - 출처 : *빛한준* 
+   ========================================================= */
+.org-summary-area {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.summary-card {
+    width: 116px;
+    min-height: 84px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.summary-title {
+    font-size: 12px;
+    color: #705843;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.summary-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #2e2118;
+    border-left: 4px solid #7b5538;
+    padding-left: 10px;
+    line-height: 1;
+}
+
+/* =========================================================
+    문서목록
+   ========================================================= */
+
+.doc-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+#search-area {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.doc-table thead tr {
+  background: #d4ab7d;
+}
+
+.doc-table th,
+.doc-table td {
+  padding: 14px 12px;
+  text-align: center;
+}
+
+.doc-table tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+/* =========================================================
+    문서목록
+   ========================================================= */
+.doc-modal.hidden {
+    display: none;
+}
+
+.doc-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+}
+
+.doc-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.approval-form-modal {
+    position: relative;
+    width: min(1320px, 92vw);
+    height: min(920px, 90vh);
+    margin: 3vh auto;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    overflow-y: auto;
+    padding: 20px 18px 28px;
+}
+
+.doc-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 18px;
+    border: none;
+    background: transparent;
+    font-size: 34px;
+    cursor: pointer;
+    color: #7b5538;
+    z-index: 10;
+}
+
+.approval-paper {
+    width: 100%;
+    min-height: 100%;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    padding: 18px 10px 12px;
+    box-sizing: border-box;
+}
+
+/* 상단 헤더 */
+.paper-header {
+    display: grid;
+    grid-template-columns: 230px 1fr 180px;
+    align-items: center;
+    gap: 24px;
+    border-top: 1px solid #cfcfcf;
+    border-bottom: 1px solid #cfcfcf;
+    padding: 26px 14px 22px;
+    margin-bottom: 14px;
+}
+
+.paper-title {
+    text-align: center;
+    font-size: 45px;
+    font-weight: 800;
+    color: #111;
+    letter-spacing: -1px;
+}
+
+.writer-info-table,
+.approval-sign-table,
+.approval-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.writer-info-table th,
+.writer-info-table td,
+.approval-sign-table th,
+.approval-sign-table td,
+.approval-detail-table th,
+.approval-detail-table td {
+    border: 1px solid #cfcfcf;
+}
+
+.writer-info-table th,
+.approval-detail-table th {
+    background: #d8b085;
+    font-weight: 700;
+    color: #111;
+}
+
+.writer-info-table th,
+.writer-info-table td {
+    height: 40px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.approval-sign-table th,
+.approval-sign-table td {
+    height: 40px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* 본문 테이블 */
+.paper-body {
+    margin-top: 6px;
+}
+
+.approval-detail-table th {
+    width: 160px;
+    min-width: 160px;
+    text-align: left;
+    padding: 0 18px;
+    font-size: 14px;
+    height: 70px;
+    vertical-align: middle;
+}
+
+.approval-detail-table td {
+    background: #fff;
+    padding: 14px 16px;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.form-value {
+    min-height: 34px;
+    border: 1px solid #cfcfcf;
+    background: #fff;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    color: #111;
+}
+
+.form-value.short {
+    width: 170px;
+    justify-content: center;
+}
+
+.date-range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.date-tilde {
+    font-size: 14px;
+    font-weight: 700;
+    color: #444;
+}
+
+.form-textarea-view {
+    min-height: 280px;
+    border: 1px solid #cfcfcf;
+    background: #fff;
+    padding: 16px;
+    white-space: pre-wrap;
+    line-height: 1.7;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.content-row th,
+.content-row td {
+    vertical-align: top;
+    padding-top: 16px;
+}
+
+/* 결재 상태 */
+.sign-badge {
+    display: inline-flex;
+    min-width: 86px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    background: #7b5538;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 0 12px;
+}
+
+.sign-badge.wait {
+    background: #d59b18;
+}
+
+.sign-badge.ok {
+    background: #20b455;
+}
+
+.sign-badge.reject {
+    background: #de4829;
+}
+
+/* 결재의견 */
+.approval-comment-box {
+    margin-top: 16px;
+    border: 1px solid #cfcfcf;
+    padding: 16px;
+    background: #fafafa;
+}
+
+.approval-comment-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.approval-comment-textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: vertical;
+    border: 1px solid #cfcfcf;
+    padding: 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    background: #fff;
+}
+
+/* 하단 버튼 */
+.doc-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.modal-btn {
+    min-width: 94px;
+    height: 42px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-edit {
+    background: #c79561;
+    color: #fff;
+}
+
+.btn-delete {
+    background: #8b6a4d;
+    color: #fff;
+}
+
+.btn-approve {
+    background: #20b455;
+    color: #fff;
+}
+
+.btn-reject {
+    background: #de4829;
+    color: #fff;
+}
+
+.btn-close {
+    background: #ddd;
+    color: #333;
+}
+
+@media (max-width: 1400px) {
+    .paper-title {
+        font-size: 40px;
+    }
+
+    .approval-detail-table th {
+        font-size: 20px;
+    }
+
+    .approval-detail-table td {
+        font-size: 18px;
+    }
+
+    .form-textarea-view {
+        font-size: 18px;
+    }
+}

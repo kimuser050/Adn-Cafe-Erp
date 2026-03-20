@@ -69,7 +69,7 @@
                         <input type="date" name="startDate" id="startDate" class="form-input">
                         <input type="date" name="endDate" id="endDate" class="form-input">
     
-                        <button type="button" class="btn" onclick="searchDoc();">검색</button>
+                        <button type="button" class="btn" onclick="searchMyDoc();">검색</button>
                     </form>
                 </div>
                 <table class="doc-table">
@@ -145,34 +145,45 @@
             <div class="paper-body">
                 <table class="approval-detail-table">
                     <tr>
-                        <th>*제목</th>
+                        <th>제목</th>
                         <td colspan="3">
                             <div class="form-value" id="detail-title">-</div>
                         </td>
                     </tr>
 
                     <tr>
-                        <th>*참조부서</th>
+                        <th>참조부서</th>
                         <td colspan="3">
                             <div class="form-value" id="detail-referenceDept">-</div>
                         </td>
                     </tr>
 
                     <tr>
-                        <th>*결재자</th>
+                        <th>결재자</th>
                         <td colspan="3">
                             <div class="form-value" id="detail-approverName2">-</div>
                         </td>
                     </tr>
 
-                    <tr>
-                        <th>*시작일 - 종료일</th>
+                    <tr class="detail-row detail-row-vacation">
+                        <th>시작일 - 종료일</th>
                         <td colspan="3">
                             <div class="date-range-wrap">
                                 <span class="form-value short" id="detail-startDate">-</span>
                                 <span class="date-tilde">~</span>
                                 <span class="form-value short" id="detail-endDate">-</span>
                             </div>
+                        </td>
+                    </tr>
+
+                    <tr class="detail-row detail-row-overtime hidden">
+                        <th>연장근무 날짜</th>
+                        <td>
+                            <div class="form-value short" id="detail-workDate">-</div>
+                        </td>
+                        <th>연장근무 시간</th>
+                        <td>
+                            <div class="radio-view-wrap" id="detail-workHour">-</div>
                         </td>
                     </tr>
 

@@ -179,7 +179,7 @@
 
 .paper-title {
     text-align: center;
-    font-size: 52px;
+    font-size: 45px;
     font-weight: 800;
     color: #111;
     letter-spacing: -1px;
@@ -210,16 +210,16 @@
 
 .writer-info-table th,
 .writer-info-table td {
-    height: 44px;
+    height: 40px;
     text-align: center;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .approval-sign-table th,
 .approval-sign-table td {
-    height: 44px;
+    height: 40px;
     text-align: center;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 /* 본문 테이블 */
@@ -232,15 +232,15 @@
     min-width: 160px;
     text-align: left;
     padding: 0 18px;
-    font-size: 24px;
-    height: 78px;
+    font-size: 14px;
+    height: 70px;
     vertical-align: middle;
 }
 
 .approval-detail-table td {
     background: #fff;
     padding: 14px 16px;
-    font-size: 22px;
+    font-size: 14px;
     vertical-align: middle;
 }
 
@@ -267,7 +267,7 @@
 }
 
 .date-tilde {
-    font-size: 24px;
+    font-size: 14px;
     font-weight: 700;
     color: #444;
 }
@@ -280,7 +280,7 @@
     white-space: pre-wrap;
     line-height: 1.7;
     box-sizing: border-box;
-    font-size: 21px;
+    font-size: 14px;
 }
 
 .content-row th,
@@ -324,7 +324,7 @@
 }
 
 .approval-comment-title {
-    font-size: 22px;
+    font-size: 14px;
     font-weight: 700;
     margin-bottom: 10px;
     color: #222;
@@ -336,7 +336,7 @@
     resize: vertical;
     border: 1px solid #cfcfcf;
     padding: 12px;
-    font-size: 18px;
+    font-size: 14px;
     box-sizing: border-box;
     outline: none;
     background: #fff;
