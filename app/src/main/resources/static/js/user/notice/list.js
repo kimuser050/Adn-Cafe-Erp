@@ -25,11 +25,19 @@ function renderTable(voList) {
         str = `<tr><td colspan="6" style="padding:50px;">공지사항이 없습니다.</td></tr>`;
     } else {
         voList.forEach(vo => {
+            const isTop = vo.isTop === 'Y';
+
+            // 클래스와 아이콘/배지 설정
+            const rowClass = isTop ? 'notice-row is-top' : 'notice-row';
+            const topBadge = isTop ? '<span class="top-badge">TOP</span>' : '';
+            const displayNo = isTop ? '<span class="top-icon">🔥</span>' : vo.noticeNo;
+
             str += `
-            <tr onclick="location.href='/notice/detail?no=${vo.noticeNo}'">
-                <td>${vo.noticeNo}</td>
+            <tr onclick="location.href='/notice/detail?no=${vo.noticeNo}'" class="${rowClass}">
+                <td>${displayNo}</td>
                 <td>${vo.category}</td>
-                <td class="text-left">${vo.title}</td> <td>${vo.writerName || '관리자'}</td>
+                <td class="text-left">${topBadge} ${vo.title}</td>
+                <td>${vo.writerName || '관리자'}</td>
                 <td>${vo.createdAt}</td>
                 <td>${vo.hit}</td>
             </tr>`;
