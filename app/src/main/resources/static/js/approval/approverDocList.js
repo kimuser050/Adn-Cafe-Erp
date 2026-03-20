@@ -178,14 +178,14 @@ function renderDocDetail(doc){
     document.querySelector(".detail-row-overtime").classList.add("hidden");
 
     // 휴가
-    if (String(doc.categoryNo) === "1") {
+    if (doc.categoryNo === 1) {
         document.querySelector(".detail-row-vacation").classList.remove("hidden");
         document.querySelector("#detail-startDate").innerText = formatDate(doc.startDate);
         document.querySelector("#detail-endDate").innerText = formatDate(doc.endDate);
     }
 
     // 연장근무
-    if (String(doc.categoryNo) === "2") {
+    if (doc.categoryNo === 2) {
         document.querySelector(".detail-row-overtime").classList.remove("hidden");
         document.querySelector("#detail-workDate").innerText = formatDate(doc.workDate);
         document.querySelector("#detail-workHour").innerText = `${doc.workHour}시간`;
