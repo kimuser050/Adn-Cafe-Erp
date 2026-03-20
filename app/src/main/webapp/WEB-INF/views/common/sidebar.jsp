@@ -58,7 +58,7 @@
                 <div class="nav-sub">
                     <a href="/approval/document/write">문서작성</a>
                     <a href="/approval/document/myDocList/1">내 문서함</a>
-                    <a href="/approval/document/approverDocList">결재함</a>
+                    <a href="/approval/document/approverDocList/1">결재함</a>
                 </div>
             </div>
             <br>

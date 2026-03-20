@@ -101,7 +101,7 @@ function formatDate(value) {
     return value;
 }
 
-async function searchDoc(){
+async function searchMyDoc(){
     const statusCode = document.querySelector("#statusCode").value;
     const categoryNo = document.querySelector("#categoryNo").value;
     const docNo = document.querySelector("#docNo").value;
@@ -117,7 +117,7 @@ async function searchDoc(){
 
     });
 
-    const resp = await fetch(`/api/approval/document/search?${params.toString()}`);
+    const resp = await fetch(`/api/approval/document/searchMyDoc?${params.toString()}`);
     const data = await resp.json();
     const pvo = data.pvo;
     const voList = data.voList;
@@ -173,8 +173,25 @@ function renderDocDetail(doc){
     // document.querySelector("#detail-docNo").innerText = doc.docNo ?? "-";
     document.querySelector("#detail-title").innerText = doc.title ?? "-";
     document.querySelector("#detail-referenceDept").innerText = doc.referenceDept ?? "-";
-    document.querySelector("#detail-startDate").innerText = formatDate(doc.startDate);
-    document.querySelector("#detail-endDate").innerText = formatDate(doc.endDate);
+
+    // 모든 카테고리 행 숨기기
+    document.querySelector(".detail-row-vacation").classList.add("hidden");
+    document.querySelector(".detail-row-overtime").classList.add("hidden");
+
+    // 휴가
+    if (String(doc.categoryNo) === "1") {
+        document.querySelector(".detail-row-vacation").classList.remove("hidden");
+        document.querySelector("#detail-startDate").innerText = formatDate(doc.startDate);
+        document.querySelector("#detail-endDate").innerText = formatDate(doc.endDate);
+    }
+
+    // 연장근무
+    if (String(doc.categoryNo) === "2") {
+        document.querySelector(".detail-row-overtime").classList.remove("hidden");
+        document.querySelector("#detail-workDate").innerText = formatDate(doc.workDate);
+        document.querySelector("#detail-workHour").innerText = `${doc.workHour}시간`;
+    }
+
     document.querySelector("#detail-reason").innerText = doc.reason ?? "-";
     document.querySelector("#detail-content").innerText = doc.content ?? "-";
 

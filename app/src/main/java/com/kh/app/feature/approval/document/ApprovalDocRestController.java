@@ -30,7 +30,6 @@ public class ApprovalDocRestController {
     // 문서 작성
     @PostMapping("write")
     public ResponseEntity<Map<String, String>> insert(@RequestBody ApprovalDocVo vo){
-        System.out.println("vo = " + vo);
         int result = approvalDocService.insert(vo);
 
         if(result != 1){
@@ -46,13 +45,13 @@ public class ApprovalDocRestController {
     // 내 문서함
     @GetMapping("selectMyDocumentList")
     public ResponseEntity<Map<String, Object>> selectMyDocumentList(@RequestParam(required = false , defaultValue = "1") int currentPage , HttpSession session){
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//        vo.setWriterNo(loginMemberVo.getEmpNo());
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        String loginEmpNo = loginMemberVo.getEmpNo();
         int listCount = approvalDocService.selectMyDocListCount();
         int pageLimit = this.pageLimit;
         int boardLimit = this.boardLimit;
         PageVo pvo = new PageVo(listCount , currentPage , pageLimit , boardLimit);
-        List<ApprovalDocVo> voList= approvalDocService.selectMyDocumentList(pvo);
+        List<ApprovalDocVo> voList= approvalDocService.selectMyDocumentList(pvo , loginEmpNo);
 
         Map<String, Object> map = new HashMap<>();
         map.put("pvo" , pvo);
@@ -64,13 +63,13 @@ public class ApprovalDocRestController {
     // 결재함
     @GetMapping("selectApproverDocList")
     public ResponseEntity<Map<String, Object>> selectApproverDocList(@RequestParam(required = false , defaultValue = "1") int currentPage , HttpSession session){
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//        vo.setWriterNo(loginMemberVo.getEmpNo());
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        String loginEmpNo = loginMemberVo.getEmpNo();
         int listCount = approvalDocService.selectApproverDocListCount();
         int pageLimit = this.pageLimit;
         int boardLimit = this.boardLimit;
         PageVo pvo = new PageVo(listCount , currentPage , pageLimit , boardLimit);
-        List<ApprovalDocVo> voList= approvalDocService.selectApproverDocList(pvo);
+        List<ApprovalDocVo> voList= approvalDocService.selectApproverDocList(pvo , loginEmpNo);
 
         Map<String, Object> map = new HashMap<>();
         map.put("pvo" , pvo);
@@ -79,10 +78,12 @@ public class ApprovalDocRestController {
         return ResponseEntity.ok(map);
     }
 
-    // 검색
-    @GetMapping("search")
-    public ResponseEntity<Map<String, Object>> searchDoc(@RequestParam(required = false , defaultValue = "1") int currentPage , ApprovalDocVo vo){
-        int listCount = approvalDocService.selectSearchDocCount(vo);
+    // 검색(기안자 시점)
+    @GetMapping("searchMyDoc")
+    public ResponseEntity<Map<String, Object>> searchMyDoc(@RequestParam(required = false , defaultValue = "1") int currentPage , ApprovalDocVo vo , HttpSession session){
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        String loginEmpNo = loginMemberVo.getEmpNo();
+        int listCount = approvalDocService.searchMyDocCount(vo , loginEmpNo);
         int pageLimit = this.pageLimit;
         int boardLimit = this.boardLimit;
 
@@ -92,7 +93,32 @@ public class ApprovalDocRestController {
         paramMap.put("vo" , vo);
         paramMap.put("pvo" , pvo);
 
-        List<ApprovalDocVo> voList = approvalDocService.searchDoc(paramMap);
+        List<ApprovalDocVo> voList = approvalDocService.searchMyDoc(paramMap , loginEmpNo);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("vo" , vo);
+        resultMap.put("pvo" , pvo);
+        resultMap.put("voList" , voList);
+
+
+        return ResponseEntity.ok(resultMap);
+
+    }// 검색(결재자 시점)
+    @GetMapping("searchApproverDoc")
+    public ResponseEntity<Map<String, Object>> searchApproverDoc(@RequestParam(required = false , defaultValue = "1") int currentPage , ApprovalDocVo vo , HttpSession session){
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        String loginEmpNo = loginMemberVo.getEmpNo();
+        int listCount = approvalDocService.searchApproverDocCount(vo , loginEmpNo);
+        int pageLimit = this.pageLimit;
+        int boardLimit = this.boardLimit;
+
+        PageVo pvo = new PageVo(listCount , currentPage , pageLimit , boardLimit);
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("vo" , vo);
+        paramMap.put("pvo" , pvo);
+
+        List<ApprovalDocVo> voList = approvalDocService.searchApproverDoc(paramMap , loginEmpNo);
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("vo" , vo);
@@ -102,17 +128,6 @@ public class ApprovalDocRestController {
 
         return ResponseEntity.ok(resultMap);
     }
-
-
-//    // 상세조회
-//    @GetMapping("/{docNo}")
-//    public ResponseEntity<Map<String, Object>> selectOne(@PathVariable String docNo){
-//        ApprovalDocVo vo = approvalDocService.selectOne(docNo);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("vo", vo);
-//
-//        return ResponseEntity.ok(map);
-//    }
 
     // 문서 수정 (기안자)
     @PutMapping("/{docNo}")
@@ -172,23 +187,26 @@ public class ApprovalDocRestController {
             @PathVariable String docNo,
             HttpSession session
     ) {
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        String loginEmpNo = loginMemberVo.getEmpNo();
 
-        ApprovalDocVo detailVo = approvalDocService.selectDocDetail(docNo); //, loginMemberVo.getEmpNo()
-        System.out.println("detailVo = " + detailVo);
+        ApprovalDocVo detailVo = approvalDocService.selectDocDetail(docNo , loginEmpNo); //, loginMemberVo.getEmpNo()
         return ResponseEntity.ok(detailVo);
     }
 
     // 승인
-    @PostMapping("{docNo}/approve")
+    @PutMapping("{docNo}/approve")
     public ResponseEntity<Map<String, Object>> approveDoc(
             @PathVariable String docNo,
             @RequestBody ApprovalDocVo vo,
             HttpSession session
     ) {
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-
-        approvalDocService.approveDoc(docNo, vo.getApproverComment());//, loginMemberVo.getEmpNo()
+        System.out.println("docNo = " + docNo);
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        String loginEmpNo = loginMemberVo.getEmpNo();
+        String approverComment = vo.getApproverComment();
+        System.out.println("loginEmpNo = " + loginEmpNo);
+        approvalDocService.approveDoc(docNo, approverComment, loginEmpNo);
 
         Map<String, Object> map = new HashMap<>();
         map.put("msg", "승인 완료");
@@ -196,15 +214,17 @@ public class ApprovalDocRestController {
     }
 
     // 반려
-    @PostMapping("{docNo}/reject")
+    @PutMapping("{docNo}/reject")
     public ResponseEntity<Map<String, Object>> rejectDoc(
             @PathVariable String docNo,
             @RequestBody ApprovalDocVo vo,
             HttpSession session
     ) {
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        String loginEmpNo = loginMemberVo.getEmpNo();
+        String approverComment = vo.getApproverComment();
 
-        approvalDocService.rejectDoc(docNo, vo.getApproverComment());//, loginMemberVo.getEmpNo()
+        approvalDocService.rejectDoc(docNo, approverComment, loginEmpNo);
 
         Map<String, Object> map = new HashMap<>();
         map.put("msg", "반려 완료");
@@ -217,9 +237,9 @@ public class ApprovalDocRestController {
             @PathVariable String docNo,
             HttpSession session
     ) {
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-
-        approvalDocService.deleteDoc(docNo);//, loginMemberVo.getEmpNo()
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        String loginEmpNo = loginMemberVo.getEmpNo();
+        approvalDocService.deleteDoc(docNo, loginEmpNo);
 
         Map<String, Object> map = new HashMap<>();
         map.put("msg", "삭제 완료");
