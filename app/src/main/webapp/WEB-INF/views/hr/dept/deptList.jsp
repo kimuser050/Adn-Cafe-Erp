@@ -72,12 +72,14 @@
                     <thead>
                     <tr>
                         <th>NO</th>
-                        <th>부서명</th>
-                        <th>부서장</th>
-                        <th>인원수</th>
-                        <th>근무위치</th>
-                        <th>등록일</th>
-                        <th>상태</th>
+                        <th>이름</th>
+                        <th>직급</th>
+                        <th>부서/매장</th>
+                        <th>출근</th>
+                        <th>지각</th>
+                        <th>결근</th>
+                        <th>휴가</th>
+                        <th>연장근무시간(h)</th>
                     </tr>
                     </thead>
                     <tbody id="dept-list"></tbody>

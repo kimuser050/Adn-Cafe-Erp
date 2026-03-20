@@ -25,7 +25,7 @@
                 <a href="/hr/pay/list">급여관리</a>
             </div>
         </div>
-
+        
         <div class="nav-group">
             <button type="button" class="nav-main">재무관리</button>
             <div class="nav-sub">
