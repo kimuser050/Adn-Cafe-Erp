@@ -8,7 +8,7 @@
         <img src="/img/common/logo.png" alt="Coffee Prince 로고" class="sidebar-logo-img">
         </a>
     </div>
-
+    
     <nav class="sidebar-nav">
 
         

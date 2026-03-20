@@ -22,38 +22,43 @@
             <%@ include file="/WEB-INF/views/hr/common/attSidebar.jsp" %>
 
                 <main class="page-shell">
-                    <section class="page-content org-page pay-page">
+                    <section class="page-content org-page att-page">
 
-                        <div class="pay-top-spacer"></div>
+                        <div class="att-top-spacer"></div>
 
                         <!-- 요약 카드 -->
                         <div class="org-summary-area">
                             <div class="summary-card">
-                                <div class="summary-title">총 등록 건수</div>
+                                <div class="summary-title">출근</div>
                                 <div class="summary-value" id="total-count">0</div>
                             </div>
 
                             <div class="summary-card summary-card-wide">
-                                <div class="summary-title">총 실지급액</div>
+                                <div class="summary-title">지각</div>
                                 <div class="summary-value" id="total-net-amount">0</div>
                             </div>
 
                             <div class="summary-card">
-                                <div class="summary-title">미확정</div>
+                                <div class="summary-title">결근</div>
                                 <div class="summary-value" id="unconfirmed-count">0</div>
                             </div>
 
                             <div class="summary-card">
-                                <div class="summary-title">확정</div>
+                                <div class="summary-title">휴가</div>
+                                <div class="summary-value" id="confirmed-count">0</div>
+                            </div>
+
+                            <div class="summary-card">
+                                <div class="summary-title">연장근무</div>
                                 <div class="summary-value" id="confirmed-count">0</div>
                             </div>
                         </div>
 
-                        <!-- 급여목록 테이블 -->
+                        <!-- 근태목록 테이블 -->
                         <div class="org-table-card">
 
                             <div class="org-toolbar">
-                                <div class="toolbar-left pay-toolbar-left">
+                                <div class="toolbar-left att-toolbar-left">
                                     <input type="month" id="month" class="form-input month-input">
                                 </div>
 
@@ -73,110 +78,109 @@
                                 </div>
                             </div>
 
-                            <table class="org-table pay-table">
+                            <table class="org-table att-table">
                                 <thead>
                                     <tr>
                                         <th>NO</th>
                                         <th>이름</th>
-                                        <th>사번</th>
                                         <th>직급</th>
-                                        <th>부서</th>
-                                        <th>지급월</th>
-                                        <th>실지급액</th>
-                                        <th>상태</th>
+                                        <th>소속</th>
+                                        <th>출근</th>
+                                        <th>지각</th>
+                                        <th>결근</th>
+                                        <th>휴가</th>
+                                        <th>연장근무시간(h)</th>
                                     </tr>
                                 </thead>
-                                <tbody id="pay-list">
-                                    <tr class="payty-row">
-                                        <td colspan="8">조회된 급여 데이터가 없습니다.</td>
+                                <tbody id="att-list">
+                                    <tr class="att-row">
+                                        <td colspan="8">조회된 근태 이력이 없습니다.</td>
                                     </tr>
                                 </tbody>
                             </table>
 
                             <div class="org-bottom-area">
-                                <button type="button" class="btn btn-sm btn-mid register-btn"
-                                    onclick="goPayRegisterPage()">
-                                    급여등록
-                                </button>
+                                <button type="button" class="btn btn-sm btn-mid register-btn" onclick="goPayRegisterPage()">급여등록</button>
                             </div>
                         </div>
 
                         <!-- ========================= 1) 상세조회 모달 ========================= -->
-                        <div id="pay-modal-wrap" class="org-modal-wrap">
-                            <div class="org-modal pay-detail-modal">
+                        <div id="att-modal-wrap" class="org-modal-wrap">
+                            <div class="org-modal att-detail-modal">
                                 <!-- 모달 헤더 -->
                                 <div class="org-modal-header">
-                                    <h2>○ 급여조회</h2> <button type="button" class="modal-close-btn" onclick="closePayModal()">✕</button>
+                                    <h2>○ 근태조회</h2>
+                                    <button type="button" class="modal-close-btn" onclick="closePayModal()">✕</button>
                                 </div>
                                 <!-- 모달 바디 -->
-                                <div class="org-modal-body pay-detail-body">
+                                <div class="org-modal-body att-detail-body">
                                    
                                     <!-- 모달 1번째 영역 -->
-                                    <div class="payInfo-section">
-                                        <h3 class="payInfo-section-title">직원정보</h3>
-                                        <div class="payInfo-profile-area">
-                                            <div class="payInfo-profile-img">
+                                    <div class="attInfo-section">
+                                        <h3 class="attInfo-section-title">직원정보</h3>
+                                        <div class="attInfo-profile-area">
+                                            <div class="attInfo-profile-img">
                                                  <img id="modal-profile-img" src="/img/common/default-profile.png" alt="프로필"> 
                                             </div>
-                                            <div class="payInfo-grid">
-                                                <div class="payInfo-row">
-                                                     <span class="payInfo-value" id="modal-pay-empName">-</span>
+                                            <div class="attInfo-grid">
+                                                <div class="attInfo-row">
+                                                     <span class="attInfo-value" id="modal-att-empName">-</span>
                                                 </div>
-                                                <div class="payInfo-row">
-                                                     <span class="payInfo-label">부서</span> 
-                                                     <span class="payInfo-value" id="modal-pay-dept">-</span>
+                                                <div class="attInfo-row">
+                                                     <span class="attInfo-label">부서</span> 
+                                                     <span class="attInfo-value" id="modal-att-dept">-</span>
                                                 </div>
-                                                <div class="payInfo-row">
-                                                     <span class="payInfo-label">사번</span> 
-                                                     <span class="payInfo-value" id="modal-pay-empNo">-</span>
+                                                <div class="attInfo-row">
+                                                     <span class="attInfo-label">사번</span> 
+                                                     <span class="attInfo-value" id="modal-att-empNo">-</span>
                                                 </div>
-                                                <div class="payInfo-row">
-                                                     <span class="payInfo-label">직급</span> 
-                                                     <span class="payInfo-value" id="modal-pay-pos">-</span>
+                                                <div class="attInfo-row">
+                                                     <span class="attInfo-label">직급</span> 
+                                                     <span class="attInfo-value" id="modal-att-pos">-</span>
                                                 </div>
                                         </div>
                                         </div>
                                     </div>
 
                                     <!-- 모달 2번째 영역 -->
-                                    <div class="payInfo-section">
-                                        <h3 class="payInfo-section-title">급여상태</h3>
-                                            <div class="payInfo-grid">
-                                                <div class="payInfo-row">
-                                                    <span class="payInfo-label">지급월</span> 
-                                                     <span class="payInfo-value" id="modal-pay-payYearMonth">-</span>
+                                    <div class="attInfo-section">
+                                        <h3 class="attInfo-section-title">급여상태</h3>
+                                            <div class="attInfo-grid">
+                                                <div class="attInfo-row">
+                                                    <span class="attInfo-label">지급월</span> 
+                                                     <span class="attInfo-value" id="modal-att-attYearMonth">-</span>
                                                 </div>
-                                                <div class="payInfo-row">
-                                                     <span class="payInfo-label">상태</span> 
-                                                     <span class="payInfo-value" id="modal-pay-confirmYn">-</span>
+                                                <div class="attInfo-row">
+                                                     <span class="attInfo-label">상태</span> 
+                                                     <span class="attInfo-value" id="modal-att-confirmYn">-</span>
                                                 </div>
                                         </div>
                                         </div>
                                     
                                     <!-- 모달 3번째 영역 -->
-                                    <div class="payInfo-section">
-                                        <h3 class="payInfo-section-title">요약</h3>
-                                            <div class="paySummary-grid">
-                                                <div class="payInfo-row">
-                                                    <span class="payInfo-label">총 지급 금액</span> 
-                                                     <span class="payInfo-value" id="modal-pay-totalEarnAmount">-</span>
+                                    <div class="attInfo-section">
+                                        <h3 class="attInfo-section-title">요약</h3>
+                                            <div class="attSummary-grid">
+                                                <div class="attInfo-row">
+                                                    <span class="attInfo-label">총 지급 금액</span> 
+                                                     <span class="attInfo-value" id="modal-att-totalEarnAmount">-</span>
                                                 </div>
-                                                <div class="payInfo-row">
-                                                     <span class="payInfo-label">총 공제 금액</span> 
-                                                     <span class="payInfo-value" id="modal-pay-totalDeductAmount">-</span>
+                                                <div class="attInfo-row">
+                                                     <span class="attInfo-label">총 공제 금액</span> 
+                                                     <span class="attInfo-value" id="modal-att-totalDeductAmount">-</span>
                                                 </div>
-                                                <div class="payInfo-row">
-                                                     <span class="payInfo-label">실 지급액(총액)</span> 
-                                                     <span class="payInfo-value" id="modal-pay-netAmount">-</span>
+                                                <div class="attInfo-row">
+                                                     <span class="attInfo-label">실 지급액(총액)</span> 
+                                                     <span class="attInfo-value" id="modal-att-netAmount">-</span>
                                                 </div>
                                         </div>
                                         </div>
 
                                     <!-- 모달 4번째 영역 -->
                                      <hr>
-                                    <div class="payInfo-section">
-                                        <h3 class="payInfo-section-title">항목상세</h3>
-                                            <table class = "payDetail-grid">
+                                    <div class="attInfo-section">
+                                        <h3 class="attInfo-section-title">항목상세</h3>
+                                            <table class = "attDetail-grid">
                                                 <thead>
                                                     <tr>
                                                         <th>항목명</th>
@@ -186,14 +190,14 @@
                                                         <th>비고</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="modal-payDetail-list"></tbody>
+                                                <tbody id="modal-attDetail-list"></tbody>
                                             </table>
                                         </div>
   
                                 <div class="org-modal-footer"> 
                                     <button type="button" class="btn btn-sm btn-mid" id="open-edit-btn" onclick="openEditModal()">수정하기</button>
                                      <button type="button" class="btn btn-sm btn-dark" id="toggle-confirm-btn" onclick="toggleConfirmYn()"></button> 
-                                     <button type="button" class="btn btn-sm btn-mid" id="delete-pay-btn" onclick="deletePay()">삭제하기</button>
+                                     <button type="button" class="btn btn-sm btn-mid" id="delete-att-btn" onclick="deletePay()">삭제하기</button>
                                      <button type="button" class="btn btn-sm btn-dark" onclick="closePayModal()">닫기</button>
                                 
                                     
@@ -204,20 +208,20 @@
                     </div>
 
                     <!-- ========================= 2) 수정 모달 ========================= -->
-                        <div id="pay-edit-modal-wrap" class="org-modal-wrap">
-                            <div class="org-modal pay-edit-modal">
+                        <div id="att-edit-modal-wrap" class="org-modal-wrap">
+                            <div class="org-modal att-edit-modal">
                                 <!-- 수정 모달 타이틀 -->
                                 <div class="org-modal-header">
                                     <h2>○ 급여수정</h2> 
                                     <button type="button" class="modal-close-btn" onclick="cancelEditModal()">✕</button>
                                 </div>
                                 <!-- 수정 모달 내용 -->
-                                <div class="org-modal-body pay-edit-body"> 
-                                    <input type="hidden" id="edit-pay-no">
+                                <div class="org-modal-body att-edit-body"> 
+                                    <input type="hidden" id="edit-att-no">
                                     <div class="detail-section">
-                                        <div class="payList-header-row">
+                                        <div class="attList-header-row">
                                     </div>
-                                        <table class="org-table payList-edit-table">
+                                        <table class="org-table attList-edit-table">
                                             <thead>
                                                 <tr>
                                                     <th>항목명</th>
@@ -227,7 +231,7 @@
                                                     <th>비고</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="payList-edit-body"></tbody>
+                                            <tbody id="attList-edit-body"></tbody>
                                         </table>
                                     </div>
                                 </div>
