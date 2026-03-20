@@ -39,9 +39,41 @@ public class NoticeRestController {
         if(loginMemberVo == null){
             throw new IllegalStateException("login required");
         }
+
+        // --- 🔥 [권한 검증 추가] ---
+        String userDept = loginMemberVo.getDeptCode(); // 로그인 유저 부서 코드
+        String category = vo.getCategory();           // 작성하려는 공지 카테고리 ("인사", "재무" 등)
+        boolean isAuthorized = false;
+
+        if ("310100".equals(userDept)) {
+            // 경영혁신실은 모든 카테고리 가능
+            isAuthorized = true;
+        } else {
+            // 일반 부서는 본인 부서 카테고리 또는 "공통"만 가능
+            if ("공통".equals(category)) {
+                isAuthorized = true;
+            } else if ("인사".equals(category) && "310101".equals(userDept)) {
+                isAuthorized = true;
+            } else if ("재무".equals(category) && "310102".equals(userDept)) {
+                isAuthorized = true;
+            } else if ("품질".equals(category) && "310103".equals(userDept)) {
+                isAuthorized = true;
+            }
+        }
+
+        if (!isAuthorized) {
+            log.warn("권한 없는 공지 작성 시도: 유저부서={}, 카테고리={}", userDept, category);
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("result", "0");
+            errorMap.put("msg", "해당 카테고리의 공지사항을 작성할 권한이 없습니다.");
+            return ResponseEntity.status(403).body(errorMap); // 403 Forbidden 반환
+        }
+        // --- [권한 검증 끝] ---
+
         String loginMemberNo = loginMemberVo.getEmpNo();
         vo.setWriterNo(loginMemberNo);
-        int result = noticeService.insert(vo,file );
+
+        int result = noticeService.insert(vo, file);
 
         if (result != 1) {
             String errMsg = "[B-100] insert err...";
