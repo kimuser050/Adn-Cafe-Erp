@@ -25,44 +25,35 @@
                 <div class="qna-title-text">문의게시판</div>
 
                 <div class="qna-form-box">
-                    <form id="insertForm" enctype="multipart/form-data">
-                        <div class="form-row">
-                            <div class="form-group title-group">
-                                <label for="title">제목</label>
-                                <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
-                            </div>
-
-                            <div class="form-group secret-group">
-                                <input type="checkbox" id="secretYn" name="secretYn" value="Y">
-                                <label for="secretYn">비밀글 설정</label>
-                            </div>
-
-                            <div class="form-group type-group">
-                                <label for="typeCode">카테고리</label>
-                                <select id="typeCode" name="typeCode">
-                                    <option value="1">시스템</option>
-                                    <option value="2">재무</option>
-                                    <option value="3">인사</option>
-                                    <option value="4">품질</option>
-                                    <option value="5">공통</option>
-                                </select>
-                            </div>
+                    <div class="form-row">
+                        <div class="form-group title-group">
+                            <label>제목</label>
+                            <input type="text" placeholder="제목을 입력하세요">
                         </div>
 
-                        <div class="content-group">
-                            <label for="content">내용</label>
-                            <textarea id="content" name="content" placeholder="문의하실 내용을 입력해주세요."></textarea>
+                        <div class="form-group type-group">
+                            <label>카테고리</label>
+                            <select>
+                                <option>시스템</option>
+                            </select>
                         </div>
 
-                        <div class="btn-area">
-                            <div class="file-upload-part">
-                                <button type="button" class="btn-custom" onclick="$('#file-input').click();">파일첨부</button>
-                                <input type="file" id="file-input" name="file" multiple>
-                                <span id="file-name-display" class="file-name-display"></span>
-                            </div>
-                            <button type="button" class="btn-custom" onclick="submitQuestion();">등록하기</button>
+                        <div class="secret-group">
+                            <label>
+                                <input type="checkbox" name="secretYn"> 비밀글 설정
+                            </label>
                         </div>
-                    </form>
+                    </div>
+
+                    <div class="content-group">
+                        <label>내용</label>
+                        <textarea placeholder="문의하실 내용을 입력해주세요."></textarea>
+                    </div>
+
+                    <div class="btn-area">
+                        <button type="button" class="btn-custom">파일첨부</button>
+                        <button type="button" class="btn-custom">등록하기</button>
+                    </div>
                 </div>
             </div>
         </div>
