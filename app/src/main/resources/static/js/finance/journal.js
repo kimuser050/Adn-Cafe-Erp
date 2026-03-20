@@ -24,7 +24,19 @@ async function getAccountList() {
 // 전표등록
 async function insertJournal() {
 
+
+    const journalDate = document.querySelector("#journalDate").value;
+    if (!journalDate) {
+        alert("전표 일자를 선택해주세요");
+        return;
+    }
+
     const debitInput = document.querySelector(".debitInput").value;
+    if (!debitInput) {
+        alert("목록에 없는 차변 계정입니다. 자동완성 목록에서 선택해주세요.");
+        return;
+    }
+
     const option = document.querySelectorAll("#accountOptions option");
     let accountNo = "";
     for (let opt of option) {
@@ -35,6 +47,10 @@ async function insertJournal() {
     }
 
     const creditInput = document.querySelector(".creditInput").value;
+    if (!creditInput) {
+        alert("목록에 없는 대변 계정입니다. 자동완성 목록에서 선택해주세요.");
+        return;
+    }
     const option2 = document.querySelectorAll("#accountOptions option");
     let accountNo2 = "";
     for (let opt of option2) {
@@ -47,7 +63,14 @@ async function insertJournal() {
 
     const debit = document.querySelector("#debit").value;
     const credit = document.querySelector("#credit").value;
-    const journalDate = document.querySelector("#journalDate").value;
+    if (debit <= 0 || credit <= 0) {
+        alert("금액은 0원보다 커야 합니다.");
+        return;
+    }
+    if (debit !== credit) {
+        alert("차변 금액과 대변 금액이 일치해야 합니다.");
+        return;
+    }
 
     const data = [
         {
@@ -98,6 +121,11 @@ function clear() {
 
 async function selectJournal() {
     const journalDate = document.querySelector("#journalDate").value;
+    if (!journalDate) {
+        alert("조회할 일자를 선택해주세요.");
+        return;
+    }
+
     const resp = await fetch(`/journal/selectJournal?journalDate=${journalDate}`);
 
     const voList = await resp.json();
@@ -105,12 +133,17 @@ async function selectJournal() {
     if (resp.ok) {
         const tbody = document.querySelector("#journalListBody");
         let str = "";
+        if (voList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">조회된 전표가 없습니다.</td></tr>`;
+            total([]); // 총계 0원 처리
+            return;
+        }
+
         for (let i = 0; i < voList.length; i += 2) {
             const debitVo = voList[i];
             const creditVo = voList[i + 1];
             str += `
                 <tr>
-                    <td rowspan="2"><input type="checkbox"></td>
                     <td rowspan="2">${debitVo.journalDate.substring(0, 10)}</td>
                     <td rowspan="2">${debitVo.journalNo}</td>
                     <td>${debitVo.accountName}</td>
@@ -191,8 +224,11 @@ function closeModal() {
 async function updateJournal() {
     const journalNo = document.querySelector("#modalJournalNo").value;
     const journalDate = document.querySelector("#modalDate").value;
+    if (!journalDate) { alert("일자를 선택해주세요."); return; }
 
     const modalDebitAccountName = document.querySelector("#modalDebitAccountName").value;
+    if (!modalDebitAccountName) { alert("차변 계정을 입력해주세요. 자동완성 목록에서 선택해주세요."); return; }
+
     const option = document.querySelectorAll("#accountOptions option");
     let accountNo = "";
     for (let opt of option) {
@@ -201,9 +237,12 @@ async function updateJournal() {
             break;
         }
     }
+
     const debit = document.querySelector("#modalDebit").value;
 
     const modalCreditAccountName = document.querySelector("#modalCreditAccountName").value;
+    if (!modalCreditAccountName) { alert("대변 계정을 입력해주세요. 자동완성 목록에서 선택해주세요."); return; }
+
     const option2 = document.querySelectorAll("#accountOptions option");
     let accountNo2 = "";
     for (let opt of option2) {
@@ -213,6 +252,13 @@ async function updateJournal() {
         }
     }
     const credit = document.querySelector("#modalCredit").value;
+
+    if (debit <= 0 || credit <= 0) {
+        alert("금액은 0원보다 커야 합니다."); return;
+    }
+    if (debit !== credit) {
+        alert("차변 금액과 대변 금액이 일치해야 합니다."); return;
+    }
 
     const data = [
         {
@@ -275,6 +321,10 @@ async function deleteJournal(no) {
 // 총계정원장
 async function findAccount() {
     const selectAccount = document.querySelector("#accountInput").value;
+    if (!selectAccount) {
+        alert("조회할 계정을 입력해주세요. 자동완성 목록에서 선택해주세요.");
+        return;
+    }
     const option = document.querySelectorAll("#accountOptions option");
     let accountNo = "";
     for (let opt of option) {
@@ -288,6 +338,11 @@ async function findAccount() {
     const voList = await resp.json();
 
     const tbody = document.querySelector("#journalListBody");
+
+    if (voList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">해당 계정의 거래 내역이 없습니다.</td></tr>`;
+        return;
+    }
 
     let str = "";
     for (const vo of voList) {
@@ -309,11 +364,17 @@ async function findAccount() {
 async function findMonthAccount() {
 
     const journalDate = document.querySelector("#journalDate").value;
+    if (!journalDate) { alert("조회할 월을 선택해주세요."); return; }
 
     const resp = await fetch(`/journal/monthListData?journalDate=${journalDate}`);
     const voList = await resp.json();
 
     const tbody = document.querySelector("#journalListBody");
+
+    if (voList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">조회된 내역이 없습니다.</td></tr>`;
+        return;
+    }
 
     let str = "";
     for (const vo of voList) {
@@ -332,11 +393,17 @@ async function findMonthAccount() {
 
 async function findDailyAccount() {
     const journalDate = document.querySelector("#journalDate").value;
+    if (!journalDate) { alert("조회할 일자를 선택해주세요."); return; }
 
     const resp = await fetch(`/journal/dailyListData?journalDate=${journalDate}`);
     const voList = await resp.json();
 
     const tbody = document.querySelector("#journalListBody");
+
+    if (voList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">조회된 내역이 없습니다.</td></tr>`;
+        return;
+    }
 
     let str = "";
     for (const vo of voList) {

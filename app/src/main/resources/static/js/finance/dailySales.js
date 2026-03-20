@@ -9,17 +9,22 @@ window.onload = function () {
 //제품명 리스트 가져오기
 
 async function getDailySales() {
-    const resp = await fetch(`/dailySales/getProductList`);
-    const voList = await resp.json();
+    try {
+        const resp = await fetch(`/dailySales/getProductList`);
+        const voList = await resp.json();
 
-    const productOptions = document.querySelector("#productOptions");
+        const productOptions = document.querySelector("#productOptions");
 
-    let str = "";
-    for (const vo of voList) {
-        str += `<option value="${vo.productsName}" data-no="${vo.productsNo}"></option>`
+        let str = "";
+        for (const vo of voList) {
+            str += `<option value="${vo.productsName}" data-no="${vo.productsNo}"></option>`
+        }
+
+        productOptions.innerHTML = str;
+    } catch (error) {
+        console.error("제품 목록 로드 실패:", error);
+        alert("제품조회에 실패했습니다.");
     }
-
-    productOptions.innerHTML = str;
 }
 
 
@@ -39,16 +44,21 @@ function getPayment() {
 
 //매장명 리스트 가져오기
 async function getStoreList() {
-    const resp = await fetch(`/dailySales/getStoreList`);
-    const voList = await resp.json();
-    const storeOptions = document.querySelector("#storeOptions");
+    try {
+        const resp = await fetch(`/dailySales/getStoreList`);
+        const voList = await resp.json();
+        const storeOptions = document.querySelector("#storeOptions");
 
-    let str = "";
-    for (const vo of voList) {
-        str += `<option value="${vo.storeName}" data-no="${vo.storeNo}"></option>`
+        let str = "";
+        for (const vo of voList) {
+            str += `<option value="${vo.storeName}" data-no="${vo.storeNo}"></option>`
+        }
+
+        storeOptions.innerHTML = str;
+    } catch (error) {
+        console.error("매장 목록 로드 실패:", error);
+        alert("매장조회에 실패했습니다.");
     }
-
-    storeOptions.innerHTML = str;
 }
 
 
@@ -58,7 +68,12 @@ async function getStoreList() {
 async function salesList() {
     const salesDate = document.querySelector("#salesDate").value;
     const storeInput = document.querySelector(".storeInput").value;
-    if (!salesDate || !storeInput) {
+    if (!salesDate) {
+        alert("조회할 일자를 선택해주세요.");
+        return;
+    }
+    if (!storeInput) {
+        alert("조회할 매장을 입력해주세요.");
         return;
     }
 
@@ -70,16 +85,21 @@ async function salesList() {
             break;
         }
     }
+    if (!storeNo) {
+        alert("목록에 없는 매장입니다.");
+        return;
+    }
 
-    const resp = await fetch(`/dailySales/listDailyData?salesDate=${salesDate}&storeNo=${storeNo}`);
-    const data = await resp.json();
-    const voList = data.voList;
+    try {
+        const resp = await fetch(`/dailySales/listDailyData?salesDate=${salesDate}&storeNo=${storeNo}`);
+        const data = await resp.json();
+        const voList = data.voList;
 
-    const tbody = document.querySelector(".body tbody")
+        const tbody = document.querySelector(".body tbody")
 
-    let str = "";
-    for (const vo of voList) {
-        str += `
+        let str = "";
+        for (const vo of voList) {
+            str += `
                 <tr>
                     <td>${vo.salesDate}</td>
                     <td>${vo.totalSales}</td>
@@ -95,9 +115,13 @@ async function salesList() {
                     <td><button onclick="delSales('${vo.salesNo}','${storeNo}');">삭제하기</button></td>
                 </tr>
         `
-    }
+        }
 
-    tbody.innerHTML = str;
+        tbody.innerHTML = str;
+    } catch (error) {
+        console.error(error);
+        alert("매출 조회 중 오류가 발생했습니다.");
+    }
 
 }
 
@@ -106,7 +130,17 @@ async function salesList() {
 
 async function insertDaily() {
 
+    const salesDate = document.querySelector("#salesDate").value;
+    if (!salesDate) {
+        alert("매출 일자를 선택해주세요.");
+        return;
+    }
+
     const storeInput = document.querySelector(".storeInput").value;
+    if (!storeInput) {
+        alert("매장을 선택해주세요.");
+        return;
+    }
     const storeOptions = document.querySelectorAll("#storeOptions option");
     let storeNo = "";
     for (let opt of storeOptions) {
@@ -115,8 +149,11 @@ async function insertDaily() {
             break;
         }
     }
+    if (!storeNo) {
+        alert("유효한 매장을 선택해주세요.");
+        return;
+    }
 
-    const salesDate = document.querySelector("#salesDate").value;
 
     const dataRow = document.querySelectorAll("tbody tr");
     const dataList = [];
@@ -149,8 +186,21 @@ async function insertDaily() {
                 }
             }
 
+            if (!paymentCd) {
+                alert(`${i + 1}번째 줄: 올바른 결제방법(현금/카드)을 선택해주세요.`);
+                return;
+            }
+
             const unitPrice = row.querySelector(".unitPrice").value;
             const quantity = row.querySelector(".quantity").value;
+            if (isNaN(unitPrice) || unitPrice < 0) {
+                alert(`${i + 1}번째 줄: 단가를 올바르게 입력해주세요.`);
+                return;
+            }
+            if (isNaN(quantity) || quantity <= 0) {
+                alert(`${i + 1}번째 줄: 수량은 1 이상이어야 합니다.`);
+                return;
+            }
 
             dataList.push({
                 storeNo: storeNo,
@@ -163,19 +213,29 @@ async function insertDaily() {
         }
     }
 
-    const resp = await fetch(`/dailySales/insertDaily`, {
-        method: "post",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dataList)
-    });
+    if (dataList.length === 0) {
+        alert("등록할 매출 내역을 최소 한 줄 이상 입력해주세요.");
+        return;
+    }
 
-    if (resp.ok) {
-        alert("매출 등록 성공");
-        location.href = `/dailySales/listDaily`
-    } else {
-        alert("매출 등록 실패");
+    try {
+        const resp = await fetch(`/dailySales/insertDaily`, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataList)
+        });
+
+        if (resp.ok) {
+            alert("매출 등록 성공");
+            location.href = `/dailySales/listDaily`
+        } else {
+            alert("매출 등록 실패");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("서버 통신 중 오류가 발생했습니다.");
     }
 }
 
@@ -223,6 +283,10 @@ async function editSales() {
             break;
         }
     }
+    if (!storeNo) {
+        alert("유효한 매장을 선택해주세요.");
+        return;
+    }
 
     const salesNo = document.querySelector("#modalSalesNo").value;
     const salesDate = document.querySelector("#modalSalesDate").value;
@@ -235,8 +299,22 @@ async function editSales() {
             break;
         }
     }
+    if (!productNo) {
+        alert("유효한 제품을 선택해주세요.");
+        return;
+    }
+
     const unitPrice = document.querySelector("#modalUnitPrice").value;
     const quantity = document.querySelector("#modalQuantity").value;
+    if (isNaN(unitPrice) || unitPrice < 0) {
+        alert("단가를 올바르게 입력해주세요.");
+        return;
+    }
+    if (isNaN(quantity) || quantity <= 0) {
+        alert("수량은 1 이상이어야 합니다.");
+        return;
+    }
+
     const paymentInput = document.querySelector("#modalPayment").value;
     let paymentCd = "";
     if (paymentInput === "C" || paymentInput === "D") {
@@ -250,23 +328,32 @@ async function editSales() {
             }
         }
     }
+    if (!paymentCd) {
+        alert("올바른 결제방법을 선택해주세요.");
+        return;
+    }
 
-    const resp = await fetch(`/dailySales/editDaily`, {
-        method: "put",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            storeNo, salesNo, salesDate, productNo, unitPrice, quantity, paymentCd
+    try {
+        const resp = await fetch(`/dailySales/editDaily`, {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                storeNo, salesNo, salesDate, productNo, unitPrice, quantity, paymentCd
+            })
         })
-    })
 
-    if (resp.ok) {
-        alert("매출 수정 성공");
-        closeModal();
-        salesList();
-    } else {
-        alert("매출 수정 실패");
+        if (resp.ok) {
+            alert("매출 수정 성공");
+            closeModal();
+            salesList();
+        } else {
+            alert("매출 수정 실패");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("수정 중 오류가 발생했습니다.");
     }
 }
 
@@ -276,15 +363,20 @@ async function delSales(no, storeNo) {
     console.log(no, storeNo);
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
-    const resp = await fetch(`/dailySales/delDaily?salesNo=${no}&storeNo=${storeNo}`, {
-        method: "delete"
-    });
+    try {
+        const resp = await fetch(`/dailySales/delDaily?salesNo=${no}&storeNo=${storeNo}`, {
+            method: "delete"
+        });
 
-    if (resp.ok) {
-        alert("매출 삭제 성공");
-        salesList();
-    } else {
-        alert("매출 삭제 실패");
+        if (resp.ok) {
+            alert("매출 삭제 성공");
+            salesList();
+        } else {
+            alert("매출 삭제 실패");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("삭제 중 오류가 발생했습니다.");
     }
 
 }

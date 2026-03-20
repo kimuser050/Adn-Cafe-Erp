@@ -2,11 +2,13 @@
 async function incomeState() {
 
     const journalDate = document.querySelector("#journalDate").value;
+    if (!journalDate) {
+        alert("조회할 일자를 선택해주세요.");
+        return;
+    }
 
     const resp = await fetch(`/journal/incomeStateData?journalDate=${journalDate}`);
     const voList = await resp.json();
-
-    console.log("최종 리스트:", voList);
 
     const tbody = document.querySelector("#journalListBody");
     tbody.innerHTML = "";
