@@ -157,4 +157,5 @@ public interface JournalMapper {
             ORDER BY A.ACCOUNT_NO
             """)
     List<JournalVo> incomeState(@Param("journalDate") String journalDate);
+
 }

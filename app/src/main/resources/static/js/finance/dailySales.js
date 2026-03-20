@@ -2,8 +2,25 @@ window.onload = function () {
     getDailySales();
     getPayment();
     getStoreList();
+    setMyStore();
 }
 
+//본인의 지점명 가져오기
+
+async function setMyStore() {
+    try {
+        const resp = await fetch(`/dailySales/getMyStoreData`);
+        const storeVo = await resp.json();
+
+        if (storeVo && storeVo.storeName) {
+            const storeInput = document.querySelector(".storeInput");
+            storeInput.value = storeVo.storeName;
+            storeInput.setAttribute("readonly", true);
+        }
+    } catch (error) {
+        console.log("점주 정보가 없거나 에러 발생");
+    }
+}
 
 
 //제품명 리스트 가져오기
@@ -202,6 +219,8 @@ async function insertDaily() {
                 return;
             }
 
+            const totalSales = Number(unitPrice) * Number(quantity);
+
             dataList.push({
                 storeNo: storeNo,
                 salesDate: salesDate,
@@ -209,6 +228,7 @@ async function insertDaily() {
                 unitPrice: unitPrice,
                 quantity: quantity,
                 paymentCd: paymentCd,
+                totalSales: String(totalSales)
             });
         }
     }
@@ -218,6 +238,7 @@ async function insertDaily() {
         return;
     }
 
+    console.log("서버로 보내는 데이터 확인:", dataList);
     try {
         const resp = await fetch(`/dailySales/insertDaily`, {
             method: "post",
