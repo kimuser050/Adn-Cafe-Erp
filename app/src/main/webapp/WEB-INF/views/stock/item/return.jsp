@@ -15,67 +15,60 @@
     <div class="app-shell">
         <%@ include file="/WEB-INF/views/stock/common/returnSidebar.jsp" %>
 
-       <main class="main-content">
-    <div class="return-container">
-        <div class="return-title-tag">반품 신청</div>
-
-        <div class="return-form-card">
-            
-            <div class="form-row">
-                <div class="input-group-row">
-                    <label>상품이름</label>
-                    <div class="input-wrap">
-                        <select id="productName" class="form-control">
-                            <option value="우유2L">우유2L</option>
-                            <option value="원두커피">원두 커피</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="input-group-row label-left">
-                    <label>수량</label>
-                    <div class="input-wrap">
-                        <div class="qty-pill">
-                            <button type="button" onclick="changeQty(1)">+</button>
-                            <input type="text" id="quantity" value="1" readonly>
-                            <button type="button" onclick="changeQty(-1)">-</button>
+        <main class="content-container">
+            <div class="return-box">
+                <div class="box-header">반품 신청</div>
+                
+                <form id="returnForm" class="return-grid">
+                    <div class="column">
+                        <div class="input-item">
+                            <label>매장 명</label>
+                            <input type="text" value="강남 지점" readonly class="readonly-input">
+                            <input type="hidden" id="storeCode" value="S001"> 
+                        </div>
+                        
+                        <div class="input-item">
+                            <label>상품 명</label>
+                            <input type="text" id="productName" value="원두 커피" placeholder="상품명을 입력하세요">
+                        </div>
+                        
+                        <div class="input-item">
+                            <label>사유</label>
+                            <textarea id="reason" placeholder="내용을 입력하세요">맘에 안듬 걍 암튼 안들어요</textarea>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="form-row align-top">
-                <div class="input-group-row vertical-stack">
-                    <label>사유</label>
-                    <div class="textarea-wrap">
-                        <textarea id="reason" class="form-textarea"></textarea>
+                    <div class="column">
+                        <div class="input-item">
+                            <label>수량</label>
+                            <div class="qty-wrapper">
+                                <button type="button" onclick="changeQty(-1)">-</button>
+                                <input type="number" id="quantity" value="10" readonly>
+                                <button type="button" onclick="changeQty(1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="input-item">
+                            <label>접수일</label>
+                            <input type="text" id="enrollDate" value="2026-03-19" readonly class="readonly-input">
+                        </div>
+
+                        <div class="input-item">
+                            <label>상태</label>
+                            <select id="status">
+                                <option value="W" selected>정상</option>
+                                <option value="R">반품진행</option>
+                                <option value="C">완료</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="input-group-row vertical-stack label-left">
-                    <label>접수일</label>
-                    <div class="input-wrap date-box">
-                        <input type="text" id="enrollDate" class="form-control text-center date-input" value="2026-03-03" readonly>
+
+                    <div class="button-area">
+                        <button type="button" class="btn-save" onclick="submitReturn()">저장</button>
                     </div>
-                </div>
+                </form>
             </div>
-
-            <div class="form-row full-width">
-                <div class="input-group-row full-width">
-                    <label>매장이름</label>
-                    <div class="input-wrap">
-                        <select id="storeCode" class="form-control store-select">
-                            <option value="강남지점">▲ &nbsp;&nbsp;&nbsp; 강남지점 &nbsp;&nbsp;&nbsp; ▼</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-row button-row">
-                <div class="btn-container">
-                    <button type="button" class="btn-submit" onclick="submitReturn()">신청하기</button>
-                </div>
-            </div>
-
-        </div> </div> </main>
+        </main>
     </div>
 </body>
 </html>

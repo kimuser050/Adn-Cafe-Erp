@@ -40,9 +40,9 @@
             <div class="nav-sub">
                 <a href="/stock/order" >발주신청</a>
                 <a href="/stock/return" class="active">반품신청</a>
-                <a href="#">반품검수</a>
+                <a href="/stock/check">반품검수</a>
                 <a href="/stock/item">본사품목</a>
-                <a href="#">상품관리</a>
+                <a href="/stock/products">상품관리</a>
             </div>
         </div>
 

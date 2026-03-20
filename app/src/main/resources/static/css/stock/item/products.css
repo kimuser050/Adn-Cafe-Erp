@@ -1,0 +1,312 @@
+/* 1. 기본 배경 및 폰트 설정 */
+body { 
+    background-color: #d1c8b8; /* 따뜻한 베이지톤 배경 */
+    margin: 0; 
+    font-family: 'Pretendard', -apple-system, sans-serif; 
+    overflow-x: hidden; 
+}
+
+/* 2. 레이아웃: 사이드바 제외 나머지 공간 전체 차지 */
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content { 
+    flex: 1;                /* 사이드바 제외 우측 공간 꽉 채우기 */
+    padding: 40px 60px;     /* 상하좌우 적절한 여백 */
+    display: flex; 
+    justify-content: center; /* 흰색 컨테이너를 가로 중앙에 배치 */
+    align-items: flex-start; 
+    box-sizing: border-box;
+}
+
+/* 3. 흰색 카드 컨테이너: 디자인 핵심 */
+.content-container {
+    background: #f8f7f5;    /* 2번 이미지와 동일한 톤의 화이트 */
+    width: 100%;
+    max-width: 1300px;      /* 너무 커지는 것 방지 */
+    padding: 45px 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* 부드러운 그림자 */
+    
+    /* 스크롤 방지: 고정 높이 제거하고 콘텐츠에 따라 유동적으로 조절 */
+    min-height: auto; 
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* 4. 헤더 및 검색바 */
+.header-box h2 {
+    color: #4e342e; /* 짙은 브라운 */
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+.search-bar { 
+    margin-bottom: 25px; 
+    display: flex; 
+    gap: 12px; 
+    align-items: center; 
+    padding-bottom: 20px;
+    border-bottom: 1.5px solid #e5e0d8; /* 구분선 */
+}
+
+.search-bar label {
+    font-weight: 600;
+    color: #5d4037;
+    margin-right: 5px;
+}
+
+.search-bar input { 
+    padding: 10px 15px; 
+    border: 1px solid #d7ccc8; 
+    border-radius: 6px; 
+    width: 280px; 
+    font-size: 15px;
+}
+
+.btn-search { 
+    background: #6d4c41; /* 검색 버튼 브라운 */
+    color: white; 
+    border: none; 
+    padding: 10px 22px; 
+    border-radius: 6px; 
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-search:hover {
+    background: #5d4037;
+}
+
+/* 5. 테이블 스타일: 가로 100% 꽉 채우기 및 행 높이 최적화 */
+.data-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 10px;
+}
+
+.data-table th { 
+    background: #e5e0d8; /* 헤더 배경색 */
+    padding: 15px; 
+    border-bottom: 2px solid #d1c8b8; 
+    color: #4e342e; 
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.data-table td { 
+    padding: 14px; 
+    text-align: center; 
+    border-bottom: 1px solid #efebe9; 
+    color: #5d4037;
+    font-size: 15px;
+}
+
+.data-table tr:hover { 
+    background: #f1ede4; /* 마우스 올렸을 때 색상 변화 */
+    cursor: pointer; 
+}
+
+/* 6. 페이징: 테이블 바로 아래 중앙 정렬 */
+.pagination-container { 
+    display: flex; 
+    justify-content: center; 
+    gap: 8px; 
+    margin: 35px 0; 
+}
+
+.pagination-container button { 
+    border: 1px solid #d1c8b8; 
+    background: white; 
+    padding: 8px 14px; 
+    cursor: pointer; 
+    border-radius: 5px; 
+    color: #5d4037;
+}
+
+.pagination-container button.active { 
+    background: #6d4c41; 
+    color: white; 
+    border-color: #6d4c41;
+}
+
+/* 7. 하단 등록 버튼: 이미지 2번 위치 고정 */
+.action-buttons { 
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px; /* 페이징과의 간격 */
+}
+
+.btn-register { 
+    background: #4e342e; /* 아주 짙은 브라운 */
+    color: white; 
+    border: none; 
+    padding: 14px 35px; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    font-size: 17px; 
+    cursor: pointer; 
+    transition: transform 0.1s;
+}
+
+.btn-register:active {
+    transform: scale(0.98); /* 클릭 시 꾹 눌리는 효과 */
+}
+
+/* =========================================
+   8. 모달 스타일 (이미지 2번 감성으로 환골탈태)
+   ========================================= */
+
+/* 모달 전체 배경 */
+.modal-overlay {
+    display: none; 
+    position: fixed; 
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); /* 배경을 조금 더 어둡게 해서 집중도 향상 */
+    justify-content: center; 
+    align-items: center; 
+    z-index: 2000;
+}
+
+/* 모달창 본체 */
+.modal-window { 
+    background: #ffffff; 
+    padding: 50px;           /* 여백을 넉넉하게 */
+    border-radius: 25px;    /* 부드러운 곡선 적용 */
+    width: 500px;           /* 적절한 가로 너비 */
+    box-shadow: 0 15px 50px rgba(0,0,0,0.2); 
+    position: relative;
+}
+
+/* 모달 제목 */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e5e0d8;
+    padding-bottom: 15px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #4e342e;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* 닫기 버튼 (X) */
+.close-btn {
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+}
+
+/* 입력 폼 레이아웃 */
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 입력 칸 사이 간격 */
+}
+
+/* 입력 그룹 (라벨 + 인풋) */
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.input-group label {
+    width: 80px;
+    font-weight: 700;
+    color: #5d4037;
+    font-size: 16px;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #d7ccc8;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fbfaf8;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #6d4c41;
+    box-shadow: 0 0 5px rgba(109, 76, 65, 0.2);
+}
+
+/* 하단 버튼 영역 */
+.modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 40px;
+}
+
+/* 모달 전용 버튼 스타일 */
+.modal-footer button {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* 수정/등록 버튼 (브라운) */
+.btn-save, .btn-edit {
+    background: #6d4c41;
+    color: white;
+}
+
+.btn-save:hover, .btn-edit:hover {
+    background: #4e342e;
+}
+
+/* 삭제 버튼 (레드/톤다운) */
+.btn-delete {
+    background: #a94442;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #843534;
+}
+/* 사용여부 버튼 그룹 스타일 */
+.status-btn-group {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+}
+
+.btn-status {
+    flex: 1;
+    padding: 12px 0;
+    border: 1px solid #d7ccc8;
+    background-color: #fbfaf8;
+    color: #8d6e63;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* 선택되었을 때의 스타일 (이미지 2번 포인트 컬러) */
+.btn-status.selected {
+    background-color: #6d4c41;
+    color: white;
+    border-color: #6d4c41;
+}
+
+.btn-status:hover:not(.selected) {
+    background-color: #efebe9;
+}
