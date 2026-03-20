@@ -33,8 +33,21 @@
 
                         <div class="form-group type-group">
                             <label>카테고리</label>
-                            <select>
-                                <option>시스템</option>
+                            <select name="categoryCode" id="categorySelect">
+                                <c:choose>
+                                    <c:when test="${sessionScope.loginMemberVo.deptCode eq '310101'}">
+                                        <option value="310101" selected>인사</option>
+                                    </c:when>
+                                    <c:when test="${sessionScope.loginMemberVo.deptCode eq '310102'}">
+                                        <option value="310102" selected>재무</option>
+                                    </c:when>
+                                    <c:when test="${sessionScope.loginMemberVo.deptCode eq '310103'}">
+                                        <option value="310103" selected>품질</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="common">공통</option>
+                                    </c:otherwise>
+                                </c:choose>
                             </select>
                         </div>
 

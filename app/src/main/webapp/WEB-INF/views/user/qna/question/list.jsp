@@ -61,3 +61,13 @@
     </div>
 </body>
 </html>
+
+<script>
+    $(document).ready(function() {
+        const msg = "${alertMsg}";
+
+        if (msg && msg.length > 0) {
+            alert(msg);
+        }
+    });
+</script>

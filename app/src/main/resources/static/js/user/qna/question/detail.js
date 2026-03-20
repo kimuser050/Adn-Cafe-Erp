@@ -85,7 +85,11 @@ async function fetchDetailData() {
             answerSection.style.display = "none";
             if(btnAnswer) {
                 btnAnswer.style.display = "inline-block";
-                btnAnswer.onclick = () => { location.href = `/qna/answer/insert?no=${no}`; };
+
+                // 🔥 수정된 부분: no와 함께 category(typeCode)를 파라미터로 전달
+                btnAnswer.onclick = () => {
+                    location.href = `/qna/answer/insert?no=${no}&category=${vo.typeCode}`;
+                };
             }
         }
 

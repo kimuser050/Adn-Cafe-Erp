@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -18,7 +19,7 @@ public class MemberViewController {
 
     private final MemberService memberService;
 
-    @GetMapping("join")
+    @GetMapping("/join")
     public String join(){
         return "user/member/join";
     }
@@ -30,17 +31,22 @@ public class MemberViewController {
         return ResponseEntity.ok(member);
     }
 
-    @GetMapping("logout")
+    @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("loginMemberVo");
+        session.invalidate(); // 세션 무효화
         return "redirect:/";  // 메인 페이지로 리다이렉트
     }
 
     @GetMapping("mypage")
-    public String update(HttpSession session){
+    public String update(HttpSession session, RedirectAttributes ra) {
         if (session.getAttribute("loginMemberVo") == null) {
-            throw new IllegalStateException("login plz..");
+            // 일회성 세션 데이터로 메시지 전달 (리다이렉트 시 자동 삭제됨)
+            ra.addFlashAttribute("alertMsg", "로그인이 필요한 서비스입니다.");
+            return "redirect:/"; // 메인 페이지(/)로 리다이렉트
         }
         return "user/member/mypage";
     }
+
+
+
 }
