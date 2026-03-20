@@ -63,20 +63,7 @@
                                     </div>
                                 <% } %>
 
-                                        <div class="home-card-wrap">
-                                            <div class="card-item">
-                                                <div class="card-badge">이달의 우수사원</div>
-                                                <div class="home-card"></div>
-                                            </div>
-                                            <div class="card-item">
-                                                <div class="card-badge">이달의 우수매장</div>
-                                                <div class="home-card"></div>
-                                            </div>
-                                            <div class="card-item">
-                                                <div class="card-badge">공지사항</div>
-                                                <div class="home-card"></div>
-                                            </div>
-                                        </div>
+
                         </div>
 
                     </div>
