@@ -60,3 +60,21 @@ async function join() {
                 alert("회원가입 중 오류가 발생했습니다.");
             }
         }
+
+        function previewImage(input) {
+            const preview = document.getElementById('profile-preview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block'; // 사진이 선택되면 이미지 태그를 보이게 함
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = "";
+                preview.style.display = 'none'; // 선택 취소 시 숨김
+            }
+        }

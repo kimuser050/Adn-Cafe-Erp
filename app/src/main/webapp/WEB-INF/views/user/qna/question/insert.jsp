@@ -28,24 +28,24 @@
                     <div class="form-row">
                         <div class="form-group title-group">
                             <label>제목</label>
-                            <input type="text" placeholder="제목을 입력하세요">
+                            <input type="text" id="title" placeholder="제목을 입력하세요">
                         </div>
 
                         <div class="form-group type-group">
                             <label>카테고리</label>
-                            <select name="categoryCode" id="categorySelect">
+                            <select name="categoryCode" id="typeCode">
                                 <c:choose>
                                     <c:when test="${sessionScope.loginMemberVo.deptCode eq '310101'}">
-                                        <option value="310101" selected>인사</option>
+                                        <option value="3" selected>인사</option>
                                     </c:when>
                                     <c:when test="${sessionScope.loginMemberVo.deptCode eq '310102'}">
-                                        <option value="310102" selected>재무</option>
+                                        <option value="2" selected>재무</option>
                                     </c:when>
                                     <c:when test="${sessionScope.loginMemberVo.deptCode eq '310103'}">
-                                        <option value="310103" selected>품질</option>
+                                        <option value="4" selected>품질</option>
                                     </c:when>
                                     <c:otherwise>
-                                        <option value="common">공통</option>
+                                        <option value="5">공통</option>
                                     </c:otherwise>
                                 </c:choose>
                             </select>
@@ -53,19 +53,22 @@
 
                         <div class="secret-group">
                             <label>
-                                <input type="checkbox" name="secretYn"> 비밀글 설정
+                                <input type="checkbox" id="secretYn" name="secretYn"> 비밀글 설정
                             </label>
                         </div>
                     </div>
 
                     <div class="content-group">
                         <label>내용</label>
-                        <textarea placeholder="문의하실 내용을 입력해주세요."></textarea>
+                        <textarea id="content" placeholder="문의하실 내용을 입력해주세요."></textarea>
                     </div>
 
+                    <div id="file-name-display" style="margin-bottom: 10px; font-size: 14px; color: #8c7361;"></div>
+
                     <div class="btn-area">
-                        <button type="button" class="btn-custom">파일첨부</button>
-                        <button type="button" class="btn-custom">등록하기</button>
+                        <input type="file" id="file-input" style="display: none;" multiple>
+                        <button type="button" class="btn-custom" onclick="document.querySelector('#file-input').click()">파일첨부</button>
+                        <button type="button" class="btn-custom" onclick="submitQuestion()">등록하기</button>
                     </div>
                 </div>
             </div>

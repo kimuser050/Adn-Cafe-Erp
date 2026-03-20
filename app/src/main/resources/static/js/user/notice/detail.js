@@ -1,5 +1,5 @@
 let currentLoginEmpNo = null;
-let currentVo = null;
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
         location.href = "/notice/list";
     }
 });
+
+let currentVo = null;
 
 async function fetchDetail(no) {
     try {
@@ -110,6 +112,13 @@ function setupOwnerButtons(vo) {
         const title   = document.getElementById("edit-title").value.trim();
         const content = document.getElementById("edit-content").value.trim();
         const file    = document.getElementById("edit-file").files[0];
+
+        console.log("=== 수정 요청 디버깅 ===");
+            console.log("noticeNo:", vo.noticeNo);
+            console.log("writerNo:", vo.writerNo);
+            console.log("title:", title);
+            console.log("content:", content);
+            console.log("file:", file);
 
         if (!title)   return alert("제목을 입력하세요.");
         if (!content) return alert("내용을 입력하세요.");
@@ -233,70 +242,66 @@ function renderComments(list, noticeNo, loginEmpNo) {
         `;
         area.appendChild(div);
     });
+
+    area.querySelectorAll(".comment-delete-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+            if (!confirm("댓글을 삭제하시겠습니까?")) return;
+            try {
+                const resp = await fetch("/notice/comment", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        commentNo: btn.dataset.commentNo,
+                        noticeNo: noticeNo
+                    })
+                });
+                if (!resp.ok) throw new Error("삭제 실패");
+                loadComments(noticeNo, loginEmpNo);
+            } catch (err) {
+                alert("삭제 중 오류가 발생했습니다.");
+            }
+        });
+    });
+
+    area.querySelectorAll(".comment-edit-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const no = btn.dataset.commentNo;
+            document.getElementById(`comment-content-${no}`).style.display = "none";
+            document.getElementById(`comment-edit-area-${no}`).style.display = "block";
+        });
+    });
+
+    area.querySelectorAll(".comment-save-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+            const no = btn.dataset.commentNo;
+            const content = document.getElementById(`comment-edit-input-${no}`).value.trim();
+            if (!content) return alert("내용을 입력하세요.");
+            try {
+                const resp = await fetch("/notice/comment", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        commentNo: no,
+                        commentContent: content
+                    })
+                });
+                if (!resp.ok) throw new Error("수정 실패");
+                loadComments(noticeNo, loginEmpNo);
+            } catch (err) {
+                alert("수정 중 오류가 발생했습니다.");
+            }
+        });
+    });
+
+    area.querySelectorAll(".comment-cancel-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const no = btn.dataset.commentNo;
+            document.getElementById(`comment-content-${no}`).style.display = "block";
+            document.getElementById(`comment-edit-area-${no}`).style.display = "none";
+        });
+    });
 }
 
-// 댓글 이벤트 - 딱 한 번만 등록
-document.getElementById("comment-area").addEventListener("click", async (e) => {
-    const btn = e.target;
-    const noticeNo = currentVo?.noticeNo;
-    const loginEmpNo = currentLoginEmpNo;
-
-    // 삭제
-    if (btn.classList.contains("comment-delete-btn")) {
-        if (!confirm("댓글을 삭제하시겠습니까?")) return;
-        try {
-            const resp = await fetch("/notice/comment", {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    commentNo: btn.dataset.commentNo,
-                    noticeNo: noticeNo
-                })
-            });
-            if (!resp.ok) throw new Error("삭제 실패");
-            loadComments(noticeNo, loginEmpNo);
-        } catch (err) {
-            alert("삭제 중 오류가 발생했습니다.");
-        }
-    }
-
-    // 수정 모드 전환
-    if (btn.classList.contains("comment-edit-btn")) {
-        const no = btn.dataset.commentNo;
-        document.getElementById(`comment-content-${no}`).style.display = "none";
-        document.getElementById(`comment-edit-area-${no}`).style.display = "block";
-    }
-
-    // 저장
-    if (btn.classList.contains("comment-save-btn")) {
-        const no = btn.dataset.commentNo;
-        const content = document.getElementById(`comment-edit-input-${no}`).value.trim();
-        if (!content) return alert("내용을 입력하세요.");
-        try {
-            const resp = await fetch("/notice/comment", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    commentNo: no,
-                    commentContent: content
-                })
-            });
-            if (!resp.ok) throw new Error("수정 실패");
-            loadComments(noticeNo, loginEmpNo);
-        } catch (err) {
-            alert("수정 중 오류가 발생했습니다.");
-        }
-    }
-
-    // 취소
-    if (btn.classList.contains("comment-cancel-btn")) {
-        const no = btn.dataset.commentNo;
-        document.getElementById(`comment-content-${no}`).style.display = "block";
-        document.getElementById(`comment-edit-area-${no}`).style.display = "none";
-    }
-});
-
-// 댓글 작성
 document.querySelector(".comment-submit").addEventListener("click", async () => {
     const input = document.getElementById("comment-input");
     const content = input.value.trim();
