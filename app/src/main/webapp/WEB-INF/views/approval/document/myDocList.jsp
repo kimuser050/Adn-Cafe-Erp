@@ -176,7 +176,7 @@
                         </td>
                     </tr>
 
-                    <tr class="detail-row detail-row-overtime hidden">
+                    <tr class="detail-row detail-row-overtime">
                         <th>연장근무 날짜</th>
                         <td>
                             <div class="form-value short" id="detail-workDate">-</div>
