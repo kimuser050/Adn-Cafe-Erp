@@ -19,14 +19,14 @@ async function journalState() {
     let str = "";
 
     for (const vo of voList) {
+        if (Number(vo.accountNo) >= 4000) continue;
+
         const totalAll = Number(vo.thisMonth || 0);
         const subName = vo.subAccountName || "기타 자산/부채";
 
         if (Number(vo.accountNo) < 2000) totalA += totalAll;
         else if (Number(vo.accountNo) < 3000) totalB += totalAll;
         else if (Number(vo.accountNo) < 4000) totalC += totalAll;
-
-        if (accNo >= 4000) continue;
 
         if (Sub !== subName) {
             Sub = subName;
@@ -45,8 +45,16 @@ async function journalState() {
 
     str += `
         <tr>
-            <td>총계</td>
+            <td>자본 총계</td>
             <td>${totalA.toLocaleString()} 원</td>
+        </tr>
+        <tr>
+            <td>부채 총계</td>
+            <td>${totalB.toLocaleString()} 원</td>
+        </tr>
+        <tr>
+            <td>자산 총계</td>
+            <td>${totalC.toLocaleString()} 원</td>
         </tr>
     `;
 

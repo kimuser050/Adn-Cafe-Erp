@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="/css/common/sidebar.css">
         <link rel="stylesheet" href="/css/common/component.css">
         <link rel="stylesheet" href="/css/hr/dept/deptList.css">
-        <link rel="stylesheet" href="/css/finance/journal/monthList.css">
+        <link rel="stylesheet" href="/css/finance/journal/journalState.css">
         <script defer src="/js/finance/journalState.js"></script>
     </head>
 
