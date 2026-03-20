@@ -45,7 +45,6 @@
                                     <table class="summary-table">
                                         <thead>
                                             <tr>
-                                                <th width="40"><input type="checkbox" readonly></th>
                                                 <th>날짜</th>
                                                 <th>번호</th>
                                                 <th>계정과목</th>
