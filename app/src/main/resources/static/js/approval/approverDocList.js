@@ -173,19 +173,20 @@ function renderDocDetail(doc){
     // document.querySelector("#detail-docNo").innerText = doc.docNo ?? "-";
     document.querySelector("#detail-title").innerText = doc.title ?? "-";
     document.querySelector("#detail-referenceDept").innerText = doc.referenceDept ?? "-";
+    
     // 모든 카테고리 행 숨기기
     document.querySelector(".detail-row-vacation").classList.add("hidden");
     document.querySelector(".detail-row-overtime").classList.add("hidden");
 
     // 휴가
-    if (doc.categoryNo === 1) {
+    if (String(doc.categoryNo) === "1") {
         document.querySelector(".detail-row-vacation").classList.remove("hidden");
         document.querySelector("#detail-startDate").innerText = formatDate(doc.startDate);
         document.querySelector("#detail-endDate").innerText = formatDate(doc.endDate);
     }
 
     // 연장근무
-    if (doc.categoryNo === 2) {
+    if (String(doc.categoryNo) === "2") {
         document.querySelector(".detail-row-overtime").classList.remove("hidden");
         document.querySelector("#detail-workDate").innerText = formatDate(doc.workDate);
         document.querySelector("#detail-workHour").innerText = `${doc.workHour}시간`;
