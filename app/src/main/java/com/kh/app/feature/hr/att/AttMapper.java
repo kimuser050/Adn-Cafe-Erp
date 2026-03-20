@@ -370,6 +370,8 @@ public interface AttMapper {
             SET STATUS_CODE = 4,
             CHECK_IN_AT = NULL,
             CHECK_OUT_AT = NULL,
+            OT_APPROVED_HOURS = NULL,
+            OT_CONFIRMED_HOURS = NULL,
             ATT_NOTE = '휴가 승인 반영',
             UPDATED_AT = SYSTIMESTAMP
             WHERE EMP_NO = #{empNo}
@@ -419,6 +421,7 @@ public interface AttMapper {
             UPDATED_AT = SYSTIMESTAMP
             WHERE EMP_NO = #{empNo}
             AND WORK_DATE = TO_DATE(#{workDate}, 'YYYY-MM-DD')
+            AND (STATUS_CODE IS NULL OR STATUS_CODE IN (1,2,3))
             """)
     int updateOvertimeAttendance(@Param("empNo") String empNo, @Param("workDate") String workDate, @Param("approvedHours") int approvedHours);
 
