@@ -57,9 +57,10 @@ public interface JournalMapper {
                 , A.ACCOUNT_NAME
                 , J.DEBIT
                 , J.CREDIT
-                , J.WRITER_NO
+                , M.EMP_NAME AS writerName
             FROM JOURNAL J
             JOIN ACCOUNT A ON J.ACCOUNT_NO = A.ACCOUNT_NO
+            JOIN MEMBER M ON M.EMP_NO = J.WRITER_NO
             WHERE J.IS_DELETED = 'N'
             AND J.JOURNAL_DATE = TO_DATE(#{journalDate}, 'YY/MM/DD')
             ORDER BY JOURNAL_NO DESC, DEBIT DESC

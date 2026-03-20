@@ -44,10 +44,6 @@
                                         <img src="http://192.168.20.2:5500/member/${loginMemberVo.profileChangeName}"
                                             alt="${loginMemberVo.profileOriginName}" class="profile-img">
                                     </div>
-                                    <div class="user-info">
-                                        <span class="user-dept">${loginMemberVo.deptName}</span>
-                                        <span class="user-name">${loginMemberVo.empName}님</span>
-                                    </div>
                                     <button type="button" class="logout-btn"
                                         onclick="location.href='/logout'">로그아웃</button>
                                 </div>

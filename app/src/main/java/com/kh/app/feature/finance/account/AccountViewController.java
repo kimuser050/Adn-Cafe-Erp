@@ -17,13 +17,13 @@ public class AccountViewController {
     @GetMapping("")
     public String mainAccount(HttpSession session, RedirectAttributes ra) throws Exception {
 
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//
-//        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
-//                && !"310100".equals(loginMemberVo.getDeptCode()))){
-//            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
-//            return "redirect:/home";
-//        }
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
+                && !"310100".equals(loginMemberVo.getDeptCode()))){
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/home";
+        }
 
         return "finance/account/accountMain";
     }
@@ -31,13 +31,13 @@ public class AccountViewController {
     @GetMapping("/insertAccount")
     public String insertAccount(HttpSession session, RedirectAttributes ra) throws Exception {
 
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//
-//        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
-//                && !"310100".equals(loginMemberVo.getDeptCode()))){
-//            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
-//            return "redirect:/home";
-//        }
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
+                && !"310100".equals(loginMemberVo.getDeptCode()))){
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/home";
+        }
 
         return "finance/account/account";
     }

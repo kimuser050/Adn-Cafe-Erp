@@ -16,13 +16,13 @@ public class JournalViewController {
     @GetMapping("/insertJournal")
     public String insertJournal(HttpSession session, RedirectAttributes ra) throws Exception {
 
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//
-//        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
-//                && !"310100".equals(loginMemberVo.getDeptCode()))){
-//            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
-//            return "redirect:/home";
-//        }
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
+                && !"310100".equals(loginMemberVo.getDeptCode()))){
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/home";
+        }
 
         return "/finance/journal/journal";
     }
@@ -45,13 +45,13 @@ public class JournalViewController {
     @GetMapping("/journalState")
     public String journalState(HttpSession session, RedirectAttributes ra) throws Exception {
 
-//        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
-//
-//        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
-//                && !"310100".equals(loginMemberVo.getDeptCode()))){
-//            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
-//            return "redirect:/home";
-//        }
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if(loginMemberVo == null || (!"310102".equals(loginMemberVo.getDeptCode())
+                && !"310100".equals(loginMemberVo.getDeptCode()))){
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/home";
+        }
 
         return "finance/journal/journalState";
     }

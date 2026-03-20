@@ -100,20 +100,6 @@
     object-fit: cover;
 }
 
-.user-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    line-height: 1.4;
-    font-size: 14px;
-    color: #333;
-}
-
-.user-dept {
-    font-size: 12px;
-    color: #888;
-}
-
 .logout-btn {
     padding: 5px 10px;
     border: 1px solid #ccc;
