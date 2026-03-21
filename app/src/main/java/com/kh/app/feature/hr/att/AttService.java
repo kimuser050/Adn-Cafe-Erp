@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -30,6 +31,15 @@ public class AttService {
     // - 반환값은 생성 건수
     @Transactional
     public int initDailyAttendance(String workDate) {
+        //주말 방어하기-> 그 다음 실행
+        LocalDate date = LocalDate.parse(workDate);
+    
+        if (date.getDayOfWeek() == DayOfWeek.SATURDAY
+                || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            return 0;
+        }
+
+
         List<String> empNoList = attMapper.selectEmpNoListForDailyInit(workDate);
 
         int cnt = 0;

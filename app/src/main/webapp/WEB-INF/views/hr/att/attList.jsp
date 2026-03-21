@@ -98,6 +98,8 @@
             </div>
 
             <!-- ========================= 상세조회 모달 ========================= -->
+            
+            
             <div id="att-modal-wrap" class="org-modal-wrap" style="display:none;">
                 <div class="org-modal att-detail-modal">
                     <div class="org-modal-header">
@@ -167,7 +169,7 @@
                         <!-- 월 이력 -->
                         <div class="attInfo-section">
                             <h3 class="attInfo-section-title" id="modal-history-title">월 근태이력</h3>
-
+                            <div class="att-table-scroll">
                             <table class="org-table att-history-table">
                                 <thead>
                                 <tr>
@@ -185,6 +187,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     </div>
 
@@ -204,6 +207,7 @@
                     </div>
 
                     <div class="org-modal-body att-edit-body">
+                        <div class="att-table-scroll">
                         <table class="org-table att-edit-table">
                             <thead>
                             <tr>
@@ -221,6 +225,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
 
                     <div class="org-modal-footer">
