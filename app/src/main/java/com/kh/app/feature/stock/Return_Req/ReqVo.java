@@ -4,14 +4,16 @@ import lombok.Data;
 
 @Data
 public class ReqVo {
-    private String returnNo;      // PK (시퀀스 자동생성)
-    private String productName;   // 상품명 (이미지의 '원두 커피')
+    private String returnNo;      // PK (SEQ_RETURN_REQ.NEXTVAL)
+    private String itemNo;        // [중요] 상품 고유 번호 (실제 DB 저장용 FK)
+    private String storeCode;     // 매장 코드 (FK)
     private String quantity;      // 수량
     private String reason;        // 사유
-    private String status;        // 상태 (기본값 'W')
-    private String createdAt;     // 접수일 (SYSDATE)
-    private String storeCode;     // 매장 코드 (FK)
+    private String status;        // 상태 (W: 대기, F: 완료 등)
+    private String createAt;       // 접수일
 
-    // JOIN 결과용
-    private String storeName;     // 매장 이름 (강남 지점 등)
+    // JOIN 결과용 (DB 테이블에는 없지만 화면 표시용)
+    private String itemName;      // [수정] 상품명 (이미지의 '우유2L')
+    private String storeName;     // 매장 이름 (이미지의 '강남지점')
+    private String empNo;
 }
