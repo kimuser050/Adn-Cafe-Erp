@@ -23,11 +23,11 @@ public class OderReqService {
     }
 
     /**
-     * 2. [발주 신청 탭] 품목 목록 조회 (페이징 + 검색)
+     * 2. [발주 신청 탭] 품목 목록 조회 (페이징 + 검색 + 매장정보)
      */
-    public List<OderReqVo> selectList(PageVo pvo, String keyword) {
-        return oderReqMapper.selectList(pvo, keyword);
-
+    public List<OderReqVo> selectList(PageVo pvo, String keyword, String empNo) {
+        // 매퍼에 empNo를 추가로 전달해서 쿼리가 STORE_NAME을 찾을 수 있게 합니다.
+        return oderReqMapper.selectList(pvo, keyword, empNo);
     }
 
     /**
