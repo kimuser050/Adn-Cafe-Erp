@@ -121,33 +121,43 @@ function openInsertModal() {
     document.querySelector("#itemInsertModal").style.display = "block";
 }
 
-// [6] 등록 처리 (POST)
-async function insertItem() {
-    const vo = {
-        itemName: document.querySelector("#insertItemName").value,
-        unitPrice: document.querySelector("#insertUnitPrice").value,
-        location: document.querySelector("#insertLocation").value
+function insertItem() {
+    // 1. 데이터 가져오기
+    const itemName = document.querySelector("#insertItemName").value;
+    const unitPrice = document.querySelector("#insertUnitPrice").value;
+    const stock = document.querySelector("#insertStock").value;
+    const locationName = document.querySelector("#insertLocation").value;
+
+    const data = {
+        itemName: itemName,
+        unitPrice: unitPrice,
+        stock: stock,
+        location: locationName
     };
 
-    if(!vo.itemName) { alert("품목 명은 필수입니다."); return; }
-
-    try {
-        const resp = await fetch("/api/stock/insert", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(vo)
-        });
-
-        if(resp.ok) {
-            alert("품목이 등록되었습니다.");
-            document.querySelector("#itemInsertModal").style.display = "none";
-            itemVoList(1);
+    // 2. 서버 통신
+    fetch("/api/stock/insert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(resp => {
+        if (!resp.ok) throw new Error("서버 응답 에러");
+        return resp.json();
+    })
+    .then(data => {
+        // 서버 컨트롤러에서 map.put("result", result + "") 로 보냈으므로 data.result 확인
+        if(data.result === "1") { 
+            alert("신규 품목이 등록되었습니다! 🎉");
+            location.reload(); // 페이지 새로고침해서 목록 갱신
         } else {
-            alert("등록 실패");
+            alert("등록에 실패했습니다. 다시 시도해주세요.");
         }
-    } catch (err) {
-        console.error("등록 에러:", err);
-    }
+    })
+    .catch(err => {
+        console.error("에러 발생:", err);
+        alert("통신 중 에러가 발생했습니다.");
+    });
 }
 
 // [7] 이벤트 바인딩 및 초기화
