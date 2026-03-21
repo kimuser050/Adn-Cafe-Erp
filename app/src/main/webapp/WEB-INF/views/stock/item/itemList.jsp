@@ -17,7 +17,7 @@
         <main class="page-shell">
             <section class="page-content">
                 <div class="tab-wrapper">
-                    <a href="/stock/item" class="tab-btn active">본사 품목</a>
+                    <a href="/stock/item" class="tab-btn active">품목</a>
                     <a href="/stock/inbound" class="tab-btn">입고 내역</a>
                 </div>
 
@@ -87,24 +87,25 @@
         </div>
     </div>
 
-    <div id="itemInsertModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>신규 품목 등록</h3>
-                <span class="close-insert-modal" style="cursor:pointer; font-size:24px;">&times;</span>
-            </div>
-            <form id="itemInsertForm">
-                <div class="modal-body">
-                    <div class="form-row"><label>품목 명</label><input type="text" id="insertItemName"></div>
-                    <div class="form-row"><label>단가</label><input type="number" id="insertUnitPrice" value="0"></div>
-                    <div class="form-row"><label>위치</label><input type="text" id="insertLocation" placeholder="예: A-101"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-action-brown" onclick="insertItem()">등록하기</button>
-                    <button type="button" class="btn-gray-close-modal close-insert-modal">취소</button>
-                </div>
-            </form>
+   <div id="itemInsertModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>신규 품목 등록</h3>
+            <span class="close-insert-modal" style="cursor:pointer; font-size:24px;">&times;</span>
         </div>
+        <form id="itemInsertForm">
+            <div class="modal-body">
+                <div class="form-row"><label>품목 명</label><input type="text" id="insertItemName"></div>
+                <div class="form-row"><label>단가</label><input type="number" id="insertUnitPrice" value="0"></div>
+                <div class="form-row"><label>초기 재고</label><input type="number" id="insertStock" value="0"></div>
+                <div class="form-row"><label>위치</label><input type="text" id="insertLocation" placeholder="예: A-101"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-action-brown" onclick="insertItem()">등록하기</button>
+                <button type="button" class="btn-gray-close-modal close-insert-modal">취소</button>
+            </div>
+        </form>
     </div>
+</div>
 </body>
 </html>

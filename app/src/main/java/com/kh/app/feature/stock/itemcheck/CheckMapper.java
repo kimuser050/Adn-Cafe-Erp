@@ -12,8 +12,8 @@ import java.util.List;
 @Mapper
 public interface CheckMapper {
     @Select("""
-            SELECT COUNT(ITEM_RETURN_NO)
-            FROM ITEM_CHECK
+            SELECT COUNT(RETURN_NO)
+            FROM RETURN_REQ
             """)
     int selectCount();
 
@@ -21,43 +21,47 @@ public interface CheckMapper {
     SELECT
         R.RETURN_NO,
         C.ITEM_RETURN_NO,
-        R.STATUS,                --(W, A, R)
+        R.STATUS,
         C.PROCESS_RESULT,
-        R.PRODUCT_NAME,
+        I.ITEM_NAME AS itemName,   -- 상품명 가져오기
         R.STORE_CODE,
         S.STORE_NAME,
         R.CREATED_AT
     FROM
-        RETURN_REQ R                                   -- 신청 테이블을 기준으로
-    LEFT OUTER JOIN
-        ITEM_CHECK C ON R.RETURN_NO = C.RETURN_NO      -- 검수 내역은 있으면 가져오고 없으면 null
+        RETURN_REQ R
+    INNER JOIN
+        ITEM I ON R.PRODUCTS_NO = I.ITEM_NO -- [수정] PRODUCTS_NO로 직접 조인 (숫자 vs 숫자)
     INNER JOIN
         STORE S ON R.STORE_CODE = S.STORE_CODE
+    LEFT OUTER JOIN
+        ITEM_CHECK C ON R.RETURN_NO = C.RETURN_NO
     ORDER BY R.RETURN_NO DESC
-    OFFSET #{offset} ROWS
-    FETCH NEXT #{boardLimit} ROWS ONLY
+    OFFSET #{offset} ROWS              
+    FETCH NEXT #{boardLimit} ROWS ONLY 
 """)
     List<CheckVo> selectList(PageVo pvo);
 
-    //상세조회
+    // 상세조회
     @Select("""
     SELECT
         C.ITEM_RETURN_NO,
         R.RETURN_NO,
         R.STATUS,
         C.PROCESS_RESULT,
-        R.PRODUCT_NAME,
+        I.ITEM_NAME AS itemName,
         R.STORE_CODE,
         S.STORE_NAME,
         R.QUANTITY,
         R.REASON,
         R.CREATED_AT
     FROM
-        RETURN_REQ R    /* 기준을 신청 테이블(R)로 변경 */
-    LEFT OUTER JOIN
-        ITEM_CHECK C ON R.RETURN_NO = C.RETURN_NO
+        RETURN_REQ R
+    INNER JOIN
+        ITEM I ON R.PRODUCTS_NO = I.ITEM_NO -- [수정] PRODUCTS_NO로 직접 조인
     INNER JOIN
         STORE S ON R.STORE_CODE = S.STORE_CODE
+    LEFT OUTER JOIN
+        ITEM_CHECK C ON R.RETURN_NO = C.RETURN_NO
     WHERE
         R.RETURN_NO = #{no}
 """)

@@ -26,7 +26,6 @@ public class InboundRestController {
 
     @Value("${page.boardLimit}")
     private int boardLimit;
-
     /**
      * 입고 내역 조회 (페이징 + 검색)
      */

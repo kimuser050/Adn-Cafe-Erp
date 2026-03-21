@@ -8,44 +8,64 @@ import java.util.List;
 @Mapper
 public interface ItemMapper {
 
-//등록
+    /**
+     * 1. 품목 등록
+     * 테이블에 DEFAULT SEQ_ITEM.NEXTVAL이 설정되어 있으므로 ITEM_NO 컬럼은 생략합니다.
+     * @SelectKey에서도 DB 이름과 똑같이 SEQ_ITEM을 사용해야 합니다.
+     */
     @Insert("""
-        INSERT INTO ITEM
-        (
-         ITEM_NAME
-         ,UNIT_PRICE
-         ,LOCATION
-        )
-        VALUES
-        (
-         #{itemName}
-         ,#{unitPrice}
-         ,#{location}
+        INSERT INTO ITEM (
+            ITEM_NAME,
+            UNIT_PRICE,
+            STOCK,
+            LOCATION,
+            ACTIVE_YN,
+            CREATED_AT
+        ) VALUES (
+            #{itemName},
+            #{unitPrice},
+            #{stock},
+            #{location},
+            'Y',
+            SYSDATE
         )
         """)
+    @SelectKey(statement = "SELECT SEQ_ITEM.CURRVAL FROM DUAL",
+            keyProperty = "itemNo",
+            before = false,
+            resultType = String.class)
     int insert(ItemVo vo);
 
-
-    // 검색 결과 개수 조회 (중요: @Param 추가)
+    /**
+     * 2. 검색 결과 개수 조회
+     */
     @Select("""
-    SELECT COUNT(ITEM_NO)
-    FROM ITEM
-    WHERE ITEM_NAME LIKE '%' || #{keyword} || '%'
-    """)
+        <script>
+        SELECT COUNT(ITEM_NO)
+        FROM ITEM
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND ITEM_NAME LIKE '%' || #{keyword} || '%'
+            </if>
+        </where>
+        </script>
+        """)
     int selectCount(@Param("keyword") String keyword);
-//조회
-@Select("""
+
+    /**
+     * 3. 목록 조회 (페이징 + 검색)
+     */
+    @Select("""
         <script>
         SELECT
-            ITEM_NO
-           ,ITEM_NAME
-           ,UNIT_PRICE
-           ,STOCK
-           ,LOCATION
-           ,ACTIVE_YN
-           ,CREATED_AT
-           ,UPDATED_AT
-           ,ORDER_DATE
+            ITEM_NO,
+            ITEM_NAME,
+            UNIT_PRICE,
+            STOCK,
+            LOCATION,
+            ACTIVE_YN,
+            TO_CHAR(CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT,
+            TO_CHAR(UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
         FROM ITEM
         <where>
             <if test="keyword != null and keyword != ''">
@@ -53,54 +73,55 @@ public interface ItemMapper {
             </if>
         </where>
         ORDER BY ITEM_NO DESC
-        OFFSET #{pvo.offset} ROWS
+        OFFSET ((#{pvo.currentPage} - 1) * #{pvo.boardLimit}) ROWS
         FETCH NEXT #{pvo.boardLimit} ROWS ONLY
         </script>
         """)
-// @Param을 붙여서 이름을 명시해줘야 MyBatis가 찾을 수 있습니다.
-List<ItemVo> selectList(@Param("pvo") PageVo pvo, @Param("keyword") String keyword);
+    List<ItemVo> selectList(@Param("pvo") PageVo pvo, @Param("keyword") String keyword);
 
- //상세조회
+    /**
+     * 4. 상세 조회
+     */
     @Select("""
-            SELECT
-                ITEM_NO
-                ,ITEM_NAME
-                ,UNIT_PRICE
-                ,STOCK
-                ,LOCATION
-                ,ACTIVE_YN
-                ,CREATED_AT
-                ,UPDATED_AT
-                ,ORDER_DATE
-            FROM ITEM
-            WHERE ITEM_NO = #{itemNo}
+        SELECT
+            ITEM_NO,
+            ITEM_NAME,
+            UNIT_PRICE,
+            STOCK,
+            LOCATION,
+            ACTIVE_YN,
+            CREATED_AT,
+            UPDATED_AT
+        FROM ITEM
+        WHERE ITEM_NO = #{itemNo}
         """)
     ItemVo selectOne(String itemNo);
 
-    //삭제
+    /**
+     * 5. 삭제 (논리 삭제 - 상태값 변경)
+     */
     @Update("""
         UPDATE ITEM
         SET
-            ACTIVE_YN = 'N'
-           ,UPDATED_AT = SYSDATE
+            ACTIVE_YN = 'N',
+            UPDATED_AT = SYSDATE
         WHERE ITEM_NO = #{itemNo}
-    """)
+        """)
     int deleteByNo(ItemVo vo);
 
-    //수정
+    /**
+     * 6. 수정
+     */
     @Update("""
         UPDATE ITEM
         SET
-            ITEM_NAME = #{itemName}
-            , UNIT_PRICE = #{unitPrice}
-            , STOCK = #{stock}
-            , LOCATION = #{location}
-            , ACTIVE_YN = #{activeYn}
-            , UPDATED_AT = SYSDATE
+            ITEM_NAME = #{itemName},
+            UNIT_PRICE = #{unitPrice},
+            STOCK = #{stock},
+            LOCATION = #{location},
+            ACTIVE_YN = #{activeYn},
+            UPDATED_AT = SYSDATE
         WHERE ITEM_NO = #{itemNo}
-    """)
+        """)
     int updateByNo(ItemVo vo);
-
-
-
 }

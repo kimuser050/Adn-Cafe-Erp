@@ -51,13 +51,16 @@ function loadOrderList(page) {
 }
 
 /**
- * 2. 테이블 렌더링 (수량 조절 디자인 포함)
+ * 2. 테이블 렌더링 (SQL에서 가져온 매장명 출력 버전)
  */
 function renderOrderTable(list) {
     const body = document.getElementById('orderBody');
     if (!body) return;
+
+    // 테이블 초기화
     body.innerHTML = '';
 
+    // 데이터가 없을 경우 처리
     if (!list || list.length === 0) {
         body.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:100px 0;">조회된 품목이 없습니다.</td></tr>';
         return;
@@ -65,11 +68,17 @@ function renderOrderTable(list) {
 
     list.forEach(item => {
         const tr = document.createElement('tr');
+        
+        // 쿼리(Mapper)에서 가져온 storeName이 있으면 쓰고, 없으면 '본사' 등으로 표시
+        const displayStoreName = item.storeName || '정보없음';
+
         tr.innerHTML = `
             <td><input type="checkbox" class="item-check" data-no="${item.itemNo}"></td>
             <td>${item.itemNo}</td>
             <td style="text-align:left; padding-left:20px;">${item.itemName}</td>
-            <td>본사</td>
+            
+            <td>${displayStoreName}</td> 
+            
             <td>
                 <div class="qty-control">
                     <button type="button" class="qty-minus" onclick="changeQty(this, -1)">-</button>
@@ -77,7 +86,7 @@ function renderOrderTable(list) {
                     <button type="button" class="qty-plus" onclick="changeQty(this, 1)">+</button>
                 </div>
             </td>
-            <td>2026/03/19</td>
+            <td>${new Date().toLocaleDateString()}</td>
         `;
         body.appendChild(tr);
     });
@@ -126,6 +135,11 @@ function renderPagination(paging) {
     nextBtn.disabled = (paging.currentPage === paging.maxPage || paging.maxPage === 0);
     nextBtn.onclick = () => loadOrderList(paging.currentPage + 1);
     pgnArea.appendChild(nextBtn);
+}
+
+if (response.status === 401) {
+    alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+    location.href = "/login"; // 로그인 페이지로 이동
 }
 
 /**

@@ -12,6 +12,7 @@
     <script defer src="/js/stock/order.js"></script>
 </head>
 <body>
+    <input type="hidden" id="loginUserEmpName" value="${userEmpName}">
     <div class="app-shell">
         <%@ include file="/WEB-INF/views/stock/common/orderSidebar.jsp" %>
 
