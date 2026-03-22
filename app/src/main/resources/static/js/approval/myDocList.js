@@ -5,20 +5,20 @@ function getStatusInfo(statusCode){
         return "-";
 }
 
-async function loadDocList(){
-    const pno = location.pathname.split("/").pop();
-    const resp = await fetch(`/api/approval/document/selectMyDocumentList?currentPage=${pno}`);
+// async function loadDocList(currentPage = 1){
+//     const pno = location.pathname.split("/").pop();
+//     const resp = await fetch(`/api/approval/document/selectMyDocumentList?currentPage=${currentPage}`);
 
-    const data = await resp.json();
-    const pvo = data.pvo;
-    const voList = data.voList;
+//     const data = await resp.json();
+//     const pvo = data.pvo;
+//     const voList = data.voList;
 
-    setPageArea(pvo);
-    renderDocList(voList);
-    renderSummary(voList);
-}
+//     setPageArea(pvo);
+//     renderDocList(voList);
+//     renderSummary(voList);
+// }
 
-loadDocList();
+// loadDocList();
 
 // 테이블 렌더링 
 function renderDocList(voList) {
@@ -43,7 +43,6 @@ function renderDocList(voList) {
                 <td>${vo.categoryName}</td>
                 <td>${vo.title}</td>
                 <td>${vo.writerName}</td>
-                <td>${vo.writerDept}</td>
                 <td>
                     <span class="status-badge">
                         <span class="status-dot ${statusClass}"></span>
@@ -101,26 +100,25 @@ function formatDate(value) {
     return value;
 }
 
-async function searchMyDoc(){
+async function searchMyDoc(currentPage = 1){
     const statusCode = document.querySelector("#statusCode").value;
     const categoryNo = document.querySelector("#categoryNo").value;
-    const docNo = document.querySelector("#docNo").value;
     const startDate = document.querySelector("#startDate").value;
     const endDate = document.querySelector("#endDate").value;
 
     const params = new URLSearchParams({
         statusCode,
         categoryNo,
-        docNo,
         startDate,
         endDate,
-
+        currentPage
     });
 
     const resp = await fetch(`/api/approval/document/searchMyDoc?${params.toString()}`);
     const data = await resp.json();
     const pvo = data.pvo;
     const voList = data.voList;
+    history.pushState(null, "", `/approval/document/approverDocList?${params.toString()}`);
 
     setPageArea(pvo)
     renderDocList(voList);
@@ -131,13 +129,13 @@ function setPageArea(pvo){
     const pageArea = document.querySelector(".pagination");
     let str = '';
     if(pvo.startPage != 1){
-        str += `<button class="page-btn" onclick="location.href='/approval/document/myDocList/${pvo.startPage-1}'">이전</button>`;
+        str += `<button class="page-btn" onclick="searchMyDoc(${pvo.startPage-1});">이전</button>`;
     }
     for(let i = pvo.startPage; i <= pvo.endPage; ++i){
-        str += `<button class="page-btn" onclick="location.href='/approval/document/myDocList/${i}'">${i}</button>`;
+        str += `<button class="page-btn" onclick="searchMyDoc(${i})">${i}</button>`;
     }
     if(pvo.endPage < pvo.maxPage){
-        str += `<button class="page-btn" onclick="location.href='/approval/document/myDocList/${pvo.endPage+1}'">다음</button>`;
+        str += `<button class="page-btn" onclick="searchMyDoc(${pvo.endPage+1})">다음</button>`;
     }
     pageArea.innerHTML = str;
 }
@@ -166,9 +164,8 @@ function renderDocDetail(doc){
     document.querySelector("#detail-writerPosition").innerText = doc.writerPosition ?? "-";
     document.querySelector("#detail-writerName").innerText = doc.writerName ?? "-";
 
-    document.querySelector("#detail-approverPosition").innerText = doc.approverPosition ?? "-";
     document.querySelector("#detail-approverName").innerText = doc.approverName ?? "-";
-    document.querySelector("#detail-approverName2").innerText = doc.approverName ?? "-";
+    document.querySelector("#detail-actedAt").innerText = doc.actedAt ?? "-";
 
     // document.querySelector("#detail-docNo").innerText = doc.docNo ?? "-";
     document.querySelector("#detail-title").innerText = doc.title ?? "-";
@@ -194,13 +191,6 @@ function renderDocDetail(doc){
 
     document.querySelector("#detail-reason").innerText = doc.reason ?? "-";
     document.querySelector("#detail-content").innerText = doc.content ?? "-";
-
-    const attachmentTag = document.querySelector("#detail-attachment");
-    if(doc.attachmentName){
-        attachmentTag.innerHTML = `<a href="/api/approval/document/file/${doc.docNo}" target="_blank">${doc.attachmentName}</a>`;
-    }else{
-        attachmentTag.innerText = "-";
-    }
 
     const statusTag = document.querySelector("#detail-statusName");
     statusTag.innerText = doc.statusName ?? "-";
@@ -286,4 +276,24 @@ async function rejectDoc(docNo){
     alert(data.msg ?? "반려 완료");
     closeDocModal();
     loadDocList();
+}
+
+window.onload = () => {
+    const param = getParams();
+
+    document.querySelector("#statusCode").value = param.statusCode || "1";
+
+    searchMyDoc(param.currentPage);
+};
+
+function getParams(){
+    const params = new URLSearchParams(location.search);
+
+    return {
+        currentPage: params.get("currentPage") || 1,
+        statusCode: params.get("statusCode") || "",
+        categoryNo: params.get("categoryNo") || "",
+        startDate: params.get("startDate") || "",
+        endDate: params.get("endDate") || ""
+    };
 }

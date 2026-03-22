@@ -9,7 +9,6 @@ public class ApprovalDocVo {
     private String writerNo;
     private String deptCode;
     private String title;
-    private String reason;
     private String content;
     private String approverNo;
     private String statusCode;

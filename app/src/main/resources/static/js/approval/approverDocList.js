@@ -5,20 +5,21 @@ function getStatusInfo(statusCode){
         return "-";
 }
 
-async function loadDocList(){
-    const pno = location.pathname.split("/").pop();
-    const resp = await fetch(`/api/approval/document/selectApproverDocList?currentPage=${pno}`);
+// async function loadDocList(currentPage = 1){
+//     // const pno = location.pathname.split("/").pop();
+//     const resp = await fetch(`/api/approval/document/selectApproverDocList?currentPage=${pno}`);
 
-    const data = await resp.json();
-    const pvo = data.pvo;
-    const voList = data.voList;
+//     const data = await resp.json();
+//     const pvo = data.pvo;
+//     const voList = data.voList;
 
-    setPageArea(pvo);
-    renderDocList(voList);
-    renderSummary(voList);
-}
+//     setPageArea(pvo);
+//     renderDocList(voList);
+//     renderSummary(voList);
+// }
 
-loadDocList();
+// loadDocList();
+
 
 // 테이블 렌더링 
 function renderDocList(voList) {
@@ -101,19 +102,18 @@ function formatDate(value) {
     return value;
 }
 
-async function searchApproverDoc(){
+async function searchApproverDoc(currentPage = 1){
     const statusCode = document.querySelector("#statusCode").value;
     const categoryNo = document.querySelector("#categoryNo").value;
-    const docNo = document.querySelector("#docNo").value;
     const startDate = document.querySelector("#startDate").value;
     const endDate = document.querySelector("#endDate").value;
 
     const params = new URLSearchParams({
         statusCode,
         categoryNo,
-        docNo,
         startDate,
         endDate,
+        currentPage
 
     });
 
@@ -121,6 +121,7 @@ async function searchApproverDoc(){
     const data = await resp.json();
     const pvo = data.pvo;
     const voList = data.voList;
+    history.pushState(null, "", `?${params.toString()}`);
 
     setPageArea(pvo)
     renderDocList(voList);
@@ -131,13 +132,13 @@ function setPageArea(pvo){
     const pageArea = document.querySelector(".pagination");
     let str = '';
     if(pvo.startPage != 1){
-        str += `<button class="page-btn" onclick="location.href='/approval/document/approverDocList/${pvo.startPage-1}'">이전</button>`;
+        str += `<button class="page-btn" onclick="searchApproverDoc(${pvo.startPage-1});">이전</button>`;
     }
     for(let i = pvo.startPage; i <= pvo.endPage; ++i){
-        str += `<button class="page-btn" onclick="location.href='/approval/document/approverDocList/${i}'">${i}</button>`;
+        str += `<button class="page-btn" onclick="searchApproverDoc(${i})">${i}</button>`;
     }
     if(pvo.endPage < pvo.maxPage){
-        str += `<button class="page-btn" onclick="location.href='/approval/document/approverDocList/${pvo.endPage+1}'">다음</button>`;
+        str += `<button class="page-btn" onclick="searchApproverDoc(${pvo.endPage+1})">다음</button>`;
     }
     pageArea.innerHTML = str;
 }
@@ -166,9 +167,8 @@ function renderDocDetail(doc){
     document.querySelector("#detail-writerPosition").innerText = doc.writerPosition ?? "-";
     document.querySelector("#detail-writerName").innerText = doc.writerName ?? "-";
 
-    document.querySelector("#detail-approverPosition").innerText = doc.approverPosition ?? "-";
     document.querySelector("#detail-approverName").innerText = doc.approverName ?? "-";
-    document.querySelector("#detail-approverName2").innerText = doc.approverName ?? "-";
+    document.querySelector("#detail-actedAt").innerText = doc.actedAt ?? "-";
 
     // document.querySelector("#detail-docNo").innerText = doc.docNo ?? "-";
     document.querySelector("#detail-title").innerText = doc.title ?? "-";
@@ -178,27 +178,20 @@ function renderDocDetail(doc){
     document.querySelector(".detail-row-overtime").classList.add("hidden");
 
     // 휴가
-    if (doc.categoryNo === 1) {
+    if (String(doc.categoryNo) === "1") {
         document.querySelector(".detail-row-vacation").classList.remove("hidden");
         document.querySelector("#detail-startDate").innerText = formatDate(doc.startDate);
         document.querySelector("#detail-endDate").innerText = formatDate(doc.endDate);
     }
 
     // 연장근무
-    if (doc.categoryNo === 2) {
+    if (String(doc.categoryNo) === "2") {
         document.querySelector(".detail-row-overtime").classList.remove("hidden");
         document.querySelector("#detail-workDate").innerText = formatDate(doc.workDate);
         document.querySelector("#detail-workHour").innerText = `${doc.workHour}시간`;
     }
     document.querySelector("#detail-reason").innerText = doc.reason ?? "-";
     document.querySelector("#detail-content").innerText = doc.content ?? "-";
-
-    const attachmentTag = document.querySelector("#detail-attachment");
-    if(doc.attachmentName){
-        attachmentTag.innerHTML = `<a href="/api/approval/document/file/${doc.docNo}" target="_blank">${doc.attachmentName}</a>`;
-    }else{
-        attachmentTag.innerText = "-";
-    }
 
     const statusTag = document.querySelector("#detail-statusName");
     statusTag.innerText = doc.statusName ?? "-";
@@ -284,4 +277,24 @@ async function rejectDoc(docNo){
     alert(data.msg ?? "반려 완료");
     closeDocModal();
     loadDocList();
+}
+
+window.onload = () => {
+    const param = getParams();
+
+    document.querySelector("#statusCode").value = param.statusCode || "1";
+
+    searchApproverDoc(param.currentPage);
+};
+
+function getParams(){
+    const params = new URLSearchParams(location.search);
+
+    return {
+        currentPage: params.get("currentPage") || 1,
+        statusCode: params.get("statusCode") || "",
+        categoryNo: params.get("categoryNo") || "",
+        startDate: params.get("startDate") || "",
+        endDate: params.get("endDate") || ""
+    };
 }

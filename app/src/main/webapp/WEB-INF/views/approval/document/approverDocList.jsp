@@ -18,7 +18,7 @@
 <body>
 
 <div class="app-shell">
-    <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
+    <%@ include file="/WEB-INF/views/approval/common/adlSidebar.jsp" %>
 
     <main class="page-shell">
         <section class="page-content">
@@ -53,7 +53,7 @@
                     <form id="search-form">
                         <select name="statusCode" class="form-select" id="statusCode">
                             <option value="">전체</option>
-                            <option value="1">대기</option>
+                            <option value="1" selected>대기</option>
                             <option value="2">승인</option>
                             <option value="3">반려</option>
                         </select>
@@ -63,8 +63,6 @@
                             <option value="1">휴가</option>
                             <option value="2">연장근무</option>
                         </select>
-                        
-                        <input type="text" name="docNo" id="docNo" class="form-input" placeholder="문서번호">
     
                         <input type="date" name="startDate" id="startDate" class="form-input">
                         <input type="date" name="endDate" id="endDate" class="form-input">
@@ -97,8 +95,8 @@
 <div id="doc-detail-modal" class="doc-modal hidden">
     <div class="doc-modal-overlay" onclick="closeDocModal()"></div>
 
-    <div class="doc-modal-content approval-form-modal">
-        <button type="button" class="doc-modal-close" onclick="closeDocModal()">×</button>
+    <!-- <div class="doc-modal-content approval-form-modal">
+        <button type="button" class="doc-modal-close" onclick="closeDocModal()">×</button> -->
 
         <div class="approval-paper">
 
@@ -127,7 +125,7 @@
                     <table class="approval-sign-table">
                         <tr>
                             <th rowspan="3">결재</th>
-                            <td id="detail-approverPosition">-</td>
+                            <td id="detail-approverName">-</td>
                         </tr>
                         <tr>
                             <td>
@@ -135,7 +133,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td id="detail-approverName">-</td>
+                            <td id="detail-actedAt">-</td>
                         </tr>
                     </table>
                 </div>
@@ -155,13 +153,6 @@
                         <th>참조부서</th>
                         <td colspan="3">
                             <div class="form-value" id="detail-referenceDept">-</div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>결재자</th>
-                        <td colspan="3">
-                            <div class="form-value" id="detail-approverName2">-</div>
                         </td>
                     </tr>
 
@@ -191,13 +182,6 @@
                         <th>사유</th>
                         <td colspan="3">
                             <div class="form-value" id="detail-reason">-</div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>첨부파일</th>
-                        <td colspan="3">
-                            <div class="form-value" id="detail-attachment">-</div>
                         </td>
                     </tr>
 

@@ -31,8 +31,8 @@ public interface ApprovalDocMapper {
         , RD.DEPT_NAME AS REFERENCE_DEPT
         , TO_CHAR(VD.START_DATE, 'YYYY-MM-DD') AS START_DATE
         , TO_CHAR(VD.END_DATE, 'YYYY-MM-DD') AS END_DATE
-        , A.REASON
-        , AA.FILE_ORIGIN_NAME AS ATTACHMENT_NAME
+        , TO_CHAR(OD.WORK_DATE, 'YYYY-MM-DD') AS WORK_DATE
+        , OD.WORK_HOUR
     FROM APPROVAL_DOC A
     LEFT JOIN APPROVAL_CATEGORY C ON A.CATEGORY_NO = C.CATEGORY_NO
     LEFT JOIN APPROVAL_DOC_STATUS DS ON A.STATUS_CODE = DS.STATUS_CODE
@@ -43,7 +43,7 @@ public interface ApprovalDocMapper {
     LEFT JOIN POSITION PW ON MW.POS_CODE = PW.POS_CODE
     LEFT JOIN POSITION PA ON MA.POS_CODE = PA.POS_CODE
     LEFT JOIN VACATION_DOC VD ON A.DOC_NO = VD.DOC_NO
-    LEFT JOIN APPROVAL_ATTACHMENT AA ON A.DOC_NO = AA.DOC_NO
+    LEFT JOIN OVERTIME_DOC OD ON A.DOC_NO = OD.DOC_NO
     WHERE A.DEL_YN = 'N'
       AND A.DOC_NO = #{docNo}
 """)
@@ -97,7 +97,6 @@ public interface ApprovalDocMapper {
                  , WRITER_NO
                  , DEPT_CODE
                  , TITLE
-                 , REASON
                  , CONTENT
                  , APPROVER_NO
              )
@@ -108,7 +107,6 @@ public interface ApprovalDocMapper {
                  ,#{writerNo}
                  ,#{deptCode}
                  ,#{title}
-                 ,#{reason}
                  ,#{content}
                  ,#{approverNo}
              )       
@@ -152,8 +150,7 @@ public interface ApprovalDocMapper {
            A.DOC_NO
            , C.CATEGORY_NAME
            , MW.EMP_NAME AS WRITER_NAME
-           , WD.DEPT_NAME AS WRITER_DEPT
-           , RD.DEPT_NAME AS REFERENCE_DEPT
+           , WD.DEPT_NAME AS WRITER_DEPT  
            , A.TITLE
            , MA.EMP_NAME AS APPROVER_NAME
            , A.STATUS_CODE AS STATUS_CODE
@@ -165,7 +162,6 @@ public interface ApprovalDocMapper {
         LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
         LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
         LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
-        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
         LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
         WHERE A.DEL_YN = 'N'
         AND A.WRITER_NO = #{loginEmpNo}
@@ -182,7 +178,6 @@ public interface ApprovalDocMapper {
            , C.CATEGORY_NAME
            , MW.EMP_NAME AS WRITER_NAME
            , WD.DEPT_NAME AS WRITER_DEPT
-           , RD.DEPT_NAME AS REFERENCE_DEPT
            , A.TITLE
            , MA.EMP_NAME AS APPROVER_NAME
            , A.STATUS_CODE AS STATUS_CODE
@@ -194,7 +189,6 @@ public interface ApprovalDocMapper {
         LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
         LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
         LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
-        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
         LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
         WHERE A.DEL_YN = 'N'
         AND A.APPROVER_NO = #{loginEmpNo}
@@ -205,47 +199,11 @@ public interface ApprovalDocMapper {
     """)
     List<ApprovalDocVo> selectApproverDocList(PageVo pvo, @Param("loginEmpNo") String loginEmpNo);
 
-    @Select("""
-        SELECT
-            A.DOC_NO
-            , C.CATEGORY_NAME
-            , MW.EMP_NAME AS WRITER_NAME
-            , WD.DEPT_NAME AS WRITER_DEPT
-            , RD.DEPT_NAME AS REFERENCE_DEPT
-            , A.TITLE
-            , A.REASON
-            , A.CONTENT
-            , MA.EMP_NAME AS APPROVER_NAME
-            , DS.STATUS_NAME
-            , A.SUBMITTED_AT
-            , A.ACTED_AT
-            , V.START_DATE
-            , V.END_DATE
-            , O.WORK_DATE
-            , O.WORK_HOUR
-        FROM APPROVAL_DOC A 
-        LEFT JOIN VACATION_DOC V ON (V.DOC_NO = A.DOC_NO)
-        LEFT JOIN OVERTIME_DOC O ON (O.DOC_NO = A.DOC_NO)
-        LEFT JOIN APPROVAL_CATEGORY C ON (A.CATEGORY_NO = C.CATEGORY_NO)
-        LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
-        LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
-        LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
-        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
-        LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
-        WHERE A.DEL_YN = 'N'
-        AND A.DOC_NO = #{docNo}
-        ORDER BY A.DOC_NO DESC
-    """)
-    ApprovalDocVo selectOne(String docNo);
-
-
-
     @Update("""
         UPDATE APPROVAL_DOC
             SET
                 DEPT_CODE = #{deptCode}
                 , TITLE = #{title}
-                , REASON = #{reason}
                 , CONTENT = #{content}
                 , APPROVER_NO = #{approverNo}
                 , SUBMITTED_AT = SYSDATE
@@ -255,18 +213,6 @@ public interface ApprovalDocMapper {
                 
     """)
     int editDocument(ApprovalDocVo vo);
-
-//    @Update("""
-//        UPDATE APPROVAL_DOC
-//            SET
-//                STATUS_CODE = #{statusCode}
-//                ,ACTED_AT = SYSDATE
-//                ,APPROVER_COMMENT = #{approverComment}
-//            WHERE DOC_NO = #{docNo}
-//            AND APPROVER_NO = #{approverNo}
-//            AND DEL_YN = 'N'
-//    """)
-//    int processApproval(ApprovalDocVo vo);
 
 //    @Delete("""
 //        DELETE FROM APPROVAL_DOC
@@ -294,7 +240,6 @@ public interface ApprovalDocMapper {
            , C.CATEGORY_NAME
            , MW.EMP_NAME AS WRITER_NAME
            , WD.DEPT_NAME AS WRITER_DEPT
-           , RD.DEPT_NAME AS REFERENCE_DEPT
            , A.TITLE
            , MA.EMP_NAME AS APPROVER_NAME
            , A.STATUS_CODE AS STATUS_CODE
@@ -306,7 +251,6 @@ public interface ApprovalDocMapper {
         LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
         LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
         LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
-        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
         LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
         WHERE A.DEL_YN = 'N'
         AND WRITER_NO = #{loginEmpNo}
@@ -317,10 +261,6 @@ public interface ApprovalDocMapper {
     
         <if test="paramMap.vo.categoryNo != null and paramMap.vo.categoryNo != ''">
             AND A.CATEGORY_NO = #{paramMap.vo.categoryNo}
-        </if>
-        
-        <if test="paramMap.vo.docNo != null and paramMap.vo.docNo != ''">
-            AND A.DOC_NO = #{paramMap.vo.docNo}
         </if>
         
         <if test="paramMap.vo.startDate != null and paramMap.vo.startDate != ''">
@@ -346,7 +286,6 @@ public interface ApprovalDocMapper {
            , C.CATEGORY_NAME
            , MW.EMP_NAME AS WRITER_NAME
            , WD.DEPT_NAME AS WRITER_DEPT
-           , RD.DEPT_NAME AS REFERENCE_DEPT
            , A.TITLE
            , MA.EMP_NAME AS APPROVER_NAME
            , A.STATUS_CODE AS STATUS_CODE
@@ -358,7 +297,6 @@ public interface ApprovalDocMapper {
         LEFT JOIN APPROVAL_DOC_STATUS DS ON (DS.STATUS_CODE = A.STATUS_CODE)
         LEFT JOIN MEMBER MW ON (MW.EMP_NO = A.WRITER_NO)
         LEFT JOIN MEMBER MA ON (MA.EMP_NO = A.APPROVER_NO)
-        LEFT JOIN DEPT RD ON (A.DEPT_CODE = RD.DEPT_CODE)
         LEFT JOIN DEPT WD ON (WD.DEPT_CODE = MW.DEPT_CODE)
         WHERE A.DEL_YN = 'N'
         AND APPROVER_NO = #{loginEmpNo}
@@ -369,10 +307,6 @@ public interface ApprovalDocMapper {
     
         <if test="paramMap.vo.categoryNo != null and paramMap.vo.categoryNo != ''">
             AND A.CATEGORY_NO = #{paramMap.vo.categoryNo}
-        </if>
-        
-        <if test="paramMap.vo.docNo != null and paramMap.vo.docNo != ''">
-            AND A.DOC_NO = #{paramMap.vo.docNo}
         </if>
         
         <if test="paramMap.vo.startDate != null and paramMap.vo.startDate != ''">
@@ -421,10 +355,6 @@ public interface ApprovalDocMapper {
                 AND A.CATEGORY_NO = #{vo.categoryNo}
             </if>
             
-            <if test="vo.docNo != null and vo.docNo != ''">
-                AND A.DOC_NO = #{vo.docNo}
-            </if>
-            
             <if test="vo.startDate != null and vo.startDate != ''">
                 AND SUBMITTED_AT >= TO_DATE(#{vo.startDate}, 'YYYY-MM-DD')
             </if>
@@ -448,10 +378,6 @@ public interface ApprovalDocMapper {
     
             <if test="vo.categoryNo != null and vo.categoryNo != ''">
                 AND A.CATEGORY_NO = #{vo.categoryNo}
-            </if>
-            
-            <if test="vo.docNo != null and vo.docNo != ''">
-                AND A.DOC_NO = #{vo.docNo}
             </if>
             
             <if test="vo.startDate != null and vo.startDate != ''">

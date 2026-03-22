@@ -18,7 +18,7 @@
 <body>
 
 <div class="app-shell">
-    <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
+    <%@ include file="/WEB-INF/views/approval/common/mdlSidebar.jsp" %>
 
     <main class="page-shell">
         <section class="page-content">
@@ -53,19 +53,17 @@
                     <form id="search-form">
                         <select name="statusCode" class="form-select" id="statusCode">
                             <option value="">전체</option>
-                            <option value="1">대기</option>
+                            <option value="1" selected>대기</option>
                             <option value="2">승인</option>
                             <option value="3">반려</option>
                         </select>
-                        
+
                         <select name="category" class="form-select" id="categoryNo">
                             <option value="">전체</option>
                             <option value="1">휴가</option>
                             <option value="2">연장근무</option>
                         </select>
-                        
-                        <input type="text" name="docNo" id="docNo" class="form-input" placeholder="문서번호">
-    
+
                         <input type="date" name="startDate" id="startDate" class="form-input">
                         <input type="date" name="endDate" id="endDate" class="form-input">
     
@@ -79,7 +77,6 @@
                             <th>문서유형</th>
                             <th>제목</th>
                             <th>기안자</th>
-                            <th>기안자 부서</th>
                             <th>상태</th>
                             <th>결재자</th>
                             <th>상신일</th>
@@ -98,7 +95,7 @@
     <div class="doc-modal-overlay" onclick="closeDocModal()"></div>
 
     <div class="doc-modal-content approval-form-modal">
-        <button type="button" class="doc-modal-close" onclick="closeDocModal()">×</button>
+        <!-- <button type="button" class="doc-modal-close" onclick="closeDocModal()">×</button> -->
 
         <div class="approval-paper">
 
@@ -127,7 +124,7 @@
                     <table class="approval-sign-table">
                         <tr>
                             <th rowspan="3">결재</th>
-                            <td id="detail-approverPosition">-</td>
+                            <td id="detail-approverName">-</td>
                         </tr>
                         <tr>
                             <td>
@@ -135,7 +132,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td id="detail-approverName">-</td>
+                            <td id="detail-actedAt">-</td>
                         </tr>
                     </table>
                 </div>
@@ -155,13 +152,6 @@
                         <th>참조부서</th>
                         <td colspan="3">
                             <div class="form-value" id="detail-referenceDept">-</div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>결재자</th>
-                        <td colspan="3">
-                            <div class="form-value" id="detail-approverName2">-</div>
                         </td>
                     </tr>
 
@@ -194,13 +184,6 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <th>첨부파일</th>
-                        <td colspan="3">
-                            <div class="form-value" id="detail-attachment">-</div>
-                        </td>
-                    </tr>
-
                     <tr class="content-row">
                         <th>내용</th>
                         <td colspan="3">
@@ -213,7 +196,7 @@
             <!-- 결재 의견 -->
             <div class="approval-comment-box">
                 <div class="approval-comment-title">결재의견</div>
-                <textarea id="approval-comment" class="approval-comment-textarea" placeholder="승인 또는 반려 의견을 입력하세요."></textarea>
+                <textarea id="approval-comment" class="approval-comment-textarea"></textarea>
             </div>
 
             <!-- 하단 버튼 -->

@@ -82,10 +82,6 @@ public class ApprovalDocService {
     }
 
 
-//    public ApprovalDocVo selectOne(String docNo) {
-//        return approvalDocMapper.selectOne(docNo);
-//    }
-
     @Transactional
     public int editDocument(ApprovalDocVo vo) {
         if ("1".equals(vo.getStatusCode())){
@@ -96,11 +92,6 @@ public class ApprovalDocService {
         }
         return 1;
     }
-//    @Transactional
-//    public int processApproval(ApprovalDocVo vo) {
-//        return approvalDocMapper.processApproval(vo);
-//    }
-
 //    @Transactional
 //    public int deleteDoc(ApprovalDocVo vo) {
 //
