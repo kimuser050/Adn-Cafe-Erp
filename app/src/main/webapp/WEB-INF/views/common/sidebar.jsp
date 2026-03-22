@@ -18,10 +18,11 @@
             <div class="nav-group">
                 <button type="button" class="nav-main">인적관리</button>
                 <div class="nav-sub">
-                    <a href="/hr/dept/list" class="active">조직관리</a>
-                    <a href="#">직원관리</a>
-                    <a href="#">근태관리</a>
-                    <a href="#">급여관리</a>
+                    <a href="/hr/home">인적현황</a>
+                    <a href="/hr/dept/list">조직관리</a>
+                    <a href="/hr/emp/list">직원관리</a>
+                    <a href="/hr/att/list">근태관리</a>
+                    <a href="/hr/pay/list">급여관리</a>
                 </div>
             </div>
 

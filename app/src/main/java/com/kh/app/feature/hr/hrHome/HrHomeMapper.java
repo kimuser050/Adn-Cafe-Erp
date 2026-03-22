@@ -50,18 +50,18 @@ public interface HrHomeMapper {
     int selectApprovedOvertimeCount(@Param("baseDate") String baseDate);
 
     @Select("""
-            SELECT
-                COUNT(*) AS totalEmpCount
-                , SUM(CASE WHEN STATUS_CODE = 1 THEN 1 ELSE 0 END) AS presentCount
-                , SUM(CASE WHEN STATUS_CODE = 2 THEN 1 ELSE 0 END) AS lateCount
-                , SUM(CASE WHEN STATUS_CODE = 3 THEN 1 ELSE 0 END) AS absentCount
-                , SUM(CASE WHEN STATUS_CODE = 4 THEN 1 ELSE 0 END) AS vacationCount
-                , SUM(CASE WHEN NVL(OT_CONFIRMED_HOURS, 0) > 0 THEN 1 ELSE 0 END) AS overtimeCount
-                , SUM(CASE WHEN STATUS_CODE = 1 THEN 1 ELSE 0 END) AS normalCount
-            FROM ATTENDANCE
-            WHERE WORK_DATE >= TO_DATE(#{baseDate}, 'YYYY-MM-DD')
-              AND WORK_DATE < TO_DATE(#{baseDate}, 'YYYY-MM-DD') + 1
-            """)
+        SELECT
+            COUNT(*) AS totalEmpCount
+            , NVL(SUM(CASE WHEN STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS presentCount
+            , NVL(SUM(CASE WHEN STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount
+            , NVL(SUM(CASE WHEN STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount
+            , NVL(SUM(CASE WHEN STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount
+            , NVL(SUM(CASE WHEN NVL(OT_CONFIRMED_HOURS, 0) > 0 THEN 1 ELSE 0 END), 0) AS overtimeCount
+            , NVL(SUM(CASE WHEN STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS normalCount
+        FROM ATTENDANCE
+        WHERE WORK_DATE >= TO_DATE(#{baseDate}, 'YYYY-MM-DD')
+          AND WORK_DATE < TO_DATE(#{baseDate}, 'YYYY-MM-DD') + 1
+        """)
     HrHomeDayAttSummaryVo selectDayAttSummary(@Param("baseDate") String baseDate);
 
     @Select("""
@@ -94,8 +94,8 @@ public interface HrHomeMapper {
         SELECT
             NVL(SUM(NET_AMOUNT), 0) AS totalNetAmount
             , COUNT(*) AS targetCount
-            , SUM(CASE WHEN CONFIRM_YN = 'Y' THEN 1 ELSE 0 END) AS confirmedCount
-            , SUM(CASE WHEN CONFIRM_YN = 'N' THEN 1 ELSE 0 END) AS unconfirmedCount
+            , NVL(SUM(CASE WHEN CONFIRM_YN = 'Y' THEN 1 ELSE 0 END), 0) AS confirmedCount
+            , NVL(SUM(CASE WHEN CONFIRM_YN = 'N' THEN 1 ELSE 0 END), 0) AS unconfirmedCount
         FROM PAYROLL_MASTER
         WHERE DEL_YN = 'N'
           AND PAY_MONTH >= TO_DATE(#{payMonth}, 'YYYY-MM')
