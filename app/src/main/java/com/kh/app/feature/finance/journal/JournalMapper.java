@@ -74,6 +74,7 @@ public interface JournalMapper {
                 ACCOUNT_NO
                 , ACCOUNT_NAME
             FROM ACCOUNT
+            WHERE USE_YN = 'Y'
             ORDER BY ACCOUNT_NO ASC
             """)
     List<AccountVo> getAccountList();

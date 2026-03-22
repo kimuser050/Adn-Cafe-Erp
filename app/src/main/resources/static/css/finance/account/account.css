@@ -65,7 +65,7 @@ body {
     border-radius: 10px 10px 0 0;
     margin: 0;
 
-    background-color: #dcbfa6; /* 사진과 동일한 베이지브라운 */
+    background-color: var(--color-light); /* 사진과 동일한 베이지브라운 */
     color: #333;
     font-size: 15px;
     font-weight: 700;
@@ -123,6 +123,34 @@ body {
     border-right: 1px solid var(--color-border);
     background-color: #fafafa;
     overflow-y: auto;
+}
+
+/* 하위 계정 리스트 행 스타일 */
+.sub-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f2eeea;
+    transition: all 0.2s;
+}
+
+/* 💡 비활성화(N) 상태일 때: 회색 글자 + 취소선 */
+.sub-row.disabled-row {
+    color: #bbb !important; /* 연한 회색 */
+    text-decoration: line-through; /* 취소선 */
+    background-color: #fcfcfc; /* 선택사항: 배경도 살짝 흐리게 */
+}
+
+/* 체크박스와 텍스트 정렬 */
+.sub-row input[type="checkbox"] {
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+}
+
+.sub-row span {
+    font-size: 14px;
 }
 
 .main-row {
@@ -206,7 +234,7 @@ body {
 }
 
 .form-title {
-    background-color: #dcbfa6; /* 왼쪽 헤더와 똑같은 베이지색 */
+    background-color: var(--color-light); /* 왼쪽 헤더와 똑같은 베이지색 */
     color: #333;
     font-size: 15px;
     font-weight: 700;
