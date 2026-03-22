@@ -158,4 +158,11 @@ public interface JournalMapper {
             """)
     List<JournalVo> incomeState(@Param("journalDate") String journalDate);
 
+    @Select("""
+            SELECT (I.UNIT_PRICE * R.QUANTITY)
+            FROM RETURN_REQ R
+            JOIN ITEM I ON R.PRODUCTS_NO = I.ITEM_NO
+            WHERE R.RETURN_NO = #{returnNo}
+            """)
+    String ReqTotalPrice(String returnNo);
 }
