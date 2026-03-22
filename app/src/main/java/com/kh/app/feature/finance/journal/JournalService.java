@@ -240,6 +240,73 @@ public class JournalService {
         return totalResult;
     }
 
+    //매출삭제 전표자동생성
+    @Transactional
+    public int autoSalesDel(DailySalesVo Dvo, HttpSession session){
+
+        //작성자 사번 받아오기
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if (loginMemberVo == null) {
+            throw new RuntimeException("로그인 세션이 만료되었습니다.");
+        }
+
+        //리스트생성
+        String sharedNo = journalMapper.getJournalNo();
+
+        int totalResult = 0;
+
+        //차변
+        JournalVo debitVo = new JournalVo();
+        debitVo.setJournalNo(sharedNo);
+        debitVo.setAccountNo("4010"); //제품매출
+        debitVo.setDebit(Dvo.getTotalSales());
+        debitVo.setCredit("0");
+        debitVo.setWriterNo(loginMemberVo.getEmpNo());
+        debitVo.setJournalDate(Dvo.getSalesDate());
+        totalResult += journalMapper.insertJournal(debitVo);
+
+        //대변
+        JournalVo creditVo = new JournalVo();
+        creditVo.setJournalNo(sharedNo);
+        if ("D".equals(Dvo.getPaymentCd())) {
+            creditVo.setAccountNo("1130"); // 외상매출금(카드결제)
+        } else {
+            creditVo.setAccountNo("1120"); // 보통예금(현금결제)
+        }
+        creditVo.setDebit("0");
+        creditVo.setCredit(Dvo.getTotalSales());
+        creditVo.setWriterNo(loginMemberVo.getEmpNo());
+        creditVo.setJournalDate(Dvo.getSalesDate());
+        totalResult += journalMapper.insertJournal(creditVo);
+
+        if (totalResult != 2 ) {
+            throw new RuntimeException("전표 저장 중 일부 데이터가 누락되었습니다.");
+        }
+
+        return totalResult;
+    }
+
+    //매출수정 전표자동생성
+    @Transactional
+    public int autoSalesEdit(DailySalesVo originalDvo, DailySalesVo editDvo, HttpSession session){
+        int totalResult = 0;
+
+        // 1. 기존 내역 취소 (수정되기 전의 원본 데이터로 역분개)
+        totalResult += autoSalesDel(originalDvo, session);
+
+        // 2. 새로운 내역 등록 (사용자가 입력한 새로운 데이터로 정상분개)
+        totalResult += autoSalesInsert(editDvo, session);
+
+        // 삭제(2건) + 등록(2건) = 총 4건의 전표 데이터가 처리되어야 정상
+        if (totalResult != 4 ) {
+            throw new RuntimeException("전표 수정 중 데이터 처리에 실패했습니다.");
+        }
+
+        return totalResult;
+    }
+
+
     //입고확정(거래처에서 본사로 입고) 전표자동생성
     @Transactional
     public int autoInboundYInsert(InboundVo IVo){

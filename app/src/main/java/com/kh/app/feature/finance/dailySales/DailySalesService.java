@@ -64,23 +64,69 @@ public class DailySalesService {
     }
 
     @Transactional
-    public int editDaily(DailySalesVo vo) throws Exception {
+    public int editDaily(DailySalesVo vo, HttpSession session) throws Exception {
 
         String koreanStoreName = dailySalesMapper.getkoreanStoreName(vo.getStoreNo());
 
         String tableName = engStoreName(koreanStoreName) + "_DAILY_SALES";
 
-        return dailySalesMapper.editDaily(vo, tableName);
+        // 원본 가져오기 (전표 역분개용)
+        DailySalesVo originalVo = dailySalesMapper.getDailySales(vo, tableName);
+
+        // 역분개 전표에 넣을 기존 총금액 계산
+        if(originalVo.getUnitPrice() != null && originalVo.getQuantity() != null) {
+            int originalTotal = Integer.parseInt(originalVo.getUnitPrice()) * Integer.parseInt(originalVo.getQuantity());
+            originalVo.setTotalSales(String.valueOf(originalTotal));
+        }
+
+        // 신규 전표에 넣을 수정된 총금액 계산
+        if(vo.getUnitPrice() != null && vo.getQuantity() != null) {
+            int calcTotal = Integer.parseInt(vo.getUnitPrice()) * Integer.parseInt(vo.getQuantity());
+            vo.setTotalSales(String.valueOf(calcTotal));
+        }
+
+        // 지점 테이블 수정하고 결과값을 변수에 저장
+        int result = dailySalesMapper.editDaily(vo, tableName);
+
+        // 토탈 테이블 수정
+        dailySalesMapper.editTotalSalesReal(vo);
+
+        // 전표 역분개 & 재등록
+        journalService.autoSalesEdit(originalVo, vo, session);
+
+        return result;
     }
 
     @Transactional
-    public int delDaily(DailySalesVo vo) throws Exception {
+    public int delDaily(DailySalesVo vo, HttpSession session) throws Exception {
 
         String koreanStoreName = dailySalesMapper.getkoreanStoreName(vo.getStoreNo());
 
         String tableName = engStoreName(koreanStoreName) + "_DAILY_SALES";
 
-        return dailySalesMapper.delDaily(vo, tableName);
+        // 역분개 전표를 만들기 위해 원본 데이터 가져오기
+        DailySalesVo originalVo = dailySalesMapper.getDailySales(vo, tableName);
+
+        if (originalVo == null) {
+            throw new Exception("삭제할 매출 데이터를 찾을 수 없습니다.");
+        }
+
+        // 역분개 전표에 넣을 총금액(TotalSales) 계산
+        if(originalVo.getUnitPrice() != null && originalVo.getQuantity() != null) {
+            int originalTotal = Integer.parseInt(originalVo.getUnitPrice()) * Integer.parseInt(originalVo.getQuantity());
+            originalVo.setTotalSales(String.valueOf(originalTotal));
+        }
+
+        // 전표 역분개 처리
+        journalService.autoSalesDel(originalVo, session);
+
+        // 지점 테이블 매출 내역 삭제 (결과값 저장)
+        int result = dailySalesMapper.delDaily(vo, tableName);
+
+        // TOTAL_SALES 통합 테이블 매출 내역 삭제
+        dailySalesMapper.delTotalSalesReal(originalVo);
+
+        return result;
     }
 
     public List<DailySalesVo> listDaily(DailySalesVo vo) throws Exception {

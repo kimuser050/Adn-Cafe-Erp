@@ -36,9 +36,11 @@ public class DailySalesRestController {
     }
 
     @PutMapping("/editDaily")
-    public ResponseEntity<Map<String, String>> editDaily(@RequestBody DailySalesVo vo) throws Exception {
+    public ResponseEntity<Map<String, String>> editDaily(
+            @RequestBody DailySalesVo vo,
+            HttpSession session) throws Exception {
 
-        int result = dailySalesService.editDaily(vo);
+        int result = dailySalesService.editDaily(vo, session);
 
         Map<String, String> map = new HashMap<>();
         map.put("result" , result+"");
@@ -46,9 +48,11 @@ public class DailySalesRestController {
     }
 
     @DeleteMapping("/delDaily")
-    public ResponseEntity<Map<String, String>> delDaily(DailySalesVo vo) throws Exception {
+    public ResponseEntity<Map<String, String>> delDaily(
+            DailySalesVo vo,
+            HttpSession session) throws Exception {
 
-        int result = dailySalesService.delDaily(vo);
+        int result = dailySalesService.delDaily(vo, session);
 
         Map<String, String> map = new HashMap<>();
         map.put("result" , result+"");
