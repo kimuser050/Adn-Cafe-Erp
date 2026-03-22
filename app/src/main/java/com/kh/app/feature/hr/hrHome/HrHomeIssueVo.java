@@ -15,5 +15,4 @@ public class HrHomeIssueVo {
     private String hisDate;       // 인사이력 날짜
     private String hisEvent;      // 입사 / 퇴사 / 부서이동 / 직급변경
     private String hisContent;    // 상세내용
-    private String badgeText;     // 화면 badge용 텍스트
 }

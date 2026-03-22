@@ -137,7 +137,7 @@ public class PayService {
         }
 
         // return 전에 호출
-        journalService.autoPayrollYInsert(netAmount, empNo, updatedAt);
+        journalService.autoPayrollYInsert(originVo);
 
         return result;
 
@@ -162,7 +162,7 @@ public class PayService {
         }
 
 
-        journalService.autoPayrollNInsert(netAmount, empNo, updatedAt);
+        journalService.autoPayrollNInsert(originVo);
 
         return result;
     }
