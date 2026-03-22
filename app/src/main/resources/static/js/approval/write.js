@@ -32,7 +32,7 @@ async function insertDocument(){
         }
     
         alert("상신 완료");
-        location.href="/approval/document/myDocList"
+        location.href="/approval/document/myDocList/1"
     } catch (error) {
         location.href="/home"
         console.log(error)
