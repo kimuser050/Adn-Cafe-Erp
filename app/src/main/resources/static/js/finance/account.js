@@ -42,10 +42,10 @@ async function loadSub(element, mainAccountNo) {
 
         let subList = "";
         for (const vo of voList) {
-            // 1. 상태값 꺼내기 (대소문자 모두 대응)
+            // 상태값 꺼내기 (대소문자 모두 대응)
             const currentStatus = vo.useYn || vo.USE_YN;
 
-            // 2. 상태가 'N'이면 'disabled-row'라는 클래스명을 변수에 담기
+            // 상태가 'N'이면 'disabled-row'라는 클래스명을 변수에 담기 (css로 효과 변경)
             const disabledClass = (currentStatus === 'N') ? "disabled-row" : "";
             subList += `
             <div class="sub-row ${disabledClass}" >
