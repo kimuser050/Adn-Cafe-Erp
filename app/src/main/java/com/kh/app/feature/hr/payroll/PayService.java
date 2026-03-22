@@ -1,5 +1,6 @@
 package com.kh.app.feature.hr.payroll;
 
+import com.kh.app.feature.finance.journal.JournalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class PayService {
 
     private final PayMapper payMapper;
+    private final JournalService journalService;
 
     // 1. 급여 등록
     @Transactional
@@ -134,7 +136,11 @@ public class PayService {
             throw new IllegalStateException("급여 확정 실패");
         }
 
+        // return 전에 호출
+        journalService.autoPayrollYInsert(netAmount, empNo, updatedAt);
+
         return result;
+
     }
 
     // 7. 급여 확정 취소
@@ -154,6 +160,9 @@ public class PayService {
         if (result != 1) {
             throw new IllegalStateException("급여 확정 취소 실패");
         }
+
+
+        journalService.autoPayrollNInsert(netAmount, empNo, updatedAt);
 
         return result;
     }
