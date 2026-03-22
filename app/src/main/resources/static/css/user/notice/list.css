@@ -244,3 +244,32 @@
 .btn-search:hover {
     background-color: #5d4037;
 }
+
+/* 공통 버튼 색 */
+:root {
+    --main-brown: #71513d;
+    --main-brown-hover: #5d4037;
+}
+
+/* 페이지 내 버튼들 통일 */
+.pagination button,
+.btn-search,
+.write-btn,
+.top-user-bar button {
+    background-color: var(--main-brown);
+    color: white;
+    border: none;
+}
+
+/* hover 통일 */
+.pagination button:hover,
+.btn-search:hover,
+.write-btn:hover,
+.top-user-bar button:hover {
+    background-color: var(--main-brown-hover);
+}
+
+/* active 버튼도 맞춤 */
+.pagination button.active {
+    background: var(--main-brown);
+}

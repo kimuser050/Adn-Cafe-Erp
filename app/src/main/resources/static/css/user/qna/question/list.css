@@ -1,3 +1,9 @@
+:root {
+    --main-brown: #71513d;
+    --main-brown-hover: #5d4037;
+}
+
+
 .qna-list-wrap {
     padding: 40px;
     background-color: #eee9e4;
@@ -217,3 +223,25 @@
 .top-user-bar button:hover {
     background: #6d5a47;
 }
+
+.page-num {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+/* hover 효과 */
+.page-num:hover {
+    background-color: var(--main-brown);
+    color: white;
+}
+
+
+
