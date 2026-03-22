@@ -3,6 +3,9 @@ package com.kh.app.feature.finance.journal;
 import com.kh.app.feature.finance.account.AccountVo;
 import com.kh.app.feature.finance.dailySales.DailySalesVo;
 import com.kh.app.feature.hr.payroll.PayMasterVo;
+import com.kh.app.feature.stock.Return_Req.ReqVo;
+import com.kh.app.feature.stock.inbound.InboundVo;
+import com.kh.app.feature.stock.oderReq.OderReqVo;
 import com.kh.app.feature.user.member.MemberVo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("Duplicates") // "중복 코드 알고 있으니 경고 띄우지 마"라는 뜻
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -96,8 +100,9 @@ public class JournalService {
         return journalMapper.incomeState(journalDate);
     }
 
+    //급여확정 전표자동생성
     @Transactional
-    public int autoPayrollInsert(PayMasterVo Pvo){
+    public int autoPayrollYInsert(PayMasterVo Pvo){
 
         String sharedNo = journalMapper.getJournalNo();
 
@@ -136,6 +141,49 @@ public class JournalService {
         return totalResult;
     }
 
+    //급여취소 전표자동생성
+    @Transactional
+    public int autoPayrollNInsert(PayMasterVo Pvo){
+
+        String sharedNo = journalMapper.getJournalNo();
+
+        //리스트생성
+        List<JournalVo> jVoList = new ArrayList<>();
+
+        //차변
+        JournalVo debitVo = new JournalVo();
+        debitVo.setJournalNo(sharedNo);
+        debitVo.setAccountNo("1120");
+        debitVo.setDebit(Pvo.getNetAmount());
+        debitVo.setCredit("0");
+        debitVo.setWriterNo(Pvo.getEmpNo());
+        debitVo.setJournalDate(Pvo.getUpdatedAt());
+        jVoList.add(debitVo);
+
+        //대변
+        JournalVo creditVo = new JournalVo();
+        creditVo.setJournalNo(sharedNo);
+        creditVo.setAccountNo("5010");
+        creditVo.setDebit("0");
+        creditVo.setCredit(Pvo.getNetAmount());
+        creditVo.setWriterNo(Pvo.getEmpNo());
+        creditVo.setJournalDate(Pvo.getUpdatedAt());
+        jVoList.add(creditVo);
+
+        int totalResult = 0;
+        for (JournalVo vo : jVoList) {
+            totalResult += journalMapper.insertJournal(vo);
+        }
+
+        if (totalResult != jVoList.size()) {
+            throw new RuntimeException("전표 저장 중 일부 데이터가 누락되었습니다.");
+        }
+
+        return totalResult;
+    }
+
+    //매출등록 전표자동생성
+    @Transactional
     public int autoSalesInsert(DailySalesVo Dvo, HttpSession session){
 
         //작성자 사번 받아오기
@@ -181,6 +229,129 @@ public class JournalService {
         return totalResult;
     }
 
+    //입고확정(거래처에서 본사로 입고) 전표자동생성
+    @Transactional
+    public int autoInboundYInsert(InboundVo IVo){
+
+        String sharedNo = journalMapper.getJournalNo();
+
+        //리스트생성
+        List<JournalVo> jVoList = new ArrayList<>();
+
+        //차변
+        JournalVo debitVo = new JournalVo();
+        debitVo.setJournalNo(sharedNo);
+        debitVo.setAccountNo("1140"); // '원재료'코드
+        debitVo.setDebit(IVo.getTotalPrice());
+        debitVo.setCredit("0");
+        debitVo.setWriterNo("입고관리팀");
+        debitVo.setJournalDate(IVo.getUpdatedAt());
+        jVoList.add(debitVo);
+
+        //대변
+        JournalVo creditVo = new JournalVo();
+        creditVo.setJournalNo(sharedNo);
+        creditVo.setAccountNo("1120"); //'보통예금'코드
+        creditVo.setDebit("0");
+        creditVo.setCredit(IVo.getTotalPrice());
+        creditVo.setWriterNo("입고관리팀");
+        creditVo.setJournalDate(IVo.getUpdatedAt());
+        jVoList.add(creditVo);
+
+        int totalResult = 0;
+        for (JournalVo vo : jVoList) {
+            totalResult += journalMapper.insertJournal(vo);
+        }
+
+        if (totalResult != jVoList.size()) {
+            throw new RuntimeException("전표 저장 중 일부 데이터가 누락되었습니다.");
+        }
+
+        return totalResult;
+    }
+
+    //발주확정(본사재고 내에서 점주가 발주) 전표 자동생성
+    @Transactional
+    public int autoOrderYInsert(OderReqVo oderReqVo){
+
+        String sharedNo = journalMapper.getJournalNo();
+
+        //리스트생성
+        List<JournalVo> jVoList = new ArrayList<>();
+
+        //차변
+        JournalVo debitVo = new JournalVo();
+        debitVo.setJournalNo(sharedNo);
+        debitVo.setAccountNo("1140"); // '원재료'코드
+        debitVo.setDebit(oderReqVo.getTotalPrice());
+        debitVo.setCredit("0");
+        debitVo.setWriterNo("발주관리팀");
+        debitVo.setJournalDate(oderReqVo.getRequestDate());
+        jVoList.add(debitVo);
+
+        //대변
+        JournalVo creditVo = new JournalVo();
+        creditVo.setJournalNo(sharedNo);
+        creditVo.setAccountNo("5020"); //'제조원가'코드
+        creditVo.setDebit("0");
+        creditVo.setCredit(oderReqVo.getTotalPrice());
+        creditVo.setWriterNo("발주관리팀");
+        creditVo.setJournalDate(oderReqVo.getRequestDate());
+        jVoList.add(creditVo);
+
+        int totalResult = 0;
+        for (JournalVo vo : jVoList) {
+            totalResult += journalMapper.insertJournal(vo);
+        }
+
+        if (totalResult != jVoList.size()) {
+            throw new RuntimeException("전표 저장 중 일부 데이터가 누락되었습니다.");
+        }
+
+        return totalResult;
+    }
+
+
+    //반품확정(매장에서 본사에게 원재료 반품신청) 전표 자동생성
+//    @Transactional
+//    public int autoRetrunYInsert(ReqVo RVo){
+//
+//        String sharedNo = journalMapper.getJournalNo();
+//
+//        //리스트생성
+//        List<JournalVo> jVoList = new ArrayList<>();
+//
+//        //차변
+//        JournalVo debitVo = new JournalVo();
+//        debitVo.setJournalNo(sharedNo);
+//        debitVo.setAccountNo("5020"); // '재고자산폐기손실'코드
+//        debitVo.setDebit(RVo.getTotalPrice());
+//        debitVo.setCredit("0");
+//        debitVo.setWriterNo("반품관리팀");
+//        debitVo.setJournalDate(RVo.getCreateAt());
+//        jVoList.add(debitVo);
+//
+//        //대변
+//        JournalVo creditVo = new JournalVo();
+//        creditVo.setJournalNo(sharedNo);
+//        creditVo.setAccountNo("1140"); //'원재료'코드
+//        creditVo.setDebit("0");
+//        creditVo.setCredit(RVo.getTotalPrice());
+//        creditVo.setWriterNo("반품관리팀");
+//        creditVo.setJournalDate(RVo.getCreateAt());
+//        jVoList.add(creditVo);
+//
+//        int totalResult = 0;
+//        for (JournalVo vo : jVoList) {
+//            totalResult += journalMapper.insertJournal(vo);
+//        }
+//
+//        if (totalResult != jVoList.size()) {
+//            throw new RuntimeException("전표 저장 중 일부 데이터가 누락되었습니다.");
+//        }
+//
+//        return totalResult;
+//    }
 }
 
 
