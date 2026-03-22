@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("stock")
 public class OrderReqViewController {
 
-    // 1. 발주 신청 화면
+    // 1. 점주입장 발주 신청 화면
     @GetMapping("order")
     public String order(HttpSession session, RedirectAttributes ra, org.springframework.ui.Model model) {
 
@@ -21,7 +21,7 @@ public class OrderReqViewController {
         if (loginMemberVo == null ||
                 (!"310102".equals(loginMemberVo.getDeptCode()) && !"310104".equals(loginMemberVo.getDeptCode()))) {
             ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
-            return "redirect:/main";
+            return "redirect:/home";
         }
 
         // 2. [중요] 사번(empNo)을 모델에 담습니다.
@@ -33,9 +33,34 @@ public class OrderReqViewController {
         return "stock/item/orderReq";
     }
 
-    // 2. 발주 내역 화면 (order 메서드 밖으로 독립시킴)
+    // 1-2 점주입장 발주 내역 화면 (order 메서드 밖으로 독립시킴)
+    @GetMapping("product/history")
+    public String productHistory(HttpSession session, RedirectAttributes ra, org.springframework.ui.Model model){
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if(loginMemberVo == null || (!"310104".equals(loginMemberVo.getDeptCode())
+                && !"310100".equals(loginMemberVo.getDeptCode()))){
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/home";
+        }
+
+
+        return "stock/item/productOrderhistory"; // jsp 경로
+    }
+
+
+
+    // 2. 발주 상태 화면 품질담당자만
     @GetMapping("history")
-    public String history() {
+    public String history(HttpSession session, RedirectAttributes ra, org.springframework.ui.Model model){
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if(loginMemberVo == null || (!"310103".equals(loginMemberVo.getDeptCode())
+                && !"310100".equals(loginMemberVo.getDeptCode()))){
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/home";
+        }
+
         return "stock/item/orderhistory"; // jsp 경로
     }
 }

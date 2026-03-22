@@ -12,12 +12,12 @@
 </head>
 <body>
     <div class="app-shell">
-        <%@ include file="/WEB-INF/views/stock/common/itemSidebar.jsp" %>
+     <%@ include file="/WEB-INF/views/stock/common/itemSidebar.jsp" %>
 
         <main class="page-shell">
             <section class="page-content">
                 <div class="tab-wrapper">
-                    <a href="/stock/item" class="tab-btn active">품목</a>
+                    <a href="/stock/item" class="tab-btn active">관리 품목 </a>
                     <a href="/stock/inbound" class="tab-btn">입고 내역</a>
                 </div>
 
