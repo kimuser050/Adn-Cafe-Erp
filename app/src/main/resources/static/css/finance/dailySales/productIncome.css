@@ -1,97 +1,30 @@
-/* 1. 기본 레이아웃 (보내주신 가이드 기준) */
+/* 1. 전체 레이아웃 정돈 */
 .page {
-    margin-left: 100px;
-    padding: 60px 20px;
+    padding: 20px 40px;
+    border-radius: 20px;
+    background-color: var(--color-white); /* 배경색 제거, 깔끔한 화이트 */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-width: 1200px;
+    position: relative;
+    min-height: 800px;
 }
 
-/* 2. 상단 탭 그룹 */
-.main-tab-group {
-    width: 100%;
-    max-width: 1300px;
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    justify-content: flex-start;
-}
-
-.menu-btn {
-    padding: 12px 30px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    background-color: #fff;
-    color: #6a4328;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s;
-}
-
-.menu-btn.active {
-    background-color: #6a4328;
-    color: #fff;
-    border: none;
-}
-
-/* 부모 컨테이너: 두 요소를 나란히 배치 */
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    /* 양 끝으로 배치 */
-    width: 1300px;
-    align-items: center;
-    /* 세로 중앙 정렬 */
-    max-width: 100%;
-    margin: 0 auto 20px auto;
-    box-sizing: border-box;
-}
-
-/* 검색 영역: 스타일 유지 */
-.search-wrapper {
-    /* 남은 공간을 차지하도록 설정 (필요에 따라 조정 가능) */
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 35px;
-    background-color: #fcfcfc;
-    border-radius: 15px;
-    border: 1px solid #eee;
-    /* margin-right: 20px; */
-    /* 프로필 박스와의 간격 */
-}
-
-/* 프로필 박스: 크기 지정 및 스타일 적용 */
+/* 👤 유저 프로필 (위치 하향 조정) */
 .user-profile {
+    position: absolute;
+    top: 45px; /* 25px -> 45px로 더 내림 */
+    right: 40px;
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background-color: #fcfcfc;
-    border-radius: 15px;
-    border: 1px solid #eee;
-
-    /* 원하는 크기로 지정 (예시) */
-    width: 250px;
-    height: 70px;
-    box-sizing: border-box;
+    gap: 12px;
 }
 
-/* 나머지 스타일 유지 */
 .profile-img-box {
-    flex-shrink: 0;
-    width: 45px;
-    height: 45px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
+    border: 1.5px solid var(--color-mid);
     overflow: hidden;
-    border: 1px solid #ddd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
 }
 
 .profile-img {
@@ -100,87 +33,93 @@
     object-fit: cover;
 }
 
+/* 🔴 로그아웃 버튼 디자인 */
 .logout-btn {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #f9f9f9;
-    cursor: pointer;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+    padding: 4px 12px;
+    border-radius: 6px;
     font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .logout-btn:hover {
-    background: #eee;
+    background-color: #fcfcfc;
+    color: var(--color-dark);
+    border-color: var(--color-mid);
+}
+
+/* 📅 검색바 (다른 페이지와 통일감 있게 축소) */
+.header-container {
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.search-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 15px; /* 패딩 축소 */
+    border-bottom: 2px solid var(--color-mid); /* 선으로만 포인트 */
 }
 
 .search-wrapper label {
-    font-weight: bold;
-    color: #666;
-    font-size: 15px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-mid);
 }
-
 
 .month-input {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 10px 15px;
+    border: none;
+    font-family: 'Pretendard', sans-serif;
     font-size: 14px;
+    font-weight: 600;
+    color: var(--color-dark);
     outline: none;
-    transition: all 0.2s;
+    cursor: pointer;
 }
 
-.month-input:focus {
-    border-color: #6a4328;
-    box-shadow: 0 0 0 2px rgba(106, 67, 40, 0.1);
-}
-
-/* 4. 대시보드 메인 박스 (막대그래프 크기 최적화) */
+/* 📊 차트 그리드 (배경색/그림자 제거, 선으로 구분) */
 .sales-dashboard {
-    background: #fff;
-    border-radius: 20px;
-    padding: 40px;
-    display: flex;
-    justify-content: center;
-    /* 중앙 정렬 */
-    align-items: stretch;
-    /* 자식 높이를 동일하게 맞춤 */
-    gap: 50px;
-    /* 차트 사이 간격 확대 */
-    width: 100%;
-    max-width: 1300px;
-    min-height: 600px;
-    /* 전체적인 높이감 확보 */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 30px; /* 위아래 간격을 좀 더 줌 */
 }
 
 .chart-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* 도넛 차트 영역 (고정 폭 유지로 예쁜 원형 유지) */
-.chart-item.donut {
-    flex: 1;
-    max-width: 450px;
-}
-
-/* 막대 차트 영역 (flex를 높여서 더 넓게 확장) */
-.chart-item.bar {
-    flex: 1.5;
+    background: none; /* 카드 배경 제거 */
+    padding: 10px;
+    border: none;
+    box-shadow: none; /* 그림자 제거 */
 }
 
 .chart-item h3 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    margin-bottom: 25px;
-    color: #6a4328;
-    text-align: center;
+    color: var(--color-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* 차트 컨테이너 높이 */
+/* 제목 옆 포인트 바 */
+.chart-item h3::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background-color: var(--color-mid);
+    border-radius: 10px;
+}
+
 .chart-container {
-    flex: 1;
     position: relative;
-    min-height: 450px;
+    height: 300px; /* 크기 살짝 조정 */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #f0f0f0; /* 차트 영역만 아주 연한 선으로 구분 */
+    border-radius: 12px;
 }

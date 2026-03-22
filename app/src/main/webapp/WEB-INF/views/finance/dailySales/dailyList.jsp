@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="/css/common/sidebar.css">
         <link rel="stylesheet" href="/css/common/component.css">
         <link rel="stylesheet" href="/css/hr/dept/deptList.css">
-        <link rel="stylesheet" href="/css/finance/dailySales/dailyList.css">
+        <link rel="stylesheet" href="/css/finance/dailySales/dailySales.css">
         <script defer src="/js/finance/dailySales.js"></script>
     </head>
 
@@ -27,10 +27,14 @@
                             <div class="page-content-box">
                                 <div class="title">매출 조회</div>
                                 <div class="header">
+                                    <div class="header-left">
                                     <input type="date" name="salesDate" id="salesDate" onchange="salesList();">
                                     <input type="text" class="storeInput" list="storeOptions" placeholder="매장명 선택">
+                                </div>
                                     <datalist id="storeOptions"></datalist>
+                                    <div class="header-right">
                                     <button onclick="location.href='/dailySales/insertDaily'">매출 등록</button>
+                                </div>
                                 </div>
                                 <div class="body">
                                     <table>

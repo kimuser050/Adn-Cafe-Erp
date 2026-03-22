@@ -124,11 +124,7 @@ async function salesList() {
                     <td>${Number(vo.unitPrice).toLocaleString()}</td>
                     <td>${vo.quantity}</td>
                     <td>${vo.paymentCd}</td>
-                    <td><button onclick="openEditModal(
-                    '${vo.storeNo}',
-                    '${vo.salesNo}', '${vo.salesDate}','${vo.productName}',
-                    '${vo.unitPrice}', '${vo.quantity}', '${vo.paymentCd}'
-                    );">수정하기</button></td>
+                    <td><button onclick="openEditModal('${vo.storeNo}','${vo.salesNo}','${vo.salesDate}','${vo.productName}','${vo.unitPrice}','${vo.quantity}','${vo.paymentCd}');">수정하기</button></td>
                     <td><button onclick="delSales('${vo.salesNo}','${storeNo}');">삭제하기</button></td>
                 </tr>
         `
@@ -295,18 +291,15 @@ function closeModal() {
 
 async function editSales() {
 
-    const storeInputValue = document.querySelector(".storeInput").value;
-    const storeOption = document.querySelectorAll("#storeOptions option");
+    const storeInput = document.querySelector(".storeInput").value; // "강남점" (X)
+    const storeOptions = document.querySelectorAll("#storeOptions option");
     let storeNo = "";
-    for (let opt of storeOption) {
-        if (opt.value === storeInputValue) {
-            storeNo = opt.dataset.no; // 실제 DB용 숫자 코드
+
+    for (let opt of storeOptions) {
+        if (opt.value === storeInput) {
+            storeNo = opt.dataset.no; // "1" 또는 "101" 같은 숫자 (O)
             break;
         }
-    }
-    if (!storeNo) {
-        alert("유효한 매장을 선택해주세요.");
-        return;
     }
 
     const salesNo = document.querySelector("#modalSalesNo").value;
@@ -325,7 +318,7 @@ async function editSales() {
         return;
     }
 
-    const unitPrice = document.querySelector("#modalUnitPrice").value;
+    const unitPrice = document.querySelector("#modalUnitPrice").value.toString().replace(/,/g, "");
     const quantity = document.querySelector("#modalQuantity").value;
     if (isNaN(unitPrice) || unitPrice < 0) {
         alert("단가를 올바르게 입력해주세요.");
@@ -361,7 +354,9 @@ async function editSales() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                storeNo, salesNo, salesDate, productNo, unitPrice, quantity, paymentCd
+                storeNo, salesNo, salesDate, productNo, 
+                unitPrice : Number(unitPrice), 
+                quantity : Number(quantity), paymentCd
             })
         })
 

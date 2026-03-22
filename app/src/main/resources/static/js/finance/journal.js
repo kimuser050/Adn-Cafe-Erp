@@ -142,15 +142,17 @@ async function selectJournal() {
         for (let i = 0; i < voList.length; i += 2) {
             const debitVo = voList[i];
             const creditVo = voList[i + 1];
+
             str += `
-                <tr>
+                <tr class="new-group">
                     <td rowspan="2">${debitVo.journalDate.substring(0, 10)}</td>
                     <td rowspan="2">${debitVo.journalNo}</td>
                     <td>${debitVo.accountName}</td>
                     <td>${Number(debitVo.debit).toLocaleString()}</td>
                     <td rowspan="2">${debitVo.writerName}</td>
                     <td rowspan="2">
-                        <button type="button" class="menu-btn-sm" 
+                    <div class="action-cell">
+                        <button type="button" class="btn-action edit" 
                         onclick="openUpdateModal(
                         '${debitVo.journalNo}'
                         , '${debitVo.accountName}', '${Number(debitVo.debit).toLocaleString()}'
@@ -158,8 +160,9 @@ async function selectJournal() {
                         , '${debitVo.journalDate}'
                         )">수정</button>
                 
-                        <button type="button" class="menu-btn-sm" 
+                        <button type="button" class="btn-action del" 
                         onclick="deleteJournal('${debitVo.journalNo}')">삭제</button>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -369,17 +372,20 @@ async function findAccount(page = 1) {
 
 // 페이징 버튼을 그리는 함수
 function renderPagination(pvo) {
-    const pagingArea = document.querySelector("#pagingArea"); // HTML에 버튼 들어갈 div가 있어야 함
+    const pagingArea = document.querySelector("#pagination-area"); 
     
     if(!pagingArea) return;
 
     let pagingStr = "";
 
-
-    // 숫자 버튼
+    // 숫자 버튼 생성 루프
     for (let i = pvo.startPage; i <= pvo.endPage; i++) {
-        const activeClass = (i === pvo.currentPage) ? 'style="font-weight:bold; color:red;"' : '';
-        pagingStr += `<button ${activeClass} onclick="findAccount(${i})">${i}</button>`;
+        const isActive = (i === pvo.currentPage) ? 'active' : '';
+        
+        pagingStr += `
+            <div class="page-num ${isActive}" onclick="findAccount(${i})">
+                ${i}
+            </div>`;
     }
 
     pagingArea.innerHTML = pagingStr;

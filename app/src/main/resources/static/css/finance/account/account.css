@@ -1,252 +1,261 @@
-/* 기본 초기화 및 배경 */
+/* =========================================================
+   기본 초기화 및 전체 레이아웃
+   ========================================================= */
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background: #c8c1b4;
-    /* 기존 배경색 유지 */
+    background: #c8c1b4; /* 기존 배경색 유지 */
     font-family: 'Pretendard', Arial, sans-serif;
 }
 
-/* 1. 전체를 감싸는 page: 자식들을 중앙으로 모으되, 내부 정렬은 자식들에게 맡김 */
 .page {
-    /* 사이드바 너비를 제외한 나머지 공간에서 중앙 정렬 */
-    margin-left: 100px;
+    margin-left: 100px; /* 사이드바 여백 */
     padding: 60px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* 자식 요소들을 가로축 중앙으로 */
     min-width: 1200px;
-    /* 박스가 커질 것이므로 최소 너비 확보 */
 }
+
+/* =========================================================
+   계정과목 관리 (재무제표 공통 UI 스타일 적용)
+   ========================================================= */
 
 .title {
-    align-self: center;
-    margin-left: 130px;
-    /* 부모의 center를 따름 */
-    width: 100%;
-    max-width: 1300px;
-    /* 아래 content-box와 동일하게 맞춤 */
 
-    display: inline-block;
-    width: fit-content;
-    text-align: left;
-    margin-bottom: 15px;
-
-    /* 왼쪽 정렬을 위해 margin-right만 오토로 지정 */
-    margin-right: auto;
-    /* 만약 박스가 중앙에 있다면, margin-left도 계산되어야 함 */
-
-    padding: 12px 30px;
-    font-size: 16px;
+    font-size: 24px;
     font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    background-color: #6a4328;
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s;
+    color: #6a4328;
+    margin-bottom: 20px;
+    align-self: flex-start;
+    padding-left: 10px;
+
 }
 
-/* 4. 메인 박스: 기존과 동일하게 유지 */
+/* 메인 패널 (재무제표 .journal-card 스타일 동일 적용) */
 .content-box {
-    background: #fff;
-    border-radius: 20px;
-    padding: 40px;
-    display: flex;
-    gap: 40px;
     width: 100%;
-    max-width: 1300px;
-    /* 기존 1100px에서 1300px로 확대 */
-    min-height: 600px;
-    /* 세로 크기도 어느 정도 확보 */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    min-height: 780px;
+    padding: 30px;
+    display: flex;
+    align-items: flex-start;
+    gap: 30px; /* 좌우 영역 간격 */
+    background: var(--color-panel);
+    border-radius: 12px;
 }
 
-/* 왼쪽 계정 영역 */
+.account-area, .register-area {
+    flex: 1; /* 너비를 5:5로 동일하게 */
+}
+
+/* =========================================================
+   좌우 공통 헤더 스타일 (재무제표 테이블 헤더 느낌)
+   ========================================================= */
+.table-header, .form-title {
+    /* background-color: var(--color-light); 
+    color: var(--color-dark);
+    padding: 15px 20px;
+    font-size: 15px;
+    font-weight: 800;
+    border: 1px solid var(--color-border); */
+    border-bottom: 2px solid var(--color-border);
+    border-radius: 10px 10px 0 0;
+    margin: 0;
+
+    background-color: #dcbfa6; /* 사진과 동일한 베이지브라운 */
+    color: #333;
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    height: 45px; /* 양쪽 헤더 높이 완벽 일치 */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 텍스트 가운데 정렬 */
+    border: 1px solid #dcbfa6;
+}
+
+.table-header {
+    border-radius: 8px 8px 0 0;
+}
+
+/* =========================================================
+   왼쪽: 계정과목 목록 영역
+   ========================================================= */
 .account-area {
     flex: 1.2;
     display: flex;
     flex-direction: column;
 }
 
-.table-header {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: #6a4328;
-    text-align: left;
-    padding-left: 5px;
+.account-wrapper {
+    /* display: flex;
+    flex: 1;
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    background-color: var(--color-white); */
+    overflow: hidden;
+
+    height: 450px; /* 고정 높이 */
+    display: flex;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background: #fff;
 }
 
-/* 계정 테이블 래퍼 */
-.account-wrapper {
-    display: flex;
-    border: 1px solid #eee;
+.form-box {
+    /* 오른쪽 폼 박스는 [헤더 45px + 래퍼 450px] = 495px로 맞춰야 왼쪽과 딱 맞습니다 */
+    height: 495px; 
+    border: 1px solid #ccc;
+    border-radius: 8px;
     background: #fff;
-    height: 450px;
-    border-radius: 12px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 💡 튀어나오는 현상 해결 핵심 (박스 밖으로 나가는 요소 숨김) */
 }
 
 .account-main {
-    width: 45%;
-    border-right: 1px solid #eee;
+    width: 40%;
+    border-right: 1px solid var(--color-border);
+    background-color: #fafafa;
     overflow-y: auto;
 }
 
 .main-row {
-    padding: 14px;
     text-align: center;
-    /* 텍스트 가운데 정렬 */
-    border-bottom: 1px solid #eee;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f2eeea;
     cursor: pointer;
-    /* 수직 중앙 정렬까지 확실하게 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
 }
 
 .main-row:hover {
-    background: #fdfaf8;
+    background-color: #fdfaf8;
+    color: var(--color-mid);
+    font-weight: 700;
+    border-left: 4px solid #b28a6d;
 }
 
 .main-row.active {
-    background: #6a4328;
-    color: #fff;
-    font-weight: 600;
+    background-color: #fdfaf8;
+    color: var(--color-mid);
+    font-weight: 800;
+    border-left: 4px solid var(--color-mid);
 }
 
-/* 하위 계정 영역 */
 .account-sub {
     flex: 1;
+    padding: 20px;
     overflow-y: auto;
-    background: #fcfcfc;
-    padding: 30px;
 }
 
 .sub-placeholder {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #bbb;
+    color: var(--color-muted);
+    text-align: center;
+    margin-top: 50px;
     font-size: 14px;
 }
 
-/* 하단 버튼들 (수정/삭제/추가 버튼 디자인 통일) */
-.account-footer,
-.register-footer {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
+.account-footer {
+    margin-top: 15px;
+    text-align: right;
 }
 
-.delete-btn,
-.add-btn {
-    padding: 10px 25px;
-    font-size: 14px;
-    font-weight: bold;
-    border: 1px solid #6a4328;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
+/* 상태변경 버튼 (재무제표 .menu-btn 기반) */
 .delete-btn {
-    background-color: #fff;
-    color: #6a4328;
-}
-
-.add-btn {
-    background-color: #6a4328;
-    color: #fff;
-    border: none;
-}
-
-/* 버튼 호버 시 커서만 변경 */
-.delete-btn:hover,
-.add-btn:hover {
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-white);
+    color: var(--color-muted);
     cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s;
 }
 
-/* 오른쪽 계정 등록 영역 */
+.delete-btn:hover {
+    background-color: #f8f9fa;
+}
+
+/* =========================================================
+   오른쪽: 신규 계정 등록 영역
+   ========================================================= */
+/* ================== 오른쪽 계정 등록 영역 ================== */
 .register-area {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* 박스 자체를 세로 중앙으로 밀어줌 */
 }
 
 .form-box {
-    background: #f3f3f3;
+    height: 495px; /* 왼쪽(헤더 45px + 바디 450px)과 완벽하게 똑같은 높이 */
     border: 1px solid #ccc;
-    padding: 30px;
-    /* 다른 설정은 건드리지 않음 */
+    border-radius: 8px;
+    background: #fff;
+    padding: 0; /* 💡 핵심: 패딩을 0으로 없애야 제목이 박스 끝까지 꽉 찹니다 */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .form-title {
-    font-size: 18px;
+    background-color: #dcbfa6; /* 왼쪽 헤더와 똑같은 베이지색 */
+    color: #333;
+    font-size: 15px;
     font-weight: 700;
-    margin-bottom: 25px;
-    color: #6a4328;
-    text-align: center;
+    height: 45px; /* 왼쪽 헤더와 완벽히 같은 높이 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    border-bottom: 1px solid #ccc; /* 제목 아래 선 */
 }
 
 form {
+    padding: 40px 40px 0 40px; /* 깎아낸 패딩을 폼 내부에 다시 적용 */
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
+    flex: 1;
 }
 
 .form-row {
     display: grid;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 100px 1fr;
     align-items: center;
+    gap: 15px;
 }
 
-.form-row label {
-    font-size: 14px;
-    color: #555;
-    font-weight: 600;
-}
-
-/* 입력창을 둥글게 수정 */
 .form-row input {
-    height: 38px;
-    padding: 0 15px;
-    border-radius: 12px;
-    /* 둥근 디자인 */
-    border: 1px solid #ddd;
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     outline: none;
-    transition: 0.2s;
+    box-sizing: border-box;
 }
 
-.form-row input:focus {
-    border-color: #6a4328;
-}
-
-/* 하위계정 행 스타일 */
-.sub-row {
+.register-footer {
+    padding: 0 40px 30px 40px; /* 하단 여백 */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    /* 텍스트 가운데 정렬 */
-    gap: 8px;
-    padding: 6px 10px;
+    justify-content: flex-end;
+    margin-top: auto; /* 버튼을 맨 아래로 밀어내기 */
 }
 
-.sub-row span {
-    font-size: 14px;
-}
-
-/* 비활성화 행 스타일 (취소선) */
-.sub-row.disabled-row span {
-    color: #ccc !important;
-    text-decoration: line-through !important;
+/* 추가하기 버튼 */
+.add-btn {
+    background-color: #b28a6d; /* 진한 베이지 포인트 */
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
 }
