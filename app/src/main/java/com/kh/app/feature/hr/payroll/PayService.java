@@ -1,6 +1,7 @@
 package com.kh.app.feature.hr.payroll;
 
 import com.kh.app.feature.finance.journal.JournalService;
+import com.kh.app.feature.util.PageVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,17 +60,20 @@ public class PayService {
     }
 
     // 2. 월별 목록조회
-    public Map<String, Object> selectList(String month) {
+    public Map<String, Object> selectList(String month, int currentPage, int pageLimit, int boardLimit) {
         month = getDefaultMonth(month);
 
-        List<PayMasterVo> voList = payMapper.selectListByMonth(month);
-        Map<String, Object> summary = payMapper.selectSummaryByMonth(month);
+        int listCount = payMapper.selectCount(month);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<PayMasterVo> voList = payMapper.selectListByPage(month, pvo);
+        Map<String, Object> summaryMap = payMapper.selectSummaryByMonth(month);
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
-        map.put("summary", summary);
+        map.put("summaryMap", summaryMap);
+        map.put("pvo", pvo);
         map.put("voList", voList);
-
         return map;
     }
 
@@ -87,37 +91,42 @@ public class PayService {
     }
 
     // 4. 이름 검색
-    public Map<String, Object> selectListByName(String month, String keyword) {
+    public Map<String, Object> selectListByName(String month, String keyword, int currentPage, int pageLimit, int boardLimit) {
         month = getDefaultMonth(month);
 
-        List<PayMasterVo> voList = payMapper.selectListByName(month, keyword);
-        Map<String, Object> summary = payMapper.selectSummaryByMonth(month);
+        int listCount = payMapper.selectCountByName(month, keyword);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<PayMasterVo> voList = payMapper.selectListByNameByPage(month, keyword, pvo);
+        Map<String, Object> summaryMap = payMapper.selectSummaryByMonth(month);
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
         map.put("keyword", keyword);
-        map.put("summary", summary);
+        map.put("summaryMap", summaryMap);
+        map.put("pvo", pvo);
         map.put("voList", voList);
-
         return map;
     }
 
     // 5. 확정상태 검색
-    public Map<String, Object> selectListByConfirmYn(String month, String confirmYn) {
+    public Map<String, Object> selectListByConfirmYn(String month, String confirmYn, int currentPage, int pageLimit, int boardLimit) {
         month = getDefaultMonth(month);
 
-        List<PayMasterVo> voList = payMapper.selectListByConfirmYn(month, confirmYn);
-        Map<String, Object> summary = payMapper.selectSummaryByMonth(month);
+        int listCount = payMapper.selectCountByConfirmYn(month, confirmYn);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<PayMasterVo> voList = payMapper.selectListByConfirmYnByPage(month, confirmYn, pvo);
+        Map<String, Object> summaryMap = payMapper.selectSummaryByMonth(month);
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
         map.put("confirmYn", confirmYn);
-        map.put("summary", summary);
+        map.put("summaryMap", summaryMap);
+        map.put("pvo", pvo);
         map.put("voList", voList);
-
         return map;
     }
-
     // 6. 급여 확정
     @Transactional
     public int confirmY(String payNo) {

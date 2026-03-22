@@ -2,9 +2,6 @@
    인적자원 HOME
 ========================================================= */
 
-/* =========================================================
-   1. 시작
-========================================================= */
 window.addEventListener("DOMContentLoaded", async function () {
     try {
         await loadHrHome();
@@ -15,9 +12,6 @@ window.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-/* =========================================================
-   2. 메인 조회
-========================================================= */
 async function loadHrHome() {
     const resp = await fetch("/api/hr/home");
 
@@ -34,9 +28,6 @@ async function loadHrHome() {
     renderIssueList(data.issueVoList);
 }
 
-/* =========================================================
-   3. 공통 함수
-========================================================= */
 function nvl(value, defaultValue = "-") {
     if (value === null || value === undefined || value === "") {
         return defaultValue;
@@ -48,10 +39,6 @@ function formatNumber(value) {
     return Number(value || 0).toLocaleString("ko-KR");
 }
 
-function formatPercent(value) {
-    return `${Number(value || 0)}%`;
-}
-
 function getProfileImageSrc(fileName) {
     if (!fileName) {
         return "/img/common/default-profile.png";
@@ -59,9 +46,6 @@ function getProfileImageSrc(fileName) {
     return `/upload/profile/${fileName}`;
 }
 
-/* =========================================================
-   4. 프로필 렌더링
-========================================================= */
 function renderProfile(vo) {
     if (!vo) return;
 
@@ -75,105 +59,100 @@ function renderProfile(vo) {
     if (deptNameTag) deptNameTag.textContent = nvl(vo.deptName);
     if (posNameTag) posNameTag.textContent = nvl(vo.posName);
     if (empNoTag) empNoTag.textContent = nvl(vo.empNo);
-
-    if (profileImgTag) {
-        profileImgTag.src = getProfileImageSrc(vo.profileImg);
-    }
+    if (profileImgTag) profileImgTag.src = getProfileImageSrc(vo.profileImg);
 }
 
-/* =========================================================
-   5. 전날 승인 결재 요약 렌더링
-========================================================= */
 function renderApprovalSummary(vo) {
     if (!vo) return;
 
     const vacationTag = document.querySelector("#approved-vacation-count");
     const overtimeTag = document.querySelector("#approved-overtime-count");
 
-    if (vacationTag) {
-        vacationTag.textContent = formatNumber(vo.approvedVacationCount);
-    }
-
-    if (overtimeTag) {
-        overtimeTag.textContent = formatNumber(vo.approvedOvertimeCount);
-    }
+    if (vacationTag) vacationTag.textContent = formatNumber(vo.approvedVacationCount);
+    if (overtimeTag) overtimeTag.textContent = formatNumber(vo.approvedOvertimeCount);
 }
 
-/* =========================================================
-   6. 전날 근태 요약 렌더링
-========================================================= */
 function renderAttSummary(vo) {
     if (!vo) return;
 
     const baseDateTag = document.querySelector("#att-base-date");
-    const totalEmpCountTag = document.querySelector("#total-emp-count");
-    const presentCountTag = document.querySelector("#present-count");
-    const lateCountTag = document.querySelector("#late-count");
-    const absentCountTag = document.querySelector("#absent-count");
-    const vacationCountTag = document.querySelector("#vacation-count");
-    const overtimeCountTag = document.querySelector("#overtime-count");
-    const normalCountTag = document.querySelector("#normal-count");
-    const normalRateTag = document.querySelector("#normal-rate");
+    const attProgressFillTag = document.querySelector("#att-progress-fill");
+    const attProgressTextTag = document.querySelector("#att-progress-text");
 
     if (baseDateTag) baseDateTag.textContent = nvl(vo.baseDate);
-    if (totalEmpCountTag) totalEmpCountTag.textContent = formatNumber(vo.totalEmpCount);
-    if (presentCountTag) presentCountTag.textContent = formatNumber(vo.presentCount);
-    if (lateCountTag) lateCountTag.textContent = formatNumber(vo.lateCount);
-    if (absentCountTag) absentCountTag.textContent = formatNumber(vo.absentCount);
-    if (vacationCountTag) vacationCountTag.textContent = formatNumber(vo.vacationCount);
-    if (overtimeCountTag) overtimeCountTag.textContent = formatNumber(vo.overtimeCount);
-    if (normalCountTag) normalCountTag.textContent = formatNumber(vo.normalCount);
-    if (normalRateTag) normalRateTag.textContent = formatPercent(vo.normalRate);
+
+    animateNumber("#total-emp-count", vo.totalEmpCount);
+    animateNumber("#remote-count", vo.remoteCount || 0);
+    animateNumber("#present-count", vo.presentCount);
+    animateNumber("#late-count", vo.lateCount);
+    animateNumber("#absent-count", vo.absentCount);
+    animateNumber("#vacation-count", vo.vacationCount);
+    animateNumber("#overtime-count", vo.overtimeCount);
+    animateNumber("#other-count", vo.otherCount || 0);
+
+    const normalRate = Number(vo.normalRate || 0);
+
+    if (attProgressTextTag) {
+        attProgressTextTag.textContent = `${normalRate}%`;
+    }
+
+    if (attProgressFillTag) {
+        setTimeout(() => {
+            attProgressFillTag.style.height = `${normalRate}%`;
+        }, 180);
+    }
 }
 
-/* =========================================================
-   7. 급여 현황 렌더링
-========================================================= */
 function renderPaySummary(vo) {
     if (!vo) return;
 
     const payMonthTag = document.querySelector("#pay-month");
     const totalNetAmountTag = document.querySelector("#total-net-amount");
-    const targetCountTag = document.querySelector("#target-count");
-    const confirmedCountTag = document.querySelector("#confirmed-count");
-    const unconfirmedCountTag = document.querySelector("#unconfirmed-count");
-    const confirmRateTag = document.querySelector("#confirm-rate");
+    const payProgressFillTag = document.querySelector("#pay-progress-fill");
+    const payProgressTextTag = document.querySelector("#pay-progress-text");
+    const confirmRate = Number(vo.confirmRate || 0);
 
     if (payMonthTag) payMonthTag.textContent = nvl(vo.payMonth);
     if (totalNetAmountTag) totalNetAmountTag.textContent = `${formatNumber(vo.totalNetAmount)}원`;
-    if (targetCountTag) targetCountTag.textContent = formatNumber(vo.targetCount);
-    if (confirmedCountTag) confirmedCountTag.textContent = formatNumber(vo.confirmedCount);
-    if (unconfirmedCountTag) unconfirmedCountTag.textContent = formatNumber(vo.unconfirmedCount);
-    if (confirmRateTag) confirmRateTag.textContent = formatPercent(vo.confirmRate);
+
+    animateNumber("#target-count", vo.targetCount, "명");
+    animateNumber("#confirmed-count", vo.confirmedCount, "명");
+    animateNumber("#unconfirmed-count", vo.unconfirmedCount, "명");
+
+    if (payProgressTextTag) {
+        payProgressTextTag.textContent = `${confirmRate}%`;
+    }
+
+    if (payProgressFillTag) {
+        setTimeout(() => {
+            payProgressFillTag.style.width = `${confirmRate}%`;
+        }, 250);
+    }
 }
 
-/* =========================================================
-   8. 최신 인사소식 렌더링
-========================================================= */
 function renderIssueList(list) {
     const issueListTag = document.querySelector("#issue-list");
     const issueCountTextTag = document.querySelector("#issue-count-text");
 
     if (!issueListTag) return;
 
-    if (!list || list.length === 0) {
-        issueListTag.innerHTML = `
-            <div class="empty-msg">최신 인사소식이 없습니다.</div>
-        `;
-        if (issueCountTextTag) {
-            issueCountTextTag.textContent = "최근 0건";
-        }
+    const displayList = Array.isArray(list) ? list.slice(0, 6) : [];
+
+    if (displayList.length === 0) {
+        issueListTag.innerHTML = `<div class="empty-msg">최신 인사소식이 없습니다.</div>`;
+        if (issueCountTextTag) issueCountTextTag.textContent = "최근 0건";
         return;
     }
 
     if (issueCountTextTag) {
-        issueCountTextTag.textContent = `최근 ${list.length}건`;
+        issueCountTextTag.textContent = `최근 ${displayList.length}건`;
     }
 
     let str = "";
 
-    for (const vo of list) {
+    for (const vo of displayList) {
         const profileImgSrc = getProfileImageSrc(vo.profileImg);
+        const eventClass = getIssueEventClass(vo.hisEvent);
 
         str += `
             <div class="issue-item">
@@ -184,15 +163,13 @@ function renderIssueList(list) {
                 <div class="issue-text-box">
                     <div class="issue-top-line">
                         <span class="issue-name">${nvl(vo.empName)}</span>
-                        <span class="issue-event">${nvl(vo.hisEvent)}</span>
+                        <span class="issue-event ${eventClass}">${nvl(vo.hisEvent)}</span>
                     </div>
 
                     <div class="issue-meta">
                         <span>${nvl(vo.deptName)}</span>
-                        <span class="dot">·</span>
+                        <span class="dot">/</span>
                         <span>${nvl(vo.posName)}</span>
-                        <span class="dot">·</span>
-                        <span>${nvl(vo.hisDate)}</span>
                     </div>
 
                     <div class="issue-content">${nvl(vo.hisContent)}</div>
@@ -204,9 +181,6 @@ function renderIssueList(list) {
     issueListTag.innerHTML = str;
 }
 
-/* =========================================================
-   9. 이동 이벤트
-========================================================= */
 function bindMoveEvents() {
     const vacationSummaryBtn = document.querySelector("#vacation-summary-btn");
     const overtimeSummaryBtn = document.querySelector("#overtime-summary-btn");
@@ -222,4 +196,36 @@ function bindMoveEvents() {
             location.href = "/approval/received";
         });
     }
+}
+
+function animateNumber(selector, endValue, suffix = "") {
+    const tag = document.querySelector(selector);
+    if (!tag) return;
+
+    const finalValue = Number(endValue || 0);
+    let current = 0;
+    const duration = 700;
+    const stepTime = 16;
+    const totalSteps = Math.max(1, Math.floor(duration / stepTime));
+    const increment = finalValue / totalSteps;
+
+    const timer = setInterval(() => {
+        current += increment;
+
+        if (current >= finalValue) {
+            current = finalValue;
+            clearInterval(timer);
+        }
+
+        tag.textContent = `${formatNumber(Math.round(current))}${suffix}`;
+    }, stepTime);
+}
+
+function getIssueEventClass(eventName) {
+    const value = String(eventName || "").trim();
+
+    if (value.includes("입사")) return "join";
+    if (value.includes("퇴사")) return "leave";
+    if (value.includes("직급") || value.includes("부서") || value.includes("배치")) return "change";
+    return "default";
 }

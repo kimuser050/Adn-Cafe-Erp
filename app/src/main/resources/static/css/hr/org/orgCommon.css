@@ -1,14 +1,14 @@
 /* =========================================================
-   인적자원 > 조직관리 공통 스타일
-   - 부서관리 / 매장관리 / 직급관리 공통 UI
-   - 페이지별 CSS에서는 여기 없는 특수기능만 추가
+   인적자원관리 공통 스타일
+   - 조직관리 / 직원관리 / 근태관리 / 급여관리 공통 뼈대
+   - 페이지 전용 특수기능은 각 페이지 css에서 추가
    ========================================================= */
 
-/* ---------------------------------------------------------
-   1. 페이지 배경/여백
+/* =========================================================
+   1. 페이지 기본 배경 / 여백
    사용법:
-   section 태그에 org-page 클래스 추가
-   --------------------------------------------------------- */
+   <section class="page-content org-page ...">
+   ========================================================= */
 .org-page {
     min-height: 100%;
     padding: 26px 34px;
@@ -16,12 +16,19 @@
     background: linear-gradient(180deg, #bcae8e 0%, #c8bba0 35%, #d9d4cb 100%);
 }
 
-/* ---------------------------------------------------------
+/* 상단 비우는 여백
+   - HR 목록 화면들에서 공통 사용 */
+.org-top-spacer {
+    height: 44px;
+    margin-bottom: 18px;
+}
+
+/* =========================================================
    2. 상단 탭
    사용법:
    .org-tab-area > .tab-btn
-   현재 페이지는 .active 추가
-   --------------------------------------------------------- */
+   현재 탭은 .active
+   ========================================================= */
 .org-tab-area {
     display: flex;
     gap: 10px;
@@ -45,9 +52,9 @@
     color: #fff;
 }
 
-/* ---------------------------------------------------------
-   3. 요약 카드
-   --------------------------------------------------------- */
+/* =========================================================
+   3. 요약 카드 영역
+   ========================================================= */
 .org-summary-area {
     display: flex;
     gap: 18px;
@@ -56,8 +63,8 @@
 }
 
 .summary-card {
-    width: 116px;
-    min-height: 84px;
+    width: 128px;
+    min-height: 86px;
     padding: 14px 16px;
     border-radius: 12px;
     background-color: rgba(255, 255, 255, 0.72);
@@ -65,6 +72,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.summary-card-wide {
+    width: 210px;
 }
 
 .summary-title {
@@ -83,11 +94,11 @@
     line-height: 1;
 }
 
-/* ---------------------------------------------------------
+/* =========================================================
    4. 목록 패널 / 툴바
-   --------------------------------------------------------- */
+   ========================================================= */
 .org-table-card {
-    margin-top: 10px;
+    margin-top: 6px;
     padding: 16px 18px 18px;
     border-radius: 12px;
     background-color: rgba(255, 255, 255, 0.86);
@@ -98,8 +109,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
     gap: 12px;
+    margin-bottom: 16px;
 }
 
 .toolbar-left {
@@ -120,41 +131,12 @@
     font-size: 12px;
 }
 
-.search-box {
-    display: flex;
-    align-items: center;
-    height: 34px;
-    border: 1px solid #ddd;
-    border-radius: 18px;
-    background-color: #fff;
-    overflow: hidden;
-    padding-left: 12px;
-}
 
-.search-box input {
-    border: none;
-    outline: none;
-    width: 150px;
-    font-size: 12px;
-    color: #4b3c31;
-    background: transparent;
-}
-
-.search-btn {
-    border: none;
-    background: transparent;
-    width: 34px;
-    height: 34px;
-    cursor: pointer;
-    color: #87674e;
-    font-size: 14px;
-}
-
-/* ---------------------------------------------------------
-   5. 조직관리 공통 테이블
+/* =========================================================
+   5. HR 공통 테이블
    사용법:
-   table 클래스에 org-table 추가
-   --------------------------------------------------------- */
+   <table class="org-table ...">
+   ========================================================= */
 .org-table {
     width: 100%;
     border-collapse: separate;
@@ -193,18 +175,20 @@
     border-bottom: none;
 }
 
-.empty-row td {
-    padding: 40px 0;
+/* 조회 결과 없음 행 */
+.org-table .empty-row td {
+    height: 120px;
+    text-align: center;
     color: #9a8b7e;
     font-size: 13px;
 }
 
-/* ---------------------------------------------------------
+/* =========================================================
    6. 하단 영역 / 페이지네이션 / 등록버튼
-   --------------------------------------------------------- */
+   ========================================================= */
 .org-bottom-area {
     position: relative;
-    margin-top: 16px;
+    margin-top: 18px;
     min-height: 40px;
 }
 
@@ -218,17 +202,17 @@
     width: 24px;
     height: 24px;
     border: none;
-    background: transparent;
     border-radius: 6px;
-    font-size: 11px;
+    background: rgba(255,255,255,0.88);
+    color: #5a4636;
     cursor: pointer;
-    color: #4d3a2f;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .page-btn.active {
-    background-color: #d2a980;
+    background: #7b5538;
     color: #fff;
-    font-weight: 700;
 }
 
 .register-btn {
@@ -237,115 +221,147 @@
     top: 0;
 }
 
-/* ---------------------------------------------------------
-   7. 공통 모달
-   사용법:
-   .org-modal-wrap > .org-modal
-   --------------------------------------------------------- */
+/* =========================================================
+   7. 공통 상세/수정 모달 틀
+   ========================================================= */
 .org-modal-wrap {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.35);
     display: none;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(30, 20, 10, 0.34);
     z-index: 999;
 }
 
 .org-modal {
-    width: 600px;
-    max-width: 90%;
-    background-color: #fff;
-    border-radius: 14px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+    width: min(960px, 100%);
+    max-height: 90vh;
     overflow: hidden;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
 }
 
 .org-modal-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid #eee;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid #ede6de;
 }
 
 .org-modal-header h2 {
-    margin: 0;
-    font-size: 22px;
+    font-size: 18px;
     color: #4b3728;
+    font-weight: 800;
 }
 
 .modal-close-btn {
+    width: 32px;
+    height: 32px;
     border: none;
+    border-radius: 8px;
     background: transparent;
-    font-size: 20px;
+    color: #6c5442;
+    font-size: 18px;
     cursor: pointer;
-    color: #7a614d;
+}
+
+.modal-close-btn:hover {
+    background: rgba(0, 0, 0, 0.04);
 }
 
 .org-modal-body {
-    padding: 24px;
+    padding: 20px 22px;
+    overflow-y: auto;
 }
 
 .org-modal-footer {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
-    padding: 0 24px 20px;
+    padding: 16px 22px 20px;
+    border-top: 1px solid #ede6de;
 }
 
-/* ---------------------------------------------------------
-   8. 상세 조회 행
-   --------------------------------------------------------- */
-.org-detail-row {
-    display: flex;
-    align-items: flex-start;
+/* 상세정보 줄 레이아웃 */
+.org-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 16px;
     margin-bottom: 18px;
-    gap: 20px;
+}
+
+.org-detail-item {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    border-radius: 10px;
+    background: #f8f5f1;
+    overflow: hidden;
 }
 
 .org-detail-label {
-    width: 100px;
+    width: 120px;
+    min-width: 120px;
+    padding: 11px 12px;
+    background: #e7d7c6;
+    color: #5a4332;
+    font-size: 12px;
     font-weight: 700;
-    color: #5d4735;
-    flex-shrink: 0;
 }
 
 .org-detail-value {
     flex: 1;
-    color: #333;
-    line-height: 1.5;
-    word-break: break-all;
+    padding: 11px 14px;
+    color: #433227;
+    font-size: 13px;
 }
 
-.org-divider {
-    border: none;
-    border-top: 1px solid #ddd6cf;
-    margin: 20px 0 14px;
+/* =========================================================
+   8. 반응형
+   ========================================================= */
+@media (max-width: 1400px) {
+    .org-table-card {
+        overflow-x: auto;
+    }
 }
 
-/* ---------------------------------------------------------
-   9. 인라인 수정 공통
-   --------------------------------------------------------- */
+@media (max-width: 900px) {
+    .org-top-spacer {
+        height: 20px;
+        margin-bottom: 14px;
+    }
 
-.inline-edit-area {
-    display: none;
+    .org-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+        flex-wrap: wrap;
+    }
+
+    .org-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   6. 하단 영역 / 페이지네이션
+   ========================================================= */
+.pagination {
+    display: flex;
+    justify-content: center;
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
-}
-
-.inline-edit-area .form-input,
-.inline-edit-area .form-select {
-    min-width: 140px;
-}
-
-.address-input {
-    width: 260px;
-}
-
-.insert-address-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
 }

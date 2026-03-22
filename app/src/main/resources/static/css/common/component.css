@@ -1,27 +1,76 @@
 /* =========================================================
-   공통 UI 컴포넌트
-   - 프로젝트 전체에서 재사용할 버튼, 카드, 상태표시, 입력요소
-   - 다른 도메인도 클래스명만 맞추면 동일 스타일 적용 가능
+   component.css
+   ---------------------------------------------------------
+   [역할]
+   - 프로젝트 전체에서 재사용할 "작은 UI 부품" 모음
+   - 버튼, 입력창, 상태표시, 링크형 텍스트, 카드 등
+
+   [사용 규칙]
+   - 페이지마다 반복해서 쓰일 가능성이 높은 것만 여기에 넣는다.
+   - 예: 버튼, input, select, 상태뱃지, 공통 카드
+   - 특정 페이지에서만 쓰는 특수한 디자인은 각 도메인 css에 둔다.
+
    ========================================================= */
 
+
 /* =========================================================
-   프로젝트 공통 색상 토큰
-   - 배경 그라데이션 제외, 핵심 UI 컬러 3종만 사용
+   1. 공통 색상 토큰
+   ---------------------------------------------------------
+   [설명]
+   - 프로젝트 전체에서 공통으로 쓰는 색 변수
+   - 메인 브라운 3톤 + 보조색(회색/성공/경고/위험)
+
+   [사용 규칙]
+   - 새 css를 만들 때 색을 하드코딩하기보다
+     가능하면 이 변수를 사용
+   - 메인 색상은 아래 3개를 우선 사용
+     --color-dark / --color-mid / --color-light
    ========================================================= */
 :root {
-    /* 3종 컬러는 아래 색상만 사용 */
     --color-dark: #5C3F2A;
     --color-mid: #9C785D;
     --color-light: #D9B189;
 
     --color-white: #ffffff;
+    --color-black: #111111;
+
     --color-border: #d8d0c7;
     --color-text: #3f2f24;
     --color-muted: #7b6a5c;
+
     --color-panel: rgba(255, 255, 255, 0.86);
+    --color-card: rgba(255, 255, 255, 0.78);
+
+    --color-disabled-bg: #e5e7eb;
+    --color-disabled-text: #8b8b8b;
+    --color-disabled-border: #d1d5db;
+
+    --color-readonly-bg: #f3f4f6;
+    --color-readonly-text: #666666;
+    --color-readonly-border: #dcdfe6;
+
+    --color-success: #22c55e;
+    --color-warning: #facc15;
+    --color-danger: #de4829;
 }
 
-/* ------------[버튼]------------------------------------- */
+
+/* =========================================================
+   2. 버튼 공통
+   ---------------------------------------------------------
+   [역할]
+   - 프로젝트 전체 버튼의 기본 모양
+   - 크기 클래스 + 색상 클래스 조합으로 사용
+
+   [기본 사용법]
+   - class="btn btn-sm btn-dark"
+   - class="btn btn-md btn-mid"
+   - class="btn btn-sm btn-outline"
+
+   [규칙]
+   - 버튼 새로 만들기 전에 먼저 btn 조합으로 해결 가능한지 확인
+   - 크기와 색은 조합해서 사용
+   ========================================================= */
 .btn {
     height: 36px;
     padding: 0 14px;
@@ -35,13 +84,21 @@
     font-weight: 700;
     cursor: pointer;
     transition: all 0.18s ease;
+    white-space: nowrap;
 }
 
 .btn:hover {
     opacity: 0.92;
 }
 
-/* 버튼 크기 */
+
+/* ---------------------------------------------------------
+   2-1. 버튼 크기
+   [설명]
+   - sm : 작은 버튼
+   - md : 기본 버튼
+   - lg : 큰 버튼
+   --------------------------------------------------------- */
 .btn-sm {
     height: 30px;
     padding: 0 10px;
@@ -61,7 +118,15 @@
     font-size: 13px;
 }
 
-/* 버튼 컬러 */
+
+/* ---------------------------------------------------------
+   2-2. 버튼 색상
+   [설명]
+   - btn-dark   : 진한 강조 버튼
+   - btn-mid    : 기본 강조 버튼
+   - btn-light  : 밝은 포인트 버튼
+   - btn-outline: 취소/보조 액션에 적합
+   --------------------------------------------------------- */
 .btn-dark {
     background: var(--color-dark);
     color: var(--color-white);
@@ -84,26 +149,70 @@
 }
 
 
-/* ------------------------------------------------- */
+/* ---------------------------------------------------------
+   2-3. 잠김 / 비활성 느낌 버튼
+   [설명]
+   - 확정상태라 수정불가일 때
+   - 조건상 클릭 막아야 할 때 사용 가능
 
-/* 카드 */
+   [사용 예시]
+   - class="btn btn-sm btn-mid btn-locked"
+   - class="btn btn-md btn-dark btn-disabled"
+   --------------------------------------------------------- */
+.btn-locked,
+.btn-disabled {
+    background-color: var(--color-disabled-bg) !important;
+    color: var(--color-disabled-text) !important;
+    border: 1px solid var(--color-disabled-border) !important;
+    cursor: not-allowed !important;
+    opacity: 0.92;
+}
+
+
+/* =========================================================
+   3. 카드 / 패널
+   ---------------------------------------------------------
+   [설명]
+   - 박스형 UI의 공통 베이스
+   - 살짝 투명한 흰색 배경 + 그림자
+
+   [사용 규칙]
+   - 아주 기본적인 카드 느낌만 공통으로 제공
+   - 특정 도메인의 상세한 카드 내부 배치는 각 css에서 처리
+   ========================================================= */
 .card {
-    background: rgba(255, 255, 255, 0.78);
+    background: var(--color-card);
     border-radius: 14px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
 }
 
 .panel {
-    background: rgba(255, 255, 255, 0.86);
+    background: var(--color-panel);
     border-radius: 16px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
-/* 입력요소 */
+
+/* =========================================================
+   4. 입력 요소 공통
+   ---------------------------------------------------------
+   [설명]
+   - 텍스트 입력창 / 셀렉트 / 텍스트영역의 공통 모양
+
+   [기본 사용법]
+   - <input class="form-input">
+   - <select class="form-select">
+   - <textarea class="form-textarea"></textarea>
+
+   [규칙]
+   - 페이지마다 input 모양을 새로 만들기 전에
+     form-input / form-select 먼저 사용
+   - 폭(width), 특수 배치만 페이지 css에서 따로 조절
+   ========================================================= */
 .form-input,
-.form-select {
-    height: 38px;
-    border: 1px solid #d8d0c7;
+.form-select,
+.form-textarea {
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 0 12px;
     font-size: 13px;
@@ -112,12 +221,79 @@
     outline: none;
 }
 
+.form-input,
+.form-select {
+    height: 38px;
+}
+
+.form-textarea {
+    min-height: 100px;
+    padding: 10px 12px;
+    resize: vertical;
+}
+
 .form-input:focus,
-.form-select:focus {
+.form-select:focus,
+.form-textarea:focus {
     border-color: #b88d68;
 }
 
-/* 상태 표시 */
+
+/* ---------------------------------------------------------
+   4-1. 읽기전용 input
+   [설명]
+   - 수정 불가능한 input에 회색 느낌을 주는 공통 클래스
+
+   [사용 예시]
+   - <input class="form-input input-readonly" readonly>
+   --------------------------------------------------------- */
+.input-readonly {
+    background-color: var(--color-readonly-bg);
+    color: var(--color-readonly-text);
+    cursor: not-allowed;
+    border: 1px solid var(--color-readonly-border);
+}
+
+.input-readonly:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+/* ---------------------------------------------------------
+   4-2. 읽기전용 select
+   [설명]
+   - 수정 불가능한 select에 회색 느낌을 주는 공통 클래스
+
+   [사용 예시]
+   - <select class="form-select select-readonly" disabled>
+   --------------------------------------------------------- */
+.select-readonly {
+    background-color: var(--color-readonly-bg);
+    color: var(--color-readonly-text);
+    border: 1px solid var(--color-readonly-border);
+    cursor: not-allowed;
+    pointer-events: none;
+    appearance: none;
+}
+
+
+/* =========================================================
+   5. 상태 표시
+   ---------------------------------------------------------
+   [설명]
+   - 텍스트 앞에 점이 붙는 공통 상태 뱃지
+   - 정상/비정상/미확정/확정 등에 사용 가능
+
+   [기본 사용법]
+   - <span class="status status-confirmed">확정</span>
+   - <span class="status status-pending">미확정</span>
+   - <span class="status status-on">정상</span>
+
+   [규칙]
+   - 상태 글자를 그냥 텍스트로 쓰지 말고
+     가능하면 status 클래스로 통일
+   ========================================================= */
 .status {
     display: inline-flex;
     align-items: center;
@@ -126,6 +302,7 @@
     font-size: 12px;
     font-weight: 600;
     color: var(--color-text);
+    white-space: nowrap;
 }
 
 .status::before {
@@ -137,20 +314,47 @@
     flex-shrink: 0;
 }
 
-/* 상태 종류 */
-.status.on::before {
-    background: #20b455;
+
+/* ---------------------------------------------------------
+   5-1. 범용 상태 종류
+   --------------------------------------------------------- */
+.status-on::before {
+    background: var(--color-success);
 }
 
-.status.off::before {
-    background: #de4829;
+.status-off::before {
+    background: var(--color-danger);
 }
 
-.status.rest::before {
+.status-rest::before {
     background: #d59b18;
 }
 
-/* 링크형 텍스트 */
+
+/* ---------------------------------------------------------
+   5-2. 확정 / 미확정 상태
+   [설명]
+   - 급여뿐 아니라 다른 기능에서도 재사용 가능
+   --------------------------------------------------------- */
+.status-confirmed::before {
+    background: var(--color-success);
+}
+
+.status-pending::before {
+    background: var(--color-warning);
+}
+
+
+/* =========================================================
+   6. 링크형 텍스트
+   ---------------------------------------------------------
+   [설명]
+   - 목록에서 상세조회 링크처럼 보이게 할 때 사용
+   - a 태그가 아니어도 span 등에 적용 가능
+
+   [사용 예시]
+   - <span class="link-text">김아담</span>
+   ========================================================= */
 .link-text {
     color: #1f77ff;
     font-weight: 700;
@@ -161,8 +365,137 @@
     text-decoration: underline;
 }
 
+/* =========================================================
+   7. 페이징 버튼 공통
+   ---------------------------------------------------------
+   [설명]
+   - 목록 하단의 페이지 버튼 공통 스타일
+   - 숫자 버튼 / 다음 버튼 공통 사용
+
+   [사용 예시]
+   - <div class="pagination"> ... </div>
+   - <button class="page-btn active">1</button>
+   - <button class="page-btn page-next">&gt;</button>
+
+   [규칙]
+   - 페이지 버튼 모양은 공통으로 맞춘다
+   - 페이지 영역 정렬은 각 도메인 공통 css에서 조절 가능
+   ========================================================= */
+.page-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-white);
+    color: var(--color-dark);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover {
+    background: rgba(255, 255, 255, 0.92);
+    transform: translateY(-1px);
+}
+
+.page-btn.active {
+    background: var(--color-dark);
+    color: var(--color-white);
+    border-color: var(--color-dark);
+}
+
+.page-btn:disabled,
+.page-btn.disabled {
+    background: var(--color-disabled-bg);
+    color: var(--color-disabled-text);
+    border-color: var(--color-disabled-border);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.page-next {
+    font-size: 13px;
+}
 
 
+/* =========================================================
+   8. 검색 UI 공통
+   ---------------------------------------------------------
+   [설명]
+   - 목록 화면에서 자주 쓰는 검색 카테고리 + 검색 입력창 + 아이콘 버튼
+   - 길이는 각 도메인에서 조정하고, 기본 모양은 공통으로 맞춘다.
 
+   [사용 예시]
+   <select class="form-select search-select">...</select>
 
+   <div class="search-box">
+       <input type="text" class="search-box-input" placeholder="검색어를 입력하세요">
+       <button type="button" class="search-btn">⌕</button>
+   </div>
 
+   [규칙]
+   - 검색창 길이(width)는 각 도메인에서 조절 가능
+   - 모양과 높이, radius, 아이콘 버튼 느낌은 공통으로 사용
+   ========================================================= */
+
+/* 검색 카테고리 선택 셀렉트 */
+.search-select {
+    height: 34px;
+    min-width: 92px;
+    border-radius: 18px;
+    font-size: 12px;
+
+    /* 화살표가 아주 조금 왼쪽으로 들어온 느낌 */
+    padding: 0 26px 0 12px;
+}
+
+/* 검색 입력 박스 전체 */
+.search-box {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background-color: #fff;
+    overflow: hidden;
+    padding-left: 12px;
+
+    /* 길이는 너무 강하게 고정하지 않고 최소만 */
+    min-width: 220px;
+}
+
+/* 검색 입력칸 */
+.search-box-input {
+    width: 170px;
+    border: none;
+    outline: none;
+    font-size: 12px;
+    color: #4b3c31;
+    background: transparent;
+}
+
+/* 검색 버튼 */
+.search-btn {
+    border: none;
+    background: transparent;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    color: #87674e;
+    font-size: 14px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s ease;
+}
+
+.search-btn:hover {
+    opacity: 0.85;
+}
