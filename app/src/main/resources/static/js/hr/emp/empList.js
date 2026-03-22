@@ -12,12 +12,18 @@ let posList = [];
 let deptList = [];
 let statusList = [];
 
+let currentPage = 1;
+let currentSearchType = "all";
+let currentKeyword = "";
+
+
 /* =========================================================
    1. 시작
 ========================================================= */
 window.addEventListener("DOMContentLoaded", async function () {
     try {
-        await loadEmpList();
+        await loadEmpSummary();
+        await loadEmpList(1);
         await loadCodeData();
 
         const keywordTag = document.querySelector("#keyword");
@@ -112,47 +118,44 @@ async function loadCodeData() {
 /* =========================================================
    4. 직원 목록 조회
 ========================================================= */
-async function loadEmpList() {
-    const resp = await fetch("/emp");
+async function loadEmpList(page = 1) {
+    const resp = await fetch(`/emp?currentPage=${page}`);
 
     if (!resp.ok) {
         throw new Error("직원 목록 조회 실패 ...");
     }
 
     const data = await resp.json();
+
+    currentPage = page;
+    currentSearchType = "all";
+    currentKeyword = "";
+
     empList = data.voList ?? [];
 
-    renderSummary(empList);
-    renderTable(empList);
+    
+    renderTable(empList, data.pvo);
+    renderPagination(data.pvo);
 }
 
-function renderSummary(voList) {
-    let workingCount = 0;
-    let leaveCount = 0;
-    let businessTripCount = 0;
-    let trainingCount = 0;
-
-    for (const vo of voList) {
-        const status = String(vo.empStatusNo);
-
-        if (status === "1") workingCount++;
-        else if (status === "2") businessTripCount++;
-        else if (status === "3") trainingCount++;
-        else if (status === "4") leaveCount++;
-    }
-
+function renderSummary(summary) {
     const workingTag = document.querySelector("#working-count");
-    const leaveTag = document.querySelector("#leave-count");
     const businessTripTag = document.querySelector("#business-trip-count");
     const trainingTag = document.querySelector("#training-count");
+    const leaveTag = document.querySelector("#leave-count");
 
-    if (workingTag) workingTag.innerText = workingCount;
-    if (leaveTag) leaveTag.innerText = leaveCount;
-    if (businessTripTag) businessTripTag.innerText = businessTripCount;
-    if (trainingTag) trainingTag.innerText = trainingCount;
+    const workingCount = summary.workingCount ?? summary.WORKINGCOUNT ?? 0;
+    const businessTripCount = summary.businessTripCount ?? summary.BUSINESSTRIPCOUNT ?? 0;
+    const trainingCount = summary.trainingCount ?? summary.TRAININGCOUNT ?? 0;
+    const leaveCount = summary.leaveCount ?? summary.LEAVECOUNT ?? 0;
+
+    if (workingTag) workingTag.textContent = workingCount;
+    if (businessTripTag) businessTripTag.textContent = businessTripCount;
+    if (trainingTag) trainingTag.textContent = trainingCount;
+    if (leaveTag) leaveTag.textContent = leaveCount;
 }
 
-function renderTable(voList) {
+function renderTable(voList, pvo) {
     const tbody = document.querySelector("#emp-list");
     if (!tbody) return;
 
@@ -166,6 +169,7 @@ function renderTable(voList) {
     }
 
     let str = "";
+    const startNo = pvo ? ((pvo.currentPage - 1) * pvo.boardLimit) : 0;
 
     for (let i = 0; i < voList.length; i++) {
         const vo = voList[i];
@@ -173,7 +177,7 @@ function renderTable(voList) {
 
         str += `
             <tr>
-                <td>${i + 1}</td>
+                <td>${startNo + i + 1}</td>
                 <td class="emp-name-cell">
                     <span class="link-text" onclick="openEmpModal('${vo.empNo}')">
                         ${nvl(vo.empName)}
@@ -271,7 +275,11 @@ function renderEmpDetail(vo) {
     setText("#modal-resign-date", formatDate(vo.resignDate));
 
     const statusInfo = getEmpStatusInfo(vo);
-    setText("#modal-emp-status", statusInfo.text);
+    const statusTag = document.querySelector("#modal-emp-status");
+        if (statusTag) {
+            statusTag.className = `detail-value status ${statusInfo.statusClass}`;
+            statusTag.innerText = statusInfo.text;
+        }
     setText("#modal-base-salary", formatNumber(vo.baseSalary));
     setText("#modal-bonus-rate", nvl(vo.bonusRate));
     setText("#modal-expected-salary", formatNumber(vo.expectedSalary));
@@ -305,8 +313,8 @@ function renderEmpHistory(historyList) {
         str += `
             <tr>
                 <td>${formatDate(vo.hisDate)}</td>
-                <td>${nvl(vo.hisEvent)}</td>
-                <td>${nvl(vo.hisContent)}</td>
+                <td>${escapeHtml(nvl(vo.hisEvent))}</td>
+                <td>${escapeHtml(nvl(vo.hisContent))}</td>
             </tr>
         `;
     }
@@ -420,11 +428,11 @@ function renderHistoryEditRows(historyList) {
                         <option value="퇴직" ${vo.hisEvent === "퇴직" ? "selected" : ""}>퇴직</option>
                         <option value="부서배치" ${vo.hisEvent === "부서배치" ? "selected" : ""}>부서배치</option>
                         <option value="매장배정" ${vo.hisEvent === "매장배정" ? "selected" : ""}>매장배정</option>
-                        <option value="직급변경 ${vo.hisEvent === "직급변경" ? "selected" : ""}>직급변경</option>
+                        <option value="직급변경" ${vo.hisEvent === "직급변경" ? "selected" : ""}>직급변경</option>
                     </select>
                 </td>
                 <td>
-                    <input type="text" class="his-content" value="${vo.hisContent ?? ""}" placeholder="설명 입력">
+                    <input type="text" class="his-content" value="${escapeAttr(vo.hisContent ?? "")}" placeholder="설명 입력">
                 </td>
             </tr>
         `;
@@ -448,12 +456,10 @@ function addHistoryRow() {
         <td>
             <select class="his-event">
                 <option value="신규입사">신규입사</option>
-                <option value="부서배치">부서배치</option>
-                <option value="직급부여">직급부여</option>
-                <option value="부서이동">부서이동</option>
-                <option value="직급승진">직급승진</option>
-                <option value="수습배치">수습배치</option>
+                <option value="퇴직">퇴직</option>
+                <option value="부서배치">직급부여</option>
                 <option value="매장배정">매장배정</option>
+                <option value="직급변경">직급변경</option>
             </select>
         </td>
         <td>
@@ -557,11 +563,82 @@ async function saveEmpEdit() {
 
         alert("직원 정보 수정 완료 !");
         closeEditModal();
-        await loadEmpList();
+        await loadEmpList(currentPage);
         await openEmpModal(empNo);
 
     } catch (error) {
         console.log(error);
         alert("직원 수정 실패 ...");
     }
+}
+
+function renderPagination(pvo) {
+    const pageArea = document.querySelector("#emp-pagination-area");
+    if (!pageArea) return;
+
+    if (!pvo) {
+        pageArea.innerHTML = `
+            <button type="button" class="page-btn active">1</button>
+        `;
+        return;
+    }
+
+    let str = "";
+
+    for (let i = pvo.startPage; i <= pvo.endPage; i++) {
+        str += `
+            <button
+                type="button"
+                class="page-btn ${i === pvo.currentPage ? "active" : ""}"
+                onclick="loadEmpList(${i})"
+            >
+                ${i}
+            </button>
+        `;
+    }
+
+    if (pvo.endPage < pvo.maxPage) {
+        str += `
+            <button
+                type="button"
+                class="page-btn page-next"
+                onclick="loadEmpList(${pvo.endPage + 1})"
+            >
+                &gt;
+            </button>
+        `;
+    }
+
+    pageArea.innerHTML = str;
+}
+
+async function loadEmpSummary() {
+    const resp = await fetch("/emp/summary");
+
+    if (!resp.ok) {
+        throw new Error("직원 요약 조회 실패 ...");
+    }
+
+    const data = await resp.json();
+
+    renderSummary(data);
+}
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function escapeAttr(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }

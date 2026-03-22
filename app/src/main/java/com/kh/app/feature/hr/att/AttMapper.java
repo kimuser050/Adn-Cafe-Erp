@@ -1,5 +1,6 @@
 package com.kh.app.feature.hr.att;
 
+import com.kh.app.feature.util.PageVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -106,16 +107,57 @@ public interface AttMapper {
     //      - 휴가 수
     //      - 인정 OT 합계
     @Select("""
-            SELECT
+        SELECT
             NVL(SUM(CASE WHEN STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS attendanceCount,
             NVL(SUM(CASE WHEN STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount,
             NVL(SUM(CASE WHEN STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount,
             NVL(SUM(CASE WHEN STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount,
             NVL(SUM(OT_CONFIRMED_HOURS), 0) AS otHours
-            FROM ATTENDANCE
-            WHERE TO_CHAR(WORK_DATE, 'YYYY-MM') = #{month}
-            """)
+        FROM ATTENDANCE
+        WHERE TO_CHAR(WORK_DATE, 'YYYY-MM') = #{month}
+        """)
     AttSummaryVo selectMonthSummary(@Param("month") String month);
+
+    @Select("""
+        SELECT COUNT(*)
+        FROM MEMBER M
+        WHERE M.QUIT_YN = 'N'
+        """)
+    int selectMonthListCount();
+
+    @Select("""
+        SELECT *
+        FROM
+        (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY M.EMP_NO) AS RNUM,
+                M.EMP_NO AS empNo,
+                M.EMP_NAME AS empName,
+                D.DEPT_NAME AS deptName,
+                P.POS_NAME AS posName,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS attCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount,
+                NVL(SUM(A.OT_CONFIRMED_HOURS), 0) AS otHours
+            FROM MEMBER M
+            JOIN DEPT D
+              ON M.DEPT_CODE = D.DEPT_CODE
+            JOIN POSITION P
+              ON M.POS_CODE = P.POS_CODE
+            LEFT JOIN ATTENDANCE A
+              ON M.EMP_NO = A.EMP_NO
+             AND TO_CHAR(A.WORK_DATE, 'YYYY-MM') = #{month}
+            WHERE M.QUIT_YN = 'N'
+            GROUP BY
+                M.EMP_NO,
+                M.EMP_NAME,
+                D.DEPT_NAME,
+                P.POS_NAME
+        )
+        WHERE RNUM BETWEEN #{pvo.offset} + 1 AND #{pvo.offset} + #{pvo.boardLimit}
+        """)
+    List<AttListVo> selectMonthListByPage(@Param("month") String month, @Param("pvo") PageVo pvo);
 
     // 2-2. month 기준 직원별 월간 리스트 조회
     @Select("""
@@ -465,66 +507,98 @@ public interface AttMapper {
 
     // 이름 검색
     @Select("""
-        SELECT
-            M.EMP_NO AS empNo,
-            M.EMP_NAME AS empName,
-            D.DEPT_NAME AS deptName,
-            P.POS_NAME AS posName,
-            NVL(SUM(CASE WHEN A.STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS attCount,
-            NVL(SUM(CASE WHEN A.STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount,
-            NVL(SUM(CASE WHEN A.STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount,
-            NVL(SUM(CASE WHEN A.STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount,
-            NVL(SUM(A.OT_CONFIRMED_HOURS), 0) AS otHours
+        SELECT COUNT(*)
         FROM MEMBER M
-        JOIN DEPT D
-          ON M.DEPT_CODE = D.DEPT_CODE
-        JOIN POSITION P
-          ON M.POS_CODE = P.POS_CODE
-        LEFT JOIN ATTENDANCE A
-          ON M.EMP_NO = A.EMP_NO
-         AND TO_CHAR(A.WORK_DATE, 'YYYY-MM') = #{month}
         WHERE M.QUIT_YN = 'N'
           AND M.EMP_NAME LIKE '%' || #{keyword} || '%'
-        GROUP BY
-            M.EMP_NO,
-            M.EMP_NAME,
-            D.DEPT_NAME,
-            P.POS_NAME
-        ORDER BY M.EMP_NO
         """)
-    List<AttListVo> selectListByName(@Param("month") String month,
-                                     @Param("keyword") String keyword);
+    int selectListCountByName(@Param("keyword") String keyword);
+    @Select("""
+        SELECT *
+        FROM
+        (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY M.EMP_NO) AS RNUM,
+                M.EMP_NO AS empNo,
+                M.EMP_NAME AS empName,
+                D.DEPT_NAME AS deptName,
+                P.POS_NAME AS posName,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS attCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount,
+                NVL(SUM(A.OT_CONFIRMED_HOURS), 0) AS otHours
+            FROM MEMBER M
+            JOIN DEPT D
+              ON M.DEPT_CODE = D.DEPT_CODE
+            JOIN POSITION P
+              ON M.POS_CODE = P.POS_CODE
+            LEFT JOIN ATTENDANCE A
+              ON M.EMP_NO = A.EMP_NO
+             AND TO_CHAR(A.WORK_DATE, 'YYYY-MM') = #{month}
+            WHERE M.QUIT_YN = 'N'
+              AND M.EMP_NAME LIKE '%' || #{keyword} || '%'
+            GROUP BY
+                M.EMP_NO,
+                M.EMP_NAME,
+                D.DEPT_NAME,
+                P.POS_NAME
+        )
+        WHERE RNUM BETWEEN #{pvo.offset} + 1 AND #{pvo.offset} + #{pvo.boardLimit}
+        """)
+    List<AttListVo> selectListByNameWithPage(
+            @Param("month") String month,
+            @Param("keyword") String keyword,
+            @Param("pvo") PageVo pvo
+    );
 
 
     // 부서 검색
     @Select("""
-        SELECT
-            M.EMP_NO AS empNo,
-            M.EMP_NAME AS empName,
-            D.DEPT_NAME AS deptName,
-            P.POS_NAME AS posName,
-            NVL(SUM(CASE WHEN A.STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS attCount,
-            NVL(SUM(CASE WHEN A.STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount,
-            NVL(SUM(CASE WHEN A.STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount,
-            NVL(SUM(CASE WHEN A.STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount,
-            NVL(SUM(A.OT_CONFIRMED_HOURS), 0) AS otHours
+        SELECT COUNT(*)
         FROM MEMBER M
         JOIN DEPT D
           ON M.DEPT_CODE = D.DEPT_CODE
-        JOIN POSITION P
-          ON M.POS_CODE = P.POS_CODE
-        LEFT JOIN ATTENDANCE A
-          ON M.EMP_NO = A.EMP_NO
-         AND TO_CHAR(A.WORK_DATE, 'YYYY-MM') = #{month}
         WHERE M.QUIT_YN = 'N'
           AND D.DEPT_NAME LIKE '%' || #{deptName} || '%'
-        GROUP BY
-            M.EMP_NO,
-            M.EMP_NAME,
-            D.DEPT_NAME,
-            P.POS_NAME
-        ORDER BY M.EMP_NO
         """)
-    List<AttListVo> selectListByDeptName(@Param("month") String month,
-                                         @Param("deptName") String deptName);
+    int selectListCountByDeptName(@Param("deptName") String deptName);
+    @Select("""
+        SELECT *
+        FROM
+        (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY M.EMP_NO) AS RNUM,
+                M.EMP_NO AS empNo,
+                M.EMP_NAME AS empName,
+                D.DEPT_NAME AS deptName,
+                P.POS_NAME AS posName,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS attCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount,
+                NVL(SUM(CASE WHEN A.STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount,
+                NVL(SUM(A.OT_CONFIRMED_HOURS), 0) AS otHours
+            FROM MEMBER M
+            JOIN DEPT D
+              ON M.DEPT_CODE = D.DEPT_CODE
+            JOIN POSITION P
+              ON M.POS_CODE = P.POS_CODE
+            LEFT JOIN ATTENDANCE A
+              ON M.EMP_NO = A.EMP_NO
+             AND TO_CHAR(A.WORK_DATE, 'YYYY-MM') = #{month}
+            WHERE M.QUIT_YN = 'N'
+              AND D.DEPT_NAME LIKE '%' || #{deptName} || '%'
+            GROUP BY
+                M.EMP_NO,
+                M.EMP_NAME,
+                D.DEPT_NAME,
+                P.POS_NAME
+        )
+       WHERE RNUM BETWEEN #{pvo.offset} + 1 AND #{pvo.offset} + #{pvo.boardLimit}
+        """)
+    List<AttListVo> selectListByDeptNameWithPage(
+            @Param("month") String month,
+            @Param("deptName") String deptName,
+            @Param("pvo") PageVo pvo
+    );
 }

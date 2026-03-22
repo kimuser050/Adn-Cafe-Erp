@@ -67,11 +67,11 @@ public class PayService {
         PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
 
         List<PayMasterVo> voList = payMapper.selectListByPage(month, pvo);
-        Map<String, Object> summaryMap = payMapper.selectSummaryByMonth(month);
+        Map<String, Object> summary = payMapper.selectSummaryByMonth(month);
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
-        map.put("summaryMap", summaryMap);
+        map.put("summary", summary);
         map.put("pvo", pvo);
         map.put("voList", voList);
         return map;
@@ -98,12 +98,12 @@ public class PayService {
         PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
 
         List<PayMasterVo> voList = payMapper.selectListByNameByPage(month, keyword, pvo);
-        Map<String, Object> summaryMap = payMapper.selectSummaryByMonth(month);
+        Map<String, Object> summary = payMapper.selectSummaryByName(month, keyword);
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
         map.put("keyword", keyword);
-        map.put("summaryMap", summaryMap);
+        map.put("summary", summary);
         map.put("pvo", pvo);
         map.put("voList", voList);
         return map;
@@ -117,12 +117,12 @@ public class PayService {
         PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
 
         List<PayMasterVo> voList = payMapper.selectListByConfirmYnByPage(month, confirmYn, pvo);
-        Map<String, Object> summaryMap = payMapper.selectSummaryByMonth(month);
+        Map<String, Object> summary = payMapper.selectSummaryByConfirmYn(month, confirmYn);
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
         map.put("confirmYn", confirmYn);
-        map.put("summaryMap", summaryMap);
+        map.put("summary", summary);
         map.put("pvo", pvo);
         map.put("voList", voList);
         return map;

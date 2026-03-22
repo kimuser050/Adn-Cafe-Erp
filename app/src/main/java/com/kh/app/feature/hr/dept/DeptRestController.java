@@ -3,6 +3,7 @@ package com.kh.app.feature.hr.dept;
 import com.kh.app.feature.hr.position.PosVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,12 @@ import java.util.Map;
 public class DeptRestController {
 
     private final DeptService deptService;
+
+    @Value("${page.pageLimit}")
+    private int pageLimit;   // 예: 5
+
+    @Value("${page.boardLimit}")
+    private int boardLimit;  // 예: 10
 
     // 0. 신규부서 등록하기
     @PostMapping
@@ -38,33 +45,32 @@ public class DeptRestController {
 
     // 1. 부서리스트 가져오기
     @GetMapping
-    public ResponseEntity<Map<String, Object>> selectList() {
-        List<DeptVo> voList = deptService.selectList();
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-
-        return ResponseEntity.ok(map);
+    public ResponseEntity<Map<String, Object>> selectList(
+            @RequestParam(required = false, defaultValue = "1") int currentPage
+    ) {
+        return ResponseEntity.ok(
+                deptService.selectList(currentPage, pageLimit, boardLimit)
+        );
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<Map<String, Object>> selectListByName(@RequestParam String keyword) {
-        List<DeptVo> voList = deptService.selectListByName(keyword);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-
-        return ResponseEntity.ok(map);
+    public ResponseEntity<Map<String, Object>> selectListByName(
+            @RequestParam String keyword,
+            @RequestParam(required = false, defaultValue = "1") int currentPage
+    ) {
+        return ResponseEntity.ok(
+                deptService.selectListByName(keyword, currentPage, pageLimit, boardLimit)
+        );
     }
 
     @GetMapping("/search/useYn")
-    public ResponseEntity<Map<String, Object>> selectListByUseYn(@RequestParam String useYn) {
-        List<DeptVo> voList = deptService.selectListByUseYn(useYn);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-
-        return ResponseEntity.ok(map);
+    public ResponseEntity<Map<String, Object>> selectListByUseYn(
+            @RequestParam String useYn,
+            @RequestParam(required = false, defaultValue = "1") int currentPage
+    ) {
+        return ResponseEntity.ok(
+                deptService.selectListByUseYn(useYn, currentPage, pageLimit, boardLimit)
+        );
     }
 
 

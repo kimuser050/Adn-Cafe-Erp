@@ -29,21 +29,21 @@
         <div class="nav-group">
             <button type="button" class="nav-main">재무관리</button>
             <div class="nav-sub">
-                <a href="#">계정</a>
-                <a href="#">장부</a>
-                <a href="#">재무현황</a>
-                <a href="#">매출분석</a>
+                <a href="/dailySales/storeIncome">재무현황</a>
+                <a href="/account/insertAccount">계정과목</a>
+                <a href="/journal/insertJournal">장부조회</a>
+                <a href="/journal/journalState">재무제표</a>
             </div>
         </div>
 
         <div class="nav-group">
             <button type="button" class="nav-main">품질관리</button>
             <div class="nav-sub">
-                <a href="#">발주신청</a>
-                <a href="#">반품신청</a>
-                <a href="#">반품검수</a>
-                <a href="/stock/item/myDocList">본사품목</a>
-                <a href="#">상품관리</a>
+                <a href="/stock/order" >발주신청</a>
+                <a href="/stock/return" >반품신청</a>
+                <a href="/stock/check" >반품검수</a>
+                <a href="/stock/item">본사품목</a>
+                <a href="/stock/products">상품관리</a>
             </div>
         </div>
 
@@ -63,9 +63,9 @@
                 </div>
         </div>
         <br>
-        <a href="#" class="nav-link">마이페이지</a>
-        <a href="#" class="nav-link">공지사항</a>
-        <a href="#" class="nav-link">문의게시판</a>
+        <a href="/member/mypage" class="nav-link">마이페이지</a>
+        <a href="/notice/list" class="nav-link">공지사항</a>
+        <a href="/qna/question/list" class="nav-link">문의게시판</a>
 
     </nav>
 </aside>

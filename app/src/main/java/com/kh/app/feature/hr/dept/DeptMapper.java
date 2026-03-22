@@ -1,6 +1,6 @@
 package com.kh.app.feature.hr.dept;
 
-import com.kh.app.feature.hr.position.PosVo;
+import com.kh.app.feature.util.PageVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -23,60 +23,106 @@ public interface DeptMapper {
             """)
     int insert(DeptVo vo);
 
-
-    //1. 부서리스트 가져오기 (MEMBER 랑 DEPT JOIN했음)
     @Select("""
-            SELECT
-                D.DEPT_CODE
-                , D.DEPT_NAME
-                , D.DEPT_ADDRESS
-                , D.MANAGER_EMP_NO
-                , M.EMP_NAME AS MANAGER_NAME
-                , D.USE_YN
-                , TO_CHAR(D.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
-                , TO_CHAR(D.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
-            FROM DEPT D
-            LEFT JOIN MEMBER M
-                ON D.MANAGER_EMP_NO = M.EMP_NO
-            ORDER BY D.CREATED_AT ASC
-    """)
-    List<DeptVo> selectList();
+        SELECT COUNT(*)
+        FROM DEPT
+        """)
+    int selectCount();
+
 
     @Select("""
         SELECT
             D.DEPT_CODE
-                , D.DEPT_NAME
-                , D.DEPT_ADDRESS
-                , D.MANAGER_EMP_NO
-                , M.EMP_NAME AS MANAGER_NAME
-                , D.USE_YN
-                , TO_CHAR(D.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
-                , TO_CHAR(D.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+            , D.DEPT_NAME
+            , D.DEPT_ADDRESS
+            , D.MANAGER_EMP_NO
+            , M.EMP_NAME AS MANAGER_NAME
+            , D.USE_YN
+            , TO_CHAR(D.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+            , TO_CHAR(D.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+            , (
+                SELECT COUNT(*)
+                FROM MEMBER MM
+                WHERE MM.DEPT_CODE = D.DEPT_CODE
+                  AND NVL(MM.QUIT_YN, 'N') = 'N'
+              ) AS MEMBER_COUNT
         FROM DEPT D
         LEFT JOIN MEMBER M
-        ON D.MANAGER_EMP_NO = M.EMP_NO
-        WHERE DEPT_NAME LIKE '%' || #{keyword} || '%'
+          ON D.MANAGER_EMP_NO = M.EMP_NO
         ORDER BY D.CREATED_AT ASC
+        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
         """)
-    List<DeptVo> selectListByName(String keyword);
+    List<DeptVo> selectListByPage(@Param("pvo") PageVo pvo);
+
+    @Select("""
+        SELECT COUNT(*)
+        FROM DEPT
+        WHERE DEPT_NAME LIKE '%' || #{keyword} || '%'
+        """)
+    int selectCountByName(@Param("keyword") String keyword);
 
     @Select("""
         SELECT
-           D.DEPT_CODE
-                , D.DEPT_NAME
-                , D.DEPT_ADDRESS
-                , D.MANAGER_EMP_NO
-                , M.EMP_NAME AS MANAGER_NAME
-                , D.USE_YN
-                , TO_CHAR(D.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
-                , TO_CHAR(D.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+            D.DEPT_CODE
+            , D.DEPT_NAME
+            , D.DEPT_ADDRESS
+            , D.MANAGER_EMP_NO
+            , M.EMP_NAME AS MANAGER_NAME
+            , D.USE_YN
+            , TO_CHAR(D.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+            , TO_CHAR(D.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+            , (
+                SELECT COUNT(*)
+                FROM MEMBER MM
+                WHERE MM.DEPT_CODE = D.DEPT_CODE
+                  AND NVL(MM.QUIT_YN, 'N') = 'N'
+              ) AS MEMBER_COUNT
         FROM DEPT D
         LEFT JOIN MEMBER M
-        ON D.MANAGER_EMP_NO = M.EMP_NO
+          ON D.MANAGER_EMP_NO = M.EMP_NO
+        WHERE D.DEPT_NAME LIKE '%' || #{keyword} || '%'
+        ORDER BY D.CREATED_AT ASC
+        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
+        """)
+    List<DeptVo> selectListByNameByPage(
+            @Param("keyword") String keyword,
+            @Param("pvo") PageVo pvo
+    );
+
+    @Select("""
+        SELECT COUNT(*)
+        FROM DEPT
+        WHERE USE_YN = #{useYn}
+        """)
+    int selectCountByUseYn(@Param("useYn") String useYn);
+
+    @Select("""
+        SELECT
+            D.DEPT_CODE
+            , D.DEPT_NAME
+            , D.DEPT_ADDRESS
+            , D.MANAGER_EMP_NO
+            , M.EMP_NAME AS MANAGER_NAME
+            , D.USE_YN
+            , TO_CHAR(D.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+            , TO_CHAR(D.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+            , (
+                SELECT COUNT(*)
+                FROM MEMBER MM
+                WHERE MM.DEPT_CODE = D.DEPT_CODE
+                  AND NVL(MM.QUIT_YN, 'N') = 'N'
+              ) AS MEMBER_COUNT
+        FROM DEPT D
+        LEFT JOIN MEMBER M
+          ON D.MANAGER_EMP_NO = M.EMP_NO
         WHERE D.USE_YN = #{useYn}
         ORDER BY D.CREATED_AT ASC
+        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
         """)
-    List<DeptVo> selectListByUseYn(String useYn);
+    List<DeptVo> selectListByUseYnByPage(
+            @Param("useYn") String useYn,
+            @Param("pvo") PageVo pvo
+    );
 
 
 

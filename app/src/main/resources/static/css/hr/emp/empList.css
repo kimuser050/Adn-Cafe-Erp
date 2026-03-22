@@ -1,89 +1,173 @@
-/* ========================================================= 직원관리 전용 스타일 - 직원 목록 / 상태 / 상세조회 모달 / 수정 모달 - 기존 기능 유지 + 중복 제거 ========================================================= */
-/* --------------------------------------------------------- 1. 상단 여백 --------------------------------------------------------- */
+/* =========================================================
+   직원관리 전용 스타일
+   - 기능/구조 변경 없이 외관만 개선
+   - 급여관리 페이지와 톤앤매너 통일
+   ========================================================= */
+
+/* =========================================================
+   1. 상단 여백 / 공통 진입 애니메이션
+   ========================================================= */
 .emp-top-spacer {
     height: 44px;
     margin-bottom: 18px;
 }
 
-/* --------------------------------------------------------- 2. 직원 페이지 요약 카드 / 툴바 --------------------------------------------------------- */
+.emp-page .org-summary-area,
+.emp-page .org-table-card {
+    animation: empFadeUp 0.45s ease;
+}
+
+/* =========================================================
+   2. 요약 카드
+   ========================================================= */
 .emp-page .org-summary-area {
     margin-bottom: 18px;
+    gap: 16px;
 }
 
 .emp-page .summary-card {
-    width: 128px;
-    min-height: 86px;
+    width: 140px;
+    min-height: 92px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,250,245,0.84) 100%);
+    border: 1px solid rgba(217, 177, 137, 0.28);
+    box-shadow: 0 12px 24px rgba(92, 63, 42, 0.10);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.emp-page .summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px rgba(92, 63, 42, 0.14);
+}
+
+.emp-page .summary-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #7b6452;
+    margin-bottom: 10px;
+    letter-spacing: -0.1px;
+}
+
+.emp-page .summary-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-dark);
+    border-left: 4px solid var(--color-mid);
+    padding-left: 10px;
+    line-height: 1;
+}
+
+/* =========================================================
+   3. 목록 카드 / 툴바
+   ========================================================= */
+.emp-page .org-table-card {
+    margin-top: 6px;
+    min-height: 420px;
+    padding: 18px 20px 20px;
+    border-radius: 16px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,252,248,0.88) 100%);
+    border: 1px solid rgba(217, 177, 137, 0.22);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.10);
 }
 
 .emp-page .org-toolbar {
     margin-bottom: 16px;
+    align-items: center;
 }
 
 .emp-page .toolbar-right {
     width: 100%;
     justify-content: flex-end;
+    gap: 10px;
 }
 
 .emp-page .toolbar-right .form-select {
-    min-width: 84px;
+    min-width: 92px;
+    height: 36px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.95);
 }
 
 .emp-page .search-box {
-    min-width: 210px;
+    min-width: 230px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(156, 120, 93, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
 }
 
 .emp-page .search-box input {
-    width: 160px;
+    width: 170px;
+    height: 30px;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0 10px 0 12px;
+    font-size: 12px;
+    color: var(--color-text);
 }
 
-/* --------------------------------------------------------- 3. 직원 목록 테이블 --------------------------------------------------------- */
-.emp-page .org-table-card {
-    margin-top: 6px;
-    min-height: 420px;
+.emp-page .search-box input::placeholder {
+    color: #9b8a7c;
 }
+
 
 .emp-page .org-bottom-area {
     margin-top: 18px;
     min-height: 34px;
 }
 
+/* =========================================================
+   4. 직원 목록 테이블
+   ========================================================= */
 .emp-table {
     table-layout: fixed;
+    min-width: 980px;
 }
 
 .emp-table th:nth-child(1),
-.emp-table td:nth-child(1) {
-    width: 60px;
-}
+.emp-table td:nth-child(1) { width: 60px; }
 
 .emp-table th:nth-child(2),
-.emp-table td:nth-child(2) {
-    width: 120px;
-}
+.emp-table td:nth-child(2) { width: 120px; }
 
 .emp-table th:nth-child(3),
-.emp-table td:nth-child(3) {
-    width: 110px;
-}
+.emp-table td:nth-child(3) { width: 110px; }
 
 .emp-table th:nth-child(4),
-.emp-table td:nth-child(4) {
-    width: 100px;
-}
+.emp-table td:nth-child(4) { width: 100px; }
 
 .emp-table th:nth-child(5),
-.emp-table td:nth-child(5) {
-    width: 220px;
-}
+.emp-table td:nth-child(5) { width: 220px; }
 
 .emp-table th:nth-child(6),
-.emp-table td:nth-child(6) {
-    width: 160px;
-}
+.emp-table td:nth-child(6) { width: 160px; }
 
 .emp-table th:nth-child(7),
-.emp-table td:nth-child(7) {
-    width: 110px;
+.emp-table td:nth-child(7) { width: 120px; }
+
+.emp-table thead th {
+    background: linear-gradient(180deg, #d8b18b 0%, #cfaa83 100%);
+    color: #4b3728;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 14px 10px;
+}
+
+.emp-table tbody tr {
+    transition: transform 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.emp-table tbody tr:hover {
+    background: rgba(255,255,255,0.62);
+    transform: translateY(-1px);
 }
 
 .emp-table td {
@@ -92,15 +176,6 @@
     text-overflow: ellipsis;
 }
 
-.emp-table .link-text {
-    color: #1a73e8;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.emp-table .link-text:hover {
-    text-decoration: underline;
-}
 
 .emp-table .empty-row td {
     height: 120px;
@@ -109,19 +184,31 @@
     font-size: 13px;
 }
 
-/* --------------------------------------------------------- 4. 상태 뱃지 --------------------------------------------------------- */
-.status {
+/* =========================================================
+   5. 상태 뱃지
+   - 공통 status를 emp 전용으로 조금 더 고급스럽게 보정
+   ========================================================= */
+.emp-page .status,
+#emp-modal-wrap .status,
+#emp-edit-modal-wrap .status {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 7px;
+    min-height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
     font-size: 12px;
-    font-weight: 600;
-    color: #4b3728;
+    font-weight: 700;
     white-space: nowrap;
+    border: 1px solid transparent;
+    background: rgba(255,255,255,0.72);
+    color: #4b3728;
 }
 
-.status::before {
+.emp-page .status::before,
+#emp-modal-wrap .status::before,
+#emp-edit-modal-wrap .status::before {
     content: "";
     width: 8px;
     height: 8px;
@@ -129,66 +216,171 @@
     flex-shrink: 0;
 }
 
-.status.working::before {
+.emp-page .status.working,
+#emp-modal-wrap .status.working,
+#emp-edit-modal-wrap .status.working {
+    background: rgba(34, 197, 94, 0.09);
+    border-color: rgba(34, 197, 94, 0.22);
+    color: #237344;
+}
+.emp-page .status.working::before,
+#emp-modal-wrap .status.working::before,
+#emp-edit-modal-wrap .status.working::before {
     background-color: #22c55e;
 }
 
-.status.retired::before {
-    background-color: #ef4444;
+.emp-page .status.trip,
+#emp-modal-wrap .status.trip,
+#emp-edit-modal-wrap .status.trip {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.20);
+    color: #2459b8;
 }
-
-.status.leave::before {
-    background-color: #facc15;
-}
-
-.status.trip::before {
+.emp-page .status.trip::before,
+#emp-modal-wrap .status.trip::before,
+#emp-edit-modal-wrap .status.trip::before {
     background-color: #3b82f6;
 }
 
-.status.training::before {
+.emp-page .status.training,
+#emp-modal-wrap .status.training,
+#emp-edit-modal-wrap .status.training {
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.20);
+    color: #6c46c9;
+}
+.emp-page .status.training::before,
+#emp-modal-wrap .status.training::before,
+#emp-edit-modal-wrap .status.training::before {
     background-color: #8b5cf6;
 }
 
-.status.unknown::before {
+.emp-page .status.leave,
+#emp-modal-wrap .status.leave,
+#emp-edit-modal-wrap .status.leave {
+    background: rgba(250, 204, 21, 0.10);
+    border-color: rgba(250, 204, 21, 0.24);
+    color: #8a6a10;
+}
+.emp-page .status.leave::before,
+#emp-modal-wrap .status.leave::before,
+#emp-edit-modal-wrap .status.leave::before {
+    background-color: #facc15;
+}
+
+.emp-page .status.outside,
+#emp-modal-wrap .status.outside,
+#emp-edit-modal-wrap .status.outside {
+    background: rgba(249, 115, 22, 0.09);
+    border-color: rgba(249, 115, 22, 0.22);
+    color: #b85c17;
+}
+.emp-page .status.outside::before,
+#emp-modal-wrap .status.outside::before,
+#emp-edit-modal-wrap .status.outside::before {
+    background-color: #f97316;
+}
+
+.emp-page .status.remote,
+#emp-modal-wrap .status.remote,
+#emp-edit-modal-wrap .status.remote {
+    background: rgba(14, 165, 233, 0.09);
+    border-color: rgba(14, 165, 233, 0.22);
+    color: #176a92;
+}
+.emp-page .status.remote::before,
+#emp-modal-wrap .status.remote::before,
+#emp-edit-modal-wrap .status.remote::before {
+    background-color: #0ea5e9;
+}
+
+.emp-page .status.retired,
+#emp-modal-wrap .status.retired,
+#emp-edit-modal-wrap .status.retired {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.22);
+    color: #b53b3b;
+}
+.emp-page .status.retired::before,
+#emp-modal-wrap .status.retired::before,
+#emp-edit-modal-wrap .status.retired::before {
+    background-color: #ef4444;
+}
+
+.emp-page .status.unknown,
+#emp-modal-wrap .status.unknown,
+#emp-edit-modal-wrap .status.unknown {
+    background: rgba(156, 163, 175, 0.12);
+    border-color: rgba(156, 163, 175, 0.24);
+    color: #5f6773;
+}
+.emp-page .status.unknown::before,
+#emp-modal-wrap .status.unknown::before,
+#emp-edit-modal-wrap .status.unknown::before {
     background-color: #9ca3af;
 }
 
-/* --------------------------------------------------------- 5. 상세조회 / 수정 모달 공통 --------------------------------------------------------- */
+/* =========================================================
+   6. 상세조회 / 수정 모달 공통
+   ========================================================= */
 #emp-modal-wrap .emp-detail-modal,
 #emp-edit-modal-wrap .emp-edit-modal {
     width: 980px;
     max-width: 92%;
-    border-radius: 16px;
+    border-radius: 18px;
+    transform-origin: center center;
+    animation: empModalPop 0.34s cubic-bezier(.2,.8,.2,1);
 }
 
 #emp-modal-wrap .emp-detail-body,
 #emp-edit-modal-wrap .emp-edit-body {
-    padding: 18px 22px 10px;
+    padding: 18px 22px 12px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
     max-height: 80vh;
     overflow-y: auto;
 }
 
+#emp-modal-wrap .org-modal-header,
+#emp-edit-modal-wrap .org-modal-header {
+    padding: 18px 22px;
+}
+
+#emp-modal-wrap .org-modal-header h2,
+#emp-edit-modal-wrap .org-modal-header h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-dark);
+    letter-spacing: -0.2px;
+}
+
 #emp-modal-wrap .org-modal-footer,
 #emp-edit-modal-wrap .org-modal-footer {
-    padding: 0 22px 20px;
+    padding: 14px 22px 20px;
+    gap: 8px;
 }
 
-/* --------------------------------------------------------- 6. 공통 섹션 박스 --------------------------------------------------------- */
-.detail-section {
-    border: 1px solid #e6c9ae;
-    border-radius: 10px;
-    padding: 14px 16px 16px;
-    background-color: #fffdfa;
+/* =========================================================
+   7. 상세/수정 공통 섹션
+   ========================================================= */
+#emp-modal-wrap .detail-section,
+#emp-edit-modal-wrap .detail-section {
+    border: 1px solid #efe8e0;
+    border-radius: 14px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,250,245,0.95) 100%);
+    padding: 16px;
+    box-shadow: 0 10px 24px rgba(92, 63, 42, 0.05);
 }
 
-.detail-section-title {
+#emp-modal-wrap .detail-section-title,
+#emp-edit-modal-wrap .detail-section-title {
     margin: 0 0 14px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 800;
-    color: #4b3728;
+    color: #5a3d2b;
+    letter-spacing: -0.1px;
 }
 
 .section-title-row {
@@ -203,7 +395,9 @@
     color: #9a8b7e;
 }
 
-/* --------------------------------------------------------- 7. 기본정보 영역 --------------------------------------------------------- */
+/* =========================================================
+   8. 기본정보 영역
+   ========================================================= */
 .detail-profile-area {
     display: flex;
     gap: 22px;
@@ -211,20 +405,22 @@
 }
 
 .detail-profile-img {
-    width: 110px;
-    min-width: 110px;
+    width: 116px;
+    min-width: 116px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
 }
 
 .detail-profile-img img {
-    width: 92px;
-    height: 92px;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #d9c7b4;
-    background-color: #f4efe8;
+    border: 2px solid rgba(217, 177, 137, 0.42);
+    background:
+        radial-gradient(circle at 30% 30%, #fff 0%, #f4efe8 100%);
+    box-shadow: 0 8px 18px rgba(92, 63, 42, 0.10);
 }
 
 .detail-info-grid {
@@ -239,6 +435,8 @@
     align-items: center;
     gap: 10px;
     min-width: 0;
+    min-height: 38px;
+    padding: 0 2px;
 }
 
 .detail-row-address {
@@ -247,83 +445,74 @@
 }
 
 .detail-label {
-    width: 72px;
-    min-width: 72px;
+    width: 76px;
+    min-width: 76px;
     font-size: 13px;
-    font-weight: 700;
-    color: #5b4635;
+    font-weight: 800;
+    color: #6a4d39;
 }
 
 .detail-value {
     flex: 1;
     font-size: 13px;
-    color: #4b3728;
+    color: #433227;
     line-height: 1.5;
     word-break: break-word;
 }
 
-/* --------------------------------------------------------- 8. 급여 + 근태 2단 레이아웃 --------------------------------------------------------- */
-.detail-two-column {
+/* =========================================================
+   9. 급여 / 근태 정보 박스
+   - HTML 변경 없이 현재 구조 그대로 스타일링
+   - 오타 클래스 Attandance-info-grid도 같이 대응
+   ========================================================= */
+.salary-info-grid,
+.attendance-info-grid,
+.Attandance-info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 10px;
 }
 
-.salary-info-grid {
-    display: grid;
-    gap: 12px;
-}
-
-.attendance-info-grid {
-    display: grid;
-    gap: 14px;
-}
-
-.attendance-item {
-    display: flex;
+.salary-info-grid .detail-row,
+.attendance-info-grid .detail-row,
+.Attandance-info-grid .detail-row {
+    min-height: 42px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #f8f5f1;
+    border: 1px solid #efe4d7;
     justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #f1e7dc;
 }
 
-.attendance-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+.salary-info-grid .detail-label,
+.attendance-info-grid .detail-label,
+.Attandance-info-grid .detail-label {
+    width: auto;
+    min-width: auto;
 }
 
-.attendance-label {
-    font-size: 13px;
+.salary-info-grid .detail-value,
+.attendance-info-grid .detail-value,
+.Attandance-info-grid .detail-value {
+    text-align: right;
     font-weight: 700;
-    color: #5b4635;
+    color: #3f2d22;
 }
 
-.attendance-value {
-    font-size: 13px;
-    font-weight: 600;
-    color: #4b3728;
-}
-
-/* --------------------------------------------------------- 9. 인사이력 테이블 --------------------------------------------------------- */
+/* =========================================================
+   10. 인사이력 테이블
+   ========================================================= */
 .emp-history-table {
     table-layout: fixed;
 }
 
 .emp-history-table th:nth-child(1),
-.emp-history-table td:nth-child(1) {
-    width: 140px;
-}
+.emp-history-table td:nth-child(1) { width: 140px; }
 
 .emp-history-table th:nth-child(2),
-.emp-history-table td:nth-child(2) {
-    width: 160px;
-}
+.emp-history-table td:nth-child(2) { width: 160px; }
 
 .emp-history-table th:nth-child(3),
-.emp-history-table td:nth-child(3) {
-    width: auto;
-}
+.emp-history-table td:nth-child(3) { width: auto; }
 
 .emp-history-table td {
     white-space: nowrap;
@@ -331,7 +520,17 @@
     text-overflow: ellipsis;
 }
 
-/* --------------------------------------------------------- 10. 수정 모달 --------------------------------------------------------- */
+.emp-history-table tbody tr {
+    transition: background-color 0.16s ease, transform 0.16s ease;
+}
+
+.emp-history-table tbody tr:hover {
+    background: rgba(255,255,255,0.55);
+}
+
+/* =========================================================
+   11. 수정 모달
+   ========================================================= */
 .edit-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -341,46 +540,103 @@
 .edit-row {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
 }
 
 .edit-row label {
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 800;
     color: #5b4635;
 }
 
 .edit-row input,
 .edit-row select {
-    height: 38px;
-    padding: 0 10px;
-    border: 1px solid #d8c8b8;
-    border-radius: 8px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #dac9b8;
+    border-radius: 10px;
     font-size: 13px;
     color: #4b3728;
     background-color: #fff;
     box-sizing: border-box;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.edit-row input:focus,
+.edit-row select:focus {
+    border-color: #b88d68;
+    box-shadow: 0 0 0 4px rgba(184, 141, 104, 0.12);
+    outline: none;
+}
+
+.edit-row input[readonly] {
+    background: #f4f2ef;
+    color: #7a6a5e;
+    cursor: not-allowed;
 }
 
 .history-header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 12px;
+    margin-bottom: 12px;
 }
+
+.emp-history-edit-table {
+    table-layout: fixed;
+}
+
+.emp-history-edit-table th:nth-child(1),
+.emp-history-edit-table td:nth-child(1) { width: 160px; }
+
+.emp-history-edit-table th:nth-child(2),
+.emp-history-edit-table td:nth-child(2) { width: 180px; }
+
+.emp-history-edit-table th:nth-child(3),
+.emp-history-edit-table td:nth-child(3) { width: auto; }
 
 .emp-history-edit-table input,
 .emp-history-edit-table select {
     width: 100%;
-    height: 34px;
+    height: 36px;
     border: 1px solid #d8c8b8;
-    border-radius: 6px;
-    padding: 0 8px;
+    border-radius: 8px;
+    padding: 0 10px;
     font-size: 12px;
+    background: #fff;
     box-sizing: border-box;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* --------------------------------------------------------- 11. 반응형 --------------------------------------------------------- */
+.emp-history-edit-table input:focus,
+.emp-history-edit-table select:focus {
+    border-color: #b88d68;
+    box-shadow: 0 0 0 4px rgba(184, 141, 104, 0.12);
+    outline: none;
+}
+
+/* =========================================================
+   12. 페이지네이션 미세 보정
+   ========================================================= */
+.emp-page .pagination {
+    gap: 8px;
+}
+
+.emp-page .page-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    transition: transform 0.16s ease, background-color 0.16s ease;
+}
+
+.emp-page .page-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   13. 반응형
+   ========================================================= */
 @media (max-width: 1400px) {
     .emp-page .org-table-card {
         overflow-x: auto;
@@ -398,7 +654,6 @@
     }
 
     .detail-info-grid,
-    .detail-two-column,
     .edit-grid {
         grid-template-columns: 1fr;
     }
@@ -416,5 +671,340 @@
 
     .emp-page .toolbar-right {
         justify-content: flex-start;
+    }
+
+    .emp-page .search-box {
+        min-width: 100%;
+    }
+
+    .emp-page .search-box input {
+        width: 100%;
+    }
+
+    #emp-modal-wrap .emp-detail-modal,
+    #emp-edit-modal-wrap .emp-edit-modal {
+        max-width: 100%;
+    }
+}
+
+/* =========================================================
+   14. keyframes
+   ========================================================= */
+@keyframes empFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes empModalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.97) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* =========================================================
+   직원 상세조회 모달 - 최종 정리본
+   - 기존 상세조회 덮어쓰기 블록 전부 삭제 후 이것만 사용
+   ========================================================= */
+
+/* 1. 모달 전체 */
+#emp-modal-wrap {
+    backdrop-filter: blur(6px);
+}
+
+#emp-modal-wrap .emp-detail-modal {
+    width: 920px;
+    max-width: 92%;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #f7f4f1;
+    border: 1px solid #e5d8cb;
+    box-shadow: 0 24px 48px rgba(42, 29, 20, 0.18);
+}
+
+#emp-modal-wrap .org-modal-header {
+    padding: 22px 26px 16px;
+    background: #f7f4f1;
+    border-bottom: 1px solid #e7dbcf;
+}
+
+#emp-modal-wrap .org-modal-header::after {
+    content: none;
+}
+
+#emp-modal-wrap .org-modal-header h2 {
+    font-size: 19px;
+    font-weight: 900;
+    color: #5a3d2b;
+    letter-spacing: -0.2px;
+}
+
+#emp-modal-wrap .emp-detail-body {
+    padding: 18px 22px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 78vh;
+    overflow-y: auto;
+    background: #f7f4f1;
+}
+
+#emp-modal-wrap .org-modal-footer {
+    padding: 14px 22px 20px;
+    border-top: 1px solid #e7dbcf;
+    background: #f7f4f1;
+}
+
+/* 2. 공통 섹션 */
+#emp-modal-wrap .detail-section {
+    padding: 16px 18px;
+    border: 1px solid #e5d7ca;
+    border-radius: 18px;
+    background: #fbf9f7;
+    box-shadow: none;
+}
+
+#emp-modal-wrap .detail-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 14px;
+    font-size: 14px;
+    font-weight: 900;
+    color: #5a3d2b;
+    letter-spacing: -0.1px;
+}
+
+#emp-modal-wrap .detail-section-title::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #7b5a43;
+    box-shadow: 0 0 0 4px rgba(123, 90, 67, 0.12);
+}
+
+/* 3. 기본정보 */
+#emp-modal-wrap .detail-profile-area {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+#emp-modal-wrap .detail-profile-img {
+    width: 110px;
+    min-width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+#emp-modal-wrap .detail-profile-img img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e3d4c6;
+    background: #fff;
+    box-shadow: 0 8px 16px rgba(92, 63, 42, 0.10);
+}
+
+/* 핵심: 카드 나열 금지, 정보표처럼 정리 */
+#emp-modal-wrap .detail-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 34px;
+    align-items: start;
+}
+
+#emp-modal-wrap .detail-info-grid > .detail-row,
+#emp-modal-wrap .detail-info-grid > .detail-row.detail-row-address {
+    min-height: auto;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 8px;
+    align-items: start;
+    grid-column: auto !important;
+}
+
+#emp-modal-wrap .detail-info-grid > .detail-row:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+/* 이메일/주소만 한 줄 더 넓게 */
+#emp-modal-wrap .detail-info-grid > .detail-row:nth-child(7) {
+    grid-column: 1 / span 2 !important;
+}
+
+#emp-modal-wrap .detail-info-grid > .detail-row.detail-row-address {
+    grid-column: 1 / span 2 !important;
+}
+
+#emp-modal-wrap .detail-label {
+    width: auto;
+    min-width: auto;
+    font-size: 12px;
+    font-weight: 800;
+    color: #8a705c;
+    line-height: 1.7;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+#emp-modal-wrap .detail-value {
+    width: 100%;
+    font-size: 13px;
+    font-weight: 700;
+    color: #49362a;
+    line-height: 1.7;
+    word-break: break-word;
+}
+
+/* 이름만 살짝 강조 */
+#emp-modal-wrap #modal-emp-name {
+    font-size: 15px;
+    font-weight: 900;
+}
+
+/* 상태칩 */
+#emp-modal-wrap #modal-emp-status.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    width: fit-content;
+    padding: 4px 10px;
+    min-height: 28px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* 4. 급여정보 */
+#emp-modal-wrap .salary-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+#emp-modal-wrap .salary-info-grid .detail-row {
+    min-height: auto;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid #eadccf;
+    background: #f8f4ef;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+    justify-content: center;
+    box-shadow: none;
+}
+
+#emp-modal-wrap .salary-info-grid .detail-row:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+#emp-modal-wrap .salary-info-grid .detail-label {
+    font-size: 12px;
+    color: #8a705c;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+#emp-modal-wrap .salary-info-grid .detail-value {
+    font-size: 18px;
+    font-weight: 900;
+    color: #3d2b20;
+    line-height: 1.2;
+}
+
+/* 5. 인사이력 */
+#emp-modal-wrap .emp-history-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px #eee3d7;
+}
+
+#emp-modal-wrap .emp-history-table thead th {
+    padding: 13px 12px;
+    background: #d5ad86;
+    color: #4b3728;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+#emp-modal-wrap .emp-history-table tbody td {
+    padding: 13px 12px;
+    font-size: 12px;
+    color: #4b3728;
+    border-bottom: 1px solid #f1e7dd;
+    background: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#emp-modal-wrap .emp-history-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#emp-modal-wrap .emp-history-table tbody tr:hover td {
+    background: #fcf8f4;
+}
+
+/* 6. 반응형 */
+@media (max-width: 860px) {
+    #emp-modal-wrap .detail-profile-area {
+        grid-template-columns: 1fr;
+    }
+
+    #emp-modal-wrap .detail-profile-img {
+        margin: 0 auto;
+    }
+
+    #emp-modal-wrap .detail-info-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    #emp-modal-wrap .detail-info-grid > .detail-row,
+    #emp-modal-wrap .detail-info-grid > .detail-row:nth-child(7),
+    #emp-modal-wrap .detail-info-grid > .detail-row.detail-row-address {
+        grid-column: auto !important;
+    }
+
+    #emp-modal-wrap .salary-info-grid {
+        grid-template-columns: 1fr;
     }
 }

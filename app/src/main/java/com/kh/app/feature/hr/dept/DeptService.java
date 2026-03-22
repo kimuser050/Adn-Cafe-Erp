@@ -1,6 +1,7 @@
 package com.kh.app.feature.hr.dept;
 
-import com.kh.app.feature.hr.position.PosVo;
+
+import com.kh.app.feature.util.PageVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,16 +26,45 @@ public class DeptService {
     }
 
     //1. 부서 전체 조회하기
-    public List<DeptVo> selectList() {
-        return deptMapper.selectList();
+    public Map<String, Object> selectList(int currentPage, int pageLimit, int boardLimit) {
+        int listCount = deptMapper.selectCount();
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<DeptVo> voList = deptMapper.selectListByPage(pvo);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("pvo", pvo);
+        map.put("voList", voList);
+
+        return map;
     }
 
-    public List<DeptVo> selectListByName(String keyword) {
-        return deptMapper.selectListByName(keyword);
+    public Map<String, Object> selectListByName(String keyword, int currentPage, int pageLimit, int boardLimit) {
+        int listCount = deptMapper.selectCountByName(keyword);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<DeptVo> voList = deptMapper.selectListByNameByPage(keyword, pvo);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("keyword", keyword);
+        map.put("pvo", pvo);
+        map.put("voList", voList);
+
+        return map;
     }
 
-    public List<DeptVo> selectListByUseYn(String useYn) {
-        return deptMapper.selectListByUseYn(useYn);
+    public Map<String, Object> selectListByUseYn(String useYn, int currentPage, int pageLimit, int boardLimit) {
+        int listCount = deptMapper.selectCountByUseYn(useYn);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<DeptVo> voList = deptMapper.selectListByUseYnByPage(useYn, pvo);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("useYn", useYn);
+        map.put("pvo", pvo);
+        map.put("voList", voList);
+
+        return map;
     }
 
     //2. 부서 상세 조회하기
