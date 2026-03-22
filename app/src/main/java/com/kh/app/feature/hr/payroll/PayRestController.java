@@ -121,4 +121,9 @@ public class PayRestController {
     public ResponseEntity<PayEmpVo> selectEmpOne(@PathVariable String empNo) {
         return ResponseEntity.ok(payService.selectEmpOne(empNo));
     }
+
+    @GetMapping("/emps/{empNo}/attendance-summary")
+    public ResponseEntity<Map<String, Object>> selectAttendanceSummary(@PathVariable String empNo, @RequestParam String month) {
+        return ResponseEntity.ok(payService.selectAttendanceSummary(empNo, month));
+    }
 }

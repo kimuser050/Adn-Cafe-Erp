@@ -597,24 +597,35 @@ function renderPayEditItemList(detailList) {
         const item = detailList[i];
         const taxText = item.isTaxable === "Y" ? "과세" : "비과세";
 
-        const isFixedItem = item.itemName === "기본급" || item.itemName === "보너스";
+        // 금액은 3개 고정
+        const isFixedAmount =
+            item.itemName === "기본급" ||
+            item.itemName === "보너스" ||
+            item.itemName === "연장근무수당";
 
-        const amountReadonly = isFixedItem ? "readonly" : "";
-        const amountClass = isFixedItem
+        // 비고는 기본급/보너스만 고정
+        const isFixedNote =
+            item.itemName === "기본급" ||
+            item.itemName === "보너스";
+
+        const amountReadonly = isFixedAmount ? "readonly" : "";
+        const amountClass = isFixedAmount
             ? "edit-amount-input fixed-input"
             : "edit-amount-input";
 
-        const noteReadonly = isFixedItem ? "readonly" : "";
-        const noteClass = isFixedItem
+        const noteReadonly = isFixedNote ? "readonly" : "";
+        const noteClass = isFixedNote
             ? "edit-note-input fixed-input"
             : "edit-note-input";
 
-        const noteValue = isFixedItem
-            ? "직급기준"
-            : (item.payNote ? item.payNote : "");
+        let noteValue = item.payNote ? item.payNote : "";
+
+        if (item.itemName === "기본급" || item.itemName === "보너스") {
+            noteValue = "직급기준";
+        }
 
         str += `
-            <tr data-item-code="${item.itemCode}" data-item-type="${item.itemType}" data-fixed="${isFixedItem ? "Y" : "N"}">
+            <tr data-item-code="${item.itemCode}" data-item-type="${item.itemType}">
                 <td>${nvl(item.itemName)}</td>
                 <td>${nvl(item.itemType)}</td>
                 <td>${taxText}</td>
@@ -640,7 +651,6 @@ function renderPayEditItemList(detailList) {
 
     tbody.innerHTML = str;
 }
-
 /* =========================================================
    18. 급여 수정 저장
    ========================================================= */

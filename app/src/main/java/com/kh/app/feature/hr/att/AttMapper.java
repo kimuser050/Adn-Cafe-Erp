@@ -59,6 +59,42 @@ public interface AttMapper {
             """)
     int insertDailyAttendanceRow(@Param("empNo") String empNo, @Param("workDate") String workDate);
 
+    // =========================================================
+    // 1-3. 출근 버튼용 오늘 내 row 생성
+    // - 만약에 오늘 근태가 없고, 출근 누르면 하게 (시연용)
+    // - 이름만 따로 둬서 checkIn에서 읽기 쉽게 사용
+    // =========================================================
+    @Insert("""
+            INSERT INTO ATTENDANCE
+            (
+                ATT_NO,
+                STATUS_CODE,
+                EMP_NO,
+                WORK_DATE,
+                CHECK_IN_AT,
+                CHECK_OUT_AT,
+                ATT_NOTE,
+                CREATED_AT,
+                UPDATED_AT,
+                OT_APPROVED_HOURS,
+                OT_CONFIRMED_HOURS
+            )
+            VALUES
+            (
+                SEQ_ATTENDANCE.NEXTVAL,
+                NULL,
+                #{empNo},
+                TO_DATE(#{workDate}, 'YYYY-MM-DD'),
+                NULL,
+                NULL,
+                NULL,
+                SYSTIMESTAMP,
+                SYSTIMESTAMP,
+                NULL,
+                NULL
+            )
+            """)
+    int insertTodayAttendanceRow(@Param("empNo") String empNo, @Param("workDate") String workDate);
 
     // =========================================================
     // 2. 월별 전체조회용
@@ -425,4 +461,70 @@ public interface AttMapper {
             """)
     int updateOvertimeAttendance(@Param("empNo") String empNo, @Param("workDate") String workDate, @Param("approvedHours") int approvedHours);
 
+
+
+    // 이름 검색
+    @Select("""
+        SELECT
+            M.EMP_NO AS empNo,
+            M.EMP_NAME AS empName,
+            D.DEPT_NAME AS deptName,
+            P.POS_NAME AS posName,
+            NVL(SUM(CASE WHEN A.STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS attCount,
+            NVL(SUM(CASE WHEN A.STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount,
+            NVL(SUM(CASE WHEN A.STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount,
+            NVL(SUM(CASE WHEN A.STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount,
+            NVL(SUM(A.OT_CONFIRMED_HOURS), 0) AS otHours
+        FROM MEMBER M
+        JOIN DEPT D
+          ON M.DEPT_CODE = D.DEPT_CODE
+        JOIN POSITION P
+          ON M.POS_CODE = P.POS_CODE
+        LEFT JOIN ATTENDANCE A
+          ON M.EMP_NO = A.EMP_NO
+         AND TO_CHAR(A.WORK_DATE, 'YYYY-MM') = #{month}
+        WHERE M.QUIT_YN = 'N'
+          AND M.EMP_NAME LIKE '%' || #{keyword} || '%'
+        GROUP BY
+            M.EMP_NO,
+            M.EMP_NAME,
+            D.DEPT_NAME,
+            P.POS_NAME
+        ORDER BY M.EMP_NO
+        """)
+    List<AttListVo> selectListByName(@Param("month") String month,
+                                     @Param("keyword") String keyword);
+
+
+    // 부서 검색
+    @Select("""
+        SELECT
+            M.EMP_NO AS empNo,
+            M.EMP_NAME AS empName,
+            D.DEPT_NAME AS deptName,
+            P.POS_NAME AS posName,
+            NVL(SUM(CASE WHEN A.STATUS_CODE = 1 THEN 1 ELSE 0 END), 0) AS attCount,
+            NVL(SUM(CASE WHEN A.STATUS_CODE = 2 THEN 1 ELSE 0 END), 0) AS lateCount,
+            NVL(SUM(CASE WHEN A.STATUS_CODE = 3 THEN 1 ELSE 0 END), 0) AS absentCount,
+            NVL(SUM(CASE WHEN A.STATUS_CODE = 4 THEN 1 ELSE 0 END), 0) AS vacationCount,
+            NVL(SUM(A.OT_CONFIRMED_HOURS), 0) AS otHours
+        FROM MEMBER M
+        JOIN DEPT D
+          ON M.DEPT_CODE = D.DEPT_CODE
+        JOIN POSITION P
+          ON M.POS_CODE = P.POS_CODE
+        LEFT JOIN ATTENDANCE A
+          ON M.EMP_NO = A.EMP_NO
+         AND TO_CHAR(A.WORK_DATE, 'YYYY-MM') = #{month}
+        WHERE M.QUIT_YN = 'N'
+          AND D.DEPT_NAME LIKE '%' || #{deptName} || '%'
+        GROUP BY
+            M.EMP_NO,
+            M.EMP_NAME,
+            D.DEPT_NAME,
+            P.POS_NAME
+        ORDER BY M.EMP_NO
+        """)
+    List<AttListVo> selectListByDeptName(@Param("month") String month,
+                                         @Param("deptName") String deptName);
 }

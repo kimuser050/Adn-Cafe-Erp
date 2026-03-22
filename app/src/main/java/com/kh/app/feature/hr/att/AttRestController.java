@@ -1,11 +1,13 @@
 package com.kh.app.feature.hr.att;
 
+import com.kh.app.feature.hr.position.PosVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -74,11 +76,16 @@ public class AttRestController {
     // - 9시 전이면 출근(1), 이후면 지각(2)
     @PostMapping("/check-in")
     public ResponseEntity<Map<String, String>> checkIn(@RequestParam String empNo) {
-        attService.checkIn(empNo);
-
         Map<String, String> map = new HashMap<>();
-        map.put("msg", "출근 처리 완료");
-        return ResponseEntity.ok(map);
+
+        try {
+            attService.checkIn(empNo);
+            map.put("msg", "출근 처리 완료");
+            return ResponseEntity.ok(map);
+        } catch (IllegalStateException e) {
+            map.put("msg", e.getMessage());
+            return ResponseEntity.badRequest().body(map);
+        }
     }
 
     // 6. 퇴근 버튼 처리
@@ -86,11 +93,16 @@ public class AttRestController {
     // - 승인 OT 있으면 인정시간 계산
     @PostMapping("/check-out")
     public ResponseEntity<Map<String, String>> checkOut(@RequestParam String empNo) {
-        attService.checkOut(empNo);
-
         Map<String, String> map = new HashMap<>();
-        map.put("msg", "퇴근 처리 완료");
-        return ResponseEntity.ok(map);
+
+        try {
+            attService.checkOut(empNo);
+            map.put("msg", "퇴근 처리 완료");
+            return ResponseEntity.ok(map);
+        } catch (IllegalStateException e) {
+            map.put("msg", e.getMessage());
+            return ResponseEntity.badRequest().body(map);
+        }
     }
 
     // 7. 결근 마감 처리
@@ -104,6 +116,35 @@ public class AttRestController {
         Map<String, Object> map = new HashMap<>();
         map.put("msg", "결근 마감 처리 완료");
         map.put("count", count);
+
+        return ResponseEntity.ok(map);
+    }
+
+
+    // 이름 검색
+    @GetMapping("/search/name")
+    public ResponseEntity<Map<String, Object>> selectListByName(
+            @RequestParam String month,
+            @RequestParam String keyword
+    ) {
+        List<AttListVo> voList = attService.selectListByName(month, keyword);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
+
+        return ResponseEntity.ok(map);
+    }
+
+    // 부서 검색
+    @GetMapping("/search/deptName")
+    public ResponseEntity<Map<String, Object>> selectListByDept(
+            @RequestParam String month,
+            @RequestParam String deptName
+    ) {
+        List<AttListVo> voList = attService.selectListByDeptName(month, deptName);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
 
         return ResponseEntity.ok(map);
     }

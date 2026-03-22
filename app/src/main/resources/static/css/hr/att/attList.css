@@ -1,0 +1,413 @@
+/* =========================================================
+   근태관리 전용 스타일
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. 상단 여백 / 카드 / 툴바
+   --------------------------------------------------------- */
+.att-top-spacer {
+    height: 44px;
+    margin-bottom: 18px;
+}
+
+.att-page .org-summary-area {
+    margin-bottom: 18px;
+}
+
+.att-page .summary-card {
+    width: 132px;
+    min-height: 88px;
+}
+
+.att-page .org-table-card {
+    margin-top: 6px;
+    min-height: 420px;
+    overflow-x: auto;
+}
+
+.att-page .org-toolbar {
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.att-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.att-page .month-input {
+    min-width: 150px;
+}
+
+.att-page .toolbar-right {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.att-page .toolbar-right .form-select {
+    min-width: 88px;
+}
+
+.att-page .search-box {
+    min-width: 230px;
+}
+
+.att-page .search-box input {
+    width: 180px;
+}
+
+/* ---------------------------------------------------------
+   2. 목록 테이블
+   --------------------------------------------------------- */
+.att-table {
+    table-layout: fixed;
+    min-width: 980px;
+}
+
+.att-table th:nth-child(1),
+.att-table td:nth-child(1) {
+    width: 64px;
+}
+
+.att-table th:nth-child(2),
+.att-table td:nth-child(2) {
+    width: 120px;
+}
+
+.att-table th:nth-child(3),
+.att-table td:nth-child(3) {
+    width: 110px;
+}
+
+.att-table th:nth-child(4),
+.att-table td:nth-child(4) {
+    width: 180px;
+}
+
+.att-table th:nth-child(5),
+.att-table td:nth-child(5),
+.att-table th:nth-child(6),
+.att-table td:nth-child(6),
+.att-table th:nth-child(7),
+.att-table td:nth-child(7),
+.att-table th:nth-child(8),
+.att-table td:nth-child(8) {
+    width: 88px;
+}
+
+.att-table th:nth-child(9),
+.att-table td:nth-child(9) {
+    width: 130px;
+}
+
+.att-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.att-table .link-text {
+    color: #1a73e8;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.att-table .link-text:hover {
+    text-decoration: underline;
+}
+
+.att-table .empty-row td {
+    height: 120px;
+    text-align: center;
+    color: #9a8b7e;
+    font-size: 13px;
+}
+
+/* ---------------------------------------------------------
+   3. 모달 공통
+   --------------------------------------------------------- */
+#att-modal-wrap .att-detail-modal,
+#att-edit-modal-wrap .att-edit-modal {
+    width: 1120px;
+    max-width: min(1120px, 94vw);
+    border-radius: 16px;
+}
+
+#att-modal-wrap .org-modal-header,
+#att-edit-modal-wrap .org-modal-header {
+    padding: 18px 22px 14px;
+}
+
+#att-modal-wrap .org-modal-header h2,
+#att-edit-modal-wrap .org-modal-header h2 {
+    font-size: 22px;
+}
+
+#att-modal-wrap .org-modal-footer,
+#att-edit-modal-wrap .org-modal-footer {
+    padding: 0 22px 20px;
+    border-top: 1px solid #f0e8df;
+    background: #fff;
+}
+
+#att-modal-wrap .att-detail-body,
+#att-edit-modal-wrap .att-edit-body {
+    padding: 18px 22px 14px;
+    max-height: 72vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 모달 안 스크롤바가 있어도 헤더/푸터는 유지 */
+#att-modal-wrap .org-modal,
+#att-edit-modal-wrap .org-modal {
+    display: flex;
+    flex-direction: column;
+    max-height: 88vh;
+}
+
+/* ---------------------------------------------------------
+   4. 상세조회 상단 정보 박스
+   --------------------------------------------------------- */
+.attInfo-section {
+    border: 1px solid #e6c9ae;
+    border-radius: 12px;
+    padding: 16px 18px;
+    background-color: #fffdfa;
+}
+
+.attInfo-section-title {
+    margin: 0 0 14px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #4b3728;
+}
+
+.attInfo-profile-area {
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+}
+
+.attInfo-profile-img {
+    width: 100px;
+    min-width: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.attInfo-profile-img img {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #d9c7b4;
+    background-color: #f4efe8;
+}
+
+.attInfo-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+    min-width: 0;
+}
+
+.attInfo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.attInfo-label {
+    width: 56px;
+    min-width: 56px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #5b4635;
+}
+
+.attInfo-value {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    color: #4b3728;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+#modal-att-empName {
+    font-size: 20px;
+    font-weight: 800;
+    color: #3d2c20;
+}
+
+.attInfo-period {
+    min-width: 210px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    font-size: 12px;
+    color: #8d7159;
+    padding-top: 4px;
+}
+
+.att-summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* ---------------------------------------------------------
+   5. 상세조회 이력 테이블
+   --------------------------------------------------------- */
+.att-history-table {
+    table-layout: fixed;
+    min-width: 900px;
+}
+
+.att-history-table th:nth-child(1),
+.att-history-table td:nth-child(1) {
+    width: 110px;
+}
+
+.att-history-table th:nth-child(2),
+.att-history-table td:nth-child(2) {
+    width: 100px;
+}
+
+.att-history-table th:nth-child(3),
+.att-history-table td:nth-child(3),
+.att-history-table th:nth-child(4),
+.att-history-table td:nth-child(4) {
+    width: 110px;
+}
+
+.att-history-table th:nth-child(5),
+.att-history-table td:nth-child(5) {
+    width: 140px;
+}
+
+.att-history-table th:nth-child(6),
+.att-history-table td:nth-child(6) {
+    width: auto;
+}
+
+.att-history-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------------------------------------------------------
+   6. 수정 모달 테이블
+   --------------------------------------------------------- */
+.att-edit-table {
+    table-layout: fixed;
+    min-width: 1020px;
+}
+
+.att-edit-table th:nth-child(1),
+.att-edit-table td:nth-child(1) {
+    width: 110px;
+}
+
+.att-edit-table th:nth-child(2),
+.att-edit-table td:nth-child(2) {
+    width: 110px;
+}
+
+.att-edit-table th:nth-child(3),
+.att-edit-table td:nth-child(3),
+.att-edit-table th:nth-child(4),
+.att-edit-table td:nth-child(4) {
+    width: 140px;
+}
+
+.att-edit-table th:nth-child(5),
+.att-edit-table td:nth-child(5) {
+    width: 150px;
+}
+
+.att-edit-table th:nth-child(6),
+.att-edit-table td:nth-child(6) {
+    width: 260px;
+}
+
+.att-edit-table input,
+.att-edit-table select {
+    width: 100%;
+    height: 36px;
+    border: 1px solid #d8c8b8;
+    border-radius: 8px;
+    padding: 0 10px;
+    font-size: 12px;
+    color: #4b3728;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.att-edit-table input[type="number"] {
+    text-align: right;
+}
+
+/* ---------------------------------------------------------
+   7. 반응형
+   --------------------------------------------------------- */
+@media (max-width: 1200px) {
+    .attInfo-profile-area {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .attInfo-grid {
+        width: 100%;
+        grid-template-columns: 1fr;
+    }
+
+    .attInfo-period {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .att-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .att-top-spacer {
+        height: 20px;
+        margin-bottom: 14px;
+    }
+
+    .att-page .toolbar-right {
+        justify-content: flex-start;
+    }
+
+    .att-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #att-modal-wrap .att-detail-modal,
+    #att-edit-modal-wrap .att-edit-modal {
+        max-width: 96vw;
+    }
+
+    #att-modal-wrap .att-detail-body,
+    #att-edit-modal-wrap .att-edit-body {
+        max-height: 70vh;
+        padding: 16px;
+    }
+
+}
+
+.att-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}

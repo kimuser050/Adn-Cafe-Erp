@@ -309,4 +309,15 @@ public interface PayMapper {
             WHERE M.EMP_NO = #{empNo}
             """)
     PayEmpVo selectEmpOne(String empNo);
+
+//
+
+@Select("""
+        SELECT NVL(SUM(OT_CONFIRMED_HOURS), 0)
+        FROM ATTENDANCE
+        WHERE EMP_NO = #{empNo}
+          AND TO_CHAR(WORK_DATE, 'YYYY-MM') = #{month}
+        """)
+int selectConfirmedOtHoursByMonth(@Param("empNo") String empNo, @Param("month") String month);
+
 }

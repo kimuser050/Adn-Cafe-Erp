@@ -61,19 +61,24 @@ async function loadPayItems() {
     let str = "";
 
     for (let i = 0; i < payItemList.length; i++) {
-        const item = payItemList[i];
+    const item = payItemList[i];
 
-        const taxText = item.isTaxable === "Y" ? "과세" : "비과세";
+    const taxText = item.isTaxable === "Y" ? "과세" : "비과세";
 
-        str += `
-            <tr data-code="${item.itemCode}" data-type="${item.itemType}" data-name="${item.itemName}">
-                <td>${item.itemName}</td>
-                <td>${item.itemType}</td>
-                <td>${taxText}</td>
-                <td><input type="text" class="amount"></td>
-                <td><input type="text" class="note"></td>
-            </tr>
-        `;
+    const isFixed =
+    item.itemName === "기본급" ||
+    item.itemName === "보너스" ||
+    item.itemName === "연장근무수당";
+
+    str += `
+        <tr data-code="${item.itemCode}" data-type="${item.itemType}" data-name="${item.itemName}">
+            <td>${item.itemName}</td>
+            <td>${item.itemType}</td>
+            <td>${taxText}</td>
+            <td><input type="text" class="amount" ${isFixed ? "readonly" : ""}></td>
+            <td><input type="text" class="note"></td>
+        </tr>
+    `;
     }
 
     tbody.innerHTML = str;
@@ -141,29 +146,58 @@ async function selectEmp(empNo) {
 /* =========================================================
    5. 자동계산
    ========================================================= */
-function autoCalculate() {
+async function autoCalculate() {
 
     if (!selectedEmp) {
         alert("직원 먼저 선택");
         return;
     }
 
+    const month = document.querySelector("#pay-month").value;
+
+    if (!month) {
+        alert("지급월을 먼저 선택하세요");
+        return;
+    }
+
+    // 1. 기본급 / 보너스 계산
     const base = Number(selectedEmp.baseSalary || 0);
     const bonus = Math.round(base * Number(selectedEmp.bonusRate || 0));
 
+    // 2. 근태에서 인정 연장근무시간 조회
+    const resp = await fetch(`/pay/emps/${selectedEmp.empNo}/attendance-summary?month=${month}`);
+
+    if (!resp.ok) {
+        alert("근태 연장근무 조회 실패");
+        return;
+    }
+
+    const attData = await resp.json();
+    const otHours = Number(attData.otHours || 0);
+
+    // 3. 연장근무수당 계산
+    const overtimePay = 30000 * otHours;
+
+    // 4. 항목 자동 입력
     const rows = document.querySelectorAll("#pay-item-body tr");
 
     rows.forEach(function (row) {
-
         const name = row.dataset.name;
 
-        if (name === "기본급") {
-            row.querySelector(".amount").value = base;
-        }
+       if (name === "기본급") {
+    row.querySelector(".amount").value = base;
+    row.querySelector(".note").value = "직급 기준 자동 반영";
+}
 
-        if (name === "보너스") {
-            row.querySelector(".amount").value = bonus;
-        }
+if (name === "보너스") {
+    row.querySelector(".amount").value = bonus;
+    row.querySelector(".note").value = "직급 기준 자동 반영";
+}
+
+if (name === "연장근무수당") {
+    row.querySelector(".amount").value = overtimePay;
+    row.querySelector(".note").value = `${otHours}시간 반영 후 시간당 30000원 적용`;
+}
     });
 
     calculateSummary();

@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="/css/common/component.css">
         <link rel="stylesheet" href="/css/common/home.css">
         <script defer src="/js/common/home.js"></script>
+        <script defer src="/js/hr/att/workInOut.js"></script>
 
     </head>
 
@@ -52,8 +53,8 @@
                                         </div>
 
                                         <div class="attendance-btn-group" style="display: flex; gap: 10px; width: 100%;">
-                                            <button type="button" id="btn-work-in" class="btn btn-mid" style="flex: 1;">출근</button>
-                                            <button type="button" id="btn-work-out" class="btn btn-outline" style="flex: 1;">퇴근</button>
+                                            <button type="button" id="btn-work-in" class="btn btn-mid" style="flex: 1;" data-emp-no="${loginMemberVo.empNo}">출근</button>
+                                            <button type="button" id="btn-work-out" class="btn btn-outline" style="flex: 1;" data-emp-no="${loginMemberVo.empNo}">퇴근</button>
                                         </div>
 
                                         <div class="btn-group" style="display: flex; gap: 10px; width: 100%;">

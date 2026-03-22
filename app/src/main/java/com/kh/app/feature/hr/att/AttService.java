@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -29,6 +31,15 @@ public class AttService {
     // - 반환값은 생성 건수
     @Transactional
     public int initDailyAttendance(String workDate) {
+        //주말 방어하기-> 그 다음 실행
+        LocalDate date = LocalDate.parse(workDate);
+    
+        if (date.getDayOfWeek() == DayOfWeek.SATURDAY
+                || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            return 0;
+        }
+
+
         List<String> empNoList = attMapper.selectEmpNoListForDailyInit(workDate);
 
         int cnt = 0;
@@ -105,9 +116,20 @@ public class AttService {
         // 1) 오늘 근태 row 조회
         AttVo vo = attMapper.selectAttendanceByEmpNoAndDate(empNo, workDate);
 
-        // 2) row 없으면 예외
+        // 2) row 없으면 오늘 내 row 먼저 생성
         if (vo == null) {
-            throw new IllegalStateException("오늘 근태 row가 없습니다.");
+            int insertResult = attMapper.insertTodayAttendanceRow(empNo, workDate);
+
+            if (insertResult != 1) {
+                throw new IllegalStateException("오늘 근태 row 생성 실패");
+            }
+
+            // 다시 조회
+            vo = attMapper.selectAttendanceByEmpNoAndDate(empNo, workDate);
+
+            if (vo == null) {
+                throw new IllegalStateException("오늘 근태 row 조회 실패");
+            }
         }
 
         // 3) 휴가 상태면 출근 불가
@@ -143,12 +165,12 @@ public class AttService {
 
         // 2) row 없으면 예외
         if (vo == null) {
-            throw new IllegalStateException("오늘 근태 row가 없습니다.");
+            throw new IllegalStateException("오늘 근태 정보가 없습니다.");
         }
 
         // 3) 출근시간 없으면 퇴근 불가
         if (vo.getCheckInAt() == null) {
-            throw new IllegalStateException("출근 처리 후 퇴근할 수 있습니다.");
+            throw new IllegalStateException("출근처리가 되어야 퇴근 가능합니다.");
         }
 
         // 4) 이미 퇴근시간 있으면 중복 퇴근 불가
@@ -165,11 +187,9 @@ public class AttService {
         if (approvedHours > 0) {
             LocalTime standardEnd = LocalTime.of(18, 0);
             LocalTime now = LocalTime.now();
-            // 인정 기준 시각(targetEnd)
             LocalTime targetEnd = standardEnd.plusHours(approvedHours);
 
-            // 승인된 시간만큼 다 채웠을 때만 연장근무 인정
-            //(부분 인정 없음!)
+            // 승인 시간만큼 다 채웠을 때만 인정
             if (!now.isBefore(targetEnd)) {
                 confirmedHours = approvedHours;
             }
@@ -261,4 +281,11 @@ public class AttService {
         return cnt;
     }
 
+    public List<AttListVo> selectListByName(String month, String keyword) {
+        return attMapper.selectListByName(month, keyword);
+    }
+
+    public List<AttListVo> selectListByDeptName(String month, String deptName) {
+        return attMapper.selectListByDeptName(month, deptName);
+    }
 }
