@@ -147,14 +147,14 @@ async function selectJournal() {
                     <td rowspan="2">${debitVo.journalDate.substring(0, 10)}</td>
                     <td rowspan="2">${debitVo.journalNo}</td>
                     <td>${debitVo.accountName}</td>
-                    <td>${Number(debitVo.debit)}</td>
+                    <td>${Number(debitVo.debit).toLocaleString()}</td>
                     <td rowspan="2">${debitVo.writerName}</td>
                     <td rowspan="2">
                         <button type="button" class="menu-btn-sm" 
                         onclick="openUpdateModal(
                         '${debitVo.journalNo}'
-                        , '${debitVo.accountName}', '${Number(debitVo.debit)}'
-                        , '${creditVo.accountName}', '${Number(creditVo.credit)}'
+                        , '${debitVo.accountName}', '${Number(debitVo.debit).toLocaleString()}'
+                        , '${creditVo.accountName}', '${Number(creditVo.credit).toLocaleString()}'
                         , '${debitVo.journalDate}'
                         )">수정</button>
                 
@@ -164,7 +164,7 @@ async function selectJournal() {
                 </tr>
                 <tr>
                     <td>${creditVo.accountName}</td>
-                    <td>${Number(creditVo.credit)}</td>
+                    <td>${Number(creditVo.credit).toLocaleString()}</td>
                 </tr>
                 `;
         }
@@ -319,7 +319,7 @@ async function deleteJournal(no) {
 
 
 // 총계정원장
-async function findAccount() {
+async function findAccount(page = 1) {
     const selectAccount = document.querySelector("#accountInput").value;
     if (!selectAccount) {
         alert("조회할 계정을 입력해주세요. 자동완성 목록에서 선택해주세요.");
@@ -334,13 +334,19 @@ async function findAccount() {
         }
     }
 
-    const resp = await fetch(`/journal/${accountNo}`)
-    const voList = await resp.json();
+    const resp = await fetch(`/journal/${accountNo}?page=${page}`)
+    const data = await resp.json();
+    const voList = data.journalList;
+    const pvo = data.pvo;
 
+   console.log(pvo);
+
+   const pagingArea = document.querySelector("#pagingArea");
     const tbody = document.querySelector("#journalListBody");
 
     if (voList.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">해당 계정의 거래 내역이 없습니다.</td></tr>`;
+        renderPagination(pvo);
         return;
     }
 
@@ -349,15 +355,35 @@ async function findAccount() {
         str += `
             <tr>
                 <td>${vo.journalDate}</td>
-                <td>${vo.debit}</td>
-                <td>${vo.credit}</td>
+                <td>${Number(vo.debit).toLocaleString()}</td>
+                <td>${Number(vo.credit).toLocaleString()}</td>
                 <td>${vo.accountName}</td>
             </tr>
         `
-        tbody.innerHTML = str;
     }
+        tbody.innerHTML = str;
+
+        renderPagination(pvo);
+    
 }
 
+// 페이징 버튼을 그리는 함수
+function renderPagination(pvo) {
+    const pagingArea = document.querySelector("#pagingArea"); // HTML에 버튼 들어갈 div가 있어야 함
+    
+    if(!pagingArea) return;
+
+    let pagingStr = "";
+
+
+    // 숫자 버튼
+    for (let i = pvo.startPage; i <= pvo.endPage; i++) {
+        const activeClass = (i === pvo.currentPage) ? 'style="font-weight:bold; color:red;"' : '';
+        pagingStr += `<button ${activeClass} onclick="findAccount(${i})">${i}</button>`;
+    }
+
+    pagingArea.innerHTML = pagingStr;
+}
 
 //월계표
 
@@ -380,9 +406,9 @@ async function findMonthAccount() {
     for (const vo of voList) {
         str += `
             <tr>
-                <td>${vo.debit}</td>
+                <td>${Number(vo.debit).toLocaleString()}</td>
                 <td>${vo.accountName}</td>
-                <td>${vo.credit}</td>
+                <td>${Number(vo.credit).toLocaleString()}</td>
             </tr>
         `
     }
@@ -409,9 +435,9 @@ async function findDailyAccount() {
     for (const vo of voList) {
         str += `
             <tr>
-                <td>${vo.debit}</td>
+                <td>${Number(vo.debit).toLocaleString()}</td>
                 <td>${vo.accountName}</td>
-                <td>${vo.credit}</td>
+                <td>${Number(vo.credit).toLocaleString()}</td>
             </tr>
         `
     }

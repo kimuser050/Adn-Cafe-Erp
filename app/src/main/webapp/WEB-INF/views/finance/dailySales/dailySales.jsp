@@ -30,6 +30,7 @@
                                 <input type="text" class="storeInput" list="storeOptions" placeholder="매장명 선택">
                                 <datalist id="storeOptions"></datalist>
                                 <button onclick="insertDaily();">등록하기</button>
+                                <button onclick="location.href=`/dailySales/listDaily`">뒤로가기</button>
                             </div>
                             <div class="body">
                                 <table>

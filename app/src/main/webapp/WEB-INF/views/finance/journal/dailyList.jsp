@@ -53,7 +53,6 @@
                                             </tr>
                                         </thead>
                                         <tbody id="journalListBody"></tbody>
-                                    </table>
                                 </div>
 
                             </div>

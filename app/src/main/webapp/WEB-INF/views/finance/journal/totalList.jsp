@@ -56,6 +56,7 @@
                                             </thead>
                                             <tbody id="journalListBody"></tbody>
                                         </table>
+                                    <div id="pagingArea" class="pagination-wrapper"></div>
                                     </div>
                                 </div>
                             </div>

@@ -119,9 +119,9 @@ async function salesList() {
             str += `
                 <tr>
                     <td>${vo.salesDate}</td>
-                    <td>${vo.totalSales}</td>
+                    <td>${Number(vo.totalSales).toLocaleString()}</td>
                     <td>${vo.productName}</td>
-                    <td>${vo.unitPrice}</td>
+                    <td>${Number(vo.unitPrice).toLocaleString()}</td>
                     <td>${vo.quantity}</td>
                     <td>${vo.paymentCd}</td>
                     <td><button onclick="openEditModal(
