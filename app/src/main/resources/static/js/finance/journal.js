@@ -147,14 +147,14 @@ async function selectJournal() {
                     <td rowspan="2">${debitVo.journalDate.substring(0, 10)}</td>
                     <td rowspan="2">${debitVo.journalNo}</td>
                     <td>${debitVo.accountName}</td>
-                    <td>${Number(debitVo.debit)}</td>
+                    <td>${Number(debitVo.debit).toLocaleString()}</td>
                     <td rowspan="2">${debitVo.writerName}</td>
                     <td rowspan="2">
                         <button type="button" class="menu-btn-sm" 
                         onclick="openUpdateModal(
                         '${debitVo.journalNo}'
-                        , '${debitVo.accountName}', '${Number(debitVo.debit)}'
-                        , '${creditVo.accountName}', '${Number(creditVo.credit)}'
+                        , '${debitVo.accountName}', '${Number(debitVo.debit).toLocaleString()}'
+                        , '${creditVo.accountName}', '${Number(creditVo.credit).toLocaleString()}'
                         , '${debitVo.journalDate}'
                         )">수정</button>
                 
@@ -164,7 +164,7 @@ async function selectJournal() {
                 </tr>
                 <tr>
                     <td>${creditVo.accountName}</td>
-                    <td>${Number(creditVo.credit)}</td>
+                    <td>${Number(creditVo.credit).toLocaleString()}</td>
                 </tr>
                 `;
         }
@@ -349,8 +349,8 @@ async function findAccount() {
         str += `
             <tr>
                 <td>${vo.journalDate}</td>
-                <td>${vo.debit}</td>
-                <td>${vo.credit}</td>
+                <td>${Number(vo.debit).toLocaleString()}</td>
+                <td>${Number(vo.credit).toLocaleString()}</td>
                 <td>${vo.accountName}</td>
             </tr>
         `
@@ -380,9 +380,9 @@ async function findMonthAccount() {
     for (const vo of voList) {
         str += `
             <tr>
-                <td>${vo.debit}</td>
+                <td>${Number(vo.debit).toLocaleString()}</td>
                 <td>${vo.accountName}</td>
-                <td>${vo.credit}</td>
+                <td>${Number(vo.credit).toLocaleString()}</td>
             </tr>
         `
     }
@@ -409,9 +409,9 @@ async function findDailyAccount() {
     for (const vo of voList) {
         str += `
             <tr>
-                <td>${vo.debit}</td>
+                <td>${Number(vo.debit).toLocaleString()}</td>
                 <td>${vo.accountName}</td>
-                <td>${vo.credit}</td>
+                <td>${Number(vo.credit).toLocaleString()}</td>
             </tr>
         `
     }
