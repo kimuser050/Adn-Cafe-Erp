@@ -39,11 +39,10 @@
             <div class="nav-group">
                 <button type="button" class="nav-main">품질관리</button>
                 <div class="nav-sub">
-                    <a href="#">발주신청</a>
-                    <a href="#">반품신청</a>
-                    <a href="#">반품검수</a>
-                    <a href="/stock/item" class="active">본사품목</a>
-                    <a href="#">상품관리</a>
+                    <a href="/stock/item" >품목 관리</a>
+                    <a href="/stock/history">발주 관리</a>
+                    <a href="/stock/check" >반품검수</a>
+                    <a href="/stock/products ">상품관리</a>
                 </div>
             </div>
 
@@ -51,6 +50,10 @@
                 <button type="button" class="nav-main">매장관리</button>
                 <div class="nav-sub">
                     <a href="/dailySales/listDaily">매출등록</a>
+                     <a href="/stock/return">반품 신청</a>
+                      <a href="/stock/checksList">반품 상태</a>
+                       <a href="/stock/order">발주관리</a>
+                       <a href="/stock/productsList">제품조회</a>
                 </div>
             </div>
 

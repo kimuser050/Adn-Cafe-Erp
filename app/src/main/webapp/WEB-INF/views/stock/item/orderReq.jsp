@@ -19,7 +19,7 @@
         <main class="page-shell">
             <section class="page-content">
                 <div class="tab-wrapper">
-                    <button type="button" class="tab-btn active">발주 신청</button>
+                    <button type="button" class="tab-btn active" onclick="location.href='/stock/order'">발주 신청</button>
                     <button type="button" class="tab-btn" onclick="location.href='/stock/history'">발주 상태</button>
                 </div>
 

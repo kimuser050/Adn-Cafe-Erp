@@ -31,29 +31,27 @@ function renderHistoryTable(list) {
     if(!body) return;
     body.innerHTML = '';
 
-    if (list.length === 0) {
-        body.innerHTML = '<tr><td colspan="6" style="padding:100px 0;">조회된 내역이 없습니다.</td></tr>';
-        return;
-    }
-
     list.forEach(item => {
         const tr = document.createElement('tr');
         tr.onclick = () => openOrderDetail(item.orderNo);
+        
+        // [수정] 고정된 '본사' 텍스트를 삭제하고 DB 데이터를 넣습니다.
+        const storeName = item.storeName || item.STORE_NAME || '미등록';
+
         tr.innerHTML = `
             <td>${item.orderNo}</td>
             <td style="text-align:left; padding-left:20px;">${item.itemName}</td>
-            <td>본사</td>
-            <td>${Number(item.quantity).toLocaleString()}</td>
+            <td>${storeName}</td>  <td>${Number(item.quantity).toLocaleString()}</td>
             <td><b style="color:#5D4037">${getStatusText(item.status)}</b></td>
             <td>${item.requestDate || '-'}</td>
         `;
         body.appendChild(tr);
     });
 }
-
 function getStatusText(status) {
     const map = { 'W': '대기', 'F': '완료', 'C': '취소' };
-    return map[status] || '대기';
+    const rawStatus = (status || 'W').toUpperCase();
+    return map[rawStatus] || '대기';
 }
 
 // 페이징 렌더링
@@ -88,17 +86,27 @@ function renderPagination(paging) {
     pgn.appendChild(nextBtn);
 }
 
-// 모달 제어 (생략 방지)
+// 모달 제어
 function openOrderDetail(orderNo) {
-    fetch(`/api/order/${orderNo}`).then(res => res.json()).then(data => {
+    fetch(`/api/order/${orderNo}`)
+    .then(res => res.json())
+    .then(data => {
         const vo = data.vo;
+        if(!vo) return;
+
         document.getElementById('detailItemName').value = vo.itemName;
         document.getElementById('detailQuantity').value = vo.quantity;
         document.getElementById('detailStatus').value = vo.status;
+        
+        // [참고] 모달에 매장 이름 필드가 있다면 아래처럼 넣어줄 수 있습니다.
+        const detailStore = document.getElementById('detailStoreName');
+        if(detailStore) detailStore.value = vo.storeName || vo.STORE_NAME || '본사';
+
         const modal = document.getElementById('orderDetailModal');
         modal.dataset.no = vo.orderNo;
         modal.style.display = 'flex';
-    });
+    })
+    .catch(err => alert("상세 정보 로드 실패"));
 }
 
 function closeOrderModal() {
@@ -110,6 +118,8 @@ function updateOrderStatus() {
     const orderNo = modal.dataset.no;
     const status = document.getElementById('detailStatus').value;
 
+    if(!confirm("주문 상태를 변경하시겠습니까?")) return;
+
     fetch('/api/order/status', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -120,7 +130,10 @@ function updateOrderStatus() {
         if(data.result > 0) {
             alert("수정 완료");
             closeOrderModal();
-            loadHistoryList(1);
+            loadHistoryList(1); // 목록 새로고침
+        } else {
+            alert("수정 실패");
         }
-    });
+    })
+    .catch(err => alert("서버 통신 중 에러 발생"));
 }

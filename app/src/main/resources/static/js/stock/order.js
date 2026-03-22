@@ -56,11 +56,8 @@ function loadOrderList(page) {
 function renderOrderTable(list) {
     const body = document.getElementById('orderBody');
     if (!body) return;
-
-    // 테이블 초기화
     body.innerHTML = '';
 
-    // 데이터가 없을 경우 처리
     if (!list || list.length === 0) {
         body.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:100px 0;">조회된 품목이 없습니다.</td></tr>';
         return;
@@ -69,16 +66,15 @@ function renderOrderTable(list) {
     list.forEach(item => {
         const tr = document.createElement('tr');
         
-        // 쿼리(Mapper)에서 가져온 storeName이 있으면 쓰고, 없으면 '본사' 등으로 표시
-        const displayStoreName = item.storeName || '정보없음';
+        // [수정] 서버(Mapper)에서 가져온 storeName이 있으면 쓰고, 없으면 '본사'
+        // 대소문자 구분 없이 데이터가 들어올 수 있으므로 둘 다 체크합니다.
+        const displayStoreName = item.storeName || item.STORE_NAME || '본사';
 
         tr.innerHTML = `
             <td><input type="checkbox" class="item-check" data-no="${item.itemNo}"></td>
             <td>${item.itemNo}</td>
             <td style="text-align:left; padding-left:20px;">${item.itemName}</td>
-            
             <td>${displayStoreName}</td> 
-            
             <td>
                 <div class="qty-control">
                     <button type="button" class="qty-minus" onclick="changeQty(this, -1)">-</button>

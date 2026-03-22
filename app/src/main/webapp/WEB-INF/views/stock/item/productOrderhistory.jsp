@@ -4,7 +4,7 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>발주 상태 관리 | Coffee Prince ERP</title>
+        <title>발주 상태 관리(점주) | Coffee Prince ERP</title>
         <link rel="stylesheet" href="/css/common/reset.css">
         <link rel="stylesheet" href="/css/common/layout.css">
         <link rel="stylesheet" href="/css/common/sidebar.css">
@@ -14,12 +14,12 @@
 
     <body>
         <div class="app-shell">
-            <%@ include file="/WEB-INF/views/stock/common/orderhistorySidebar.jsp" %>
+            <%@ include file="/WEB-INF/views/stock/common/productOrderhistorySidebar.jsp" %>
 
                 <main class="page-shell">
                     <section class="page-content">
                         <div class="tab-wrapper">
-
+                             <button type="button" class="tab-btn active">발주 신청</button>
                             <button type="button" class="tab-btn active">발주 상태</button>
                         </div>
 

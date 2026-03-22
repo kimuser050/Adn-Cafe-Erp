@@ -15,6 +15,7 @@ public class OderReqService {
 
     private final OderReqMapper oderReqMapper;
 
+
     /**
      * 1. [발주 신청 탭] 품목 개수 조회 (검색 포함)
      */
@@ -26,7 +27,6 @@ public class OderReqService {
      * 2. [발주 신청 탭] 품목 목록 조회 (페이징 + 검색 + 매장정보)
      */
     public List<OderReqVo> selectList(PageVo pvo, String keyword, String empNo) {
-        // 매퍼에 empNo를 추가로 전달해서 쿼리가 STORE_NAME을 찾을 수 있게 합니다.
         return oderReqMapper.selectList(pvo, keyword, empNo);
     }
 
@@ -41,14 +41,11 @@ public class OderReqService {
      * 4. [발주 상태 탭] 상태 수정 & 완료('F') 시 재고 차감
      */
     public int updateStatus(OderReqVo vo) {
-        // DB 상태값 업데이트 ('W' -> 'F', 'C' 등)
         int result = oderReqMapper.updateByNo(vo);
 
-        // 상태가 'F'(Finish/완료)로 변경될 때만 재고를 차감(-)합니다.
         if ("F".equals(vo.getStatus())) {
             int stockResult = oderReqMapper.decreaseStock(vo.getOrderNo());
             if (stockResult < 1) {
-                // 재고가 부족하거나 업데이트 실패 시 롤백 처리
                 throw new RuntimeException("재고 반영에 실패했습니다. (재고 부족 등)");
             }
         }
@@ -57,18 +54,21 @@ public class OderReqService {
 
     /**
      * 5. [발주 신청 탭] 다중 품목 일괄 주문 등록
-     * 이 메서드가 실행되면 매퍼에 의해 상태값이 'W'로 자동 저장됩니다.
+     * [수정 포인트] 파라미터에 loginEmpNo를 추가하여 Mapper가 진짜 매장코드를 찾게 합니다.
      */
-    public int orderReqBulk(List<OderReqVo> voList) {
+    public int orderReqBulk(List<OderReqVo> voList, String loginEmpNo) {
         if (voList == null || voList.isEmpty()) return 0;
 
         int totalResult = 0;
         for (OderReqVo vo : voList) {
-            // 하나씩 DB에 INSERT (상태는 매퍼 SQL에 의해 'W'로 고정됨)
+            // [중요] 로그인한 사용자의 사번을 Vo에 세팅합니다.
+            // Mapper에서 이 empNo를 사용해 STORE 테이블의 진짜 STORE_CODE를 조회합니다.
+            vo.setEmpNo(loginEmpNo);
+
             totalResult += oderReqMapper.insertOrder(vo);
         }
 
-        log.info("발주 요청 완료: 총 {}건 성공", totalResult);
+        log.info("발주 요청 완료: 사용자 {}가 총 {}건 신청 성공", loginEmpNo, totalResult);
         return totalResult;
     }
 
