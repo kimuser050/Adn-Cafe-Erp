@@ -206,3 +206,41 @@
 .top-user-bar button:hover {
     background: #5d4037;
 }
+/* 검색 영역 */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 셀렉트 */
+.search-select {
+    padding: 10px 15px;
+    border: 1px solid #8b735b;
+    border-radius: 30px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* 입력창 */
+.search-input {
+    width: 320px;
+    padding: 10px 20px;
+    border: 1px solid #8b735b;
+    border-radius: 30px;
+    outline: none;
+}
+
+/* 검색 버튼 */
+.btn-search {
+    background-color: #8b735b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-search:hover {
+    background-color: #5d4037;
+}
