@@ -30,14 +30,14 @@ async function journalState() {
 
         if (Sub !== subName) {
             Sub = subName;
-            str += `<tr>
-                    <td> ▶ ${Sub}</td>
+            str += `<tr class="sub-category-row">
+                    <td colspan="2"> ▶ ${Sub}</td>
                     </tr>`;
         }
 
         str += `
-                <tr>
-                    <td>${vo.accountName}</td>
+                <tr class="account-row">
+                    <td class="indent">${vo.accountName}</td>
                     <td>${totalAll.toLocaleString()}</td>
                 </tr>
         `

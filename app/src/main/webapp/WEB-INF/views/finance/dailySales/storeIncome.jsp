@@ -25,49 +25,56 @@
 
                 <main class="page-shell">
                     <section class="page-content">
-                        <div class="page">
-                            <div class="main-tab-group">
-                                <button class="menu-btn active"
-                                    onclick="location.href=`/dailySales/storeIncome`">지점별매출</button>
-                                <button class="menu-btn"
-                                    onclick="location.href=`/dailySales/productIncome`">상품별매출</button>
-                            </div>
+            <div class="page">
+            <div class="user-profile">
+                <div class="profile-img-box" onclick="location.href='/member/mypage'" style="cursor: pointer;">
+                    <img src="http://192.168.20.2:5500/member/${loginMemberVo.profileChangeName}" 
+                         alt="${loginMemberVo.profileOriginName}" class="profile-img">
+                </div>
+                <div>${loginMemberVo.empName}</div>
+                <button type="button" class="logout-btn" onclick="location.href='/member/logout'">로그아웃</button>
+            </div>
 
-                            <div class="header-container">
-                                <div class="search-wrapper">
-                                    <label for="salesDate">조회월</label>
-                                    <input type="month" id="salesDate" value="2026-03" class="month-input">
-                                </div>
+            <div class="header-container">
+                <div class="search-wrapper">
+                    <label for="salesDate">조회월</label>
+                    <input type="month" id="salesDate" value="2026-03" class="month-input">
+                </div>
+            </div>
 
-                                <div class="user-profile">
-                                    <div class="profile-img-box">
-                                        <img src="http://192.168.20.2:5500/member/${loginMemberVo.profileChangeName}"
-                                            alt="${loginMemberVo.profileOriginName}" class="profile-img">
-                                    </div>
-                                    <button type="button" class="logout-btn"
-                                        onclick="location.href='/logout'">로그아웃</button>
-                                </div>
-                            </div>
+            <div class="sales-dashboard">
+                <div class="chart-item">
+                    <h3>📊 지점별 매출 비중</h3>
+                    <div class="chart-container">
+                        <canvas id="storeDoughnutChart"></canvas>
+                    </div>
+                </div>
 
+                <div class="chart-item">
+                    <h3>💰 지점별 총 매출액</h3>
+                    <div class="chart-container">
+                        <canvas id="storeBarChart"></canvas>
+                    </div>
+                </div>
 
-                            <div class="sales-dashboard">
-                                <div class="chart-item">
-                                    <h3>📊 지점별 매출 비중</h3>
-                                    <div class="chart-container">
-                                        <canvas id="storeDoughnutChart"></canvas>
-                                    </div>
-                                </div>
+                <div class="chart-item">
+                    <h3>📦 상품별 매출 비중</h3>
+                    <div class="chart-container">
+                        <canvas id="productDoughnutChart"></canvas>
+                    </div>
+                </div>
 
-                                <div class="chart-item">
-                                    <h3>💰 지점별 총 매출액</h3>
-                                    <div class="chart-container">
-                                        <canvas id="storeBarChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </main>
+                <div class="chart-item">
+                    <h3>🏷️ 상품별 총 매출액</h3>
+                    <div class="chart-container">
+                        <canvas id="productBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </section>
+        </main>
         </div>
 
     </body>

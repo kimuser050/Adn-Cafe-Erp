@@ -1,159 +1,139 @@
-/* 기본 레이아웃 (기존과 통일) */
+/* =========================================================
+   총계정원장 전용 (공통 UI 토큰 상속)
+   ========================================================= */
+
 .page {
-    margin-left: 100px;
-    padding: 20px 40px;
+    margin: 0 auto;
+    padding: 20px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-/* 메인 카드 스타일 */
-.journal-card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
     width: 100%;
-    max-width: 1200px;
-    height: 85vh;
-    min-height: 800px;
-    gap: 25px;
-    margin: 0 auto;
+    max-width: 1300px;
 }
 
-/* 상단 탭 그룹 */
+/* 상단 탭 (분개장과 동일) */
 .main-tab-group {
     width: 100%;
-    max-width: 1200px;
     display: flex;
-    gap: 12px;
+    justify-content: flex-start;
+    gap: 10px;
     margin-bottom: 20px;
 }
 
 .menu-btn {
-    padding: 12px 30px;
-    font-size: 16px;
-    font-weight: bold;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
     border: none;
-    border-radius: 10px;
-    background-color: #fff;
-    color: #6a4328;
+    border-radius: 8px;
+    background-color: var(--color-white);
+    color: var(--color-muted);
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: all 0.2s;
 }
 
 .menu-btn.active {
-    background-color: #6a4328;
-    color: #fff;
+    background-color: var(--color-mid);
+    color: var(--color-white);
+    box-shadow: 0 4px 10px rgba(156, 120, 93, 0.25);
 }
 
-/* 검색 영역 스타일 */
+/* 메인 패널 */
+.journal-card {
+    width: 100%;
+    min-height: 780px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--color-panel);
+    border-radius: 12px;
+}
+
+/* 검색바 */
 .search-wrapper {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: #f8f9fa;
+    gap: 12px;
     padding: 20px;
-    border-radius: 15px;
-    border: 1px solid #eee;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
 }
 
-.account-select {
-    width: 300px;
-    height: 45px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    padding: 0 15px;
-    font-size: 15px;
+#accountInput{
+    border-radius: 20px;
+    font-size: 14px;
+    padding: 5px;
+    border: 1px solid var(--color-border);
 }
 
-/* 리스트 컨테이너 (스크롤 가능하게) */
+/* 테이블 (너비 통합 관리) */
 .list-container {
     flex: 1;
     overflow-y: auto;
-    border: 1px solid #eee;
+    border: 1px solid var(--color-border);
     border-radius: 12px;
-    padding: 10px;
-    background-color: #fff;
+    background-color: var(--color-white);
 }
 
-/* 테이블 스타일 */
 .summary-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .summary-table th {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+    padding: 14px;
+    font-size: 13px;
+    font-weight: 800;
+    border-bottom: 2px solid var(--color-border);
     position: sticky;
     top: 0;
-    background: #fdfdfd;
-    border-bottom: 2px solid #eee;
-    padding: 15px;
-    font-size: 14px;
-    color: #6a4328;
-    z-index: 1;
+    z-index: 10;
 }
 
 .summary-table td {
-    border-bottom: 1px solid #f5f5f5;
-    padding: 15px;
+    padding: 12px;
+    border-bottom: 1px solid #f2eeea;
+    font-size: 13px;
+    color: var(--color-text);
     text-align: center;
-    font-size: 15px;
-    color: #333;
+    vertical-align: middle;
 }
 
-/* 금액 강조 (오른쪽 정렬 및 굵게) */
-.summary-table td:nth-child(2),
-.summary-table td:nth-child(3) {
-    text-align: right;
-    font-weight: bold;
-    padding-right: 40px;
-}
+/* 컬럼 설정 */
+.summary-table th:nth-child(1), .summary-table td:nth-child(1) { width: 15%; }
+.summary-table th:nth-child(2), .summary-table td:nth-child(2) { width: 25%; text-align: right; padding-right: 30px; font-weight: 700; }
+.summary-table th:nth-child(3), .summary-table td:nth-child(3) { width: 25%; text-align: right; padding-right: 30px; font-weight: 700; }
+.summary-table th:nth-child(4), .summary-table td:nth-child(4) { width: 35%; }
 
-/* 스크롤바 커스텀 */
-.list-container::-webkit-scrollbar {
-    width: 8px;
-}
 
-.list-container::-webkit-scrollbar-thumb {
-    background: #ddd;
-    border-radius: 10px;
-}
-
-/* 2. 페이징 영역 스타일 (새로 추가) */
-#pagingArea {
+/* 페이징 */
+.pagination {
     display: flex;
     justify-content: center;
-    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
     gap: 10px;
-    padding: 20px 0; /* 위아래 여백 */
-    width: 100%;
-    margin-top: auto; /* 리스트가 적어도 하단에 고정되게 함 */
-    background-color: #fff; /* 확인용 */
 }
 
-/* 3. 페이징 버튼 스타일 (기본 버튼과 구분) */
-#pagingArea button {
-    padding: 5px 12px;
-    border: 1px solid #6a4328;
-    background-color: #fff;
-    color: #6a4328;
-    border-radius: 5px;
+.page-num {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
+    font-size: 14px;
 }
 
-#pagingArea button:hover {
-    background-color: #6a4328;
-    color: #fff;
-}
-
-/* 현재 페이지 표시용 (JS에서 처리할 스타일) */
-#pagingArea button.active {
-    background-color: #6a4328;
-    color: #fff;
+.page-num.active {
+    background-color: #d8b49b;
+    color: white;
+    border-radius: 5px;
 }

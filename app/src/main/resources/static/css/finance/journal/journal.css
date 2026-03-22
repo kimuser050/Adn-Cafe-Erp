@@ -1,124 +1,124 @@
-/* 기본 레이아웃 및 메인박스 */
-/* 사이드바 공간은 유지하되, 내부 컨텐츠를 유연하게 배치 */
+/* =========================================================
+   분개장 최종 통합 스타일 (journal.css)
+   ========================================================= */
+
 .page {
-    margin-left: 100px;
-    /* 사이드바 너비만큼 왼쪽 비움 */
-    padding: 20px 40px;
-    /* 좌우 여백을 줄여 유연성 확보 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* 내부 요소들을 가운데로 정렬 */
-}
-
-.main-tab-group {
-    width: 100%;
-    max-width: 1200px;
-    /* 메인 박스와 동일한 너비 */
-}
-
-.journal-card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
-
-    width: 100%;
-    /* 부모 너비에 맞춤 */
-    max-width: 1200px;
-    /* 너무 퍼지지 않게 최대치 제한 */
-    height: 85vh;
-    min-height: 800px;
-    gap: 20px;
-
     margin: 0 auto;
-    /* 본인 스스로 가운데 정렬 */
-    overflow: hidden;
-}
-
-/* 1. 상단 탭 버튼: 메인박스와 분리 */
-.main-tab-group {
+    padding: 20px 0;
     display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.menu-btn {
-    padding: 12px 30px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    background-color: #fff;
-    color: #6a4328;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s;
-}
-
-.menu-btn.active {
-    background-color: #6a4328;
-    color: #fff;
-}
-
-/* 2. 통일감 있는 버튼 스타일 (수정, 삭제, 등록) */
-.menu-btn-sm {
-    padding: 7px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    border: 1px solid #6a4328;
-    border-radius: 8px;
-    background-color: #fff;
-    color: #6a4328;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.menu-btn-sm:hover {
-    background-color: #fff;
-    color: #6a4328;
-    cursor: pointer;
-}
-
-.btn-dark {
-    background-color: #6a4328;
-    color: #fff;
-    border: none;
-}
-
-.btn-dark:hover {
-    background-color: #6a4328;
-    color: #fff;
-}
-
-.list-container {
-    flex: 3;
-    overflow-y: auto;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 15px;
-}
-
-.entry-section {
-    flex: 1;
-    /* overflow-y: hidden; */
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 15px;
-    background-color: #fcfcfc;
-}
-
-/* 가로 합계바 */
-.balance-bar {
-    display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    background: #F8F9FA;
-    padding: 15px 30px;
-    border-radius: 15px;
-    border: 1px solid #eee;
+    width: 100%;
+    max-width: 1300px;
+}
+
+/* 상단 탭 및 패널 공통 */
+.top-tab-group { width: 100%; display: flex; gap: 10px; margin-bottom: 20px; }
+.tab-btn { padding: 10px 24px; font-size: 14px; font-weight: 700; border: none; border-radius: 8px; background-color: var(--color-white); color: var(--color-muted); cursor: pointer; transition: all 0.2s; }
+.tab-btn.active { background-color: var(--color-mid); color: var(--color-white); }
+
+.journal-panel { width: 100%; min-height: 780px; padding: 30px; display: flex; flex-direction: column; gap: 20px; background: var(--color-panel); }
+
+/* 툴바 */
+.panel-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+
+/* 테이블 핵심 스타일 */
+.list-container {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background-color: var(--color-white);
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse; /* 선 겹침 정리 */
+    table-layout: fixed; /* 컬럼 너비 고정 */
+}
+
+.summary-table th {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+    padding: 14px;
+    font-size: 13px;
+    font-weight: 800;
+    border-bottom: 2px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.summary-table td {
+    padding: 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #f2eeea;
+    color: var(--color-text);
+    text-align: center;
+    /* 세로 중앙 정렬의 핵심 */
+    vertical-align: middle !important;
+}
+
+/* 전표 번호가 바뀔 때 구분선 */
+.summary-table tr.new-group td {
+    border-top: 2px solid var(--color-border);
+}
+
+/* 테이블 컬럼 너비 통합 관리 */
+.summary-table th:nth-child(1), .summary-table td:nth-child(1) { width: 12%; } /* 날짜 */
+.summary-table th:nth-child(2), .summary-table td:nth-child(2) { width: 8%; }  /* 번호 */
+.summary-table th:nth-child(3), .summary-table td:nth-child(3) { width: 32%; } /* 계정과목 */
+.summary-table th:nth-child(4), .summary-table td:nth-child(4) { width: 20%; } /* 금액 */
+.summary-table th:nth-child(5), .summary-table td:nth-child(5) { width: 13%; } /* 작성자 */
+.summary-table th:nth-child(6), .summary-table td:nth-child(6) { width: 15%; } /* 관리(버튼) */
+
+/* 관리(버튼) 셀의 세로 중앙 정렬을 위한 최종 보정 */
+.summary-table td:nth-child(6) {
+    vertical-align: middle !important;
+    padding: 0; /* 내부 여백 제거 */
+}
+
+/* 관리(버튼) 칸 설정 */
+.action-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    height: 100%;
+    min-height: 70px; /* rowspan=2 높이 대응 */
+}
+
+/* 버튼 스타일 */
+.btn-action {
+    width: 45px;
+    height: 28px;
+    border: 1px solid var(--color-mid);
+    border-radius: 4px;
+    background-color: #fff;
+    color: var(--color-mid);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-action.edit:hover { background-color: var(--color-mid); color: #fff; }
+.btn-action.del { color: #7b6a5c; border-color: #d8d0c7; }
+.btn-action.del:hover { background-color: #7b6a5c; color: #fff; }
+
+/* 하단 바 및 입력부 */
+.balance-bar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: #fdfaf8; 
+    padding: 15px 30px; 
+    border-radius: 15px; 
+    border: 1px solid var(--color-border); 
 }
 
 .bal-group {
@@ -132,125 +132,24 @@
     color: #555;
 }
 
-.bal-item input {
-    border: none;
-    background: transparent;
-    font-size: 18px;
-    font-weight: bold;
-    width: 120px;
-    text-align: right;
-    outline: none;
+.bal-item input { 
+    border: none; 
+    background: transparent; 
+    font-size: 18px; 
+    font-weight: 800; 
+    text-align: right; 
+    width: 140px;
+    outline: none; 
 }
 
-/* 입력 행 1:1.5:1:1.5 비율 */
-.entry-header-row,
-.entry-row {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr 1fr 1.5fr;
-    gap: 15px;
-    align-items: center;
-}
-
-.entry-row {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.grid-h {
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
-    color: #6a4328;
-    padding-bottom: 10px;
-}
-
-.account-select,
-.amount-input {
-    width: 100%;
-    height: 40px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    padding: 0 12px;
-}
-
-
-/* 날짜 박스 스타일 수정: 더 둥글고 간격 있게 */
-.date-input {
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    /* 더 둥글게 조정 */
-    padding: 8px 15px;
-    /* 내부 여백을 늘려 넉넉하게 */
-    outline: none;
-    background-color: #fcfcfc;
-    color: #333;
-    font-family: inherit;
-    cursor: pointer;
-}
-
-/* 날짜 박스 주변 간격 (헤더 안에서 여유를 줌) */
-.date-picker-wrap {
-    margin-right: 20px;
-    /* 오른쪽 요소와의 간격 */
-    padding: 5px 0;
-}
-
-/* 기타 유틸리티 */
-@media (max-width: 1400px) {
-    .page {
-        padding: 20px;
-    }
-
-    .journal-card {
-        padding: 20px;
-        height: 90vh;
-        /* 노트북에선 조금 더 길게 사용 */
-    }
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
+/* 차이 금액 강조 (빨간색) */
 .text-danger {
-    color: #d32f2f !important;
+    color: #de4829 !important;
+    font-weight: 800 !important;
 }
 
-.summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-
-.summary-table th {
-    border-bottom: 2px solid #eee;
-    padding: 12px;
-    font-size: 14px;
-    color: #666;
-}
-
-.summary-table td {
-    height: 15px;
-    /* 행 높이를 고정하거나 최소 높이 지정 */
-    line-height: 30px;
-
-    border-bottom: 1px solid #f9f9f9ee;
-    padding: 12px;
-    text-align: center;
-    font-size: 14px;
-}
-
-.summary-table td:first-child {
-    vertical-align: middle;
-    /* 테이블인 경우 */
-    align-items: center;
-    justify-content: center;
-}
-
-
+.entry-section { background-color: var(--color-white); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; }
+.entry-header-row, .entry-row { display: grid; grid-template-columns: 1fr 1.2fr 1fr 1.2fr; gap: 15px; }
 
 /* 모달 전체 배경 */
 .modal {

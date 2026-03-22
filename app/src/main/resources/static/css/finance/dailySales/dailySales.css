@@ -1,125 +1,253 @@
-/* 1. 페이지 전체 레이아웃 */
+/* ================================================================= 
+   1. 공통 페이지 레이아웃 및 타이틀
+   ================================================================== */
 .page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-    padding: 30px;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 30px 40px;
+    background-color: #ffffff;
 }
 
-/* 2. 상단 타이틀 */
 .title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #6a4328;
-    align-self: flex-start;
-    padding-left: 10px;
-    border-left: 5px solid #6a4328;
-}
-
-/* 3. 헤더 (날짜 및 매장 선택 영역) */
-.header {
-    width: 100%;
+    font-size: 22px; /* 살짝 줄여서 정갈하게 */
+    font-weight: 800;
+    color: var(--color-dark);
+    margin-bottom: 25px;
     display: flex;
-    gap: 15px;
     align-items: center;
-    padding: 25px;
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    gap: 10px;
 }
 
-.header input {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 14px;
+.title::before {
+    content: '';
+    width: 5px;
+    height: 18px;
+    background-color: var(--color-mid);
+    border-radius: 10px;
+}
+
+/* ================================================================= 
+   2. 헤더 영역 (검색창 왼쪽 / 버튼 오른쪽 배치)
+   ================================================================== */
+.header {
+    display: flex;
+    justify-content: space-between; /* 양 끝 정렬의 핵심 */
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.header-left {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.header-right {
+    display: flex;
+    gap: 6px;
+}
+
+/* 헤더 내 입력창 스타일 */
+.header input, .header select {
+    padding: 7px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--color-dark);
     outline: none;
-    transition: all 0.2s;
+    background-color: #fff;
 }
 
 .header input:focus {
-    border-color: #6a4328;
-    box-shadow: 0 0 0 2px rgba(106, 67, 40, 0.1);
+    border-color: var(--color-mid);
 }
 
-.storeInput {
-    width: 250px;
-}
-
-.header button {
-    margin-left: auto;
-    padding: 10px 25px;
-    background-color: #6a4328;
-    color: white;
-    border: none;
-    border-radius: 8px;
+/* ================================================================= 
+   3. 버튼 디자인 (작은 사이즈 + Hover 강화)
+   ================================================================== */
+/* 기본 버튼 공통 */
+button, .menu-btn-sm {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 4px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
+    border: 1px solid var(--color-border);
+    background-color: white;
+    color: var(--color-dark);
+    line-height: 1;
 }
 
-.header button:hover {
-    background-color: #865f42;
+/* 일반 버튼 Hover (뒤로가기, 취소 등) */
+button:hover, .menu-btn-sm:hover {
+    background-color: #f5f5f5;
+    border-color: var(--color-mid);
+    color: var(--color-mid);
 }
 
-/* 4. 바디 (테이블 입력 영역) */
+/* 강조 버튼 (매출 등록, 수정완료 등) */
+.header-right button, .btn-dark {
+    background-color: var(--color-dark) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.header-right button:hover, .btn-dark:hover {
+    background-color: var(--color-mid) !important;
+    color: white !important;
+}
+
+/* 테이블 내부 전용 버튼 (더 작게) */
+td button {
+    padding: 4px 8px;
+    font-size: 13px;
+    margin: 0 2px;
+}
+
+/* 테이블 수정 버튼 Hover */
+td button[onclick*="openEditModal"]:hover {
+    background-color: var(--color-mid) !important;
+    color: white !important;
+    border-color: var(--color-mid);
+}
+
+/* 테이블 삭제 버튼 Hover */
+td button[onclick*="delSales"]:hover {
+    background-color: #555 !important;
+    color: white !important;
+    border-color: #555;
+}
+
+/* ================================================================= 
+   4. 테이블 디자인
+   ================================================================== */
 .body {
-    width: 100%;
-    background: #fff;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    overflow-x: auto;
+    margin-top: 10px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-}
-
-thead th {
-    background-color: #f9f7f6;
-    color: #6a4328;
-    font-weight: 700;
-    padding: 15px;
-    border-bottom: 2px solid #e8e1dd;
-    text-align: center;
-}
-
-tbody td {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-    text-align: center;
-}
-
-/* 테이블 내부 입력창 스타일 */
-tbody td input {
-    width: 90%;
-    padding: 8px 12px;
-    border: 1px solid #eee;
-    border-radius: 6px;
     font-size: 14px;
-    color: #444;
-    transition: all 0.2s;
 }
 
-tbody td input:focus {
-    border-color: #6a4328;
-    background-color: #fffaf7;
+th {
+    background-color: #f9f9f9;
+    color: var(--color-dark);
+    font-weight: 700;
+    padding: 12px;
+    border-top: 2px solid var(--color-mid);
+    border-bottom: 1px solid var(--color-border);
+}
+
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center;
+    color: #444;
+}
+
+tr:hover td {
+    background-color: #fcfcfc;
+}
+
+/* ================================================================= 
+   5. 수정 모달 디자인 (정중앙 배치)
+   ================================================================== */
+.modal {
+    display: none; 
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalContainer {
+    background: white;
+    width: 400px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+}
+
+/* 모달 헤더 내 제목과 날짜 배치 */
+.modalHeader {
+    display: flex;
+    justify-content: space-between; /* 양 끝 정렬 */
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.modalHeader h3 {
+    margin-bottom: 15px;
+    font-size: 17px;
+    color: var(--color-dark);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#modalSalesNo {
+    border: none;
+    font-weight: bold;
+    width: 40px;
+    color: var(--color-mid);
     outline: none;
 }
 
-/* 수량, 단가 등 숫자 입력창 정렬 */
-#unitPrice,
-#quantity {
-    text-align: right;
+.inputGroup {
+    margin-bottom: 12px;
 }
 
-/* 행 hover 효과 */
-tbody tr:hover {
-    background-color: #fcfcfc;
+.inputGroup label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #777;
+    margin-bottom: 4px;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: 9px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 13px;
+    box-sizing: border-box; /* 패딩이 너비를 넘지 않게 */
+}
+
+.modal-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.modal-footer button {
+    flex: 1;
+    padding: 10px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+/* 날짜 입력창 스타일 및 우측 정렬 */
+#modalSalesDate {
+    padding: 5px 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 13px;
+    color: #555;
+    outline: none;
+}
+
+/* 툴팁: hidden input은 공간 차지 안하게 */
+#modalStoreNo {
+    display: none;
 }

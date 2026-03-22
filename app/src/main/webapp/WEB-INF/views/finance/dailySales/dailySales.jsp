@@ -26,11 +26,15 @@
                         <div class="page">
                             <div class="title">매출등록</div>
                             <div class="header">
+                                <div class="header-left">
                                 <input type="date" name="salesDate" id="salesDate">
                                 <input type="text" class="storeInput" list="storeOptions" placeholder="매장명 선택">
+                            </div>
                                 <datalist id="storeOptions"></datalist>
+                                <div class="header-right">
                                 <button onclick="insertDaily();">등록하기</button>
                                 <button onclick="location.href=`/dailySales/listDaily`">뒤로가기</button>
+                            </div>
                             </div>
                             <div class="body">
                                 <table>
