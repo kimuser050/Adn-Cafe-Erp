@@ -3,6 +3,7 @@ package com.kh.app.feature.hr.att;
 import com.kh.app.feature.hr.position.PosVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,12 @@ import java.util.Map;
 public class AttRestController {
 
     private final AttService attService;
+
+    @Value("${page.pageLimit}")
+    private int pageLimit;   // 예: 5
+
+    @Value("${page.boardLimit}")
+    private int boardLimit;  // 예: 10
 
     // 1. 오늘(또는 특정 날짜) 기본 근태 row 생성
     // - 재직 중인 사람들 중
@@ -38,8 +45,11 @@ public class AttRestController {
     // - month(yyyy-MM) 기준
     // - 상단 카드 summary + 직원별 리스트 voList 같이 반환
     @GetMapping
-    public ResponseEntity<Map<String, Object>> selectMonthAttendance(@RequestParam String month) {
-        Map<String, Object> result = attService.selectMonthAttendance(month);
+    public ResponseEntity<Map<String, Object>> selectMonthAttendance(
+            @RequestParam String month,
+            @RequestParam(required = false, defaultValue = "1") int currentPage
+    ) {
+        Map<String, Object> result = attService.selectMonthAttendance(month, currentPage, pageLimit, boardLimit);
         return ResponseEntity.ok(result);
     }
 
@@ -125,13 +135,10 @@ public class AttRestController {
     @GetMapping("/search/name")
     public ResponseEntity<Map<String, Object>> selectListByName(
             @RequestParam String month,
-            @RequestParam String keyword
+            @RequestParam String keyword,
+            @RequestParam(required = false, defaultValue = "1") int currentPage
     ) {
-        List<AttListVo> voList = attService.selectListByName(month, keyword);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-
+        Map<String, Object> map = attService.selectListByName(month, keyword, currentPage, pageLimit, boardLimit);
         return ResponseEntity.ok(map);
     }
 
@@ -139,13 +146,10 @@ public class AttRestController {
     @GetMapping("/search/deptName")
     public ResponseEntity<Map<String, Object>> selectListByDept(
             @RequestParam String month,
-            @RequestParam String deptName
+            @RequestParam String deptName,
+            @RequestParam(required = false, defaultValue = "1") int currentPage
     ) {
-        List<AttListVo> voList = attService.selectListByDeptName(month, deptName);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-
+        Map<String, Object> map = attService.selectListByDeptName(month, deptName, currentPage, pageLimit, boardLimit);
         return ResponseEntity.ok(map);
     }
 }

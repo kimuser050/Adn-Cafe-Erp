@@ -1,5 +1,6 @@
 package com.kh.app.feature.hr.att;
 
+import com.kh.app.feature.util.PageVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,13 +58,17 @@ public class AttService {
     // - 상단 카드용 전체 summary 조회
     // - 직원별 월간 집계 리스트 조회
     // - map으로 묶어 반환
-    public Map<String, Object> selectMonthAttendance(String month) {
+    public Map<String, Object> selectMonthAttendance(String month, int currentPage, int pageLimit, int boardLimit) {
         Map<String, Object> map = new HashMap<>();
 
+        int listCount = attMapper.selectMonthListCount();
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
         AttSummaryVo summary = attMapper.selectMonthSummary(month);
-        List<AttListVo> voList = attMapper.selectMonthList(month);
+        List<AttListVo> voList = attMapper.selectMonthListByPage(month, pvo);
 
         map.put("summary", summary);
+        map.put("pvo", pvo);
         map.put("voList", voList);
 
         return map;
@@ -281,11 +286,29 @@ public class AttService {
         return cnt;
     }
 
-    public List<AttListVo> selectListByName(String month, String keyword) {
-        return attMapper.selectListByName(month, keyword);
+    public Map<String, Object> selectListByName(String month, String keyword, int currentPage, int pageLimit, int boardLimit) {
+        int listCount = attMapper.selectListCountByName(keyword);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<AttListVo> voList = attMapper.selectListByNameWithPage(month, keyword, pvo);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("pvo", pvo);
+        map.put("voList", voList);
+
+        return map;
     }
 
-    public List<AttListVo> selectListByDeptName(String month, String deptName) {
-        return attMapper.selectListByDeptName(month, deptName);
+    public Map<String, Object> selectListByDeptName(String month, String deptName, int currentPage, int pageLimit, int boardLimit) {
+        int listCount = attMapper.selectListCountByDeptName(deptName);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<AttListVo> voList = attMapper.selectListByDeptNameWithPage(month, deptName, pvo);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("pvo", pvo);
+        map.put("voList", voList);
+
+        return map;
     }
 }

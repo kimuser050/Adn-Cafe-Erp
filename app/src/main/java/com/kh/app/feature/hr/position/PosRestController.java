@@ -2,6 +2,7 @@ package com.kh.app.feature.hr.position;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,12 @@ public class PosRestController {
 
     private final PosService posService;
 
+    @Value("${page.pageLimit}")
+    private int pageLimit;   // 예: 5
+
+    @Value("${page.boardLimit}")
+    private int boardLimit;  // 예: 10
+
     @PostMapping
     public ResponseEntity<Map<String, Object>> insert(@RequestBody PosVo vo) {
         int result = posService.insert(vo);
@@ -27,39 +34,32 @@ public class PosRestController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> selectList() {
-        List<PosVo> voList = posService.selectList();
-        int totalCount = voList.size();
-        int activeCount = (int) voList.stream()
-                .filter(vo -> "Y".equals(vo.getUseYn()))
-                .count();
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-        map.put("totalCount", totalCount);
-        map.put("activeCount", activeCount);
-
-        return ResponseEntity.ok(map);
+    public ResponseEntity<Map<String, Object>> selectList(
+            @RequestParam(required = false, defaultValue = "1") int currentPage
+    ) {
+        return ResponseEntity.ok(
+                posService.selectList(currentPage, pageLimit, boardLimit)
+        );
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<Map<String, Object>> selectListByName(@RequestParam String keyword) {
-        List<PosVo> voList = posService.selectListByName(keyword);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-
-        return ResponseEntity.ok(map);
+    public ResponseEntity<Map<String, Object>> selectListByName(
+            @RequestParam String keyword,
+            @RequestParam(required = false, defaultValue = "1") int currentPage
+    ) {
+        return ResponseEntity.ok(
+                posService.selectListByName(keyword, currentPage, pageLimit, boardLimit)
+        );
     }
 
     @GetMapping("/search/useYn")
-    public ResponseEntity<Map<String, Object>> selectListByUseYn(@RequestParam String useYn) {
-        List<PosVo> voList = posService.selectListByUseYn(useYn);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-
-        return ResponseEntity.ok(map);
+    public ResponseEntity<Map<String, Object>> selectListByUseYn(
+            @RequestParam String useYn,
+            @RequestParam(required = false, defaultValue = "1") int currentPage
+    ) {
+        return ResponseEntity.ok(
+                posService.selectListByUseYn(useYn, currentPage, pageLimit, boardLimit)
+        );
     }
 
     @GetMapping("/{posCode}")

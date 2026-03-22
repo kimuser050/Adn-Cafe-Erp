@@ -92,7 +92,7 @@
                 <div class="org-bottom-area">
                     <div id="pay-pagination-area" class="pagination"></div>
                     <button type="button" class="btn btn-sm btn-mid register-btn" onclick="goPayRegisterPage()">
-                        급여등록
+                        +급여등록
                     </button>
                 </div>
             </div>

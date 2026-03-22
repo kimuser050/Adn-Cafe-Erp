@@ -7,6 +7,10 @@ let currentMonth = "";
 let currentEmpNo = null;
 let currentDetailData = null;
 
+let currentPage = 1;
+let currentSearchType = "all";
+let currentKeyword = "";
+
 /* =========================================================
    1. 시작
    ========================================================= */
@@ -42,33 +46,46 @@ function bindEvents() {
     const searchTypeTag = document.querySelector("#search-type");
 
     if (monthTag) {
-        monthTag.addEventListener("change", async function () {
-            currentMonth = this.value;
-            await loadAttList();
-        });
-    }
+    monthTag.addEventListener("change", async function () {
+        currentMonth = this.value;
+        currentSearchType = "all";
+        currentKeyword = "";
+
+        const keywordInput = document.querySelector("#keyword");
+        const searchTypeTag = document.querySelector("#search-type");
+        if (keywordInput) keywordInput.value = "";
+        if (searchTypeTag) searchTypeTag.value = "all";
+
+        await loadAttList(1);
+    });
+}
+    
 
     if (keywordTag) {
-        keywordTag.addEventListener("keydown", async function (e) {
-            if (e.key === "Enter") {
-                await searchAtt();
-            }
-        });
+    keywordTag.addEventListener("keydown", async function (e) {
+        if (e.key === "Enter") {
+            await searchAtt(1);
+        }
+    });
+
     }
 
-    if (searchBtn) {
-        searchBtn.addEventListener("click", async function () {
-            await searchAtt();
-        });
+   if (searchBtn) {
+    searchBtn.addEventListener("click", async function () {
+        await searchAtt(1);
+    });
     }
 
     if (searchTypeTag) {
-        searchTypeTag.addEventListener("change", async function () {
-            const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
-            if (keyword === "") {
-                renderTable(attList);
-            }
-        });
+    searchTypeTag.addEventListener("change", async function () {
+        const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
+
+        if (keyword === "") {
+            currentSearchType = "all";
+            currentKeyword = "";
+            await loadAttList(1);
+        }
+    });
     }
 }
 
@@ -132,10 +149,14 @@ function toDateTimeString(workDate, timeValue) {
 /* =========================================================
    4. 목록 조회
    ========================================================= */
-async function loadAttList() {
+async function loadAttList(page = 1) {
     const month = document.querySelector("#month")?.value || currentMonth;
 
-    const resp = await fetch(`/att?month=${encodeURIComponent(month)}`);
+    currentPage = page;
+    currentSearchType = "all";
+    currentKeyword = "";
+
+    const resp = await fetch(`/att?month=${encodeURIComponent(month)}&currentPage=${page}`);
     if (!resp.ok) {
         throw new Error("근태 목록 조회 실패 ...");
     }
@@ -146,37 +167,52 @@ async function loadAttList() {
     attList = data.voList ?? [];
 
     renderSummary(data.summary);
-    renderTable(attList);
+    renderTable(attList, data.pvo);
+    renderPagination(data.pvo);
 }
 
 /* =========================================================
    5. 검색
    - 백엔드 검색 API가 없으므로 프론트에서 현재 월 목록 필터링
    ========================================================= */
-async function searchAtt() {
+async function searchAtt(page = 1) {
+    const month = document.querySelector("#month")?.value || currentMonth;
     const searchType = document.querySelector("#search-type")?.value ?? "all";
-    const keyword = document.querySelector("#keyword")?.value.trim().toLowerCase() ?? "";
+    const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
+
+    currentPage = page;
+    currentSearchType = searchType;
+    currentKeyword = keyword;
 
     if (keyword === "" || searchType === "all") {
-        renderTable(attList);
+        await loadAttList(page);
         return;
     }
 
-    let filteredList = [];
+    let url = "";
 
     if (searchType === "name") {
-        filteredList = attList.filter(vo =>
-            String(vo.empName ?? "").toLowerCase().includes(keyword)
-        );
+        url = `/att/search/name?month=${encodeURIComponent(month)}&keyword=${encodeURIComponent(keyword)}&currentPage=${page}`;
     } else if (searchType === "dept") {
-        filteredList = attList.filter(vo =>
-            String(vo.deptName ?? "").toLowerCase().includes(keyword)
-        );
+        url = `/att/search/deptName?month=${encodeURIComponent(month)}&deptName=${encodeURIComponent(keyword)}&currentPage=${page}`;
     } else {
-        filteredList = [...attList];
+        await loadAttList(page);
+        return;
     }
 
-    renderTable(filteredList);
+    const resp = await fetch(url);
+    if (!resp.ok) {
+        throw new Error("근태 검색 실패 ...");
+    }
+
+    const data = await resp.json();
+
+    currentMonth = month;
+    attList = data.voList ?? [];
+
+    // 검색 결과에서는 summary를 다시 계산하지 않음
+    renderTable(attList, data.pvo);
+    renderPagination(data.pvo);
 }
 
 /* =========================================================
@@ -193,7 +229,7 @@ function renderSummary(summary) {
 /* =========================================================
    7. 테이블 렌더링
    ========================================================= */
-function renderTable(list) {
+function renderTable(list, pvo) {
     const tbodyTag = document.querySelector("#att-list");
     if (!tbodyTag) return;
 
@@ -207,13 +243,14 @@ function renderTable(list) {
     }
 
     let str = "";
+    const startNo = pvo ? ((pvo.currentPage - 1) * pvo.boardLimit) : 0;
 
     for (let i = 0; i < list.length; i++) {
         const vo = list[i];
 
         str += `
             <tr>
-                <td>${i + 1}</td>
+                <td>${startNo + i + 1}</td>
                 <td>
                     <span class="link-text" onclick="openAttDetail('${vo.empNo}')">
                         ${escapeHtml(nvl(vo.empName))}
@@ -475,4 +512,61 @@ async function saveAttEdit() {
         console.log(error);
         alert("근태 수정 실패...");
     }
+}
+
+
+function renderPagination(pvo) {
+    const pageArea = document.querySelector("#att-pagination-area");
+    if (!pageArea) return;
+
+    if (!pvo) {
+        pageArea.innerHTML = "";
+        return;
+    }
+
+    let str = "";
+
+    if (pvo.startPage > 1) {
+        str += `
+            <button
+                type="button"
+                class="page-btn"
+                onclick="${currentSearchType === "all"
+                    ? `loadAttList(${pvo.startPage - 1})`
+                    : `searchAtt(${pvo.startPage - 1})`}"
+            >
+                &lt;
+            </button>
+        `;
+    }
+
+    for (let i = pvo.startPage; i <= pvo.endPage; i++) {
+        str += `
+            <button
+                type="button"
+                class="page-btn ${i === pvo.currentPage ? "active" : ""}"
+                onclick="${currentSearchType === "all"
+                    ? `loadAttList(${i})`
+                    : `searchAtt(${i})`}"
+            >
+                ${i}
+            </button>
+        `;
+    }
+
+    if (pvo.endPage < pvo.maxPage) {
+        str += `
+            <button
+                type="button"
+                class="page-btn"
+                onclick="${currentSearchType === "all"
+                    ? `loadAttList(${pvo.endPage + 1})`
+                    : `searchAtt(${pvo.endPage + 1})`}"
+            >
+                &gt;
+            </button>
+        `;
+    }
+
+    pageArea.innerHTML = str;
 }

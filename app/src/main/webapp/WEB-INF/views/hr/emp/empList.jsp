@@ -48,7 +48,7 @@
                                         <option value="status">상태</option>
                                     </select>
                                     <div class="search-box"> <input type="text" id="keyword" placeholder="검색어를 입력하세요">
-                                        <button type="button" class="search-btn" onclick="searchEmp()">검색</button>
+                                        <button type="button" class="search-btn" id="search-btn" onclick="searchEmp()">⌕</button>
                                     </div> <button type="button" class="btn btn-sm btn-dark">EXPORT</button>
                                 </div>
                             </div>
@@ -67,10 +67,7 @@
                                 <tbody id="emp-list"></tbody>
                             </table>
                             <div class="org-bottom-area">
-                                <div class="pagination"> <button class="page-btn active">1</button> <button
-                                        class="page-btn">2</button> <button class="page-btn">3</button> <button
-                                        class="page-btn">4</button> <button class="page-btn">5</button> <button
-                                        class="page-btn">▶</button> </div>
+                                <div id="emp-pagination-area" class="pagination"></div>
                             </div>
                         </div>
  <!-- ========================= 1) 상세조회 모달 ========================= -->
@@ -122,19 +119,7 @@
                                                     class="detail-value" id="modal-expected-salary">-</span> </div>
                                         </div>
                                     </div>
-                                    <div class="detail-section">
-                                        <h3 class="detail-section-title">근태정보(전달)</h3>
-                                        <div class="Attandance-info-grid">
-                                            <div class="detail-row"> <span class="detail-label">출근일 수</span> <span
-                                                    class="detail-value" id="modal-workingDay-count">-</span> </div>
-                                            <div class="detail-row"> <span class="detail-label">연장근무시간(h)</span> <span
-                                                    class="detail-value" id="modal-overWorkingDay-count">-</span> </div>
-                                            <div class="detail-row"> <span class="detail-label">지각</span> <span
-                                                    class="detail-value" id="modal-lateDay-count">-</span> </div>
-                                            <div class="detail-row"> <span class="detail-label">결근</span> <span
-                                                    class="detail-value" id="modal-absenceDay-count">-</span> </div>
-                                        </div>
-                                    </div>
+                                   
                                     <div class="detail-section">
                                         <h3 class="detail-section-title">인사이력</h3>
                                         <table class="org-table emp-history-table">
@@ -214,3 +199,4 @@
     </html>
 
 
+    <!--  -->

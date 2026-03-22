@@ -71,37 +71,37 @@ public interface PayMapper {
 
     // 5. 월별 목록
     @Select("""
-        SELECT COUNT(*)
-        FROM PAYROLL_MASTER PM
-        WHERE PM.DEL_YN = 'N'
-          AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
-        """)
+            SELECT COUNT(*)
+            FROM PAYROLL_MASTER PM
+            WHERE PM.DEL_YN = 'N'
+              AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
+            """)
     int selectCount(@Param("month") String month);
 
     @Select("""
-        SELECT
-            PM.PAY_NO
-            , PM.EMP_NO
-            , M.EMP_NAME
-            , P.POS_NAME
-            , D.DEPT_NAME
-            , TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') AS PAY_MONTH
-            , PM.TOTAL_EARN_AMOUNT
-            , PM.TOTAL_DEDUCT_AMOUNT
-            , PM.NET_AMOUNT
-            , PM.CONFIRM_YN
-            , PM.DEL_YN
-            , TO_CHAR(PM.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
-            , TO_CHAR(PM.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
-        FROM PAYROLL_MASTER PM
-        LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
-        LEFT JOIN DEPT D ON M.DEPT_CODE = D.DEPT_CODE
-        LEFT JOIN POSITION P ON M.POS_CODE = P.POS_CODE
-        WHERE PM.DEL_YN = 'N'
-          AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
-        ORDER BY PM.CREATED_AT DESC, PM.PAY_NO DESC
-        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
-        """)
+            SELECT
+                PM.PAY_NO
+                , PM.EMP_NO
+                , M.EMP_NAME
+                , P.POS_NAME
+                , D.DEPT_NAME
+                , TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') AS PAY_MONTH
+                , PM.TOTAL_EARN_AMOUNT
+                , PM.TOTAL_DEDUCT_AMOUNT
+                , PM.NET_AMOUNT
+                , PM.CONFIRM_YN
+                , PM.DEL_YN
+                , TO_CHAR(PM.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+                , TO_CHAR(PM.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+            FROM PAYROLL_MASTER PM
+            LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
+            LEFT JOIN DEPT D ON M.DEPT_CODE = D.DEPT_CODE
+            LEFT JOIN POSITION P ON M.POS_CODE = P.POS_CODE
+            WHERE PM.DEL_YN = 'N'
+              AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
+            ORDER BY PM.CREATED_AT DESC, PM.PAY_NO DESC
+            OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
+            """)
     List<PayMasterVo> selectListByPage(@Param("month") String month, @Param("pvo") PageVo pvo);
 
     // 6. 월별 요약
@@ -165,41 +165,41 @@ public interface PayMapper {
 
     // 9. 이름 검색
     @Select("""
-        SELECT COUNT(*)
-        FROM PAYROLL_MASTER PM
-        LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
-        WHERE PM.DEL_YN = 'N'
-          AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
-          AND M.EMP_NAME LIKE '%' || #{keyword} || '%'
-        """)
+            SELECT COUNT(*)
+            FROM PAYROLL_MASTER PM
+            LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
+            WHERE PM.DEL_YN = 'N'
+              AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
+              AND M.EMP_NAME LIKE '%' || #{keyword} || '%'
+            """)
     int selectCountByName(@Param("month") String month,
                           @Param("keyword") String keyword);
 
     @Select("""
-        SELECT
-            PM.PAY_NO
-            , PM.EMP_NO
-            , M.EMP_NAME
-            , P.POS_NAME
-            , D.DEPT_NAME
-            , TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') AS PAY_MONTH
-            , PM.TOTAL_EARN_AMOUNT
-            , PM.TOTAL_DEDUCT_AMOUNT
-            , PM.NET_AMOUNT
-            , PM.CONFIRM_YN
-            , PM.DEL_YN
-            , TO_CHAR(PM.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
-            , TO_CHAR(PM.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
-        FROM PAYROLL_MASTER PM
-        LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
-        LEFT JOIN DEPT D ON M.DEPT_CODE = D.DEPT_CODE
-        LEFT JOIN POSITION P ON M.POS_CODE = P.POS_CODE
-        WHERE PM.DEL_YN = 'N'
-          AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
-          AND M.EMP_NAME LIKE '%' || #{keyword} || '%'
-        ORDER BY PM.CREATED_AT DESC, PM.PAY_NO DESC
-        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
-        """)
+            SELECT
+                PM.PAY_NO
+                , PM.EMP_NO
+                , M.EMP_NAME
+                , P.POS_NAME
+                , D.DEPT_NAME
+                , TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') AS PAY_MONTH
+                , PM.TOTAL_EARN_AMOUNT
+                , PM.TOTAL_DEDUCT_AMOUNT
+                , PM.NET_AMOUNT
+                , PM.CONFIRM_YN
+                , PM.DEL_YN
+                , TO_CHAR(PM.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+                , TO_CHAR(PM.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+            FROM PAYROLL_MASTER PM
+            LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
+            LEFT JOIN DEPT D ON M.DEPT_CODE = D.DEPT_CODE
+            LEFT JOIN POSITION P ON M.POS_CODE = P.POS_CODE
+            WHERE PM.DEL_YN = 'N'
+              AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
+              AND M.EMP_NAME LIKE '%' || #{keyword} || '%'
+            ORDER BY PM.CREATED_AT DESC, PM.PAY_NO DESC
+            OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
+            """)
     List<PayMasterVo> selectListByNameByPage(
             @Param("month") String month,
             @Param("keyword") String keyword,
@@ -208,40 +208,40 @@ public interface PayMapper {
 
     // 10. 확정상태 검색
     @Select("""
-        SELECT COUNT(*)
-        FROM PAYROLL_MASTER PM
-        WHERE PM.DEL_YN = 'N'
-          AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
-          AND PM.CONFIRM_YN = #{confirmYn}
-        """)
+            SELECT COUNT(*)
+            FROM PAYROLL_MASTER PM
+            WHERE PM.DEL_YN = 'N'
+              AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
+              AND PM.CONFIRM_YN = #{confirmYn}
+            """)
     int selectCountByConfirmYn(@Param("month") String month,
                                @Param("confirmYn") String confirmYn);
 
     @Select("""
-        SELECT
-            PM.PAY_NO
-            , PM.EMP_NO
-            , M.EMP_NAME
-            , P.POS_NAME
-            , D.DEPT_NAME
-            , TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') AS PAY_MONTH
-            , PM.TOTAL_EARN_AMOUNT
-            , PM.TOTAL_DEDUCT_AMOUNT
-            , PM.NET_AMOUNT
-            , PM.CONFIRM_YN
-            , PM.DEL_YN
-            , TO_CHAR(PM.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
-            , TO_CHAR(PM.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
-        FROM PAYROLL_MASTER PM
-        LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
-        LEFT JOIN DEPT D ON M.DEPT_CODE = D.DEPT_CODE
-        LEFT JOIN POSITION P ON M.POS_CODE = P.POS_CODE
-        WHERE PM.DEL_YN = 'N'
-          AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
-          AND PM.CONFIRM_YN = #{confirmYn}
-        ORDER BY PM.CREATED_AT DESC, PM.PAY_NO DESC
-        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
-        """)
+            SELECT
+                PM.PAY_NO
+                , PM.EMP_NO
+                , M.EMP_NAME
+                , P.POS_NAME
+                , D.DEPT_NAME
+                , TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') AS PAY_MONTH
+                , PM.TOTAL_EARN_AMOUNT
+                , PM.TOTAL_DEDUCT_AMOUNT
+                , PM.NET_AMOUNT
+                , PM.CONFIRM_YN
+                , PM.DEL_YN
+                , TO_CHAR(PM.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+                , TO_CHAR(PM.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+            FROM PAYROLL_MASTER PM
+            LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
+            LEFT JOIN DEPT D ON M.DEPT_CODE = D.DEPT_CODE
+            LEFT JOIN POSITION P ON M.POS_CODE = P.POS_CODE
+            WHERE PM.DEL_YN = 'N'
+              AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
+              AND PM.CONFIRM_YN = #{confirmYn}
+            ORDER BY PM.CREATED_AT DESC, PM.PAY_NO DESC
+            OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
+            """)
     List<PayMasterVo> selectListByConfirmYnByPage(
             @Param("month") String month,
             @Param("confirmYn") String confirmYn,
@@ -350,12 +350,42 @@ public interface PayMapper {
 
 //
 
-@Select("""
-        SELECT NVL(SUM(OT_CONFIRMED_HOURS), 0)
-        FROM ATTENDANCE
-        WHERE EMP_NO = #{empNo}
-          AND TO_CHAR(WORK_DATE, 'YYYY-MM') = #{month}
-        """)
-int selectConfirmedOtHoursByMonth(@Param("empNo") String empNo, @Param("month") String month);
+    @Select("""
+            SELECT NVL(SUM(OT_CONFIRMED_HOURS), 0)
+            FROM ATTENDANCE
+            WHERE EMP_NO = #{empNo}
+              AND TO_CHAR(WORK_DATE, 'YYYY-MM') = #{month}
+            """)
+    int selectConfirmedOtHoursByMonth(@Param("empNo") String empNo, @Param("month") String month);
 
+
+    @Select("""
+            SELECT
+                COUNT(*) AS totalCount
+                , NVL(SUM(PM.NET_AMOUNT), 0) AS totalNetAmount
+                , SUM(CASE WHEN PM.CONFIRM_YN = 'N' THEN 1 ELSE 0 END) AS unconfirmedCount
+                , SUM(CASE WHEN PM.CONFIRM_YN = 'Y' THEN 1 ELSE 0 END) AS confirmedCount
+            FROM PAYROLL_MASTER PM
+            LEFT JOIN MEMBER M ON PM.EMP_NO = M.EMP_NO
+            WHERE PM.DEL_YN = 'N'
+              AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
+              AND M.EMP_NAME LIKE '%' || #{keyword} || '%'
+            """)
+    Map<String, Object> selectSummaryByName(@Param("month") String month,
+                                            @Param("keyword") String keyword);
+
+
+    @Select("""
+        SELECT
+            COUNT(*) AS totalCount
+            , NVL(SUM(PM.NET_AMOUNT), 0) AS totalNetAmount
+            , SUM(CASE WHEN PM.CONFIRM_YN = 'N' THEN 1 ELSE 0 END) AS unconfirmedCount
+            , SUM(CASE WHEN PM.CONFIRM_YN = 'Y' THEN 1 ELSE 0 END) AS confirmedCount
+        FROM PAYROLL_MASTER PM
+        WHERE PM.DEL_YN = 'N'
+          AND TO_CHAR(PM.PAY_MONTH, 'YYYY-MM') = #{month}
+          AND PM.CONFIRM_YN = #{confirmYn}
+        """)
+    Map<String, Object> selectSummaryByConfirmYn(@Param("month") String month,
+                                                 @Param("confirmYn") String confirmYn);
 }

@@ -1,10 +1,13 @@
 /* =========================================================
    근태관리 전용 스타일
+   - 기능/로직 변경 없음
+   - 급여관리와 디자인 톤 통일
+   - 상세조회 모달은 근태 전용 UX로 차별화
    ========================================================= */
 
-/* ---------------------------------------------------------
-   1. 상단 여백 / 카드 / 툴바
-   --------------------------------------------------------- */
+/* =========================================================
+   1. 상단 여백 / 요약카드 / 목록 패널
+   ========================================================= */
 .att-top-spacer {
     height: 44px;
     margin-bottom: 18px;
@@ -12,80 +15,151 @@
 
 .att-page .org-summary-area {
     margin-bottom: 18px;
+    gap: 16px;
 }
 
 .att-page .summary-card {
-    width: 132px;
-    min-height: 88px;
+    width: 136px;
+    min-height: 90px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,250,245,0.86) 100%);
+    border: 1px solid rgba(217, 177, 137, 0.24);
+    box-shadow: 0 12px 24px rgba(92, 63, 42, 0.10);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.att-page .summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px rgba(92, 63, 42, 0.14);
+}
+
+.att-page .summary-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #7b6452;
+    margin-bottom: 10px;
+}
+
+.att-page .summary-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: #2e2118;
+    border-left: 4px solid #7b5538;
+    padding-left: 10px;
+    line-height: 1;
 }
 
 .att-page .org-table-card {
     margin-top: 6px;
     min-height: 420px;
+    padding: 18px 20px 20px;
+    border-radius: 16px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,252,248,0.88) 100%);
+    border: 1px solid rgba(217, 177, 137, 0.20);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.10);
     overflow-x: auto;
+    animation: attCardFloatIn 0.55s ease;
 }
 
+/* =========================================================
+   2. 툴바 / 검색영역
+   - 급여쪽과 최대한 동일한 결
+   ========================================================= */
 .att-page .org-toolbar {
     margin-bottom: 16px;
-    flex-wrap: wrap;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: nowrap;
 }
 
 .att-toolbar-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
 .att-page .month-input {
-    min-width: 150px;
+    width: 140px;
+    height: 34px;
+    font-size: 12px;
 }
 
 .att-page .toolbar-right {
-    width: 100%;
+    display: flex;
+    align-items: center;
     justify-content: flex-end;
     gap: 10px;
+    width: auto;
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 .att-page .toolbar-right .form-select {
-    min-width: 88px;
+    min-width: 92px;
+    height: 34px;
+    border-radius: 18px;
+    font-size: 12px;
 }
 
 .att-page .search-box {
     min-width: 230px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.94);
+    border: 1px solid rgba(156, 120, 93, 0.20);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
 }
 
 .att-page .search-box input {
     width: 180px;
+    height: 30px;
+    padding: 0 10px 0 12px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 12px;
+    color: #4b3728;
 }
 
-/* ---------------------------------------------------------
-   2. 목록 테이블
-   --------------------------------------------------------- */
+.att-page .search-box input::placeholder {
+    color: #9b8a7c;
+}
+
+
+
+.att-page .org-bottom-area {
+    margin-top: 18px;
+    min-height: 34px;
+}
+
+/* =========================================================
+   3. 목록 테이블
+   ========================================================= */
 .att-table {
     table-layout: fixed;
     min-width: 980px;
 }
 
 .att-table th:nth-child(1),
-.att-table td:nth-child(1) {
-    width: 64px;
-}
+.att-table td:nth-child(1) { width: 64px; }
 
 .att-table th:nth-child(2),
-.att-table td:nth-child(2) {
-    width: 120px;
-}
+.att-table td:nth-child(2) { width: 120px; }
 
 .att-table th:nth-child(3),
-.att-table td:nth-child(3) {
-    width: 110px;
-}
+.att-table td:nth-child(3) { width: 110px; }
 
 .att-table th:nth-child(4),
-.att-table td:nth-child(4) {
-    width: 180px;
-}
+.att-table td:nth-child(4) { width: 180px; }
 
 .att-table th:nth-child(5),
 .att-table td:nth-child(5),
@@ -94,14 +168,10 @@
 .att-table th:nth-child(7),
 .att-table td:nth-child(7),
 .att-table th:nth-child(8),
-.att-table td:nth-child(8) {
-    width: 88px;
-}
+.att-table td:nth-child(8) { width: 88px; }
 
 .att-table th:nth-child(9),
-.att-table td:nth-child(9) {
-    width: 130px;
-}
+.att-table td:nth-child(9) { width: 130px; }
 
 .att-table td {
     white-space: nowrap;
@@ -109,15 +179,15 @@
     text-overflow: ellipsis;
 }
 
-.att-table .link-text {
-    color: #1a73e8;
-    font-weight: 700;
-    cursor: pointer;
+.att-table tbody tr {
+    transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-.att-table .link-text:hover {
-    text-decoration: underline;
+.att-table tbody tr:hover {
+    background: rgba(255,255,255,0.65);
+    transform: translateY(-1px);
 }
+
 
 .att-table .empty-row td {
     height: 120px;
@@ -126,31 +196,54 @@
     font-size: 13px;
 }
 
-/* ---------------------------------------------------------
-   3. 모달 공통
-   --------------------------------------------------------- */
+/* =========================================================
+   4. 모달 공통
+   ========================================================= */
 #att-modal-wrap .att-detail-modal,
 #att-edit-modal-wrap .att-edit-modal {
     width: 1120px;
     max-width: min(1120px, 94vw);
-    border-radius: 16px;
+    border-radius: 18px;
+    transform-origin: center center;
+    animation: attModalPop 0.34s cubic-bezier(.2,.8,.2,1);
+}
+
+#att-modal-wrap .org-modal,
+#att-edit-modal-wrap .org-modal {
+    display: flex;
+    flex-direction: column;
+    max-height: 88vh;
 }
 
 #att-modal-wrap .org-modal-header,
 #att-edit-modal-wrap .org-modal-header {
     padding: 18px 22px 14px;
+    border-bottom: 1px solid #ede6de;
 }
 
 #att-modal-wrap .org-modal-header h2,
 #att-edit-modal-wrap .org-modal-header h2 {
     font-size: 22px;
+    font-weight: 900;
+    color: #4b3728;
 }
 
 #att-modal-wrap .org-modal-footer,
 #att-edit-modal-wrap .org-modal-footer {
-    padding: 0 22px 20px;
+    padding: 16px 22px 20px;
     border-top: 1px solid #f0e8df;
     background: #fff;
+}
+
+#att-modal-wrap .org-modal-footer .btn,
+#att-edit-modal-wrap .org-modal-footer .btn {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+#att-modal-wrap .org-modal-footer .btn:hover,
+#att-edit-modal-wrap .org-modal-footer .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 16px rgba(92, 63, 42, 0.12);
 }
 
 #att-modal-wrap .att-detail-body,
@@ -164,59 +257,92 @@
     gap: 16px;
 }
 
-/* 모달 안 스크롤바가 있어도 헤더/푸터는 유지 */
-#att-modal-wrap .org-modal,
-#att-edit-modal-wrap .org-modal {
-    display: flex;
-    flex-direction: column;
-    max-height: 88vh;
+#att-modal-wrap .att-detail-body::-webkit-scrollbar,
+#att-edit-modal-wrap .att-edit-body::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
 }
 
-/* ---------------------------------------------------------
-   4. 상세조회 상단 정보 박스
-   --------------------------------------------------------- */
+#att-modal-wrap .att-detail-body::-webkit-scrollbar-track,
+#att-edit-modal-wrap .att-edit-body::-webkit-scrollbar-track {
+    background: rgba(244, 236, 227, 0.72);
+    border-radius: 999px;
+}
+
+#att-modal-wrap .att-detail-body::-webkit-scrollbar-thumb,
+#att-edit-modal-wrap .att-edit-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #d1b092 0%, #a88367 100%);
+    border-radius: 999px;
+    border: 2px solid rgba(244, 236, 227, 0.72);
+}
+
+/* =========================================================
+   5. 상세조회 섹션 공통
+   ========================================================= */
 .attInfo-section {
     border: 1px solid #e6c9ae;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px 18px;
-    background-color: #fffdfa;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,250,245,0.95) 100%);
+    box-shadow: 0 10px 24px rgba(92, 63, 42, 0.05);
+    animation: attSectionRise 0.45s ease;
 }
 
 .attInfo-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin: 0 0 14px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 800;
     color: #4b3728;
 }
 
+.attInfo-section-title::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #9c785d 0%, #5c3f2a 100%);
+    box-shadow: 0 0 0 5px rgba(156,120,93,0.10);
+}
+
+/* =========================================================
+   6. 상세조회 상단 직원 정보
+   - 급여보다 근태 느낌 강하게: 프로필 + 이름/조직 + 조회기간
+   ========================================================= */
 .attInfo-profile-area {
-    display: flex;
-    gap: 22px;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: 18px;
+    align-items: center;
 }
 
 .attInfo-profile-img {
-    width: 100px;
-    min-width: 100px;
+    width: 96px;
+    min-width: 96px;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .attInfo-profile-img img {
-    width: 86px;
-    height: 86px;
+    width: 82px;
+    height: 82px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #d9c7b4;
-    background-color: #f4efe8;
+    border: 2px solid rgba(217, 177, 137, 0.34);
+    background: #f4efe8;
+    box-shadow: 0 8px 18px rgba(92, 63, 42, 0.10);
 }
 
 .attInfo-grid {
     flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 24px;
     min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 22px;
 }
 
 .attInfo-row {
@@ -229,74 +355,120 @@
 .attInfo-label {
     width: 56px;
     min-width: 56px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #5b4635;
+    font-size: 12px;
+    font-weight: 800;
+    color: #7a6452;
 }
 
 .attInfo-value {
     flex: 1;
     min-width: 0;
     font-size: 13px;
+    font-weight: 700;
     color: #4b3728;
     line-height: 1.5;
     word-break: break-word;
 }
 
 #modal-att-empName {
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 21px;
+    font-weight: 900;
     color: #3d2c20;
+    letter-spacing: -0.2px;
 }
 
 .attInfo-period {
-    min-width: 210px;
+    min-width: 220px;
+    align-self: stretch;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-end;
     font-size: 12px;
     color: #8d7159;
-    padding-top: 4px;
+    padding: 0 0 0 14px;
+    border-left: 1px dashed rgba(184, 141, 104, 0.35);
 }
 
+/* =========================================================
+   7. 상태요약
+   - 근태 전용 KPI 박스
+   ========================================================= */
 .att-summary-grid {
-    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
 }
 
-/* ---------------------------------------------------------
-   5. 상세조회 이력 테이블
-   --------------------------------------------------------- */
+.att-summary-grid .attInfo-row {
+    min-height: 96px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #eee3d8;
+    background: linear-gradient(180deg, #f9f6f2 0%, #f3eee8 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.att-summary-grid .attInfo-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(92, 63, 42, 0.08);
+}
+
+.att-summary-grid .attInfo-label {
+    width: auto;
+    min-width: auto;
+    font-size: 12px;
+    font-weight: 700;
+    color: #7a6657;
+}
+
+.att-summary-grid .attInfo-value {
+    width: 100%;
+    font-size: 22px;
+    font-weight: 900;
+    color: #3f2d22;
+    line-height: 1.1;
+}
+
+/* 각 카드에 근태 느낌의 미세 포인트 */
+.att-summary-grid .attInfo-row:nth-child(1) { border-color: rgba(34,197,94,0.18); }
+.att-summary-grid .attInfo-row:nth-child(2) { border-color: rgba(245,158,11,0.20); }
+.att-summary-grid .attInfo-row:nth-child(3) { border-color: rgba(239,68,68,0.18); }
+.att-summary-grid .attInfo-row:nth-child(4) { border-color: rgba(59,130,246,0.18); }
+.att-summary-grid .attInfo-row:nth-child(5) { border-color: rgba(139,92,246,0.18); }
+
+/* =========================================================
+   8. 상세조회 이력 테이블
+   ========================================================= */
+.att-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
 .att-history-table {
     table-layout: fixed;
     min-width: 900px;
 }
 
 .att-history-table th:nth-child(1),
-.att-history-table td:nth-child(1) {
-    width: 110px;
-}
+.att-history-table td:nth-child(1) { width: 110px; }
 
 .att-history-table th:nth-child(2),
-.att-history-table td:nth-child(2) {
-    width: 100px;
-}
+.att-history-table td:nth-child(2) { width: 100px; }
 
 .att-history-table th:nth-child(3),
 .att-history-table td:nth-child(3),
 .att-history-table th:nth-child(4),
-.att-history-table td:nth-child(4) {
-    width: 110px;
-}
+.att-history-table td:nth-child(4) { width: 110px; }
 
 .att-history-table th:nth-child(5),
-.att-history-table td:nth-child(5) {
-    width: 140px;
-}
+.att-history-table td:nth-child(5) { width: 140px; }
 
 .att-history-table th:nth-child(6),
-.att-history-table td:nth-child(6) {
-    width: auto;
-}
+.att-history-table td:nth-child(6) { width: auto; }
 
 .att-history-table td {
     white-space: nowrap;
@@ -304,39 +476,54 @@
     text-overflow: ellipsis;
 }
 
-/* ---------------------------------------------------------
-   6. 수정 모달 테이블
-   --------------------------------------------------------- */
+.att-history-table tbody tr {
+    transition: transform 0.16s ease, background-color 0.16s ease;
+}
+
+.att-history-table tbody tr:hover {
+    background: rgba(255,255,255,0.55);
+}
+
+.att-history-table tbody td:nth-child(2) {
+    font-weight: 800;
+}
+
+/* 상태 컬럼 미세 색감 */
+.att-history-table tbody tr td:nth-child(2):has-text("출근") {
+    color: #237344;
+}
+
+/* =========================================================
+   9. 수정 모달 테이블
+   ========================================================= */
 .att-edit-table {
     table-layout: fixed;
     min-width: 1020px;
 }
 
 .att-edit-table th:nth-child(1),
-.att-edit-table td:nth-child(1) {
-    width: 110px;
-}
+.att-edit-table td:nth-child(1) { width: 110px; }
 
 .att-edit-table th:nth-child(2),
-.att-edit-table td:nth-child(2) {
-    width: 110px;
-}
+.att-edit-table td:nth-child(2) { width: 110px; }
 
 .att-edit-table th:nth-child(3),
 .att-edit-table td:nth-child(3),
 .att-edit-table th:nth-child(4),
-.att-edit-table td:nth-child(4) {
-    width: 140px;
-}
+.att-edit-table td:nth-child(4) { width: 140px; }
 
 .att-edit-table th:nth-child(5),
-.att-edit-table td:nth-child(5) {
-    width: 150px;
-}
+.att-edit-table td:nth-child(5) { width: 150px; }
 
 .att-edit-table th:nth-child(6),
-.att-edit-table td:nth-child(6) {
-    width: 260px;
+.att-edit-table td:nth-child(6) { width: 260px; }
+
+.att-edit-table tbody tr {
+    transition: background-color 0.16s ease, transform 0.16s ease;
+}
+
+.att-edit-table tbody tr:hover {
+    background: rgba(255,255,255,0.55);
 }
 
 .att-edit-table input,
@@ -350,33 +537,100 @@
     color: #4b3728;
     background-color: #fff;
     box-sizing: border-box;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.att-edit-table input:focus,
+.att-edit-table select:focus {
+    border-color: #b88d68;
+    box-shadow: 0 0 0 4px rgba(184, 141, 104, 0.12);
+    outline: none;
 }
 
 .att-edit-table input[type="number"] {
     text-align: right;
 }
 
-/* ---------------------------------------------------------
-   7. 반응형
-   --------------------------------------------------------- */
+/* =========================================================
+   10. 페이지네이션 미세 보정
+   ========================================================= */
+.att-page .pagination {
+    gap: 8px;
+}
+
+.att-page .page-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    transition: transform 0.16s ease, background-color 0.16s ease;
+}
+
+.att-page .page-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   11. 애니메이션
+   ========================================================= */
+@keyframes attModalPop {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes attSectionRise {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes attCardFloatIn {
+    0% {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   12. 반응형
+   ========================================================= */
 @media (max-width: 1200px) {
     .attInfo-profile-area {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 14px;
     }
 
     .attInfo-grid {
         width: 100%;
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 
     .attInfo-period {
         width: 100%;
+        min-width: 0;
         justify-content: flex-start;
+        padding: 10px 0 0;
+        border-left: none;
+        border-top: 1px dashed rgba(184, 141, 104, 0.35);
     }
 
     .att-summary-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -390,8 +644,20 @@
         justify-content: flex-start;
     }
 
-    .att-summary-grid {
+    .att-page .search-box {
+        min-width: 100%;
+    }
+
+    .att-page .search-box input {
+        width: 100%;
+    }
+
+    .attInfo-grid {
         grid-template-columns: 1fr;
+    }
+
+    .att-summary-grid {
+        grid-template-columns: 1fr 1fr;
     }
 
     #att-modal-wrap .att-detail-modal,
@@ -405,9 +671,27 @@
         padding: 16px;
     }
 
+    .att-page .org-toolbar {
+    flex-wrap: wrap;
 }
 
-.att-table-scroll {
+.att-page .toolbar-right {
     width: 100%;
-    overflow-x: auto;
+    margin-left: 0;
+    justify-content: flex-start;
+}
+}
+
+@media (max-width: 640px) {
+    .att-summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   근태 모달 백드롭 블러 최종본
+   ========================================================= */
+.org-modal-wrap {
+    backdrop-filter: blur(5px);
+    animation: payBackdropFade 0.25s ease;
 }

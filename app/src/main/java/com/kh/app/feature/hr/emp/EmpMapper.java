@@ -1,13 +1,28 @@
 package com.kh.app.feature.hr.emp;
 
+import com.kh.app.feature.util.PageVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface EmpMapper {
 
-    // 1. 직원 전체조회
+    // ================================
+    // 1. 전체 직원 수 (페이징용)
+    // ================================
+    @Select("""
+                SELECT COUNT(*)
+                FROM MEMBER M
+                WHERE M.QUIT_YN = 'N'
+            """)
+    int selectCount();
+
+
+    // ================================
+    // 2. 직원 목록 페이징 조회
+    // ================================
     @Select("""
             SELECT
                 M.EMP_NO
@@ -43,11 +58,14 @@ public interface EmpMapper {
             LEFT JOIN CURRENT_STATUS CS
               ON M.EMP_STATUS_NO = CS.EMP_STATUS_NO 
             ORDER BY M.HIRE_DATE ASC
+            OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
             """)
-    List<EmpVo> selectList();
+    List<EmpVo> selectListByPage(@Param("pvo") PageVo pvo);
 
 
-    // 2. 직원 상세조회
+    // ================================
+    // 3. 직원 상세조회
+    // ================================
     @Select("""
             SELECT
                 M.EMP_NO
@@ -90,7 +108,9 @@ public interface EmpMapper {
     EmpVo selectDetail(String empNo);
 
 
-    // 3. 해당 직원 인사이력 조회
+    // ================================
+    // 4. 해당 직원 인사이력 조회
+    // ================================
     @Select("""
             SELECT
                 EH.HIS_NO
@@ -110,7 +130,9 @@ public interface EmpMapper {
     List<EmpHistoryVo> selectEmpHistory(String empNo);
 
 
-    // 4. 직원 기본정보 수정
+    // ================================
+    // 5. 직원 기본정보 수정
+    // ================================
     @Update("""
             UPDATE MEMBER
             SET
@@ -123,7 +145,9 @@ public interface EmpMapper {
     int edit(EmpVo vo);
 
 
-    // 5. 인사이력 추가
+    // ================================
+    // 6. 인사이력 추가
+    // ================================
     @Insert("""
             INSERT INTO EMP_HISTORY
             (
@@ -145,7 +169,9 @@ public interface EmpMapper {
     int insertEmpHistory(EmpHistoryVo vo);
 
 
-    // 6. 인사이력 수정
+    // ================================
+    // 7. 인사이력 수정
+    // ================================
     @Update("""
             UPDATE EMP_HISTORY
             SET
@@ -157,7 +183,10 @@ public interface EmpMapper {
             """)
     int editEmpHistory(EmpHistoryVo vo);
 
-    //상태 가져오기
+
+    // ================================
+    // 8. 상태 목록 조회
+    // ================================
     @Select("""
         SELECT
             EMP_STATUS_NO
@@ -166,4 +195,16 @@ public interface EmpMapper {
         ORDER BY EMP_STATUS_NO ASC
         """)
     List<CurrentStatusVo> selectStatusList();
+
+    @Select("""
+    SELECT
+        COUNT(*) AS totalCount,
+        SUM(CASE WHEN EMP_STATUS_NO = 1 THEN 1 ELSE 0 END) AS workingCount,
+        SUM(CASE WHEN EMP_STATUS_NO = 2 THEN 1 ELSE 0 END) AS businessTripCount,
+        SUM(CASE WHEN EMP_STATUS_NO = 3 THEN 1 ELSE 0 END) AS trainingCount,
+        SUM(CASE WHEN EMP_STATUS_NO = 4 THEN 1 ELSE 0 END) AS leaveCount
+    FROM MEMBER
+    WHERE QUIT_YN = 'N'
+""")
+    Map<String, Object> selectEmpSummary();
 }

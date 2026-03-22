@@ -13,6 +13,7 @@ window.addEventListener("DOMContentLoaded", async function () {
     try {
         initDefaultMonth();
         bindEvents();
+        initSearchPlaceholder();
         await loadPayList();
     } catch (error) {
         console.log(error);
@@ -61,11 +62,37 @@ function bindEvents() {
 
     if (searchTypeTag) {
         searchTypeTag.addEventListener("change", async function () {
+
+        const keywordInput = document.querySelector("#keyword");
+
+        if (this.value === "name") {
+            keywordInput.placeholder = "사원명을 입력하세요";
+        } else if (this.value === "confirmYn") {
+            keywordInput.placeholder = "확정 / 미확정을 입력하세요";
+        } else {
+            keywordInput.placeholder = "검색어를 입력하세요";
+        }
+
         const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
         if (keyword === "") {
             await loadPayList(1);
         }
     });
+    }
+}
+
+function initSearchPlaceholder() {
+    const searchType = document.querySelector("#search-type")?.value;
+    const keywordInput = document.querySelector("#keyword");
+
+    if (!keywordInput) return;
+
+    if (searchType === "name") {
+        keywordInput.placeholder = "사원명을 입력하세요";
+    } else if (searchType === "confirmYn") {
+        keywordInput.placeholder = "확정 / 미확정을 입력하세요";
+    } else {
+        keywordInput.placeholder = "검색어를 입력하세요";
     }
 }
 
@@ -128,7 +155,7 @@ async function loadPayList(page = 1) {
     currentMonth = data.month ?? month;
     payList = data.voList ?? [];
 
-    renderSummary(payList);
+    renderSummary(data.summary);
     renderTable(payList);
     renderPagination(data.pvo);
 }
@@ -174,34 +201,34 @@ async function searchPay(page = 1) {
     currentMonth = data.month ?? month;
     payList = data.voList ?? [];
 
-    renderSummary(payList);
+    renderSummary(data.summary);
     renderTable(payList);
     renderPagination(data.pvo);
 }
 
-function renderSummary(list) {
+function renderSummary(summary) {
     const totalCountTag = document.querySelector("#total-count");
     const totalNetAmountTag = document.querySelector("#total-net-amount");
     const unconfirmedCountTag = document.querySelector("#unconfirmed-count");
     const confirmedCountTag = document.querySelector("#confirmed-count");
 
-    const safeList = Array.isArray(list) ? list : [];
+    const safeSummary = summary || {};
 
-    let totalCount = 0;
-    let totalNetAmount = 0;
-    let unconfirmedCount = 0;
-    let confirmedCount = 0;
+    const totalCount = Number(
+        safeSummary.totalCount ?? safeSummary.TOTALCOUNT ?? 0
+    );
 
-    for (const vo of safeList) {
-        totalCount += 1;
-        totalNetAmount += parseNumber(vo.netAmount);
+    const totalNetAmount = Number(
+        safeSummary.totalNetAmount ?? safeSummary.TOTALNETAMOUNT ?? 0
+    );
 
-        if (String(vo.confirmYn) === "Y") {
-            confirmedCount += 1;
-        } else {
-            unconfirmedCount += 1;
-        }
-    }
+    const unconfirmedCount = Number(
+        safeSummary.unconfirmedCount ?? safeSummary.UNCONFIRMEDCOUNT ?? 0
+    );
+
+    const confirmedCount = Number(
+        safeSummary.confirmedCount ?? safeSummary.CONFIRMEDCOUNT ?? 0
+    );
 
     if (totalCountTag) totalCountTag.innerText = totalCount;
     if (totalNetAmountTag) totalNetAmountTag.innerText = `₩ ${formatMoney(totalNetAmount)}`;

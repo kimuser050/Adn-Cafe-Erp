@@ -95,6 +95,9 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="org-bottom-area">
+                    <div id="att-pagination-area" class="pagination"></div>
+                </div>
             </div>
 
             <!-- ========================= 상세조회 모달 ========================= -->

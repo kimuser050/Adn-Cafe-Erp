@@ -2,12 +2,15 @@ package com.kh.app.feature.hr.store;
 
 import com.kh.app.feature.hr.dept.DeptVo;
 import com.kh.app.feature.user.member.MemberVo;
+import com.kh.app.feature.util.PageVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,16 +25,51 @@ public class StoreService {
         return storeMapper.insert(vo);
     }
 
-    public List<StoreVo> selectList() {
-        return storeMapper.selectList();
+    public Map<String, Object> selectList(int currentPage, int pageLimit, int boardLimit) {
+        int listCount = storeMapper.selectCount();
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<StoreVo> voList = storeMapper.selectListByPage(pvo);
+        Map<String, Object> summary = storeMapper.selectSummary();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("voList", voList);
+        map.put("pvo", pvo);
+        map.put("summary", summary);
+
+        return map;
     }
 
-    public List<StoreVo> selectListByName(String keyword) {
-        return storeMapper.selectListByName(keyword);
+    public Map<String, Object> selectListByName(String keyword, int currentPage, int pageLimit, int boardLimit) {
+        int listCount = storeMapper.selectCountByName(keyword);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<StoreVo> voList = storeMapper.selectListByNameByPage(keyword, pvo);
+        Map<String, Object> summary = storeMapper.selectSummaryByName(keyword);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("keyword", keyword);
+        map.put("voList", voList);
+        map.put("pvo", pvo);
+        map.put("summary", summary);
+
+        return map;
     }
 
-    public List<StoreVo> selectListByStatusName(String statusName) {
-        return storeMapper.selectListByStatusName(statusName);
+    public Map<String, Object> selectListByStatusName(String statusName, int currentPage, int pageLimit, int boardLimit) {
+        int listCount = storeMapper.selectCountByStatusName(statusName);
+        PageVo pvo = new PageVo(listCount, currentPage, pageLimit, boardLimit);
+
+        List<StoreVo> voList = storeMapper.selectListByStatusNameByPage(statusName, pvo);
+        Map<String, Object> summary = storeMapper.selectSummaryByStatusName(statusName);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("statusName", statusName);
+        map.put("voList", voList);
+        map.put("pvo", pvo);
+        map.put("summary", summary);
+
+        return map;
     }
 
     public StoreVo selectDetail(String storeCode) {

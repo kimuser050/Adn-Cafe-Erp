@@ -1,347 +1,931 @@
 /* =========================================================
-   급여등록 화면
+   급여등록 - UI 폴리싱 최종본
+   컬러 제한:
+   #5C3F2A / #9C785D / #D9B189
    ========================================================= */
 
+:root {
+    --pay-dark: #5C3F2A;
+    --pay-mid: #9C785D;
+    --pay-light: #D9B189;
+
+    --pay-bg: #f6f3ef;
+    --pay-panel: rgba(255, 255, 255, 0.82);
+    --pay-panel-strong: rgba(255, 255, 255, 0.92);
+    --pay-border: rgba(156, 120, 93, 0.22);
+    --pay-border-strong: rgba(156, 120, 93, 0.38);
+
+    --pay-text: #4a3425;
+    --pay-text-soft: rgba(92, 63, 42, 0.72);
+    --pay-text-faint: rgba(92, 63, 42, 0.52);
+
+    --pay-shadow-sm: 0 8px 20px rgba(92, 63, 42, 0.06);
+    --pay-shadow-md: 0 14px 30px rgba(92, 63, 42, 0.09);
+    --pay-shadow-lg: 0 22px 46px rgba(92, 63, 42, 0.11);
+
+    --pay-radius-xl: 24px;
+    --pay-radius-lg: 18px;
+    --pay-radius-md: 14px;
+    --pay-radius-sm: 10px;
+}
+
+/* =========================================================
+   1. 전체 구조
+   ========================================================= */
+.pay-insert-page,
+.pay-insert-page *,
+.pay-insert-page *::before,
+.pay-insert-page *::after {
+    box-sizing: border-box;
+}
+
 .pay-insert-page {
-    padding: 34px 36px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 16px 24px !important;
+    background:
+        linear-gradient(180deg, rgba(217, 177, 137, 0.18) 0%, rgba(217, 177, 137, 0.10) 100%),
+        var(--pay-bg);
+}
+
+.pay-insert-wrap {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .pay-insert-card {
-    background: #f7f7f7;
-    border-radius: 14px;
-    padding: 26px 28px 24px;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
-    min-height: 760px;
-}
-
-.page-title {
-    font-size: 24px;
-    font-weight: 800;
-    color: #5a3d2b;
-    margin-bottom: 26px;
-}
-
-.pay-insert-layout {
-    display: grid;
-    grid-template-columns: 390px 1fr;
-    gap: 22px;
-}
-
-.pay-left-area {
+    height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    padding: 20px 24px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.72) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(217, 177, 137, 0.18);
+    box-shadow: var(--pay-shadow-lg);
+    overflow: hidden;
 }
 
-.pay-right-area {
+/* =========================================================
+   2. 헤더
+   ========================================================= */
+.pay-insert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 18px;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(156, 120, 93, 0.14);
+    flex-shrink: 0;
+}
+
+.pay-header-left {
     min-width: 0;
 }
 
-.pay-panel {
-    background: #fcfcfc;
-    border: 1px solid #e5c7a9;
-    border-radius: 12px;
-    padding: 16px 16px 18px;
+.pay-insert-title {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--pay-dark);
 }
 
-.pay-item-panel {
-    min-height: 520px;
+.pay-insert-subtitle {
+    margin: 4px 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--pay-text-soft);
+}
+
+.pay-top-badge-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pay-top-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--pay-mid);
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(156, 120, 93, 0.18);
+    box-shadow: 0 4px 12px rgba(92, 63, 42, 0.04);
+}
+
+/* =========================================================
+   3. 메인 레이아웃
+   ========================================================= */
+.pay-main-layout {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 24px;
+    flex: 1;
+    min-height: 0;
+}
+
+.pay-side-column,
+.pay-content-column {
+    min-width: 0;
+    min-height: 0;
+}
+
+.pay-side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+}
+
+.pay-content-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* =========================================================
+   4. 공통 패널
+   ========================================================= */
+.pay-panel {
+    background: var(--pay-panel);
+    border-radius: 20px;
+    padding: 18px;
+    border: 1px solid rgba(156, 120, 93, 0.12);
+    box-shadow: var(--pay-shadow-sm);
+    transition:
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        transform 0.22s ease,
+        background-color 0.22s ease;
+}
+
+.pay-panel:hover {
+    box-shadow: var(--pay-shadow-md);
+    border-color: rgba(156, 120, 93, 0.20);
 }
 
 .panel-title {
-    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+    font-size: 14px;
     font-weight: 800;
-    color: #2f2f2f;
-    margin-bottom: 14px;
+    color: var(--pay-dark);
+    letter-spacing: -0.01em;
 }
 
-/* 지급월 */
-.month-box {
+.panel-title::before {
+    content: "";
+    width: 3px;
+    height: 14px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--pay-light) 0%, var(--pay-mid) 100%);
+}
+
+.panel-guide-text,
+.search-help-text {
+    margin: 8px 0 0;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--pay-text-faint);
+}
+
+/* =========================================================
+   5. 공통 입력 / 버튼
+   ========================================================= */
+.form-input {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(156, 120, 93, 0.18);
+    background: rgba(255,255,255,0.88);
+    color: var(--pay-text);
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.form-input:hover {
+    border-color: rgba(156, 120, 93, 0.34);
+    background: rgba(255,255,255,0.96);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: rgba(156, 120, 93, 0.55);
+    box-shadow: 0 0 0 4px rgba(217, 177, 137, 0.18);
+    background: #fff;
+}
+
+.btn {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-dark {
+    background: var(--pay-dark) !important;
+    border-color: var(--pay-dark) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 18px rgba(92, 63, 42, 0.14);
+}
+
+.btn-dark:hover {
+    background: #6a4a32 !important;
+    border-color: #6a4a32 !important;
+    box-shadow: 0 14px 22px rgba(92, 63, 42, 0.18);
+}
+
+.btn-mid {
+    background: var(--pay-mid) !important;
+    border-color: var(--pay-mid) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 18px rgba(156, 120, 93, 0.16);
+}
+
+.btn-mid:hover {
+    background: #8e6b52 !important;
+    border-color: #8e6b52 !important;
+}
+
+.btn-outline {
+    background: rgba(255,255,255,0.92) !important;
+    border: 1px solid rgba(156, 120, 93, 0.30) !important;
+    color: var(--pay-dark) !important;
+}
+
+.btn-outline:hover {
+    background: rgba(217, 177, 137, 0.10) !important;
+    border-color: rgba(156, 120, 93, 0.42) !important;
+}
+
+.btn-lg {
+    min-width: 124px;
+    height: 46px;
+    font-size: 14px;
+}
+
+/* =========================================================
+   6. 좌측 - 지급월 / 검색 / 정보
+   ========================================================= */
+.month-row {
     display: flex;
     align-items: center;
 }
 
 .month-input {
-    width: 160px;
-    height: 38px;
-    border: 1px solid #d9d9d9;
-    border-radius: 8px;
-    padding: 0 12px;
-    font-size: 14px;
-    background: #fff;
-    color: #333;
+    height: 46px;
+    padding: 0 14px;
 }
 
-/* 직원 검색 */
-.emp-search-row {
+.pay-search-panel {
     display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
+    flex-direction: column;
+}
+
+.emp-search-row {
+    display: grid;
+    grid-template-columns: 1fr 110px;
+    gap: 10px;
+    align-items: center;
 }
 
 .emp-search-row .form-input {
-    flex: 1;
-    min-width: 0;
+    height: 44px;
+    padding: 0 14px;
 }
 
+.emp-search-row .btn {
+    height: 44px;
+    border-radius: 12px;
+}
+
+/* 검색 결과 영역 */
 .emp-search-result {
-    border: 1px solid #ececec;
-    border-radius: 8px;
-    background: #fff;
-    min-height: 70px;
-    max-height: 190px;
+    margin-top: 10px;
+    height: 144px;
     overflow-y: auto;
     padding: 8px;
-    font-size: 14px;
-    color: #666;
+    border-radius: 16px;
+    border: 1px solid rgba(156, 120, 93, 0.14);
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+    scroll-behavior: smooth;
 }
 
+.emp-empty {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(217, 177, 137, 0.06);
+    color: var(--pay-text-faint);
+    font-size: 12px;
+    text-align: center;
+}
+
+/* 직원 선택 카드 */
 .emp-result-item {
+    position: relative;
     display: grid;
-    grid-template-columns: 90px 100px 1fr 90px auto;
+    grid-template-columns: 86px 74px 1fr 54px;
     gap: 10px;
     align-items: center;
-    padding: 10px 8px;
-    border-radius: 8px;
+    min-height: 48px;
+    padding: 0 14px;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    background: rgba(217, 177, 137, 0.05);
     cursor: pointer;
-}
-
-.emp-result-item:hover {
-    background: #f6efe7;
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        background-color 0.22s ease;
+    animation: empResultIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .emp-result-item + .emp-result-item {
-    border-top: 1px solid #f0f0f0;
+    margin-top: 6px;
+}
+
+.emp-result-item:hover {
+    transform: translateY(-1px);
+    background: rgba(217, 177, 137, 0.12);
+    border-color: rgba(156, 120, 93, 0.24);
+    box-shadow: 0 10px 16px rgba(92, 63, 42, 0.08);
+}
+
+.emp-result-item:active {
+    transform: translateY(0);
+}
+
+.emp-result-item.selected {
+    background: linear-gradient(180deg, rgba(217, 177, 137, 0.22) 0%, rgba(217, 177, 137, 0.14) 100%);
+    border-color: rgba(156, 120, 93, 0.42);
+    box-shadow: 0 10px 18px rgba(92, 63, 42, 0.10);
+}
+
+.emp-result-item.selected::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--pay-mid) 0%, var(--pay-dark) 100%);
+}
+
+.emp-result-item.selected::after {
+    content: "선택";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.92);
+    color: var(--pay-mid);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.emp-result-name,
+.emp-result-no,
+.emp-result-dept,
+.emp-result-pos {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .emp-result-name {
-    font-weight: 700;
-    color: #2f2f2f;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--pay-dark);
 }
 
 .emp-result-no,
-.emp-result-pos {
-    color: #666;
-    font-size: 13px;
-}
-
+.emp-result-pos,
 .emp-result-dept {
-    color: #555;
-    font-size: 13px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: 11px;
+    color: var(--pay-text-soft);
 }
 
-.emp-result-select {
-    justify-self: end;
+.emp-result-arrow {
+    display: none;
 }
 
-/* 직원 정보 */
-.emp-info-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+@keyframes empResultIn {
+    0% {
+        opacity: 0;
+        transform: translateY(6px) scale(0.985);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 직원정보 */
+.emp-info-grid.compact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
 .info-row {
-    display: grid;
-    grid-template-columns: 72px 1fr;
-    gap: 10px;
-    align-items: center;
+    min-height: 84px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.56);
+    border: 1px solid rgba(156, 120, 93, 0.10);
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.info-row:hover {
+    border-color: rgba(156, 120, 93, 0.20);
+    background: rgba(255,255,255,0.74);
 }
 
 .info-label {
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 700;
-    color: #222;
+    color: var(--pay-text-faint);
+    letter-spacing: 0.01em;
 }
 
 .info-value {
-    font-size: 15px;
-    color: #555;
-    word-break: break-all;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--pay-text);
+    word-break: break-word;
 }
 
-.auto-btn-wrap {
-    margin-top: 26px;
+.info-row-accent {
+    grid-column: 1 / -1;
+    min-height: 60px;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: linear-gradient(180deg, rgba(217, 177, 137, 0.24) 0%, rgba(217, 177, 137, 0.16) 100%) !important;
+    border-color: rgba(156, 120, 93, 0.20) !important;
+}
+
+.emp-action-row {
+    margin-top: 12px;
+}
+
+#auto-calc-btn {
+    width: 100%;
+    height: 46px;
+    font-size: 14px;
+    font-weight: 800;
+    border-radius: 14px;
+}
+
+/* =========================================================
+   7. 우측 - 테이블
+   ========================================================= */
+.pay-content-column .pay-panel {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
 }
 
-/* 우측 테이블 */
+.pay-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 12px;
+}
+
+.pay-table-wrap {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 16px;
+    border: 1px solid rgba(156, 120, 93, 0.14);
+    background: rgba(255,255,255,0.86);
+}
+
+/* 표 전체 */
 .pay-item-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     table-layout: fixed;
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
 }
 
 .pay-item-table thead th {
-    background: #d4aa7d;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 13px 12px;
+    background: linear-gradient(180deg, rgba(92, 63, 42, 0.96) 0%, rgba(92, 63, 42, 0.92) 100%);
     color: #fff;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
-    padding: 12px 10px;
     text-align: center;
+    letter-spacing: -0.01em;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.pay-item-table thead th:first-child {
+    border-top-left-radius: 14px;
+}
+
+.pay-item-table thead th:last-child {
+    border-top-right-radius: 14px;
 }
 
 .pay-item-table tbody td {
-    padding: 10px 8px;
-    border-bottom: 1px solid #f0f0f0;
-    text-align: center;
-    font-size: 14px;
-    color: #333;
+    padding: 10px 12px;
+    height: 58px;
+    border-bottom: 1px solid rgba(156, 120, 93, 0.10);
     vertical-align: middle;
+    background: rgba(255,255,255,0.40);
+    font-size: 13px;
+    color: var(--pay-text);
 }
 
-.pay-item-table th:nth-child(1),
-.pay-item-table td:nth-child(1) {
-    width: 22%;
+.pay-item-table tbody tr {
+    transition: background-color 0.18s ease;
 }
 
-.pay-item-table th:nth-child(2),
-.pay-item-table td:nth-child(2) {
-    width: 14%;
+.pay-item-table tbody tr:hover td {
+    background: rgba(217, 177, 137, 0.06);
 }
 
-.pay-item-table th:nth-child(3),
-.pay-item-table td:nth-child(3) {
-    width: 14%;
+.pay-item-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
-.pay-item-table th:nth-child(4),
-.pay-item-table td:nth-child(4) {
-    width: 22%;
+.pay-item-table .empty-row td {
+    padding: 24px 14px;
+    text-align: center;
+    color: var(--pay-text-faint);
 }
 
-.pay-item-table th:nth-child(5),
-.pay-item-table td:nth-child(5) {
-    width: 28%;
-}
-
+/* 표 텍스트 미감 */
 .pay-item-name {
+    font-size: 13px;
     font-weight: 700;
-    color: #4b3728;
+    color: var(--pay-dark);
+    text-align: center;
+    letter-spacing: -0.01em;
 }
 
 .pay-item-type {
-    color: #666;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pay-text-soft);
+    text-align: center;
 }
 
+/* 과세 뱃지 */
 .tax-badge {
-    font-size: 12px;
-    font-weight: 700;
-    display: inline-block;
-    padding: 5px 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 62px;
+    height: 28px;
+    padding: 0 10px;
     border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
 }
 
 .taxable {
-    background: #fef3c7;
-    color: #92400e;
+    color: var(--pay-dark);
+    background: rgba(217, 177, 137, 0.38);
 }
 
 .nontaxable {
-    background: #dcfce7;
-    color: #166534;
+    color: var(--pay-mid);
+    background: rgba(217, 177, 137, 0.16);
 }
 
+/* 입력칸 */
 .amount-input,
 .note-input {
-    width: 100%;
-    height: 34px;
-    box-sizing: border-box;
-    border: 1px solid #d9d9d9;
-    border-radius: 8px;
-    padding: 0 10px;
-    font-size: 13px;
-    background: #fff;
+    height: 38px !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(156, 120, 93, 0.14) !important;
+    background: rgba(255,255,255,0.92) !important;
+    color: var(--pay-text) !important;
+    box-shadow: none !important;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .amount-input {
     text-align: right;
+    padding: 0 12px !important;
+    font-weight: 600;
 }
 
-.auto-filled {
-    background: #f8fafc;
-    font-weight: 700;
+.note-input {
+    padding: 0 12px !important;
+    font-size: 12px !important;
+    color: var(--pay-text-soft) !important;
 }
 
-.empty-row td {
-    color: #999;
-    height: 80px;
+.amount-input:hover,
+.note-input:hover {
+    border-color: rgba(156, 120, 93, 0.28) !important;
+    background: #fff !important;
 }
 
-/* 합계 */
+.amount-input:focus,
+.note-input:focus {
+    transform: translateY(-1px);
+    border-color: rgba(156, 120, 93, 0.50) !important;
+    box-shadow: 0 0 0 4px rgba(217, 177, 137, 0.14) !important;
+    background: #fff !important;
+}
+
+/* readonly를 확실히 "자동반영 값"처럼 */
+.amount-input[readonly] {
+    background:
+        linear-gradient(180deg, rgba(217, 177, 137, 0.16) 0%, rgba(217, 177, 137, 0.10) 100%) !important;
+    border: 1px dashed rgba(156, 120, 93, 0.36) !important;
+    color: var(--pay-dark) !important;
+    font-weight: 800 !important;
+    cursor: not-allowed !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55) !important;
+}
+
+.amount-input[readonly]:hover,
+.amount-input[readonly]:focus {
+    transform: none !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55) !important;
+    background:
+        linear-gradient(180deg, rgba(217, 177, 137, 0.18) 0%, rgba(217, 177, 137, 0.12) 100%) !important;
+}
+
+/* 자동 채워진 비고도 살짝 구분 */
+.note-input.auto-filled,
+.amount-input.auto-filled {
+    border-color: rgba(156, 120, 93, 0.30) !important;
+}
+
+/* =========================================================
+   8. 하단 요약/버튼
+   ========================================================= */
+.pay-bottom-row {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 18px;
+    flex-shrink: 0;
+}
+
 .summary-box {
-    margin-top: 18px;
-    margin-left: auto;
-    width: 280px;
-    background: #fff;
-    border: 1px solid #ececec;
-    border-radius: 12px;
-    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    padding: 16px 22px;
+    background: linear-gradient(180deg, rgba(92, 63, 42, 0.96) 0%, rgba(92, 63, 42, 0.92) 100%);
+    border-radius: 18px;
+    color: #fff;
+    box-shadow: 0 14px 26px rgba(92, 63, 42, 0.14);
 }
 
 .summary-line {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 14px;
-    color: #555;
-    padding: 7px 0;
+    gap: 10px;
+}
+
+.summary-line span {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.72);
 }
 
 .summary-line strong {
     font-size: 16px;
-    color: #222;
+    font-weight: 800;
+    color: var(--pay-light);
+    letter-spacing: -0.01em;
 }
 
 .summary-line.net {
-    border-top: 1px solid #eee;
-    margin-top: 6px;
-    padding-top: 12px;
+    margin-left: auto;
+    padding-left: 18px;
+    border-left: 1px solid rgba(255,255,255,0.12);
 }
 
 .summary-line.net strong {
-    color: #5a3d2b;
-    font-size: 18px;
+    font-size: 22px;
+    color: #fff;
 }
 
-/* 하단 버튼 */
-.bottom-btn-area {
-    margin-top: 26px;
+.pay-action-area {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
     gap: 10px;
 }
 
-/* 반응형 */
-@media (max-width: 1200px) {
-    .pay-insert-layout {
-        grid-template-columns: 1fr;
+/* =========================================================
+   9. 스크롤바
+   ========================================================= */
+.emp-search-result::-webkit-scrollbar,
+.pay-table-wrap::-webkit-scrollbar {
+    width: 10px;
+}
+
+.emp-search-result::-webkit-scrollbar-track,
+.pay-table-wrap::-webkit-scrollbar-track {
+    background: rgba(217, 177, 137, 0.12);
+    border-radius: 999px;
+}
+
+.emp-search-result::-webkit-scrollbar-thumb,
+.pay-table-wrap::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(217, 177, 137, 0.92) 0%, rgba(156, 120, 93, 0.88) 100%);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.emp-search-result::-webkit-scrollbar-thumb:hover,
+.pay-table-wrap::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(156, 120, 93, 0.96) 0%, rgba(92, 63, 42, 0.94) 100%);
+    background-clip: padding-box;
+}
+
+.emp-search-result,
+.pay-table-wrap {
+    scrollbar-width: thin;
+    scrollbar-color: var(--pay-mid) rgba(217, 177, 137, 0.18);
+}
+
+/* =========================================================
+   10. 미세 애니메이션
+   ========================================================= */
+.summary-box,
+.info-row,
+.pay-top-badge,
+.pay-panel,
+.tax-badge {
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        background-color 0.22s ease;
+}
+
+.summary-box:hover {
+    transform: translateY(-1px);
+}
+
+#auto-calc-btn,
+.pay-action-area .btn {
+    position: relative;
+    overflow: hidden;
+}
+
+#auto-calc-btn::before,
+.pay-action-area .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.18) 48%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.6s ease;
+}
+
+#auto-calc-btn:hover::before,
+.pay-action-area .btn:hover::before {
+    transform: translateX(120%);
+}
+
+/* =========================================================
+   11. 반응형
+   ========================================================= */
+@media (max-width: 1600px) {
+    .pay-main-layout {
+        grid-template-columns: 340px minmax(0, 1fr);
+        gap: 20px;
     }
 
     .summary-box {
-        width: 100%;
+        gap: 18px;
     }
 }
 
-/* readonly input 스타일 */
-/* 기본 readonly */
-input[readonly] {
-    background-color: #f5f5f5;
-    color: #555;
-    border: 1px solid #ddd;
-    cursor: not-allowed;
+@media (max-width: 1360px) {
+    .pay-insert-page {
+        overflow: auto;
+    }
+
+    .pay-insert-card {
+        height: auto;
+        min-height: 100%;
+        overflow: visible;
+    }
+
+    .pay-main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .pay-bottom-row {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .pay-action-area {
+        justify-content: flex-end;
+    }
 }
 
-/* 급여 고정값 강조 */
-input.fixed {
-    background-color: #eef2ff;
-    border: 1px solid #c7d2fe;
-    color: #333;
+@media (max-width: 760px) {
+    .pay-insert-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .emp-search-row {
+        grid-template-columns: 1fr;
+    }
+
+    .emp-info-grid.compact {
+        grid-template-columns: 1fr;
+    }
+
+    .info-row-accent {
+        grid-column: auto;
+        min-height: 70px;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+    }
+
+    .summary-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .summary-line.net {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .pay-action-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pay-action-area .btn {
+        width: 100%;
+    }
 }

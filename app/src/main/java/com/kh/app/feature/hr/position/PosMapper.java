@@ -1,8 +1,10 @@
 package com.kh.app.feature.hr.position;
 
+import com.kh.app.feature.util.PageVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface PosMapper {
@@ -28,20 +30,34 @@ public interface PosMapper {
     int insert(PosVo vo);
 
     @Select("""
-            SELECT
-                P.POS_CODE
-                , P.POS_NAME
-                , P.POS_DESC
-                , P.BASE_SALARY
-                , P.BONUS_RATE
-                , (P.BASE_SALARY + (P.BASE_SALARY * P.BONUS_RATE)) AS EXPECTED_SALARY
-                , P.USE_YN
-                , TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
-                , TO_CHAR(P.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
-            FROM POSITION P
-            ORDER BY P.POS_CODE ASC
-            """)
-    List<PosVo> selectList();
+        SELECT COUNT(*)
+        FROM POSITION
+        """)
+    int selectCount();
+
+    @Select("""
+        SELECT
+            P.POS_CODE
+            , P.POS_NAME
+            , P.POS_DESC
+            , P.BASE_SALARY
+            , P.BONUS_RATE
+            , (P.BASE_SALARY + (P.BASE_SALARY * P.BONUS_RATE)) AS EXPECTED_SALARY
+            , P.USE_YN
+            , TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT
+            , TO_CHAR(P.UPDATED_AT, 'YYYY-MM-DD') AS UPDATED_AT
+        FROM POSITION P
+        ORDER BY P.POS_CODE ASC
+        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
+        """)
+    List<PosVo> selectListByPage(@Param("pvo") PageVo pvo);
+
+    @Select("""
+        SELECT COUNT(*)
+        FROM POSITION
+        WHERE POS_NAME LIKE '%' || #{keyword} || '%'
+        """)
+    int selectCountByName(@Param("keyword") String keyword);
 
     @Select("""
         SELECT
@@ -57,8 +73,17 @@ public interface PosMapper {
         FROM POSITION
         WHERE POS_NAME LIKE '%' || #{keyword} || '%'
         ORDER BY CREATED_AT ASC
+        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
         """)
-    List<PosVo> selectListByName(String keyword);
+    List<PosVo> selectListByNameByPage(@Param("keyword") String keyword,
+                                       @Param("pvo") PageVo pvo);
+
+    @Select("""
+        SELECT COUNT(*)
+        FROM POSITION
+        WHERE USE_YN = #{useYn}
+        """)
+    int selectCountByUseYn(@Param("useYn") String useYn);
 
     @Select("""
         SELECT
@@ -74,8 +99,10 @@ public interface PosMapper {
         FROM POSITION
         WHERE USE_YN = #{useYn}
         ORDER BY CREATED_AT ASC
+        OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
         """)
-    List<PosVo> selectListByUseYn(String useYn);
+    List<PosVo> selectListByUseYnByPage(@Param("useYn") String useYn,
+                                        @Param("pvo") PageVo pvo);
 
     @Select("""
             SELECT
@@ -142,4 +169,30 @@ public interface PosMapper {
             """)
     int editBonusRate(@Param("posCode") String posCode,
                       @Param("bonusRate") String bonusRate);
+
+    @Select("""
+        SELECT
+            COUNT(*) AS totalCount
+            , SUM(CASE WHEN USE_YN = 'Y' THEN 1 ELSE 0 END) AS enableCount
+        FROM POSITION
+        """)
+    Map<String, Object> selectSummary();
+
+    @Select("""
+        SELECT
+            COUNT(*) AS totalCount
+            , SUM(CASE WHEN USE_YN = 'Y' THEN 1 ELSE 0 END) AS enableCount
+        FROM POSITION
+        WHERE POS_NAME LIKE '%' || #{keyword} || '%'
+        """)
+    Map<String, Object> selectSummaryByName(@Param("keyword") String keyword);
+
+    @Select("""
+        SELECT
+            COUNT(*) AS totalCount
+            , SUM(CASE WHEN USE_YN = 'Y' THEN 1 ELSE 0 END) AS enableCount
+        FROM POSITION
+        WHERE USE_YN = #{useYn}
+        """)
+    Map<String, Object> selectSummaryByUseYn(@Param("useYn") String useYn);
 }

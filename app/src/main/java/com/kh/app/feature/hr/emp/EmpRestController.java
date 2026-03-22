@@ -2,6 +2,7 @@ package com.kh.app.feature.hr.emp;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,15 +18,20 @@ public class EmpRestController {
 
     private final EmpService empService;
 
-    // 1. 전체조회
+    @Value("${page.pageLimit}")
+    private int pageLimit;
+
+    @Value("${page.boardLimit}")
+    private int boardLimit;
+
+    // 1. 전체조회 (페이징)
     @GetMapping
-    public ResponseEntity<Map<String, Object>> selectList() {
-        List<EmpVo> voList = empService.selectList();
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("voList", voList);
-
-        return ResponseEntity.ok(map);
+    public ResponseEntity<Map<String, Object>> selectList(
+            @RequestParam(required = false, defaultValue = "1") int currentPage
+    ) {
+        return ResponseEntity.ok(
+                empService.selectList(currentPage, pageLimit, boardLimit)
+        );
     }
 
     // 2. 직원 상세조회 + 해당 직원 인사이력 조회
@@ -83,7 +89,6 @@ public class EmpRestController {
         return ResponseEntity.ok(map);
     }
 
-
     // 상태 목록 조회
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> selectStatusList() {
@@ -92,6 +97,12 @@ public class EmpRestController {
         Map<String, Object> map = new HashMap<>();
         map.put("statusList", statusList);
 
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<Map<String, Object>> getEmpSummary() {
+        Map<String, Object> map = empService.getEmpSummary();
         return ResponseEntity.ok(map);
     }
 }
