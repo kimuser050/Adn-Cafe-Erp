@@ -243,4 +243,13 @@ public class PayService {
         }
         return month;
     }
+
+    public Map<String, Object> selectAttendanceSummary(String empNo, String month) {
+        Map<String, Object> map = new HashMap<>();
+
+        int otHours = payMapper.selectConfirmedOtHoursByMonth(empNo, month);
+        map.put("otHours", otHours);
+
+        return map;
+    }
 }

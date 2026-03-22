@@ -329,3 +329,19 @@
         width: 100%;
     }
 }
+
+/* readonly input 스타일 */
+/* 기본 readonly */
+input[readonly] {
+    background-color: #f5f5f5;
+    color: #555;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+}
+
+/* 급여 고정값 강조 */
+input.fixed {
+    background-color: #eef2ff;
+    border: 1px solid #c7d2fe;
+    color: #333;
+}
