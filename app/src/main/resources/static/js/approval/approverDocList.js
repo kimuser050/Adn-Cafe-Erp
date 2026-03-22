@@ -191,8 +191,8 @@ function renderDocDetail(doc){
         document.querySelector("#detail-workDate").innerText = formatDate(doc.workDate);
         document.querySelector("#detail-workHour").innerText = `${doc.workHour}시간`;
     }
-    document.querySelector("#detail-reason").innerText = doc.reason ?? "-";
     document.querySelector("#detail-content").innerText = doc.content ?? "-";
+    document.querySelector("#approval-comment").value = doc.approverComment ?? "-";
 
     const statusTag = document.querySelector("#detail-statusName");
     statusTag.innerText = doc.statusName ?? "-";
@@ -212,12 +212,7 @@ function renderDocDetail(doc){
 function renderModalButtons(doc){
     const footer = document.querySelector("#doc-modal-footer");
     let str = '';
-
-    if(doc.canEdit){
-        str += `<button class="modal-btn btn-edit" onclick="editDoc(${doc.docNo})">수정</button>`;
-        str += `<button class="modal-btn btn-delete" onclick="deleteDoc(${doc.docNo})">삭제</button>`;
-    }
-
+    
     if(doc.canApprove){
         str += `<button class="modal-btn btn-approve" onclick="approveDoc(${doc.docNo})">승인</button>`;
         str += `<button class="modal-btn btn-reject" onclick="rejectDoc(${doc.docNo})">반려</button>`;

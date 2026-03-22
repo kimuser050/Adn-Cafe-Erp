@@ -1,5 +1,6 @@
 package com.kh.app.feature.approval.document;
 
+import com.kh.app.feature.hr.dept.DeptVo;
 import com.kh.app.feature.user.member.MemberVo;
 import com.kh.app.feature.util.PageVo;
 import jakarta.servlet.http.HttpSession;
@@ -27,12 +28,36 @@ public class ApprovalDocRestController {
     @Value("${page.boardLimit}")
     private int boardLimit;
 
-    // 문서 작성
-    @PostMapping("write")
-    public ResponseEntity<Map<String, String>> insert(@RequestBody ApprovalDocVo vo){
-        int result = approvalDocService.insert(vo);
+    @GetMapping("deptList")
+    public ResponseEntity<List<DeptVo>> selectDeptList() {
+        List<DeptVo> deptList = approvalDocService.selectDeptList();
+        return ResponseEntity.ok(deptList);
+    }
 
-        if(result != 1){
+    @GetMapping("approverList")
+    public ResponseEntity<List<ApproverVo>> selectApproverList() {
+        List<ApproverVo> approverList = approvalDocService.selectApproverList();
+        System.out.println("approverList = " + approverList);
+        return ResponseEntity.ok(approverList);
+    }
+
+    @PostMapping("write")
+    public ResponseEntity<Map<String, String>> insertDocument(
+            @RequestBody ApprovalDocVo vo,
+            HttpSession session
+    ) {
+        System.out.println("vo = " + vo);
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        if (loginMemberVo == null) {
+            throw new IllegalStateException("login plz");
+        }
+
+        vo.setWriterNo(loginMemberVo.getEmpNo());
+
+        int result = approvalDocService.insertDocument(vo);
+
+        if (result != 1) {
             String errMsg = "insert fail";
             log.error(errMsg);
             throw new IllegalStateException(errMsg);
@@ -42,6 +67,22 @@ public class ApprovalDocRestController {
         map.put("result" , result + "");
         return ResponseEntity.ok(map);
     }
+    // 문서 작성
+//    @PostMapping("write")
+//    public ResponseEntity<Map<String, String>> insert(@RequestBody ApprovalDocVo vo){
+//        int result = approvalDocService.insert(vo);
+//
+//        if(result != 1){
+//            String errMsg = "insert fail";
+//            log.error(errMsg);
+//            throw new IllegalStateException(errMsg);
+//        }
+//
+//        Map<String, String> map = new HashMap<>();
+//        map.put("result" , result + "");
+//        return ResponseEntity.ok(map);
+//
+//    }
     // 내 문서함
     @GetMapping("selectMyDocumentList")
     public ResponseEntity<Map<String, Object>> selectMyDocumentList(@RequestParam(required = false , defaultValue = "1") int currentPage , HttpSession session){

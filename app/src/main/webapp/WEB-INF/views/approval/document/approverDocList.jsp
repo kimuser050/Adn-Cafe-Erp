@@ -95,8 +95,8 @@
 <div id="doc-detail-modal" class="doc-modal hidden">
     <div class="doc-modal-overlay" onclick="closeDocModal()"></div>
 
-    <!-- <div class="doc-modal-content approval-form-modal">
-        <button type="button" class="doc-modal-close" onclick="closeDocModal()">×</button> -->
+    <div class="doc-modal-content approval-form-modal">
+        <!-- <button type="button" class="doc-modal-close" onclick="closeDocModal()">×</button> -->
 
         <div class="approval-paper">
 
@@ -178,13 +178,6 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <th>사유</th>
-                        <td colspan="3">
-                            <div class="form-value" id="detail-reason">-</div>
-                        </td>
-                    </tr>
-
                     <tr class="content-row">
                         <th>내용</th>
                         <td colspan="3">
@@ -197,7 +190,7 @@
             <!-- 결재 의견 -->
             <div class="approval-comment-box">
                 <div class="approval-comment-title">결재의견</div>
-                <textarea id="approval-comment" class="approval-comment-textarea" placeholder="승인 또는 반려 의견을 입력하세요."></textarea>
+                <textarea id="approval-comment" class="approval-comment-textarea"></textarea>
             </div>
 
             <!-- 하단 버튼 -->
