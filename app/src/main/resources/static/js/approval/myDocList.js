@@ -158,6 +158,7 @@ function closeDocModal(){
 }
 
 function renderDocDetail(doc){
+
     document.querySelector("#detail-form-title").innerText = `${doc.categoryName ?? "문서"} 신청`;
 
     document.querySelector("#detail-writerDept").innerText = doc.writerDept ?? "-";
@@ -189,8 +190,8 @@ function renderDocDetail(doc){
         document.querySelector("#detail-workHour").innerText = `${doc.workHour}시간`;
     }
 
-    document.querySelector("#detail-reason").innerText = doc.reason ?? "-";
     document.querySelector("#detail-content").innerText = doc.content ?? "-";
+    document.querySelector("#approval-comment").value = doc.approverComment ?? "-";
 
     const statusTag = document.querySelector("#detail-statusName");
     statusTag.innerText = doc.statusName ?? "-";
@@ -210,15 +211,10 @@ function renderDocDetail(doc){
 function renderModalButtons(doc){
     const footer = document.querySelector("#doc-modal-footer");
     let str = '';
-
+    
     if(doc.canEdit){
         str += `<button class="modal-btn btn-edit" onclick="editDoc(${doc.docNo})">수정</button>`;
         str += `<button class="modal-btn btn-delete" onclick="deleteDoc(${doc.docNo})">삭제</button>`;
-    }
-
-    if(doc.canApprove){
-        str += `<button class="modal-btn btn-approve" onclick="approveDoc(${doc.docNo})">승인</button>`;
-        str += `<button class="modal-btn btn-reject" onclick="rejectDoc(${doc.docNo})">반려</button>`;
     }
 
     str += `<button class="modal-btn btn-close" onclick="closeDocModal()">닫기</button>`;
@@ -242,41 +238,9 @@ async function deleteDoc(docNo){
     alert(data.msg ?? "삭제 완료");
     closeDocModal();
     loadDocList();
+
 }
 
-async function approveDoc(docNo){
-    const comment = document.querySelector("#approval-comment").value;
-
-    const resp = await fetch(`/api/approval/document/${docNo}/approve`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ approvalComment: comment })
-    });
-
-    const data = await resp.json();
-    alert(data.msg ?? "승인 완료");
-    closeDocModal();
-    loadDocList();
-}
-
-async function rejectDoc(docNo){
-    const comment = document.querySelector("#approval-comment").value;
-
-    const resp = await fetch(`/api/approval/document/${docNo}/reject`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ approvalComment: comment })
-    });
-
-    const data = await resp.json();
-    alert(data.msg ?? "반려 완료");
-    closeDocModal();
-    loadDocList();
-}
 
 window.onload = () => {
     const param = getParams();

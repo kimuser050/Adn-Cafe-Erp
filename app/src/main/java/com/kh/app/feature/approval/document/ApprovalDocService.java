@@ -1,9 +1,8 @@
 package com.kh.app.feature.approval.document;
 
 import com.kh.app.feature.hr.att.AttService;
-import com.kh.app.feature.user.member.MemberVo;
+import com.kh.app.feature.hr.dept.DeptVo;
 import com.kh.app.feature.util.PageVo;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,14 +20,19 @@ public class ApprovalDocService {
     private final ApprovalDocMapper approvalDocMapper;
     private final AttService attService;
 
+    public List<DeptVo> selectDeptList() {
+        return approvalDocMapper.selectDeptList();
+    }
 
+    public List<ApproverVo> selectApproverList() {
+        return approvalDocMapper.selectApproverList();
+    }
     @Transactional
-    public int insert(ApprovalDocVo vo)
-    {
+    public int insertDocument(ApprovalDocVo vo) {
         String docNo = approvalDocMapper.getDocNo();
         vo.setDocNo(docNo);
 
-        int result1 = approvalDocMapper.insertApprovalDoc(vo);
+        int result1 = approvalDocMapper.insertDocument(vo);
         if(result1 != 1){
             throw new IllegalStateException("공통 문서 등록 실패");
         }
@@ -48,6 +52,7 @@ public class ApprovalDocService {
 
         return 1;
     }
+
     //내문서함
     public List<ApprovalDocVo> selectMyDocumentList(PageVo pvo, String loginEmpNo) {
         return approvalDocMapper.selectMyDocumentList(pvo, loginEmpNo);
@@ -197,5 +202,7 @@ public class ApprovalDocService {
             throw new IllegalStateException("문서 삭제 실패");
         }
     }
+
+
 
 }

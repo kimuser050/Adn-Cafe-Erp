@@ -177,13 +177,6 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <th>사유</th>
-                        <td colspan="3">
-                            <div class="form-value" id="detail-reason">-</div>
-                        </td>
-                    </tr>
-
                     <tr class="content-row">
                         <th>내용</th>
                         <td colspan="3">
@@ -194,7 +187,7 @@
             </div>
 
             <!-- 결재 의견 -->
-            <div class="approval-comment-box">
+            <div class="approval-comment-box" id="approval-comment-box">
                 <div class="approval-comment-title">결재의견</div>
                 <textarea id="approval-comment" class="approval-comment-textarea"></textarea>
             </div>

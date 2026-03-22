@@ -1,5 +1,6 @@
 package com.kh.app.feature.approval.document;
 
+import com.kh.app.feature.hr.dept.DeptVo;
 import com.kh.app.feature.util.PageVo;
 import org.apache.ibatis.annotations.*;
 
@@ -17,6 +18,7 @@ public interface ApprovalDocMapper {
         , A.CONTENT
         , A.WRITER_NO
         , A.APPROVER_NO
+        , A.APPROVER_COMMENT
         , A.STATUS_CODE
         , DS.STATUS_NAME
         , TO_CHAR(A.SUBMITTED_AT, 'YYYY-MM-DD') AS SUBMITTED_AT
@@ -89,6 +91,29 @@ public interface ApprovalDocMapper {
     @Select("SELECT SEQ_APPROVAL_DOC.NEXTVAL FROM DUAL")
     String getDocNo();
 
+    @Select("""
+        SELECT
+            DEPT_CODE AS DEPT_CODE,
+            DEPT_NAME AS DEPT_NAME
+        FROM DEPT
+        ORDER BY DEPT_CODE
+    """)
+    List<DeptVo> selectDeptList();
+
+    @Select("""
+        SELECT
+            M.EMP_NO AS EMP_NO,
+            M.EMP_NAME AS EMP_NAME,
+            D.DEPT_NAME AS DEPT_NAME,
+            P.POS_NAME AS POS_NAME
+        FROM MEMBER M
+        JOIN DEPT D ON (M.DEPT_CODE = D.DEPT_CODE)
+        JOIN POSITION P ON (M.POS_CODE = P.POS_CODE)
+        WHERE M.QUIT_YN = 'N'
+        AND M.POS_CODE IN (100001, 100002, 100003)
+        ORDER BY M.EMP_NO
+    """)
+    List<ApproverVo> selectApproverList();
     @Insert("""
          INSERT INTO APPROVAL_DOC
              (
@@ -109,9 +134,9 @@ public interface ApprovalDocMapper {
                  ,#{title}
                  ,#{content}
                  ,#{approverNo}
-             )       
+             )
     """)
-    int insertApprovalDoc(ApprovalDocVo vo);
+    int insertDocument(ApprovalDocVo vo);
 
     @Insert("""
          INSERT INTO VACATION_DOC
@@ -390,6 +415,5 @@ public interface ApprovalDocMapper {
             </script>
             """)
     int searchMyDocCount(ApprovalDocVo vo , @Param("loginEmpNo") String loginEmpNo);
-
 
 }
