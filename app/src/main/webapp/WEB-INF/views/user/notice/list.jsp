@@ -56,15 +56,15 @@
                                 <div id="page-area" class="pagination"></div>
 
                                 <div class="bottom-menu">
-                                    <div class="search-form">
-                                        <select id="search-type">
+                                    <div class="search-box">
+                                        <select id="search-type" class="search-select">
                                             <option value="title">제목</option>
                                             <option value="writer">작성자</option>
                                         </select>
 
-                                        <input type="text" id="search-input" placeholder="검색어">
+                                        <input type="text" id="search-input" class="search-input" placeholder="검색어를 입력하세요">
 
-                                        <button onclick="loadNoticeList(1)">검색</button>
+                                        <button type="button" class="btn-search" onclick="loadNoticeList(1)">검색</button>
                                     </div>
                                     <button type="button" class="write-btn"
                                         onclick="location.href='/notice/insert'">작성하기</button>
