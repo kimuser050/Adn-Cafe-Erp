@@ -7,6 +7,7 @@ import com.kh.app.feature.stock.Return_Req.ReqVo;
 import com.kh.app.feature.stock.inbound.InboundVo;
 import com.kh.app.feature.stock.oderReq.OderReqVo;
 import com.kh.app.feature.user.member.MemberVo;
+import com.kh.app.feature.util.PageVo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,22 +81,32 @@ public class JournalService {
         return journalMapper.getAccountList();
     }
 
-    public List<JournalVo> totalList(String accountNo) {
-        return journalMapper.totalList(accountNo);
+    //계정별 행갯수
+    public int getTotalCount(String accountNo) {
+        return journalMapper.getTotalCount(accountNo);
     }
 
+    //총계정원장
+    public List<JournalVo> totalList(String accountNo, PageVo pvo) {
+        return journalMapper.totalList(accountNo, pvo);
+    }
+
+    //월계표
     public List<JournalVo> monthList(String journalDate) {
         return journalMapper.monthList(journalDate);
     }
 
+    //일계표
     public List<JournalVo> dailyList(String journalDate) {
         return journalMapper.dailyList(journalDate);
     }
 
+    //재무상태표
     public List<JournalVo> journalState(String journalDate) {
         return journalMapper.journalState(journalDate);
     }
 
+    //손익계산서
     public List<JournalVo> incomeState(String journalDate) {
         return journalMapper.incomeState(journalDate);
     }

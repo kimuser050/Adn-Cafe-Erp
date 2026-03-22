@@ -1,6 +1,7 @@
 package com.kh.app.feature.finance.journal;
 
 import com.kh.app.feature.finance.account.AccountVo;
+import com.kh.app.feature.util.PageVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -77,6 +78,11 @@ public interface JournalMapper {
             """)
     List<AccountVo> getAccountList();
 
+
+    // 계정전체 개수 조회용
+    @Select("SELECT COUNT(*) FROM JOURNAL WHERE ACCOUNT_NO = #{accountNo}")
+    int getTotalCount(@Param("accountNo") String accountNo);
+
     @Select("""
             SELECT
                 A.ACCOUNT_NAME
@@ -86,9 +92,10 @@ public interface JournalMapper {
             FROM JOURNAL J
             JOIN ACCOUNT A ON J.ACCOUNT_NO = A.ACCOUNT_NO
             WHERE J.ACCOUNT_NO = #{accountNo}
-            ORDER BY J.JOURNAL_DATE DESC
+            ORDER BY J.JOURNAL_DATE DESC, J.JOURNAL_NO DESC
+            OFFSET #{pvo.offset} ROWS FETCH NEXT #{pvo.boardLimit} ROWS ONLY
             """)
-    List<JournalVo> totalList(String accountNo);
+    List<JournalVo> totalList(@Param("accountNo") String accountNo, @Param("pvo") PageVo pvo);
 
     @Select("""
             SELECT

@@ -319,7 +319,7 @@ async function deleteJournal(no) {
 
 
 // 총계정원장
-async function findAccount() {
+async function findAccount(page = 1) {
     const selectAccount = document.querySelector("#accountInput").value;
     if (!selectAccount) {
         alert("조회할 계정을 입력해주세요. 자동완성 목록에서 선택해주세요.");
@@ -334,13 +334,19 @@ async function findAccount() {
         }
     }
 
-    const resp = await fetch(`/journal/${accountNo}`)
-    const voList = await resp.json();
+    const resp = await fetch(`/journal/${accountNo}?page=${page}`)
+    const data = await resp.json();
+    const voList = data.journalList;
+    const pvo = data.pvo;
 
+   console.log(pvo);
+
+   const pagingArea = document.querySelector("#pagingArea");
     const tbody = document.querySelector("#journalListBody");
 
     if (voList.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">해당 계정의 거래 내역이 없습니다.</td></tr>`;
+        renderPagination(pvo);
         return;
     }
 
@@ -354,10 +360,30 @@ async function findAccount() {
                 <td>${vo.accountName}</td>
             </tr>
         `
-        tbody.innerHTML = str;
     }
+        tbody.innerHTML = str;
+
+        renderPagination(pvo);
+    
 }
 
+// 페이징 버튼을 그리는 함수
+function renderPagination(pvo) {
+    const pagingArea = document.querySelector("#pagingArea"); // HTML에 버튼 들어갈 div가 있어야 함
+    
+    if(!pagingArea) return;
+
+    let pagingStr = "";
+
+
+    // 숫자 버튼
+    for (let i = pvo.startPage; i <= pvo.endPage; i++) {
+        const activeClass = (i === pvo.currentPage) ? 'style="font-weight:bold; color:red;"' : '';
+        pagingStr += `<button ${activeClass} onclick="findAccount(${i})">${i}</button>`;
+    }
+
+    pagingArea.innerHTML = pagingStr;
+}
 
 //월계표
 

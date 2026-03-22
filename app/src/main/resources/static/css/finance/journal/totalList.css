@@ -122,3 +122,38 @@
     background: #ddd;
     border-radius: 10px;
 }
+
+/* 2. 페이징 영역 스타일 (새로 추가) */
+#pagingArea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0; /* 위아래 여백 */
+    width: 100%;
+    margin-top: auto; /* 리스트가 적어도 하단에 고정되게 함 */
+    background-color: #fff; /* 확인용 */
+}
+
+/* 3. 페이징 버튼 스타일 (기본 버튼과 구분) */
+#pagingArea button {
+    padding: 5px 12px;
+    border: 1px solid #6a4328;
+    background-color: #fff;
+    color: #6a4328;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+#pagingArea button:hover {
+    background-color: #6a4328;
+    color: #fff;
+}
+
+/* 현재 페이지 표시용 (JS에서 처리할 스타일) */
+#pagingArea button.active {
+    background-color: #6a4328;
+    color: #fff;
+}
