@@ -147,6 +147,7 @@ public interface DailySalesMapper {
                 , PRODUCT_NO
                 , UNIT_PRICE
                 , QUANTITY
+                , PAYMENT_CD
                 , SALES_DATE
             )
             VALUES
@@ -156,6 +157,7 @@ public interface DailySalesMapper {
                 , #{productNo}
                 , #{unitPrice}
                 , #{quantity}
+                , #{paymentCd}
                 , #{salesDate}
             )
             """)
@@ -170,4 +172,40 @@ public interface DailySalesMapper {
             WHERE OWNER_EMP_NO = #{empNo}
             """)
     DailySalesVo getMyStore(String empNo);
+
+
+    //매출수정 역분개용
+    @Select("""
+            SELECT 
+                SALES_NO AS salesNo
+                , STORE_NO AS storeNo
+                , PRODUCT_NO AS productNo
+                , UNIT_PRICE AS unitPrice
+                , QUANTITY AS quantity
+                , PAYMENT_CD AS paymentCd
+                , TO_CHAR(SALES_DATE, 'YYYY-MM-DD') AS salesDate
+            FROM ${tableName}
+            WHERE SALES_NO = #{vo.salesNo}
+            """)
+    DailySalesVo getDailySales(@Param("vo") DailySalesVo vo, @Param("tableName") String tableName);
+
+    @Update("""
+            UPDATE TOTAL_SALES
+            SET
+                PRODUCT_NO = #{productNo}
+                , UNIT_PRICE = #{unitPrice}
+                , QUANTITY = #{quantity}
+                , PAYMENT_CD = #{paymentCd}
+            WHERE STORE_NO = #{storeNo}
+            AND TO_CHAR(SALES_DATE, 'YYYY-MM-DD') = SUBSTR(#{salesDate}, 1, 10)
+            """)
+    int editTotalSalesReal(DailySalesVo vo);
+
+    @Delete("""
+            DELETE FROM TOTAL_SALES
+            WHERE STORE_NO = #{storeNo}
+            AND TO_CHAR(SALES_DATE, 'YYYY-MM-DD') = SUBSTR(#{salesDate}, 1, 10)
+            """)
+    int delTotalSalesReal(DailySalesVo vo);
+
 }
