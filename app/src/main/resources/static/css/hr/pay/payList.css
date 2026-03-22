@@ -1,129 +1,65 @@
 /* =========================================================
-   급여관리 전용 스타일 - 목록 화면
+   급여관리 전용 스타일 - 목록 / 상세 / 수정
    ========================================================= */
 
-/* ---------------------------------------------------------
-   1. 상단 여백
-   --------------------------------------------------------- */
-.pay-top-spacer {
-    height: 44px;
-    margin-bottom: 18px;
-}
-
-/* ---------------------------------------------------------
-   2. 페이지 / 요약카드 / 툴바
-   --------------------------------------------------------- */
-.pay-page .org-summary-area {
-    margin-bottom: 18px;
-}
-
-.pay-page .summary-card {
-    width: 128px;
-    min-height: 86px;
-}
-
-.pay-page .summary-card-wide {
-    width: 210px;
-}
-
-.pay-page .org-toolbar {
-    margin-bottom: 16px;
-}
-
+/* =========================================================
+   1. 급여 툴바 전용
+   ========================================================= */
 .pay-toolbar-left {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.pay-page .toolbar-right {
-    width: 100%;
-    justify-content: flex-end;
-}
-
-.pay-page .toolbar-right .form-select {
-    min-width: 92px;
-}
-
-.pay-page .search-box {
-    min-width: 220px;
-}
-
-.pay-page .search-box input {
-    width: 170px;
-}
-
 .month-input {
     width: 140px;
     height: 34px;
-    padding: 0 10px;
-    border: 1px solid #d8c8b8;
-    border-radius: 8px;
     font-size: 12px;
-    color: #4b3728;
-    background-color: #fff;
-    box-sizing: border-box;
 }
 
-/* ---------------------------------------------------------
-   3. 목록 카드
-   --------------------------------------------------------- */
+.pay-page .search-select {
+    min-width: 92px;
+}
+
+/* =========================================================
+   2. 급여 목록 카드 높이
+   ========================================================= */
 .pay-page .org-table-card {
-    margin-top: 6px;
     min-height: 420px;
+    animation: payCardFloatIn 0.6s ease;
 }
 
-.pay-page .org-bottom-area {
-    margin-top: 18px;
-    min-height: 40px;
-}
-
-/* ---------------------------------------------------------
-   4. 급여 테이블
-   --------------------------------------------------------- */
+/* =========================================================
+   3. 급여 테이블
+   ========================================================= */
 .pay-table {
     table-layout: fixed;
+    min-width: 980px;
 }
 
 .pay-table th:nth-child(1),
-.pay-table td:nth-child(1) {
-    width: 60px;
-}
+.pay-table td:nth-child(1) { width: 60px; }
 
 .pay-table th:nth-child(2),
-.pay-table td:nth-child(2) {
-    width: 110px;
-}
+.pay-table td:nth-child(2) { width: 110px; }
 
 .pay-table th:nth-child(3),
-.pay-table td:nth-child(3) {
-    width: 100px;
-}
+.pay-table td:nth-child(3) { width: 100px; }
 
 .pay-table th:nth-child(4),
-.pay-table td:nth-child(4) {
-    width: 90px;
-}
+.pay-table td:nth-child(4) { width: 90px; }
 
 .pay-table th:nth-child(5),
-.pay-table td:nth-child(5) {
-    width: 220px;
-}
+.pay-table td:nth-child(5) { width: 220px; }
 
 .pay-table th:nth-child(6),
-.pay-table td:nth-child(6) {
-    width: 100px;
-}
+.pay-table td:nth-child(6) { width: 100px; }
 
 .pay-table th:nth-child(7),
-.pay-table td:nth-child(7) {
-    width: 140px;
-}
+.pay-table td:nth-child(7) { width: 140px; }
 
 .pay-table th:nth-child(8),
-.pay-table td:nth-child(8) {
-    width: 110px;
-}
+.pay-table td:nth-child(8) { width: 110px; }
 
 .pay-table td {
     white-space: nowrap;
@@ -131,104 +67,279 @@
     text-overflow: ellipsis;
 }
 
-.pay-table .link-text {
-    color: #1a73e8;
+.pay-table tbody tr {
+    transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pay-table tbody tr:hover {
+    background: rgba(255,255,255,0.65);
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   4. 수정 불가 행 / 수정 불가 input
+   ========================================================= */
+.payList-edit-table tr[data-fixed="Y"] td {
+    background-color: #f7f5f3;
+}
+
+.payList-edit-table tr[data-fixed="Y"] td:first-child {
+    position: relative;
+}
+
+.payList-edit-table tr[data-fixed="Y"] td:first-child::before {
+    content: "고정";
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 10px;
     font-weight: 700;
-    cursor: pointer;
+    color: #7b5a3f;
+    background: #efe2d2;
 }
 
-.pay-table .link-text:hover {
-    text-decoration: underline;
+.fixed-input,
+.input-readonly,
+.payList-edit-table .fixed-select {
+    background-color: #efefef !important;
+    color: #7a7a7a !important;
+    border: 1px solid #d8d8d8 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
 }
 
-.pay-table .empty-row td {
-    height: 120px;
-    text-align: center;
-    color: #9a8b7e;
-    font-size: 13px;
-}
-
-/* ---------------------------------------------------------
-   5. 상태 뱃지
-   --------------------------------------------------------- */
-.confirm-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #4b3728;
-    white-space: nowrap;
-}
-
-.confirm-badge::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.confirm-badge.unconfirmed::before {
-    background-color: #facc15;
-}
-
-.confirm-badge.confirmed::before {
-    background-color: #22c55e;
-}
-
-/* ---------------------------------------------------------
-   6. 반응형
-   --------------------------------------------------------- */
-@media (max-width: 1400px) {
-    .pay-page .org-table-card {
-        overflow-x: auto;
-    }
-
-    .pay-table {
-        min-width: 980px;
-    }
-}
-
-@media (max-width: 900px) {
-    .pay-top-spacer {
-        height: 20px;
-        margin-bottom: 14px;
-    }
-
-    .pay-page .toolbar-right {
-        justify-content: flex-start;
-    }
-}
-
-
-/* ---------------------------------------------------------
-   7. 수정 불가 항목 / 잠김 버튼
-   --------------------------------------------------------- */
-
-/* 수정 불가 항목 (기본급 / 보너스) */
-.fixed-input {
-    background-color: #f3f4f6;
-    color: #666;
-    cursor: not-allowed;
-    border: 1px solid #dcdfe6;
-}
-
-.fixed-input:focus {
+.fixed-input:focus,
+.input-readonly:focus,
+.payList-edit-table .fixed-select:focus {
     outline: none;
     box-shadow: none;
 }
 
-tr[data-fixed="Y"] td {
-    background-color: #fafafa;
+.payList-edit-table .fixed-select {
+    appearance: none;
+    pointer-events: none;
 }
 
-/* 확정 상태에서 수정 / 삭제 버튼 잠김 느낌 */
-.btn-locked {
-    background-color: #e5e7eb !important;
-    color: #8b8b8b !important;
-    border-color: #d1d5db !important;
-    cursor: not-allowed !important;
-    opacity: 0.9;
+.payList-edit-table .editable-cell .form-input,
+.payList-edit-table .editable-cell .form-select {
+    transition: all 0.18s ease;
+}
+
+.payList-edit-table .editable-cell .form-input:focus,
+.payList-edit-table .editable-cell .form-select:focus {
+    border-color: #b88d68;
+    box-shadow: 0 0 0 4px rgba(184, 141, 104, 0.12);
+}
+
+/* =========================================================
+   5. 급여 상세 모달
+   ========================================================= */
+.pay-detail-modal {
+    max-width: 980px;
+    transform-origin: center center;
+    animation: payModalPop 0.34s cubic-bezier(.2,.8,.2,1);
+}
+
+.pay-detail-body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.detail-section {
+    border: 1px solid #efe8e0;
+    border-radius: 14px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,250,245,0.95) 100%);
+    padding: 16px;
+    box-shadow: 0 10px 24px rgba(92, 63, 42, 0.05);
+}
+
+.detail-section-pop {
+    animation: paySectionRise 0.5s ease;
+}
+
+.detail-section-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #5a3d2b;
+    margin-bottom: 12px;
+}
+
+.pay-summary-box {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.pay-summary-item {
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f9f6f2 0%, #f3eee8 100%);
+    padding: 16px;
+    border: 1px solid #eee3d8;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pay-summary-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(92, 63, 42, 0.08);
+}
+
+.pay-summary-item-strong {
+    background: linear-gradient(180deg, #f4e7da 0%, #efddcc 100%);
+    border: 1px solid #e4ccb5;
+}
+
+.pay-summary-label {
+    font-size: 12px;
+    color: #7a6657;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.pay-summary-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: #3f2d22;
+}
+
+/* =========================================================
+   6. 급여 수정 모달
+   ========================================================= */
+.pay-edit-modal {
+    max-width: 980px;
+    transform-origin: center center;
+    animation: payModalPop 0.34s cubic-bezier(.2,.8,.2,1);
+}
+
+.pay-edit-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.payList-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.payList-edit-table {
+    table-layout: fixed;
+}
+
+.payList-edit-table th:nth-child(1),
+.payList-edit-table td:nth-child(1) { width: 180px; }
+
+.payList-edit-table th:nth-child(2),
+.payList-edit-table td:nth-child(2) { width: 110px; }
+
+.payList-edit-table th:nth-child(3),
+.payList-edit-table td:nth-child(3) { width: 110px; }
+
+.payList-edit-table th:nth-child(4),
+.payList-edit-table td:nth-child(4) { width: 180px; }
+
+.payList-edit-table th:nth-child(5),
+.payList-edit-table td:nth-child(5) { width: auto; }
+
+.payList-edit-table input,
+.payList-edit-table select {
+    width: 100%;
+}
+
+.payList-edit-table td .form-input,
+.payList-edit-table td .form-select {
+    height: 36px;
+    font-size: 12px;
+    border-radius: 10px;
+}
+
+.payList-edit-table tbody tr {
+    animation: payRowFadeIn 0.36s ease;
+}
+
+/* =========================================================
+   7. 버튼 / 모달 추가 미감
+   ========================================================= */
+.pay-detail-modal .org-modal-footer .btn,
+.pay-edit-modal .org-modal-footer .btn {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.pay-detail-modal .org-modal-footer .btn:hover,
+.pay-edit-modal .org-modal-footer .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 16px rgba(92, 63, 42, 0.12);
+}
+
+.org-modal-wrap {
+    backdrop-filter: blur(5px);
+    animation: payBackdropFade 0.25s ease;
+}
+
+/* =========================================================
+   8. 애니메이션
+   ========================================================= */
+@keyframes payModalPop {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes payBackdropFade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes paySectionRise {
+    0% {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes payCardFloatIn {
+    0% {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes payRowFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   9. 반응형
+   ========================================================= */
+@media (max-width: 900px) {
+    .pay-summary-box {
+        grid-template-columns: 1fr;
+    }
 }

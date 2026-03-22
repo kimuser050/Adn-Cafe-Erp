@@ -8,7 +8,7 @@
         <img src="/img/common/logo.png" alt="Coffee Prince 로고" class="sidebar-logo-img">
         </a>
     </div>
-    
+
     <nav class="sidebar-nav">
 
         
@@ -22,10 +22,10 @@
                 <a href="/hr/dept/list">조직관리</a>
                 <a href="/hr/emp/list">직원관리</a>
                 <a href="/hr/att/list">근태관리</a>
-                <a href="/hr/pay/list" class="active">급여관리</a>
+                <a href="/hr/pay/list">급여관리</a>
             </div>
         </div>
-
+        
         <div class="nav-group">
             <button type="button" class="nav-main">재무관리</button>
             <div class="nav-sub">

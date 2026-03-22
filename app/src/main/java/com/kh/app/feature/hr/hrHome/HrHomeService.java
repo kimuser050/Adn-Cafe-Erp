@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -73,5 +74,52 @@ public class HrHomeService {
 
     public List<HrHomeIssueVo> selectRecentIssueList() {
         return hrHomeMapper.selectRecentIssueList();
+    }
+
+    public HrHomePaySummaryVo selectPaySummary() {
+        String payMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        HrHomePaySummaryVo vo = hrHomeMapper.selectPaySummary(payMonth);
+
+        if (vo == null) {
+            vo = new HrHomePaySummaryVo();
+            vo.setPayMonth(payMonth);
+            vo.setTotalNetAmount(0);
+            vo.setTargetCount(0);
+            vo.setConfirmedCount(0);
+            vo.setUnconfirmedCount(0);
+            vo.setConfirmRate(0);
+            return vo;
+        }
+
+        vo.setPayMonth(payMonth);
+
+        if (vo.getTargetCount() == 0) {
+            vo.setConfirmRate(0);
+        } else {
+            int rate = vo.getConfirmedCount() * 100 / vo.getTargetCount();
+            vo.setConfirmRate(rate);
+        }
+
+        return vo;
+    }
+
+    //조합하기
+    public HrHomeResponseVo selectHrHome(String loginEmpNo) {
+
+        HrHomeProfileVo profileVo = selectProfile(loginEmpNo);
+        HrHomeApprovalSummaryVo approvalSummaryVo = selectApprovalSummary();
+        HrHomeDayAttSummaryVo attSummaryVo = selectDayAttSummary();
+        HrHomePaySummaryVo paySummaryVo = selectPaySummary();
+        List<HrHomeIssueVo> issueVoList = selectRecentIssueList();
+
+        HrHomeResponseVo responseVo = new HrHomeResponseVo();
+        responseVo.setProfileVo(profileVo);
+        responseVo.setApprovalSummaryVo(approvalSummaryVo);
+        responseVo.setAttSummaryVo(attSummaryVo);
+        responseVo.setPaySummaryVo(paySummaryVo);
+        responseVo.setIssueVoList(issueVoList);
+
+        return responseVo;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/hr/Home")
+@RequestMapping("/api/hr/home")
 public class HrHomeRestController {
 
     private final HrHomeService hrHomeService;
@@ -22,6 +22,9 @@ public class HrHomeRestController {
     @GetMapping("/profile")
     public ResponseEntity<HrHomeProfileVo> selectProfile(HttpSession session) {
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if (loginMemberVo == null) {
+            throw new IllegalStateException("로그인 정보가 없습니다.");
+        }
         String loginEmpNo = loginMemberVo.getEmpNo();
 
         HrHomeProfileVo vo = hrHomeService.selectProfile(loginEmpNo);
@@ -43,5 +46,22 @@ public class HrHomeRestController {
     @GetMapping("/issue-list")
     public ResponseEntity<List<HrHomeIssueVo>> selectRecentIssueList() {
         return ResponseEntity.ok(hrHomeService.selectRecentIssueList());
+    }
+
+    @GetMapping("/pay-summary")
+    public ResponseEntity<HrHomePaySummaryVo> selectPaySummary() {
+        return ResponseEntity.ok(hrHomeService.selectPaySummary());
+    }
+
+    @GetMapping
+    public ResponseEntity<HrHomeResponseVo> selectHrHome(HttpSession session) {
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        if (loginMemberVo == null) {
+            throw new IllegalStateException("로그인 정보가 없습니다.");
+        }
+        String loginEmpNo = loginMemberVo.getEmpNo();
+
+        HrHomeResponseVo vo = hrHomeService.selectHrHome(loginEmpNo);
+        return ResponseEntity.ok(vo);
     }
 }
