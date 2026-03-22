@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface HrHomeMapper {
 
@@ -47,4 +49,57 @@ public interface HrHomeMapper {
         """)
     int selectApprovedOvertimeCount(@Param("baseDate") String baseDate);
 
+    @Select("""
+            SELECT
+                COUNT(*) AS totalEmpCount
+                , SUM(CASE WHEN STATUS_CODE = 1 THEN 1 ELSE 0 END) AS presentCount
+                , SUM(CASE WHEN STATUS_CODE = 2 THEN 1 ELSE 0 END) AS lateCount
+                , SUM(CASE WHEN STATUS_CODE = 3 THEN 1 ELSE 0 END) AS absentCount
+                , SUM(CASE WHEN STATUS_CODE = 4 THEN 1 ELSE 0 END) AS vacationCount
+                , SUM(CASE WHEN NVL(OT_CONFIRMED_HOURS, 0) > 0 THEN 1 ELSE 0 END) AS overtimeCount
+                , SUM(CASE WHEN STATUS_CODE = 1 THEN 1 ELSE 0 END) AS normalCount
+            FROM ATTENDANCE
+            WHERE WORK_DATE >= TO_DATE(#{baseDate}, 'YYYY-MM-DD')
+              AND WORK_DATE < TO_DATE(#{baseDate}, 'YYYY-MM-DD') + 1
+            """)
+    HrHomeDayAttSummaryVo selectDayAttSummary(@Param("baseDate") String baseDate);
+
+    @Select("""
+            SELECT *
+            FROM (
+                SELECT
+                    EH.EMP_NO AS empNo
+                    , M.EMP_NAME AS empName
+                    , D.DEPT_NAME AS deptName
+                    , P.POS_NAME AS posName
+                    , M.PROFILE_CHANGE_NAME AS profileImg
+                    , TO_CHAR(EH.HIS_DATE, 'YYYY-MM-DD') AS hisDate
+                    , EH.HIS_EVENT AS hisEvent
+                    , EH.HIS_CONTENT AS hisContent
+                FROM EMP_HISTORY EH
+                JOIN MEMBER M
+                    ON EH.EMP_NO = M.EMP_NO
+                LEFT JOIN DEPT D
+                    ON M.DEPT_CODE = D.DEPT_CODE
+                LEFT JOIN POSITION P
+                    ON M.POS_CODE = P.POS_CODE
+                WHERE EH.HIS_EVENT IN ('신규입사', '퇴직', '부서배치', '직급변경')
+                ORDER BY EH.HIS_DATE DESC
+            )
+            WHERE ROWNUM <= 6
+            """)
+    List<HrHomeIssueVo> selectRecentIssueList();
+
+    @Select("""
+        SELECT
+            NVL(SUM(NET_AMOUNT), 0) AS totalNetAmount
+            , COUNT(*) AS targetCount
+            , SUM(CASE WHEN CONFIRM_YN = 'Y' THEN 1 ELSE 0 END) AS confirmedCount
+            , SUM(CASE WHEN CONFIRM_YN = 'N' THEN 1 ELSE 0 END) AS unconfirmedCount
+        FROM PAYROLL_MASTER
+        WHERE DEL_YN = 'N'
+          AND PAY_MONTH >= TO_DATE(#{payMonth}, 'YYYY-MM')
+          AND PAY_MONTH < ADD_MONTHS(TO_DATE(#{payMonth}, 'YYYY-MM'), 1)
+        """)
+    HrHomePaySummaryVo selectPaySummary(@Param("payMonth") String payMonth);
 }

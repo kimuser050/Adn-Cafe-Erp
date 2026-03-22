@@ -417,12 +417,11 @@ function renderHistoryEditRows(historyList) {
                 <td>
                     <select class="his-event">
                         <option value="신규입사" ${vo.hisEvent === "신규입사" ? "selected" : ""}>신규입사</option>
+                        <option value="신규입사" ${vo.hisEvent === "퇴직" ? "selected" : ""}>퇴직</option>
                         <option value="부서배치" ${vo.hisEvent === "부서배치" ? "selected" : ""}>부서배치</option>
-                        <option value="직급부여" ${vo.hisEvent === "직급부여" ? "selected" : ""}>직급부여</option>
-                        <option value="부서이동" ${vo.hisEvent === "부서이동" ? "selected" : ""}>부서이동</option>
-                        <option value="직급승진" ${vo.hisEvent === "직급승진" ? "selected" : ""}>직급승진</option>
-                        <option value="수습배치" ${vo.hisEvent === "수습배치" ? "selected" : ""}>수습배치</option>
                         <option value="매장배정" ${vo.hisEvent === "매장배정" ? "selected" : ""}>매장배정</option>
+                        <option value="직급부여" ${vo.hisEvent === "직급변경" ? "selected" : ""}>직급변경</option>
+
                     </select>
                 </td>
                 <td>

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -37,5 +38,40 @@ public class HrHomeService {
         vo.setApprovedOvertimeCount(overtimeCnt);
 
         return vo;
+    }
+
+    public HrHomeDayAttSummaryVo selectDayAttSummary() {
+        String baseDate = LocalDate.now().minusDays(1).toString();
+
+        HrHomeDayAttSummaryVo vo = hrHomeMapper.selectDayAttSummary(baseDate);
+
+        if (vo == null) {
+            vo = new HrHomeDayAttSummaryVo();
+            vo.setBaseDate(baseDate);
+            vo.setTotalEmpCount(0);
+            vo.setPresentCount(0);
+            vo.setLateCount(0);
+            vo.setAbsentCount(0);
+            vo.setVacationCount(0);
+            vo.setOvertimeCount(0);
+            vo.setNormalCount(0);
+            vo.setNormalRate(0);
+            return vo;
+        }
+
+        vo.setBaseDate(baseDate);
+
+        if (vo.getTotalEmpCount() == 0) {
+            vo.setNormalRate(0);
+        } else {
+            double rate = (double) vo.getNormalCount() * 100 / vo.getTotalEmpCount();
+            vo.setNormalRate(Math.round(rate * 10) / 10.0);
+        }
+
+        return vo;
+    }
+
+    public List<HrHomeIssueVo> selectRecentIssueList() {
+        return hrHomeMapper.selectRecentIssueList();
     }
 }
