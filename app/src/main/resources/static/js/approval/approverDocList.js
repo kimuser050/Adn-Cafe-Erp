@@ -173,6 +173,7 @@ function renderDocDetail(doc){
     // document.querySelector("#detail-docNo").innerText = doc.docNo ?? "-";
     document.querySelector("#detail-title").innerText = doc.title ?? "-";
     document.querySelector("#detail-referenceDept").innerText = doc.referenceDept ?? "-";
+    
     // 모든 카테고리 행 숨기기
     document.querySelector(".detail-row-vacation").classList.add("hidden");
     document.querySelector(".detail-row-overtime").classList.add("hidden");
