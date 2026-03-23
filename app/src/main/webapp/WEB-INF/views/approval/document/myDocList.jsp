@@ -22,6 +22,11 @@
 
     <main class="page-shell">
         <section class="page-content">
+
+            <div class="org-tab-area">
+                <button type="button" class="tab-btn active">내 문서함</button>
+            </div>
+
             <!-- 요약 카드 -->
             <div class="org-summary-area">
                 <div class="summary-card">

@@ -157,8 +157,9 @@
 .btn-submit,
 .btn-cancel {
     min-width: 90px;
-    height: 42px;
+    height: 37px;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 15px;
     font-weight: 600;
@@ -261,3 +262,5 @@
     color: white;
     cursor: pointer;
 }
+
+

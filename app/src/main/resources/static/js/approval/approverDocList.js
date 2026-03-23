@@ -238,7 +238,7 @@ async function deleteDoc(docNo){
     const data = await resp.json();
     alert(data.msg ?? "삭제 완료");
     closeDocModal();
-    loadDocList();
+    searchApproverDoc();
 }
 
 async function approveDoc(docNo){
@@ -255,7 +255,7 @@ async function approveDoc(docNo){
     const data = await resp.json();
     alert(data.msg ?? "승인 완료");
     closeDocModal();
-    loadDocList();
+    searchApproverDoc();
 }
 
 async function rejectDoc(docNo){
@@ -272,7 +272,8 @@ async function rejectDoc(docNo){
     const data = await resp.json();
     alert(data.msg ?? "반려 완료");
     closeDocModal();
-    loadDocList();
+    searchApproverDoc();
+
 }
 
 window.onload = () => {
