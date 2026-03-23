@@ -34,7 +34,7 @@
                 <button type="button" class="tab-btn" onclick="location.href='/hr/pos/list'">직급관리</button>
             </div>
 
-            <!-- 요약 카드 -->
+            <!-- 요약 -->
             <div class="org-summary-area">
                 <div class="summary-card">
                     <div class="summary-title">총 매장 수</div>
@@ -57,10 +57,10 @@
                 </div>
             </div>
 
-            <!-- 목록 카드 -->
+            <!-- 목록 -->
             <div class="org-table-card">
 
-                <!-- 툴바 -->
+                <!-- 검색줄 -->
                 <div class="org-toolbar">
                     <div class="toolbar-left"></div>
 
@@ -80,7 +80,7 @@
                     </div>
                 </div>
 
-                <!-- 테이블 -->
+                <!-- 목록 테이블 -->
                 <table class="org-table store-table">
                     <thead>
                     <tr>
@@ -95,7 +95,7 @@
                     <tbody id="store-list"></tbody>
                 </table>
 
-                <!-- 하단 -->
+                <!-- 아래쪽 -->
                 <div class="org-bottom-area">
                     <div class="pagination" id="store-pagination-area">
                         <button class="page-btn active">1</button>
@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <!-- 상세조회 모달 -->
+            <!-- 상세 모달 -->
             <div id="store-modal-wrap" class="org-modal-wrap">
                 <div class="org-modal store-detail-modal" onclick="event.stopPropagation()">
                     <div class="org-modal-header">
@@ -157,23 +157,23 @@
                             </div>
 
                             <div class="org-detail-row">
-                                 <div class="org-detail-label">상태</div>
-                            <div class="org-detail-value">
-                                <div id="status-view-area" class="detail-inline-actions">
-                                    <span id="modal-store-status" class="status status-pending">미정</span>
-                                    <button type="button" class="btn btn-sm btn-mid detail-action-btn" onclick="startEditStatus()">변경</button>
-                                </div>
+                                <div class="org-detail-label">상태</div>
+                                <div class="org-detail-value">
+                                    <div id="status-view-area" class="detail-inline-actions">
+                                        <span id="modal-store-status" class="status status-pending">미정</span>
+                                        <button type="button" class="btn btn-sm btn-mid detail-action-btn" onclick="startEditStatus()">변경</button>
+                                    </div>
 
-                                <div id="status-edit-area" class="detail-inline-edit" style="display:none;">
-                                    <select id="status-select" class="form-select">
-                                        <option value="1">운영</option>
-                                        <option value="2">휴업</option>
-                                        <option value="3">폐업</option>
-                                    </select>
-                                    <button type="button" class="btn btn-sm btn-dark detail-action-btn" onclick="saveStatus()">저장</button>
-                                    <button type="button" class="btn btn-sm btn-outline detail-action-btn" onclick="cancelEditStatus()">취소</button>
+                                    <div id="status-edit-area" class="detail-inline-edit" style="display:none;">
+                                        <select id="status-select" class="form-select">
+                                            <option value="1">운영</option>
+                                            <option value="2">휴업</option>
+                                            <option value="3">폐업</option>
+                                        </select>
+                                        <button type="button" class="btn btn-sm btn-dark detail-action-btn" onclick="saveStatus()">저장</button>
+                                        <button type="button" class="btn btn-sm btn-outline detail-action-btn" onclick="cancelEditStatus()">취소</button>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
 
                             <div class="org-detail-row">

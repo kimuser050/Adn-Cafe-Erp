@@ -1,19 +1,28 @@
 /* =========================================================
-   급여관리 JS - 목록 / 상세 / 수정
+   급여관리 JS
+   - 목록 / 상세조회 / 수정
+   ========================================================= */
+
+/* =========================================================
+   1. 전역 상태값
    ========================================================= */
 let currentPage = 1;
-let payList = [];
 let currentMonth = "";
+
+let payList = [];
 
 let currentPayNo = null;
 let currentConfirmYn = null;
 let currentPayVo = null;
 
+/* =========================================================
+   2. 시작
+   ========================================================= */
 window.addEventListener("DOMContentLoaded", async function () {
     try {
         initDefaultMonth();
         bindEvents();
-        initSearchPlaceholder();
+        setSearchPlaceholder();
         await loadPayList();
     } catch (error) {
         console.log(error);
@@ -21,8 +30,36 @@ window.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
+/* =========================================================
+   3. 공통 DOM
+   ========================================================= */
+function getEl(selector) {
+    return document.querySelector(selector);
+}
+
+function getValue(selector) {
+    return getEl(selector)?.value ?? "";
+}
+
+function showModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "flex";
+    }
+}
+
+function hideModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "none";
+    }
+}
+
+/* =========================================================
+   4. 초기 설정
+   ========================================================= */
 function initDefaultMonth() {
-    const monthTag = document.querySelector("#month");
+    const monthTag = getEl("#month");
     if (!monthTag) return;
 
     const now = new Date();
@@ -34,68 +71,66 @@ function initDefaultMonth() {
 }
 
 function bindEvents() {
-    const monthTag = document.querySelector("#month");
-    const keywordTag = document.querySelector("#keyword");
-    const searchBtn = document.querySelector("#search-btn");
-    const searchTypeTag = document.querySelector("#search-type");
+    const monthTag = getEl("#month");
+    const keywordTag = getEl("#keyword");
+    const searchBtn = getEl("#search-btn");
+    const searchTypeTag = getEl("#search-type");
 
     if (monthTag) {
         monthTag.addEventListener("change", async function () {
-        currentMonth = this.value;
-        await searchPay(1);
+            currentMonth = this.value;
+            await searchPay(1);
         });
     }
 
     if (keywordTag) {
         keywordTag.addEventListener("keydown", async function (e) {
-        if (e.key === "Enter") {
-            await searchPay(1);
-        }
-    });
+            if (e.key === "Enter") {
+                await searchPay(1);
+            }
+        });
     }
 
     if (searchBtn) {
         searchBtn.addEventListener("click", async function () {
-        await searchPay(1);
-    });
+            await searchPay(1);
+        });
     }
 
     if (searchTypeTag) {
         searchTypeTag.addEventListener("change", async function () {
+            setSearchPlaceholder();
 
-        const keywordInput = document.querySelector("#keyword");
-
-        if (this.value === "name") {
-            keywordInput.placeholder = "사원명을 입력하세요";
-        } else if (this.value === "confirmYn") {
-            keywordInput.placeholder = "확정 / 미확정을 입력하세요";
-        } else {
-            keywordInput.placeholder = "검색어를 입력하세요";
-        }
-
-        const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
-        if (keyword === "") {
-            await loadPayList(1);
-        }
-    });
+            const keyword = getValue("#keyword").trim();
+            if (keyword === "") {
+                await loadPayList(1);
+            }
+        });
     }
 }
 
-function initSearchPlaceholder() {
-    const searchType = document.querySelector("#search-type")?.value;
-    const keywordInput = document.querySelector("#keyword");
+function setSearchPlaceholder() {
+    const searchType = getValue("#search-type");
+    const keywordInput = getEl("#keyword");
 
     if (!keywordInput) return;
 
     if (searchType === "name") {
         keywordInput.placeholder = "사원명을 입력하세요";
-    } else if (searchType === "confirmYn") {
-        keywordInput.placeholder = "확정 / 미확정을 입력하세요";
-    } else {
-        keywordInput.placeholder = "검색어를 입력하세요";
+        return;
     }
+
+    if (searchType === "confirmYn") {
+        keywordInput.placeholder = "확정 / 미확정을 입력하세요";
+        return;
+    }
+
+    keywordInput.placeholder = "검색어를 입력하세요";
 }
 
+/* =========================================================
+   5. 공통 유틸
+   ========================================================= */
 function nvl(value) {
     if (value === null || value === undefined || value === "") {
         return "-";
@@ -118,7 +153,10 @@ function parseNumber(value) {
 }
 
 function escapeHtml(value) {
-    if (value === null || value === undefined) return "";
+    if (value === null || value === undefined) {
+        return "";
+    }
+
     return String(value)
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -141,8 +179,22 @@ function getConfirmInfo(confirmYn) {
     };
 }
 
+function getMonthValue() {
+    return getValue("#month") || currentMonth;
+}
+
+function getSearchState() {
+    return {
+        searchType: getValue("#search-type") || "all",
+        keyword: getValue("#keyword").trim()
+    };
+}
+
+/* =========================================================
+   6. 목록 조회 / 검색
+   ========================================================= */
 async function loadPayList(page = 1) {
-    const month = document.querySelector("#month")?.value || currentMonth;
+    const month = getMonthValue();
     currentPage = page;
 
     const resp = await fetch(`/pay?month=${encodeURIComponent(month)}&currentPage=${page}`);
@@ -161,12 +213,12 @@ async function loadPayList(page = 1) {
 }
 
 async function searchPay(page = 1) {
-    const month = document.querySelector("#month")?.value || currentMonth;
-    const searchType = document.querySelector("#search-type")?.value ?? "all";
-    const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
+    const month = getMonthValue();
+    const { searchType, keyword } = getSearchState();
 
     currentPage = page;
 
+    // 전체 검색이거나 검색어 없으면 그냥 목록 재조회
     if (searchType === "all" || keyword === "") {
         await loadPayList(page);
         return;
@@ -176,7 +228,9 @@ async function searchPay(page = 1) {
 
     if (searchType === "name") {
         url = `/pay/search/name?month=${encodeURIComponent(month)}&keyword=${encodeURIComponent(keyword)}&currentPage=${page}`;
-    } else if (searchType === "confirmYn") {
+    }
+
+    if (searchType === "confirmYn") {
         let confirmYn = "";
 
         if (keyword === "확정" || keyword.toUpperCase() === "Y") {
@@ -206,29 +260,21 @@ async function searchPay(page = 1) {
     renderPagination(data.pvo);
 }
 
+/* =========================================================
+   7. 목록 렌더링
+   ========================================================= */
 function renderSummary(summary) {
-    const totalCountTag = document.querySelector("#total-count");
-    const totalNetAmountTag = document.querySelector("#total-net-amount");
-    const unconfirmedCountTag = document.querySelector("#unconfirmed-count");
-    const confirmedCountTag = document.querySelector("#confirmed-count");
-
     const safeSummary = summary || {};
 
-    const totalCount = Number(
-        safeSummary.totalCount ?? safeSummary.TOTALCOUNT ?? 0
-    );
+    const totalCount = Number(safeSummary.totalCount ?? safeSummary.TOTALCOUNT ?? 0);
+    const totalNetAmount = Number(safeSummary.totalNetAmount ?? safeSummary.TOTALNETAMOUNT ?? 0);
+    const unconfirmedCount = Number(safeSummary.unconfirmedCount ?? safeSummary.UNCONFIRMEDCOUNT ?? 0);
+    const confirmedCount = Number(safeSummary.confirmedCount ?? safeSummary.CONFIRMEDCOUNT ?? 0);
 
-    const totalNetAmount = Number(
-        safeSummary.totalNetAmount ?? safeSummary.TOTALNETAMOUNT ?? 0
-    );
-
-    const unconfirmedCount = Number(
-        safeSummary.unconfirmedCount ?? safeSummary.UNCONFIRMEDCOUNT ?? 0
-    );
-
-    const confirmedCount = Number(
-        safeSummary.confirmedCount ?? safeSummary.CONFIRMEDCOUNT ?? 0
-    );
+    const totalCountTag = getEl("#total-count");
+    const totalNetAmountTag = getEl("#total-net-amount");
+    const unconfirmedCountTag = getEl("#unconfirmed-count");
+    const confirmedCountTag = getEl("#confirmed-count");
 
     if (totalCountTag) totalCountTag.innerText = totalCount;
     if (totalNetAmountTag) totalNetAmountTag.innerText = `₩ ${formatMoney(totalNetAmount)}`;
@@ -237,7 +283,7 @@ function renderSummary(summary) {
 }
 
 function renderTable(list) {
-    const tbodyTag = document.querySelector("#pay-list");
+    const tbodyTag = getEl("#pay-list");
     if (!tbodyTag) return;
 
     if (!list || list.length === 0) {
@@ -284,10 +330,12 @@ function goPayRegisterPage() {
     location.href = "/hr/pay/insert";
 }
 
+/* =========================================================
+   8. 상세조회 모달
+   ========================================================= */
 async function openPayDetail(payNo) {
     try {
         const resp = await fetch(`/pay/${payNo}`);
-
         if (!resp.ok) {
             throw new Error("급여 상세조회 실패");
         }
@@ -301,11 +349,7 @@ async function openPayDetail(payNo) {
         renderPayDetail(vo);
         renderPayDetailItemList(vo.detailList);
 
-        const modalWrap = document.querySelector("#pay-modal-wrap");
-        if (modalWrap) {
-            modalWrap.style.display = "flex";
-        }
-
+        showModal("#pay-modal-wrap");
     } catch (error) {
         console.log(error);
         alert("급여 상세조회 실패...");
@@ -313,26 +357,26 @@ async function openPayDetail(payNo) {
 }
 
 function renderPayDetail(vo) {
-    document.querySelector("#modal-pay-empName").innerText = nvl(vo.empName);
-    document.querySelector("#modal-pay-dept").innerText = nvl(vo.deptName);
-    document.querySelector("#modal-pay-empNo").innerText = nvl(vo.empNo);
-    document.querySelector("#modal-pay-pos").innerText = nvl(vo.posName);
-    document.querySelector("#modal-pay-payYearMonth").innerText = nvl(vo.payMonth);
+    getEl("#modal-pay-empName").innerText = nvl(vo.empName);
+    getEl("#modal-pay-dept").innerText = nvl(vo.deptName);
+    getEl("#modal-pay-empNo").innerText = nvl(vo.empNo);
+    getEl("#modal-pay-pos").innerText = nvl(vo.posName);
+    getEl("#modal-pay-payYearMonth").innerText = nvl(vo.payMonth);
 
     currentConfirmYn = vo.confirmYn;
 
-    const confirmTag = document.querySelector("#modal-pay-confirmYn");
+    const confirmTag = getEl("#modal-pay-confirmYn");
     if (confirmTag) {
         const confirmInfo = getConfirmInfo(vo.confirmYn);
         confirmTag.className = `status ${confirmInfo.className}`;
         confirmTag.innerText = confirmInfo.text;
     }
 
-    document.querySelector("#modal-pay-totalEarnAmount").innerText = formatMoney(vo.totalEarnAmount);
-    document.querySelector("#modal-pay-totalDeductAmount").innerText = formatMoney(vo.totalDeductAmount);
-    document.querySelector("#modal-pay-netAmount").innerText = formatMoney(vo.netAmount);
+    getEl("#modal-pay-totalEarnAmount").innerText = formatMoney(vo.totalEarnAmount);
+    getEl("#modal-pay-totalDeductAmount").innerText = formatMoney(vo.totalDeductAmount);
+    getEl("#modal-pay-netAmount").innerText = formatMoney(vo.netAmount);
 
-    const toggleBtn = document.querySelector("#toggle-confirm-btn");
+    const toggleBtn = getEl("#toggle-confirm-btn");
     if (toggleBtn) {
         toggleBtn.innerText = (vo.confirmYn === "Y") ? "확정취소" : "급여확정";
     }
@@ -340,27 +384,8 @@ function renderPayDetail(vo) {
     applyLockedButtonStyle(vo.confirmYn);
 }
 
-function applyLockedButtonStyle(confirmYn) {
-    const editBtn = document.querySelector("#open-edit-btn");
-    const deleteBtn = document.querySelector("#delete-pay-btn");
-
-    const isConfirmed = String(confirmYn) === "Y";
-
-    if (editBtn) {
-        editBtn.disabled = false;
-        editBtn.classList.toggle("btn-locked", isConfirmed);
-        editBtn.title = isConfirmed ? "확정상태에서는 변경이 불가합니다." : "";
-    }
-
-    if (deleteBtn) {
-        deleteBtn.disabled = false;
-        deleteBtn.classList.toggle("btn-locked", isConfirmed);
-        deleteBtn.title = isConfirmed ? "확정상태에서는 변경이 불가합니다." : "";
-    }
-}
-
 function renderPayDetailItemList(detailList) {
-    const tbody = document.querySelector("#modal-payDetail-list");
+    const tbody = getEl("#modal-payDetail-list");
     if (!tbody) return;
 
     if (!detailList || detailList.length === 0) {
@@ -391,6 +416,35 @@ function renderPayDetailItemList(detailList) {
     tbody.innerHTML = str;
 }
 
+function closePayModal() {
+    hideModal("#pay-modal-wrap");
+}
+
+/* =========================================================
+   9. 상세 모달 버튼 상태
+   ========================================================= */
+function applyLockedButtonStyle(confirmYn) {
+    const editBtn = getEl("#open-edit-btn");
+    const deleteBtn = getEl("#delete-pay-btn");
+
+    const isConfirmed = String(confirmYn) === "Y";
+
+    if (editBtn) {
+        editBtn.disabled = false;
+        editBtn.classList.toggle("btn-locked", isConfirmed);
+        editBtn.title = isConfirmed ? "확정상태에서는 변경이 불가합니다." : "";
+    }
+
+    if (deleteBtn) {
+        deleteBtn.disabled = false;
+        deleteBtn.classList.toggle("btn-locked", isConfirmed);
+        deleteBtn.title = isConfirmed ? "확정상태에서는 변경이 불가합니다." : "";
+    }
+}
+
+/* =========================================================
+   10. 확정 / 삭제
+   ========================================================= */
 async function toggleConfirmYn() {
     try {
         if (!currentPayNo) {
@@ -429,7 +483,6 @@ async function toggleConfirmYn() {
 
         await loadPayList();
         await openPayDetail(currentPayNo);
-
     } catch (error) {
         console.log(error);
         alert("확정 상태 변경 실패...");
@@ -471,20 +524,15 @@ async function deletePay() {
 
         closePayModal();
         await loadPayList();
-
     } catch (error) {
         console.log(error);
         alert("삭제 중 오류 발생...");
     }
 }
 
-function closePayModal() {
-    const modalWrap = document.querySelector("#pay-modal-wrap");
-    if (modalWrap) {
-        modalWrap.style.display = "none";
-    }
-}
-
+/* =========================================================
+   11. 수정 모달 열기 / 닫기
+   ========================================================= */
 function openEditModal() {
     if (!currentPayVo) {
         alert("수정할 급여 정보가 없습니다.");
@@ -498,33 +546,25 @@ function openEditModal() {
 
     closePayModal();
 
-    const payNoTag = document.querySelector("#edit-pay-no");
+    const payNoTag = getEl("#edit-pay-no");
     if (payNoTag) {
         payNoTag.value = currentPayVo.payNo;
     }
 
     renderPayEditItemList(currentPayVo.detailList || []);
-
-    const editModalWrap = document.querySelector("#pay-edit-modal-wrap");
-    if (editModalWrap) {
-        editModalWrap.style.display = "flex";
-    }
+    showModal("#pay-edit-modal-wrap");
 }
 
 async function cancelEditModal() {
-    const editModalWrap = document.querySelector("#pay-edit-modal-wrap");
-    if (editModalWrap) {
-        editModalWrap.style.display = "none";
-    }
-
-    const detailModalWrap = document.querySelector("#pay-modal-wrap");
-    if (detailModalWrap) {
-        detailModalWrap.style.display = "flex";
-    }
+    hideModal("#pay-edit-modal-wrap");
+    showModal("#pay-modal-wrap");
 }
 
+/* =========================================================
+   12. 수정 모달 렌더링
+   ========================================================= */
 function renderPayEditItemList(detailList) {
-    const tbody = document.querySelector("#payList-edit-body");
+    const tbody = getEl("#payList-edit-body");
     if (!tbody) return;
 
     if (!detailList || detailList.length === 0) {
@@ -541,28 +581,19 @@ function renderPayEditItemList(detailList) {
     for (const item of detailList) {
         const itemName = item.itemName || "";
 
-        /* -------------------------------------------------
-           1. 완전 고정 항목
-           - 항목명 / 구분 / 과세여부 / 금액 / 비고 전부 수정불가
-           ------------------------------------------------- */
+        // 완전 고정 항목
         const isFullyFixed =
             itemName === "기본급" ||
             itemName === "보너스" ||
             itemName === "연장근무수당";
 
-        /* -------------------------------------------------
-           2. 일부 고정 항목
-           - 항목명 / 구분 / 과세여부만 수정불가
-           - 금액 / 비고는 수정 가능
-           ------------------------------------------------- */
+        // 일부 고정 항목
         const isPartialFixed =
             itemName === "식대" ||
             itemName === "소득세" ||
             itemName === "건강보험";
 
-        /* -------------------------------------------------
-           3. 각 컬럼별 수정 가능 여부
-           ------------------------------------------------- */
+        // 각 칸별 잠금 여부
         const lockItemName = isFullyFixed || isPartialFixed;
         const lockItemType = isFullyFixed || isPartialFixed;
         const lockTaxable = isFullyFixed || isPartialFixed;
@@ -570,9 +601,10 @@ function renderPayEditItemList(detailList) {
         const lockNote = isFullyFixed;
 
         str += `
-            <tr data-fixed="${isFullyFixed ? "Y" : "N"}"
-                data-item-code="${escapeHtml(item.itemCode || "")}">
-                
+            <tr
+                data-fixed="${isFullyFixed ? "Y" : "N"}"
+                data-item-code="${escapeHtml(item.itemCode || "")}"
+            >
                 <!-- 항목명 -->
                 <td>
                     <input
@@ -631,6 +663,9 @@ function renderPayEditItemList(detailList) {
     tbody.innerHTML = str;
 }
 
+/* =========================================================
+   13. 수정 저장
+   ========================================================= */
 async function savePayEdit() {
     try {
         if (!currentPayNo) {
@@ -662,6 +697,7 @@ async function savePayEdit() {
             const amount = parseNumber(amountInput?.value || 0);
             const payNote = (noteInput?.value || "").trim();
 
+            // 금액 0보다 큰 항목만 전송
             if (amount > 0) {
                 detailList.push({
                     itemCode: itemCode,
@@ -715,26 +751,22 @@ async function savePayEdit() {
 
         alert(data.msg || "급여 수정 성공");
 
-        const editModalWrap = document.querySelector("#pay-edit-modal-wrap");
-        if (editModalWrap) {
-            editModalWrap.style.display = "none";
-        }
-
+        hideModal("#pay-edit-modal-wrap");
         await loadPayList();
         await openPayDetail(currentPayNo);
-
     } catch (error) {
         console.log(error);
         alert("급여 수정 중 오류 발생...");
     }
 }
 
-
+/* =========================================================
+   14. 페이징
+   ========================================================= */
 function renderPagination(pvo) {
-    const pageArea = document.querySelector("#pay-pagination-area");
+    const pageArea = getEl("#pay-pagination-area");
     if (!pageArea) return;
 
-    // pvo 없으면 기본 1페이지라도 생성
     if (!pvo) {
         pageArea.innerHTML = `
             <button type="button" class="page-btn active">1</button>
@@ -742,12 +774,10 @@ function renderPagination(pvo) {
         return;
     }
 
-    const searchType = document.querySelector("#search-type")?.value ?? "all";
-    const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
+    const { searchType, keyword } = getSearchState();
 
     let str = "";
 
-    // 🔥 최소 1페이지 보장
     const start = pvo.startPage || 1;
     const end = pvo.endPage || 1;
 
@@ -763,7 +793,6 @@ function renderPagination(pvo) {
         `;
     }
 
-    // 다음 버튼
     if (pvo.endPage < pvo.maxPage) {
         str += `
             <button

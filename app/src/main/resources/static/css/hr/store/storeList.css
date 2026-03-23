@@ -1,11 +1,8 @@
 /* =========================================================
-   매장관리 전용 스타일
-   - dept 스타일 통합 버전
+   매장관리
    ========================================================= */
 
-/* =========================================================
-   1. 목록 카드 / 테이블
-   ========================================================= */
+/* 목록 */
 .store-page .org-table-card {
     min-height: 420px;
     animation: storeCardFloatIn 0.6s ease;
@@ -45,14 +42,11 @@
 }
 
 .store-table tbody tr:hover {
-    background: rgba(255,255,255,0.65);
+    background: rgba(255, 255, 255, 0.65);
     transform: translateY(-1px);
 }
 
-
-/* =========================================================
-   2. 검색 UI
-   ========================================================= */
+/* 검색 */
 .store-page .search-select {
     min-width: 92px;
 }
@@ -65,9 +59,7 @@
     width: 200px;
 }
 
-/* =========================================================
-   3. 공통 모달 효과
-   ========================================================= */
+/* 모달 공통 */
 .org-modal-wrap {
     backdrop-filter: blur(5px);
     animation: storeBackdropFade 0.25s ease;
@@ -78,12 +70,10 @@
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(92, 63, 42, 0.18);
-    animation: storeModalPop 0.34s cubic-bezier(.2,.8,.2,1);
+    animation: storeModalPop 0.34s cubic-bezier(.2, .8, .2, 1);
 }
 
-/* =========================================================
-   4. 상세조회 모달
-   ========================================================= */
+/* 상세 모달 */
 .store-detail-modal {
     max-width: 980px;
 }
@@ -136,12 +126,8 @@
     overflow: hidden;
 }
 
-/* =========================================================
-   5. 상세조회 액션 영역
-   ========================================================= */
-#manager-view-area.detail-inline-actions,
-#address-view-area.detail-inline-actions,
-#status-view-area.detail-inline-actions {
+/* 상세 수정줄 */
+.detail-inline-actions {
     width: 100%;
     min-width: 0;
     display: grid;
@@ -150,8 +136,7 @@
     column-gap: 10px;
 }
 
-#manager-edit-area.detail-inline-edit,
-#status-edit-area.detail-inline-edit {
+.detail-inline-edit {
     width: 100%;
     min-width: 0;
     display: grid;
@@ -160,13 +145,8 @@
     column-gap: 8px;
 }
 
-#address-edit-area.detail-inline-edit.address-edit-grid {
-    width: 100%;
-    min-width: 0;
-    display: grid;
+.address-edit-grid {
     grid-template-columns: minmax(0, 1fr) auto auto auto;
-    align-items: center;
-    column-gap: 8px;
 }
 
 .detail-inline-text {
@@ -186,9 +166,9 @@
     padding-bottom: 2px;
 }
 
-#manager-edit-area.detail-inline-edit select,
-#status-edit-area.detail-inline-edit select,
-#address-edit-area.detail-inline-edit input {
+#manager-edit-area select,
+#status-edit-area select,
+#address-edit-area input {
     width: 100%;
     min-width: 0;
     height: 32px;
@@ -213,9 +193,21 @@
     box-shadow: 0 6px 12px rgba(92, 63, 42, 0.10);
 }
 
-/* =========================================================
-   6. 지도 섹션
-   ========================================================= */
+/* 상태 줄 */
+#status-view-area {
+    width: 100%;
+}
+
+#modal-store-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    white-space: nowrap;
+    margin: 0;
+    justify-self: start;
+}
+
+/* 지도 */
 .store-detail-section {
     border: 1px solid #efe8e0;
     border-radius: 14px;
@@ -227,10 +219,10 @@
 
 .store-detail-section-title,
 .store-map-title {
+    margin: 0 0 12px;
     font-size: 14px;
     font-weight: 800;
     color: #5a3d2b;
-    margin: 0 0 12px;
 }
 
 #store-map {
@@ -242,9 +234,7 @@
     border: 1px solid #eee3d8;
 }
 
-/* =========================================================
-   7. 등록 모달
-   ========================================================= */
+/* 등록 모달 */
 #store-insert-modal-wrap {
     align-items: flex-start !important;
     padding-top: 72px;
@@ -317,9 +307,7 @@
     width: 100%;
 }
 
-/* =========================================================
-   8. 모달 내부 input/select
-   ========================================================= */
+/* 모달 input, select */
 .org-modal input,
 .org-modal select {
     height: 36px;
@@ -338,9 +326,7 @@
     outline: none;
 }
 
-/* =========================================================
-   9. footer 버튼
-   ========================================================= */
+/* footer 버튼 */
 #store-modal-wrap .org-modal-footer .btn,
 #store-insert-modal-wrap .org-modal-footer .btn {
     transition: transform 0.18s ease, box-shadow 0.18s ease;
@@ -352,9 +338,7 @@
     box-shadow: 0 10px 16px rgba(92, 63, 42, 0.12);
 }
 
-/* =========================================================
-   10. 애니메이션
-   ========================================================= */
+/* 애니메이션 */
 @keyframes storeModalPop {
     0% {
         opacity: 0;
@@ -402,32 +386,4 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* 상태 표시 왼쪽 정렬 고정 */
-#status-view-area.detail-inline-actions {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-}
-
-#status-view-area.detail-inline-actions #modal-store-status {
-    justify-self: start;
-    align-self: center;
-    margin: 0;
-}
-
-#store-modal-wrap .org-detail-value {
-    justify-content: flex-start;
-}
-
-/* 상태 줄만 왼쪽 시작점 더 확실하게 */
-#store-modal-wrap #status-view-area {
-    width: 100%;
-}
-
-#store-modal-wrap #modal-store-status {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    white-space: nowrap;
 }

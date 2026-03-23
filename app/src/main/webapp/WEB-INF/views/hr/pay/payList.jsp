@@ -6,10 +6,13 @@
     <meta charset="UTF-8">
     <title>급여관리</title>
 
+    <!-- 공통 스타일 -->
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
     <link rel="stylesheet" href="/css/common/component.css">
+
+    <!-- HR 공통 / 급여 전용 -->
     <link rel="stylesheet" href="/css/hr/org/orgCommon.css">
     <link rel="stylesheet" href="/css/hr/pay/payList.css">
 
@@ -23,8 +26,13 @@
     <main class="page-shell">
         <section class="page-content org-page pay-page">
 
+            <!-- 상단 여백 -->
             <div class="org-top-spacer"></div>
 
+            <!-- =========================================================
+                 1. 요약 카드
+                 - 월별 급여 목록을 불러왔을 때 같이 보여주는 통계 영역
+                 ========================================================= -->
             <div class="org-summary-area">
                 <div class="summary-card">
                     <div class="summary-title">총 등록 건수</div>
@@ -47,7 +55,15 @@
                 </div>
             </div>
 
+            <!-- =========================================================
+                 2. 목록 카드
+                 - 검색 툴바
+                 - 목록 테이블
+                 - 페이징 / 등록 버튼
+                 ========================================================= -->
             <div class="org-table-card">
+
+                <!-- 검색 / 필터 툴바 -->
                 <div class="org-toolbar">
                     <div class="toolbar-left pay-toolbar-left">
                         <input type="month" id="month" class="form-input month-input">
@@ -69,6 +85,7 @@
                     </div>
                 </div>
 
+                <!-- 급여 목록 -->
                 <table class="org-table pay-table">
                     <thead>
                     <tr>
@@ -89,15 +106,23 @@
                     </tbody>
                 </table>
 
+                <!-- 하단 영역 : 페이징 + 등록 버튼 -->
                 <div class="org-bottom-area">
                     <div id="pay-pagination-area" class="pagination"></div>
-                    <button type="button" class="btn btn-sm btn-mid register-btn" onclick="goPayRegisterPage()">
+
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-mid register-btn"
+                        onclick="goPayRegisterPage()"
+                    >
                         +급여등록
                     </button>
                 </div>
             </div>
 
-            <!-- 상세조회 모달 -->
+            <!-- =========================================================
+                 3. 상세조회 모달
+                 ========================================================= -->
             <div id="pay-modal-wrap" class="org-modal-wrap">
                 <div class="org-modal pay-detail-modal">
                     <div class="org-modal-header">
@@ -106,6 +131,8 @@
                     </div>
 
                     <div class="org-modal-body pay-detail-body">
+
+                        <!-- 기본 정보 -->
                         <div class="org-detail-grid">
                             <div class="org-detail-item">
                                 <div class="org-detail-label">이름</div>
@@ -135,17 +162,21 @@
                             </div>
                         </div>
 
+                        <!-- 급여 요약 -->
                         <div class="detail-section detail-section-pop">
                             <div class="detail-section-title">급여 요약</div>
+
                             <div class="pay-summary-box">
                                 <div class="pay-summary-item">
                                     <div class="pay-summary-label">총 지급</div>
                                     <div class="pay-summary-value" id="modal-pay-totalEarnAmount">0</div>
                                 </div>
+
                                 <div class="pay-summary-item">
                                     <div class="pay-summary-label">총 공제</div>
                                     <div class="pay-summary-value" id="modal-pay-totalDeductAmount">0</div>
                                 </div>
+
                                 <div class="pay-summary-item pay-summary-item-strong">
                                     <div class="pay-summary-label">실지급액</div>
                                     <div class="pay-summary-value" id="modal-pay-netAmount">0</div>
@@ -153,8 +184,10 @@
                             </div>
                         </div>
 
+                        <!-- 급여 상세 항목 -->
                         <div class="detail-section detail-section-pop">
                             <div class="detail-section-title">상세 항목</div>
+
                             <table class="org-table">
                                 <thead>
                                 <tr>
@@ -183,7 +216,9 @@
                 </div>
             </div>
 
-            <!-- 수정 모달 -->
+            <!-- =========================================================
+                 4. 수정 모달
+                 ========================================================= -->
             <div id="pay-edit-modal-wrap" class="org-modal-wrap">
                 <div class="org-modal pay-edit-modal">
                     <div class="org-modal-header">
@@ -207,7 +242,8 @@
                                     <th>비고</th>
                                 </tr>
                                 </thead>
-                                <tbody id="payList-edit-body"></tbody>
+                                <tbody id="payList-edit-body">
+                                </tbody>
                             </table>
                         </div>
                     </div>

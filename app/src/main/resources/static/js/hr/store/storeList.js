@@ -1,6 +1,4 @@
-/* =========================================================
-   매장관리 JS (복구 완료 전체본)
-   ========================================================= */
+/* ================= 전역 ================= */
 let currentPage = 1;
 let currentSearchType = "all";
 let currentKeyword = "";
@@ -11,12 +9,12 @@ let storeMap = null;
 let storeMarker = null;
 let currentManagerList = [];
 
+/* ================= 시작 ================= */
 window.addEventListener("DOMContentLoaded", async function () {
     try {
         bindEvents();
         initSearchPlaceholder();
-        await loadStoreSummary();
-        await loadStoreList();
+        await loadStoreList(1);
     } catch (error) {
         console.log(error);
         alert("매장 페이지 로딩 실패 ...");
@@ -24,6 +22,28 @@ window.addEventListener("DOMContentLoaded", async function () {
 });
 
 /* ================= 공통 ================= */
+function getEl(selector) {
+    return document.querySelector(selector);
+}
+
+function getValue(selector) {
+    return getEl(selector)?.value ?? "";
+}
+
+function showModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "flex";
+    }
+}
+
+function hideModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "none";
+    }
+}
+
 function nvl(v) {
     return (v === null || v === undefined || v === "") ? "-" : v;
 }
@@ -42,48 +62,44 @@ function getStatusInfo(code, name) {
     return { text: "폐업", className: "status-off" };
 }
 
-/* ================= 검색 ================= */
+/* ================= 검색쪽 ================= */
 function bindEvents() {
-    document.querySelector("#keyword")?.addEventListener("keydown", function (e) {
+    getEl("#keyword")?.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             searchStore();
         }
     });
 
-    document.querySelector("#search-btn")?.addEventListener("click", function () {
+    getEl("#search-btn")?.addEventListener("click", function () {
         searchStore();
     });
 
-    document.querySelector("#search-type")?.addEventListener("change", function () {
+    getEl("#search-type")?.addEventListener("change", function () {
         initSearchPlaceholder();
 
-        const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
+        const keyword = getValue("#keyword").trim();
         if (keyword === "") {
-            loadStoreList();
+            loadStoreList(1);
         }
     });
 }
 
 function initSearchPlaceholder() {
-    const t = document.querySelector("#search-type")?.value;
-    const i = document.querySelector("#keyword");
+    const type = getValue("#search-type");
+    const keywordTag = getEl("#keyword");
 
-    if (!i) return;
+    if (!keywordTag) return;
 
-    if (t === "storeName") {
-        i.placeholder = "매장명 입력";
-    } else if (t === "statusName") {
-        i.placeholder = "운영 / 휴업 / 폐업";
+    if (type === "storeName") {
+        keywordTag.placeholder = "매장명 입력";
+    } else if (type === "statusName") {
+        keywordTag.placeholder = "운영 / 휴업 / 폐업";
     } else {
-        i.placeholder = "검색어 입력";
+        keywordTag.placeholder = "검색어 입력";
     }
 }
 
-/* ================= 요약 ================= */
-async function loadStoreSummary() {
-    await loadStoreList(1);
-}
-
+/* ================= 요약 + 목록 ================= */
 function renderSummary(summary) {
     const safe = summary || {};
 
@@ -92,10 +108,10 @@ function renderSummary(summary) {
     const rest = Number(safe.restCount ?? safe.RESTCOUNT ?? 0);
     const disable = Number(safe.disableCount ?? safe.DISABLECOUNT ?? 0);
 
-    const totalTag = document.querySelector("#total-store-count");
-    const enableTag = document.querySelector("#enable-store-count");
-    const restTag = document.querySelector("#rest-store-count");
-    const disableTag = document.querySelector("#disable-store-count");
+    const totalTag = getEl("#total-store-count");
+    const enableTag = getEl("#enable-store-count");
+    const restTag = getEl("#rest-store-count");
+    const disableTag = getEl("#disable-store-count");
 
     if (totalTag) totalTag.innerText = total;
     if (enableTag) enableTag.innerText = enable;
@@ -103,13 +119,16 @@ function renderSummary(summary) {
     if (disableTag) disableTag.innerText = disable;
 }
 
-/* ================= 목록 ================= */
 async function loadStoreList(page = 1) {
     currentPage = page;
     currentSearchType = "all";
     currentKeyword = "";
 
     const resp = await fetch(`/store?currentPage=${page}`);
+    if (!resp.ok) {
+        throw new Error("매장 목록 조회 실패");
+    }
+
     const data = await resp.json();
 
     renderSummary(data.summary);
@@ -118,7 +137,7 @@ async function loadStoreList(page = 1) {
 }
 
 function renderTable(list, pvo) {
-    const tbody = document.querySelector("#store-list");
+    const tbody = getEl("#store-list");
     if (!tbody) return;
 
     if (!list.length) {
@@ -133,56 +152,63 @@ function renderTable(list, pvo) {
     const startNo = pvo ? ((pvo.currentPage - 1) * pvo.boardLimit) : 0;
 
     tbody.innerHTML = list.map((v, i) => {
-        const s = getStatusInfo(v.statusCode, v.statusName);
+        const statusInfo = getStatusInfo(v.statusCode, v.statusName);
+
         return `
-        <tr>
-            <td>${startNo + i + 1}</td>
-            <td class="store-name-cell">
-                <span class="link-text" onclick="openStoreModal('${v.storeCode}')">${nvl(v.storeName)}</span>
-            </td>
-            <td>${nvl(v.managerName)}</td>
-            <td>${nvl(v.storeAddress)}</td>
-            <td>${formatDate(v.createdAt)}</td>
-            <td><span class="status ${s.className}">${s.text}</span></td>
-        </tr>`;
+            <tr>
+                <td>${startNo + i + 1}</td>
+                <td class="store-name-cell">
+                    <span class="link-text" onclick="openStoreModal('${v.storeCode}')">${nvl(v.storeName)}</span>
+                </td>
+                <td>${nvl(v.managerName)}</td>
+                <td>${nvl(v.storeAddress)}</td>
+                <td>${formatDate(v.createdAt)}</td>
+                <td><span class="status ${statusInfo.className}">${statusInfo.text}</span></td>
+            </tr>
+        `;
     }).join("");
 }
 
 /* ================= 검색 ================= */
 async function searchStore(page = 1) {
-    const t = document.querySelector("#search-type")?.value ?? "all";
-    const k = document.querySelector("#keyword")?.value.trim() ?? "";
+    const searchType = getValue("#search-type") || "all";
+    const keyword = getValue("#keyword").trim();
 
     currentPage = page;
-    currentSearchType = t;
-    currentKeyword = k;
+    currentSearchType = searchType;
+    currentKeyword = keyword;
 
-    if (!k || t === "all") {
+    if (!keyword || searchType === "all") {
         return loadStoreList(page);
     }
 
     let url = "";
-    if (t === "storeName") {
-        url = `/store/search/name?keyword=${encodeURIComponent(k)}&currentPage=${page}`;
-    } else {
-    let statusKeyword = k.trim();
 
-    if (
-        statusKeyword.includes("운영") ||
-        statusKeyword.includes("영업") ||
-        statusKeyword.includes("오픈")
-    ) {
-        statusKeyword = "영업중";
-    } else if (statusKeyword.includes("휴업")) {
-        statusKeyword = "휴업";
-    } else if (statusKeyword.includes("폐업")) {
-        statusKeyword = "폐업";
+    if (searchType === "storeName") {
+        url = `/store/search/name?keyword=${encodeURIComponent(keyword)}&currentPage=${page}`;
+    } else {
+        let statusKeyword = keyword;
+
+        if (
+            statusKeyword.includes("운영") ||
+            statusKeyword.includes("영업") ||
+            statusKeyword.includes("오픈")
+        ) {
+            statusKeyword = "영업중";
+        } else if (statusKeyword.includes("휴업")) {
+            statusKeyword = "휴업";
+        } else if (statusKeyword.includes("폐업")) {
+            statusKeyword = "폐업";
+        }
+
+        url = `/store/search/statusName?statusName=${encodeURIComponent(statusKeyword)}&currentPage=${page}`;
     }
 
-    url = `/store/search/statusName?statusName=${encodeURIComponent(statusKeyword)}&currentPage=${page}`;
-}
-
     const resp = await fetch(url);
+    if (!resp.ok) {
+        throw new Error("매장 검색 실패");
+    }
+
     const data = await resp.json();
 
     renderSummary(data.summary);
@@ -191,32 +217,35 @@ async function searchStore(page = 1) {
 }
 
 /* ================= 상세 ================= */
-async function openStoreModal(code) {
-    const resp = await fetch(`/store/${code}`);
-    const data = await resp.json();
+async function openStoreModal(storeCode) {
+    const resp = await fetch(`/store/${storeCode}`);
+    if (!resp.ok) {
+        throw new Error("매장 상세조회 실패");
+    }
 
+    const data = await resp.json();
     const vo = data.vo;
-    currentStoreCode = code;
+
+    currentStoreCode = storeCode;
     currentStoreVo = vo;
     currentStoreAddress = vo.storeAddress ?? "";
     currentManagerList = data.managerList || [];
 
-    document.querySelector("#modal-store-name").innerText = nvl(vo.storeName);
-    document.querySelector("#modal-store-manager").innerText = nvl(vo.managerName);
-    document.querySelector("#modal-store-address").innerText = nvl(vo.storeAddress);
-    document.querySelector("#modal-created-at").innerText = formatDate(vo.createdAt);
-    document.querySelector("#modal-store-code").innerText = nvl(vo.storeCode);
+    getEl("#modal-store-name").innerText = nvl(vo.storeName);
+    getEl("#modal-store-manager").innerText = nvl(vo.managerName);
+    getEl("#modal-store-address").innerText = nvl(vo.storeAddress);
+    getEl("#modal-created-at").innerText = formatDate(vo.createdAt);
+    getEl("#modal-store-code").innerText = nvl(vo.storeCode);
 
-    const s = getStatusInfo(vo.statusCode, vo.statusName);
-    const tag = document.querySelector("#modal-store-status");
-    if (tag) {
-        tag.className = `status ${s.className}`;
-        tag.innerText = s.text;
+    const statusInfo = getStatusInfo(vo.statusCode, vo.statusName);
+    const statusTag = getEl("#modal-store-status");
+    if (statusTag) {
+        statusTag.className = `status ${statusInfo.className}`;
+        statusTag.innerText = statusInfo.text;
     }
 
     cancelEditAll();
-
-    document.querySelector("#store-modal-wrap").style.display = "flex";
+    showModal("#store-modal-wrap");
 
     setTimeout(function () {
         drawStoreMap(vo.storeAddress);
@@ -224,18 +253,24 @@ async function openStoreModal(code) {
 }
 
 function closeStoreModal() {
-    document.querySelector("#store-modal-wrap").style.display = "none";
+    hideModal("#store-modal-wrap");
 }
 
 /* ================= 담당자 ================= */
 function startEditManager() {
-    const sel = document.querySelector("#manager-select");
-    if (!sel) return;
+    const selectTag = getEl("#manager-select");
+    if (!selectTag) return;
 
-    sel.innerHTML = "";
-    currentManagerList.forEach(m => {
-        const selected = (String(m.empNo) === String(currentStoreVo?.ownerEmpNo ?? "")) ? "selected" : "";
-        sel.innerHTML += `<option value="${m.empNo}" ${selected}>${m.empName}</option>`;
+    selectTag.innerHTML = "";
+
+    currentManagerList.forEach(function (manager) {
+        const selected = String(manager.empNo) === String(currentStoreVo?.ownerEmpNo ?? "")
+            ? "selected"
+            : "";
+
+        selectTag.innerHTML += `
+            <option value="${manager.empNo}" ${selected}>${manager.empName}</option>
+        `;
     });
 
     toggle("manager", true);
@@ -247,7 +282,7 @@ function cancelEditManager() {
 
 async function saveManager() {
     try {
-        const ownerEmpNo = document.querySelector("#manager-select")?.value;
+        const ownerEmpNo = getEl("#manager-select")?.value;
 
         const resp = await fetch(`/store/${currentStoreCode}/manager`, {
             method: "PUT",
@@ -256,16 +291,17 @@ async function saveManager() {
         });
 
         const data = await resp.json();
+
         if (!resp.ok || data.result != 1) {
             alert(data.msg || "담당자 수정 실패");
             return;
         }
 
-        const txt = document.querySelector("#manager-select").selectedOptions[0]?.text ?? "-";
-        document.querySelector("#modal-store-manager").innerText = txt;
+        const selectedName = getEl("#manager-select").selectedOptions[0]?.text ?? "-";
+        getEl("#modal-store-manager").innerText = selectedName;
 
         currentStoreVo.ownerEmpNo = ownerEmpNo;
-        currentStoreVo.managerName = txt;
+        currentStoreVo.managerName = selectedName;
 
         cancelEditManager();
         await reloadStoreListKeepingState();
@@ -278,8 +314,7 @@ async function saveManager() {
 
 /* ================= 주소 ================= */
 function startEditAddress() {
-    document.querySelector("#address-input").value =
-        document.querySelector("#modal-store-address").innerText;
+    getEl("#address-input").value = getEl("#modal-store-address").innerText;
     toggle("address", true);
 }
 
@@ -289,27 +324,28 @@ function cancelEditAddress() {
 
 async function saveAddress() {
     try {
-        const addr = document.querySelector("#address-input")?.value?.trim();
+        const storeAddress = getEl("#address-input")?.value?.trim();
 
         const resp = await fetch(`/store/${currentStoreCode}/address`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ storeAddress: addr })
+            body: JSON.stringify({ storeAddress })
         });
 
         const data = await resp.json();
+
         if (!resp.ok || data.result != 1) {
             alert(data.msg || "주소 수정 실패");
             return;
         }
 
-        document.querySelector("#modal-store-address").innerText = addr;
-        currentStoreVo.storeAddress = addr;
-        currentStoreAddress = addr;
+        getEl("#modal-store-address").innerText = storeAddress;
+        currentStoreVo.storeAddress = storeAddress;
+        currentStoreAddress = storeAddress;
 
         cancelEditAddress();
         await reloadStoreListKeepingState();
-        drawStoreMap(addr);
+        drawStoreMap(storeAddress);
         alert(data.msg || "주소 수정 완료");
     } catch (error) {
         console.log(error);
@@ -319,7 +355,7 @@ async function saveAddress() {
 
 /* ================= 상태 ================= */
 function startEditStatus() {
-    document.querySelector("#status-select").value = currentStoreVo.statusCode;
+    getEl("#status-select").value = currentStoreVo.statusCode;
     toggle("status", true);
 }
 
@@ -329,7 +365,7 @@ function cancelEditStatus() {
 
 async function saveStatus() {
     try {
-        const statusCode = document.querySelector("#status-select")?.value;
+        const statusCode = getEl("#status-select")?.value;
 
         const resp = await fetch(`/store/${currentStoreCode}/status`, {
             method: "PUT",
@@ -338,20 +374,21 @@ async function saveStatus() {
         });
 
         const data = await resp.json();
+
         if (!resp.ok || data.result != 1) {
             alert(data.msg || "상태 수정 실패");
             return;
         }
 
-        const s = getStatusInfo(statusCode);
-        const tag = document.querySelector("#modal-store-status");
-        tag.className = `status ${s.className}`;
-        tag.innerText = s.text;
+        const statusInfo = getStatusInfo(statusCode);
+        const statusTag = getEl("#modal-store-status");
+
+        statusTag.className = `status ${statusInfo.className}`;
+        statusTag.innerText = statusInfo.text;
 
         currentStoreVo.statusCode = statusCode;
 
         cancelEditStatus();
-        await reloadStoreListKeepingState();
         await reloadStoreListKeepingState();
         alert(data.msg || "상태 수정 완료");
     } catch (error) {
@@ -362,26 +399,26 @@ async function saveStatus() {
 
 /* ================= 등록 ================= */
 function openInsertStoreModal() {
-    const codeTag = document.querySelector("#insert-store-code");
-    const nameTag = document.querySelector("#insert-store-name");
-    const addrTag = document.querySelector("#insert-store-address");
+    const codeTag = getEl("#insert-store-code");
+    const nameTag = getEl("#insert-store-name");
+    const addressTag = getEl("#insert-store-address");
 
     if (codeTag) codeTag.value = "";
     if (nameTag) nameTag.value = "";
-    if (addrTag) addrTag.value = "";
+    if (addressTag) addressTag.value = "";
 
-    document.querySelector("#store-insert-modal-wrap").style.display = "flex";
+    showModal("#store-insert-modal-wrap");
 }
 
 function closeInsertStoreModal() {
-    document.querySelector("#store-insert-modal-wrap").style.display = "none";
+    hideModal("#store-insert-modal-wrap");
 }
 
 async function insertStore() {
     try {
-        const storeCode = document.querySelector("#insert-store-code")?.value?.trim();
-        const storeName = document.querySelector("#insert-store-name")?.value?.trim();
-        const storeAddress = document.querySelector("#insert-store-address")?.value?.trim();
+        const storeCode = getEl("#insert-store-code")?.value?.trim();
+        const storeName = getEl("#insert-store-name")?.value?.trim();
+        const storeAddress = getEl("#insert-store-address")?.value?.trim();
 
         if (!storeCode) {
             alert("매장코드를 입력하세요.");
@@ -417,21 +454,20 @@ async function insertStore() {
 
         alert(data.msg || "매장 등록 완료");
         closeInsertStoreModal();
-        await loadStoreSummary();
-        await loadStoreList();
+        await loadStoreList(1);
     } catch (error) {
         console.log(error);
         alert("매장 등록 중 오류 발생 ...");
     }
 }
 
-/* ================= 공통 토글 ================= */
-function toggle(type, edit) {
-    const viewTag = document.querySelector(`#${type}-view-area`);
-    const editTag = document.querySelector(`#${type}-edit-area`);
+/* ================= 수정줄 on/off ================= */
+function toggle(type, isEdit) {
+    const viewTag = getEl(`#${type}-view-area`);
+    const editTag = getEl(`#${type}-edit-area`);
 
-    if (viewTag) viewTag.style.display = edit ? "none" : "grid";
-    if (editTag) editTag.style.display = edit ? "grid" : "none";
+    if (viewTag) viewTag.style.display = isEdit ? "none" : "grid";
+    if (editTag) editTag.style.display = isEdit ? "grid" : "none";
 }
 
 function cancelEditAll() {
@@ -443,16 +479,16 @@ function cancelEditAll() {
 /* ================= 주소검색 ================= */
 function searchAddress() {
     new daum.Postcode({
-        oncomplete: data => {
-            document.querySelector("#address-input").value = data.address;
+        oncomplete: function (data) {
+            getEl("#address-input").value = data.address;
         }
     }).open();
 }
 
 function searchInsertAddress() {
     new daum.Postcode({
-        oncomplete: data => {
-            document.querySelector("#insert-store-address").value = data.address;
+        oncomplete: function (data) {
+            getEl("#insert-store-address").value = data.address;
         }
     }).open();
 }
@@ -461,7 +497,7 @@ function searchInsertAddress() {
 function drawStoreMap(address) {
     if (!address || address === "-") return;
 
-    const mapContainer = document.querySelector("#store-map");
+    const mapContainer = getEl("#store-map");
     if (!window.kakao || !window.kakao.maps || !mapContainer) return;
 
     const defaultPos = new kakao.maps.LatLng(37.499361, 127.033202);
@@ -475,10 +511,12 @@ function drawStoreMap(address) {
         storeMarker = new kakao.maps.Marker({
             position: defaultPos
         });
+
         storeMarker.setMap(storeMap);
     }
 
     const geo = new kakao.maps.services.Geocoder();
+
     geo.addressSearch(address, function (result, status) {
         if (status === kakao.maps.services.Status.OK) {
             const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
@@ -495,8 +533,9 @@ function drawStoreMap(address) {
     });
 }
 
+/* ================= 페이징 ================= */
 function renderPagination(pvo) {
-    const area = document.querySelector("#store-pagination-area");
+    const area = getEl("#store-pagination-area");
     if (!area) return;
 
     if (!pvo) {
@@ -532,7 +571,6 @@ function renderPagination(pvo) {
 
     area.innerHTML = str;
 }
-
 
 function getStorePageMoveFunction(page) {
     if (currentSearchType === "all" || currentKeyword === "") {

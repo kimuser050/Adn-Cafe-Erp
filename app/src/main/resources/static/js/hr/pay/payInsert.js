@@ -1,16 +1,15 @@
 /* =========================================================
    급여등록 JS
-   - 클릭 선택 UX 강화
-   - 금액 포맷팅 / 요약 갱신 강화
-   - 자동계산 시 강조 효과 추가
    ========================================================= */
 
-// 전역 변수
+/* =========================================================
+   1. 전역 변수
+   ========================================================= */
 let payItemList = [];
 let selectedEmp = null;
 
 /* =========================================================
-   1. 시작
+   2. 시작
    ========================================================= */
 window.addEventListener("DOMContentLoaded", async function () {
     initCurrentMonth();
@@ -19,44 +18,16 @@ window.addEventListener("DOMContentLoaded", async function () {
 });
 
 /* =========================================================
-   2. 초기 세팅
+   3. 공통 DOM / 유틸
    ========================================================= */
-function initCurrentMonth() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const currentMonth = `${year}-${month}`;
-
-    document.querySelector("#pay-month").value = currentMonth;
-    document.querySelector("#info-pay-month").innerText = currentMonth;
-    document.querySelector("#top-selected-month").innerText = `지급월 ${currentMonth}`;
+function getEl(selector) {
+    return document.querySelector(selector);
 }
 
-function bindEvents() {
-    document.querySelector("#search-emp-btn").addEventListener("click", searchEmp);
-    document.querySelector("#auto-calc-btn").addEventListener("click", autoCalculate);
-    document.querySelector("#save-btn").addEventListener("click", insertPay);
-
-    document.querySelector("#cancel-btn").addEventListener("click", function () {
-        location.href = "/hr/pay/list";
-    });
-
-    document.querySelector("#keyword").addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            searchEmp();
-        }
-    });
-
-    document.querySelector("#pay-month").addEventListener("change", function () {
-        const month = this.value || "-";
-        document.querySelector("#info-pay-month").innerText = month;
-        document.querySelector("#top-selected-month").innerText = `지급월 ${month}`;
-    });
+function getValue(selector) {
+    return getEl(selector)?.value ?? "";
 }
 
-/* =========================================================
-   3. 공통 함수
-   ========================================================= */
 function formatNumber(value) {
     return Number(value || 0).toLocaleString("ko-KR");
 }
@@ -66,30 +37,92 @@ function formatWon(value) {
 }
 
 function flashSummary() {
-    const box = document.querySelector("#summary-box");
+    const box = getEl("#summary-box");
+    if (!box) return;
+
     box.classList.remove("summary-flash");
     void box.offsetWidth;
     box.classList.add("summary-flash");
 }
 
-function clearEmpInfo() {
-    document.querySelector("#emp-name").innerText = "-";
-    document.querySelector("#emp-no").innerText = "-";
-    document.querySelector("#emp-dept").innerText = "-";
-    document.querySelector("#emp-pos").innerText = "-";
-    document.querySelector("#top-selected-emp").innerText = "선택 직원 없음";
+/* =========================================================
+   4. 초기 세팅
+   ========================================================= */
+function initCurrentMonth() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const currentMonth = `${year}-${month}`;
+
+    updateMonthUI(currentMonth);
 }
 
-function setEmpInfo(emp) {
-    document.querySelector("#emp-name").innerText = emp.empName || "-";
-    document.querySelector("#emp-no").innerText = emp.empNo || "-";
-    document.querySelector("#emp-dept").innerText = emp.deptName || "-";
-    document.querySelector("#emp-pos").innerText = emp.posName || "-";
-    document.querySelector("#top-selected-emp").innerText = `${emp.empName} (${emp.empNo})`;
+function bindEvents() {
+    getEl("#search-emp-btn")?.addEventListener("click", searchEmp);
+    getEl("#auto-calc-btn")?.addEventListener("click", autoCalculate);
+    getEl("#save-btn")?.addEventListener("click", insertPay);
+
+    getEl("#cancel-btn")?.addEventListener("click", function () {
+        location.href = "/hr/pay/list";
+    });
+
+    getEl("#keyword")?.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            searchEmp();
+        }
+    });
+
+    getEl("#pay-month")?.addEventListener("change", function () {
+        const month = this.value || "-";
+        updateMonthUI(month);
+    });
 }
 
 /* =========================================================
-   4. 급여 항목 불러오기
+   5. 화면 표시용 함수
+   ========================================================= */
+function updateMonthUI(month) {
+    getEl("#pay-month").value = month;
+    getEl("#info-pay-month").innerText = month;
+    getEl("#top-selected-month").innerText = `지급월 ${month}`;
+}
+
+function clearEmpInfo() {
+    getEl("#emp-name").innerText = "-";
+    getEl("#emp-no").innerText = "-";
+    getEl("#emp-dept").innerText = "-";
+    getEl("#emp-pos").innerText = "-";
+    getEl("#top-selected-emp").innerText = "선택 직원 없음";
+}
+
+function setEmpInfo(emp) {
+    getEl("#emp-name").innerText = emp.empName || "-";
+    getEl("#emp-no").innerText = emp.empNo || "-";
+    getEl("#emp-dept").innerText = emp.deptName || "-";
+    getEl("#emp-pos").innerText = emp.posName || "-";
+    getEl("#top-selected-emp").innerText = `${emp.empName} (${emp.empNo})`;
+}
+
+function renderEmpSearchLoading() {
+    getEl("#emp-search-result").innerHTML = `
+        <div class="emp-empty">직원을 검색 중입니다...</div>
+    `;
+}
+
+function renderEmpSearchFail() {
+    getEl("#emp-search-result").innerHTML = `
+        <div class="emp-empty">직원 검색에 실패했습니다.</div>
+    `;
+}
+
+function renderEmpSearchEmpty() {
+    getEl("#emp-search-result").innerHTML = `
+        <div class="emp-empty">검색 결과가 없습니다.</div>
+    `;
+}
+
+/* =========================================================
+   6. 급여 항목 불러오기
    ========================================================= */
 async function loadPayItems() {
     const resp = await fetch("/pay/items");
@@ -100,19 +133,23 @@ async function loadPayItems() {
     }
 
     payItemList = await resp.json();
+    renderPayItems(payItemList);
+    bindAmountInputs();
+}
 
-    const tbody = document.querySelector("#pay-item-body");
+function renderPayItems(list) {
+    const tbody = getEl("#pay-item-body");
     let str = "";
 
-    for (const item of payItemList) {
-        const taxText = item.isTaxable === "Y"
-            ? `<span class="tax-badge taxable">과세</span>`
-            : `<span class="tax-badge nontaxable">비과세</span>`;
-
+    for (const item of list) {
         const isFixed =
             item.itemName === "기본급" ||
             item.itemName === "보너스" ||
             item.itemName === "연장근무수당";
+
+        const taxText = item.isTaxable === "Y"
+            ? `<span class="tax-badge taxable">과세</span>`
+            : `<span class="tax-badge nontaxable">비과세</span>`;
 
         str += `
             <tr data-code="${item.itemCode}" data-type="${item.itemType}" data-name="${item.itemName}">
@@ -135,8 +172,11 @@ async function loadPayItems() {
     }
 
     tbody.innerHTML = str;
+}
 
+function bindAmountInputs() {
     const amountInputs = document.querySelectorAll(".amount");
+
     amountInputs.forEach(function (input) {
         input.addEventListener("input", function () {
             this.value = this.value.replace(/[^\d]/g, "");
@@ -146,31 +186,22 @@ async function loadPayItems() {
 }
 
 /* =========================================================
-   5. 직원 검색
+   7. 직원 검색
    ========================================================= */
 async function searchEmp() {
-    const keyword = document.querySelector("#keyword").value.trim();
-    const box = document.querySelector("#emp-search-result");
+    const keyword = getValue("#keyword").trim();
 
     if (keyword === "") {
         alert("검색어를 입력하세요");
         return;
     }
 
-    box.innerHTML = `
-        <div class="emp-empty">
-            직원을 검색 중입니다...
-        </div>
-    `;
+    renderEmpSearchLoading();
 
     const resp = await fetch(`/pay/emps?keyword=${encodeURIComponent(keyword)}`);
 
     if (!resp.ok) {
-        box.innerHTML = `
-            <div class="emp-empty">
-                직원 검색에 실패했습니다.
-            </div>
-        `;
+        renderEmpSearchFail();
         alert("직원 검색 실패");
         return;
     }
@@ -178,11 +209,7 @@ async function searchEmp() {
     const list = await resp.json();
 
     if (!list || list.length === 0) {
-        box.innerHTML = `
-            <div class="emp-empty">
-                검색 결과가 없습니다.
-            </div>
-        `;
+        renderEmpSearchEmpty();
         return;
     }
 
@@ -201,11 +228,11 @@ async function searchEmp() {
         `;
     }
 
-    box.innerHTML = str;
+    getEl("#emp-search-result").innerHTML = str;
 }
 
 /* =========================================================
-   6. 직원 선택
+   8. 직원 선택
    ========================================================= */
 async function selectEmp(empNo, element) {
     const resp = await fetch(`/pay/emps/${empNo}`);
@@ -228,7 +255,7 @@ async function selectEmp(empNo, element) {
 }
 
 /* =========================================================
-   7. 자동계산
+   9. 자동계산
    ========================================================= */
 async function autoCalculate() {
     if (!selectedEmp) {
@@ -236,7 +263,7 @@ async function autoCalculate() {
         return;
     }
 
-    const month = document.querySelector("#pay-month").value;
+    const month = getValue("#pay-month");
     if (!month) {
         alert("지급월을 먼저 선택하세요");
         return;
@@ -291,7 +318,7 @@ async function autoCalculate() {
 }
 
 /* =========================================================
-   8. 합계 계산
+   10. 합계 계산
    ========================================================= */
 function calculateSummary() {
     const rows = document.querySelectorAll("#pay-item-body tr");
@@ -302,9 +329,8 @@ function calculateSummary() {
     rows.forEach(function (row) {
         const type = row.dataset.type;
         const amountInput = row.querySelector(".amount");
-        if (!amountInput) {
-            return;
-        }
+
+        if (!amountInput) return;
 
         const value = Number(amountInput.value || 0);
 
@@ -317,15 +343,15 @@ function calculateSummary() {
 
     const net = earn - deduct;
 
-    document.querySelector("#total-earn-amount").innerText = formatWon(earn);
-    document.querySelector("#total-deduct-amount").innerText = formatWon(deduct);
-    document.querySelector("#net-amount").innerText = formatWon(net);
+    getEl("#total-earn-amount").innerText = formatWon(earn);
+    getEl("#total-deduct-amount").innerText = formatWon(deduct);
+    getEl("#net-amount").innerText = formatWon(net);
 
     flashSummary();
 }
 
 /* =========================================================
-   9. 저장
+   11. 저장
    ========================================================= */
 async function insertPay() {
     if (!selectedEmp) {
@@ -333,7 +359,7 @@ async function insertPay() {
         return;
     }
 
-    const month = document.querySelector("#pay-month").value;
+    const month = getValue("#pay-month");
     if (!month) {
         alert("지급월을 선택하세요");
         return;
@@ -349,9 +375,7 @@ async function insertPay() {
         const amountInput = row.querySelector(".amount");
         const noteInput = row.querySelector(".note");
 
-        if (!amountInput || !noteInput) {
-            return;
-        }
+        if (!amountInput || !noteInput) return;
 
         const amount = Number(amountInput.value || 0);
         const type = row.dataset.type;
