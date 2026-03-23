@@ -8,11 +8,12 @@ public class CheckVo {
     private String itemReturnNo;
     private String status;
     private String processResult;
-    private String itemName;
+
+    // 이 부분들이 중요합니다!
+    private String itemName;    // DB의 ITEM_NAME과 매칭
     private String storeCode;
     private String storeName;
-    private String empName;     // [추가] EMP_NO로 조인해서 가져올 사원명
-    private String regDate;     // DB의 CREATED_AT (Mapper에서 별칭 사용)
+    private String createdAt;   // DB의 CREATED_AT과 매칭 (createAt 아님!)
     private int quantity;
     private String reason;
 }

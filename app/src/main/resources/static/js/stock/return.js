@@ -87,7 +87,7 @@ function submitReturn() {
         // 서버에서 result가 "1" 혹은 1로 오는지 확인
         if (data.result == 1 || data.result == "1") { 
             alert("반품 신청이 완료되었습니다!");
-            location.href = "/stock/checksList"; // 목록 페이지로 이동
+            location.href = "/stock/check"; // 목록 페이지로 이동
         } else {
             alert("신청 실패: " + (data.msg || "관리자에게 문의하세요."));
         }
