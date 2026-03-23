@@ -1,18 +1,4 @@
-/* =========================================================
-   직급관리 JS
-   - 요약 카드
-   - 전체 목록 조회
-   - 검색
-   - 상세조회 모달
-   - 활성화 / 비활성화
-   - 기본급 수정
-   - 보너스율 수정
-   - 직급 등록
-   ========================================================= */
-
-/* =========================================================
-   0. 전역 변수
-   ========================================================= */
+/* ================= 전역 ================= */
 let currentPosCode = null;
 let currentUseYn = null;
 let currentMemberList = [];
@@ -20,11 +6,11 @@ let currentMemberList = [];
 let currentPage = 1;
 let currentSearchType = "all";
 let currentKeyword = "";
-/* =========================================================
-   1. 페이지 진입 시 실행
-   ========================================================= */
+
+/* ================= 시작 ================= */
 window.addEventListener("DOMContentLoaded", async function () {
     try {
+        bindEvents();
         initSearchPlaceholder();
         await loadPosList(1);
     } catch (error) {
@@ -33,24 +19,34 @@ window.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-/* =========================================================
-   2. 공통 함수
-   ========================================================= */
-
-// 날짜를 YYYY-MM-DD 형태로 잘라서 보여주는 함수
-function formatDate(value) {
-    if (!value) {
-        return "";
-    }
-
-    if (value.length >= 10) {
-        return value.substring(0, 10);
-    }
-
-    return value;
+/* ================= 공통 ================= */
+function getEl(selector) {
+    return document.querySelector(selector);
 }
 
-// useYn 값을 화면용 상태 텍스트/클래스로 변환
+function getValue(selector) {
+    return getEl(selector)?.value ?? "";
+}
+
+function showModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "flex";
+    }
+}
+
+function hideModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "none";
+    }
+}
+
+function formatDate(value) {
+    if (!value) return "";
+    return String(value).length >= 10 ? String(value).substring(0, 10) : value;
+}
+
 function getUseYnInfo(useYn) {
     if (useYn === "Y") {
         return { text: "사용", statusClass: "status-confirmed" };
@@ -58,13 +54,33 @@ function getUseYnInfo(useYn) {
     return { text: "미사용", statusClass: "status-pending" };
 }
 
-function initSearchPlaceholder() {
-    const type = document.querySelector("#search-type")?.value;
-    const input = document.querySelector("#keyword");
+/* ================= 검색쪽 ================= */
+function bindEvents() {
+    getEl("#search-type")?.addEventListener("change", function () {
+        initSearchPlaceholder();
 
-    if (!input) {
-        return;
-    }
+        const keyword = getValue("#keyword").trim();
+        if (keyword === "") {
+            loadPosList(1);
+        }
+    });
+
+    getEl("#keyword")?.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            searchPos(1);
+        }
+    });
+
+    getEl("#search-btn")?.addEventListener("click", function () {
+        searchPos(1);
+    });
+}
+
+function initSearchPlaceholder() {
+    const type = getValue("#search-type");
+    const input = getEl("#keyword");
+
+    if (!input) return;
 
     if (type === "posName") {
         input.placeholder = "직급명을 입력하세요";
@@ -75,18 +91,12 @@ function initSearchPlaceholder() {
     }
 }
 
-initSearchPlaceholder();
-
-/* =========================================================
-   3. 요약 카드
-   ========================================================= */
-
+/* ================= 요약 ================= */
 function renderSummary(summary) {
-    const totalEl = document.querySelector("#total-pos-count");
-    const enableEl = document.querySelector("#enable-pos-count");
+    const totalEl = getEl("#total-pos-count");
+    const enableEl = getEl("#enable-pos-count");
 
     const safe = summary || {};
-
     const totalCount = Number(safe.totalCount ?? safe.TOTALCOUNT ?? 0);
     const enableCount = Number(safe.enableCount ?? safe.ENABLECOUNT ?? 0);
 
@@ -94,9 +104,7 @@ function renderSummary(summary) {
     if (enableEl) enableEl.innerText = enableCount;
 }
 
-/* =========================================================
-   4. 목록 조회
-   ========================================================= */
+/* ================= 목록 ================= */
 async function loadPosList(page = 1) {
     try {
         currentPage = page;
@@ -104,7 +112,6 @@ async function loadPosList(page = 1) {
         currentKeyword = "";
 
         const resp = await fetch(`/pos?currentPage=${page}`);
-
         if (!resp.ok) {
             throw new Error("직급 목록 조회 실패 ...");
         }
@@ -115,7 +122,6 @@ async function loadPosList(page = 1) {
         renderSummary(data.summary);
         renderTable(voList, data.pvo);
         renderPagination(data.pvo);
-
     } catch (error) {
         console.log(error);
         alert("직급 목록 조회 중 오류 발생 ...");
@@ -123,11 +129,8 @@ async function loadPosList(page = 1) {
 }
 
 function renderTable(voList, pvo) {
-    const tbodyTag = document.querySelector("#pos-list");
-
-    if (!tbodyTag) {
-        return;
-    }
+    const tbodyTag = getEl("#pos-list");
+    if (!tbodyTag) return;
 
     if (!voList || voList.length === 0) {
         tbodyTag.innerHTML = `
@@ -165,27 +168,10 @@ function renderTable(voList, pvo) {
     tbodyTag.innerHTML = str;
 }
 
-/* =========================================================
-   5. 검색
-   ========================================================= */
-const searchTypeTag = document.querySelector("#search-type");
-
-if (searchTypeTag) {
-    searchTypeTag.addEventListener("change", function () {
-        initSearchPlaceholder();
-
-        const keywordInput = document.querySelector("#keyword");
-        const keyword = keywordInput.value.trim();
-
-        if (keyword === "") {
-            loadPosList(1);
-        }
-    });
-}
-
+/* ================= 검색 ================= */
 async function searchPos(page = 1) {
-    const searchType = document.querySelector("#search-type").value;
-    const keyword = document.querySelector("#keyword").value.trim();
+    const searchType = getValue("#search-type") || "all";
+    const keyword = getValue("#keyword").trim();
 
     currentPage = page;
     currentSearchType = searchType;
@@ -205,7 +191,7 @@ async function searchPos(page = 1) {
 
 async function loadPosListByName(page = 1) {
     try {
-        const keyword = document.querySelector("#keyword").value.trim();
+        const keyword = getValue("#keyword").trim();
 
         if (keyword === "") {
             alert("검색어를 입력하세요.");
@@ -217,7 +203,6 @@ async function loadPosListByName(page = 1) {
         currentKeyword = keyword;
 
         const resp = await fetch(`/pos/search/name?keyword=${encodeURIComponent(keyword)}&currentPage=${page}`);
-
         if (!resp.ok) {
             throw new Error("직급명 검색 실패 ...");
         }
@@ -228,7 +213,6 @@ async function loadPosListByName(page = 1) {
         renderSummary(data.summary);
         renderTable(voList, data.pvo);
         renderPagination(data.pvo);
-
     } catch (error) {
         console.log(error);
         alert("직급명 검색 중 오류 발생 ...");
@@ -237,7 +221,7 @@ async function loadPosListByName(page = 1) {
 
 async function loadPosListByUseYn(page = 1) {
     try {
-        const keyword = document.querySelector("#keyword").value.trim();
+        const keyword = getValue("#keyword").trim();
 
         if (keyword === "") {
             alert("검색어를 입력하세요.");
@@ -260,7 +244,6 @@ async function loadPosListByUseYn(page = 1) {
         currentKeyword = keyword;
 
         const resp = await fetch(`/pos/search/useYn?useYn=${useYn}&currentPage=${page}`);
-
         if (!resp.ok) {
             throw new Error("사용여부 검색 실패 ...");
         }
@@ -271,29 +254,16 @@ async function loadPosListByUseYn(page = 1) {
         renderSummary(data.summary);
         renderTable(voList, data.pvo);
         renderPagination(data.pvo);
-
     } catch (error) {
         console.log(error);
         alert("사용여부 검색 중 오류 발생 ...");
     }
 }
 
-const keywordTag = document.querySelector("#keyword");
-if (keywordTag) {
-    keywordTag.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            searchPos(1);
-        }
-    });
-}
-
-/* =========================================================
-   6. 상세조회 모달
-   ========================================================= */
+/* ================= 상세 ================= */
 async function openPosModal(posCode) {
     try {
         const resp = await fetch(`/pos/${posCode}`);
-
         if (!resp.ok) {
             throw new Error("직급 상세조회 실패 ...");
         }
@@ -306,33 +276,26 @@ async function openPosModal(posCode) {
         currentUseYn = vo.useYn;
         currentMemberList = memberList;
 
-        document.querySelector("#modal-pos-name").innerText = vo.posName ?? "-";
-        document.querySelector("#modal-pos-baseSalary").innerText = vo.baseSalary ?? "-";
-        document.querySelector("#modal-pos-bonusRate").innerText = vo.bonusRate ?? "-";
-        document.querySelector("#modal-pos-expectedSalary").innerText = vo.expectedSalary ?? "-";
-        document.querySelector("#modal-created-at").innerText = formatDate(vo.createdAt);
+        getEl("#modal-pos-name").innerText = vo.posName ?? "-";
+        getEl("#modal-pos-baseSalary").innerText = vo.baseSalary ?? "-";
+        getEl("#modal-pos-bonusRate").innerText = vo.bonusRate ?? "-";
+        getEl("#modal-pos-expectedSalary").innerText = vo.expectedSalary ?? "-";
+        getEl("#modal-created-at").innerText = formatDate(vo.createdAt);
 
         const statusInfo = getUseYnInfo(vo.useYn);
-        const modalStatusTag = document.querySelector("#modal-pos-status");
+        const modalStatusTag = getEl("#modal-pos-status");
         modalStatusTag.className = `status ${statusInfo.statusClass}`;
         modalStatusTag.innerText = statusInfo.text;
 
-        const toggleBtn = document.querySelector("#toggle-use-btn");
+        const toggleBtn = getEl("#toggle-use-btn");
         if (toggleBtn) {
-            if (vo.useYn === "Y") {
-                toggleBtn.innerText = "비활성화";
-            } else {
-                toggleBtn.innerText = "활성화";
-            }
+            toggleBtn.innerText = (vo.useYn === "Y") ? "비활성화" : "활성화";
         }
 
         renderPosMemberList(memberList);
-
         cancelEditBaseSalary();
         cancelEditBonusRate();
-
-        document.querySelector("#pos-modal-wrap").style.display = "flex";
-
+        showModal("#pos-modal-wrap");
     } catch (error) {
         console.log(error);
         alert("직급 상세조회 실패 ...");
@@ -340,15 +303,12 @@ async function openPosModal(posCode) {
 }
 
 function closePosModal() {
-    document.querySelector("#pos-modal-wrap").style.display = "none";
+    hideModal("#pos-modal-wrap");
 }
 
 function renderPosMemberList(memberList) {
-    const tbody = document.querySelector("#modal-member-list");
-
-    if (!tbody) {
-        return;
-    }
+    const tbody = getEl("#modal-member-list");
+    if (!tbody) return;
 
     if (!memberList || memberList.length === 0) {
         tbody.innerHTML = `
@@ -378,9 +338,7 @@ function renderPosMemberList(memberList) {
     tbody.innerHTML = str;
 }
 
-/* =========================================================
-   7. 활성화 / 비활성화
-   ========================================================= */
+/* ================= 상태 ================= */
 async function togglePosUseYn() {
     try {
         if (currentPosCode == null || currentUseYn == null) {
@@ -400,12 +358,10 @@ async function togglePosUseYn() {
         }
 
         const ok = confirm(msg);
-        if (!ok) {
-            return;
-        }
+        if (!ok) return;
 
         const resp = await fetch(url, {
-            method: "PUT",
+            method: "PUT"
         });
 
         if (!resp.ok) {
@@ -413,7 +369,6 @@ async function togglePosUseYn() {
         }
 
         const data = await resp.json();
-
         if (data.result != 1) {
             alert("처리 실패");
             return;
@@ -422,29 +377,24 @@ async function togglePosUseYn() {
         alert("처리 완료");
         closePosModal();
         await reloadPosListKeepingState();
-        
-        loadPosList();
-
     } catch (error) {
         console.log(error);
         alert("상태 변경 중 오류 발생 ...");
     }
 }
 
-/* =========================================================
-   8. 기본급 수정
-   ========================================================= */
+/* ================= 기본급 ================= */
 function startEditBaseSalary() {
-    const currentBaseSalary = document.querySelector("#modal-pos-baseSalary").innerText;
+    const currentBaseSalary = getEl("#modal-pos-baseSalary").innerText;
 
-    document.querySelector("#baseSalary-input").value = currentBaseSalary;
-    document.querySelector("#baseSalary-view-area").style.display = "none";
-    document.querySelector("#baseSalary-edit-area").style.display = "grid";
+    getEl("#baseSalary-input").value = currentBaseSalary;
+    getEl("#baseSalary-view-area").style.display = "none";
+    getEl("#baseSalary-edit-area").style.display = "grid";
 }
 
 function cancelEditBaseSalary() {
-    const viewTag = document.querySelector("#baseSalary-view-area");
-    const editTag = document.querySelector("#baseSalary-edit-area");
+    const viewTag = getEl("#baseSalary-view-area");
+    const editTag = getEl("#baseSalary-edit-area");
 
     if (viewTag) viewTag.style.display = "grid";
     if (editTag) editTag.style.display = "none";
@@ -452,7 +402,7 @@ function cancelEditBaseSalary() {
 
 async function saveBaseSalary() {
     try {
-        const baseSalary = document.querySelector("#baseSalary-input").value.trim();
+        const baseSalary = getValue("#baseSalary-input").trim();
 
         if (!currentPosCode) {
             alert("직급 정보가 없습니다.");
@@ -467,9 +417,9 @@ async function saveBaseSalary() {
         const resp = await fetch(`/pos/${currentPosCode}/baseSalary`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({ baseSalary }),
+            body: JSON.stringify({ baseSalary })
         });
 
         if (!resp.ok) {
@@ -477,39 +427,34 @@ async function saveBaseSalary() {
         }
 
         const data = await resp.json();
-
         if (data.result != 1) {
             alert("기본급 수정 실패");
             return;
         }
 
-        document.querySelector("#modal-pos-baseSalary").innerText = baseSalary;
+        getEl("#modal-pos-baseSalary").innerText = baseSalary;
         cancelEditBaseSalary();
 
         alert("기본급 수정 완료");
         await reloadPosListKeepingState();
-        loadPosList();
-
     } catch (error) {
         console.log(error);
         alert("기본급 수정 중 오류 발생 ...");
     }
 }
 
-/* =========================================================
-   9. 보너스율 수정
-   ========================================================= */
+/* ================= 보너스율 ================= */
 function startEditBonusRate() {
-    const currentBonusRate = document.querySelector("#modal-pos-bonusRate").innerText;
+    const currentBonusRate = getEl("#modal-pos-bonusRate").innerText;
 
-    document.querySelector("#bonusRate-input").value = currentBonusRate;
-    document.querySelector("#bonusRate-view-area").style.display = "none";
-    document.querySelector("#bonusRate-edit-area").style.display = "grid";
+    getEl("#bonusRate-input").value = currentBonusRate;
+    getEl("#bonusRate-view-area").style.display = "none";
+    getEl("#bonusRate-edit-area").style.display = "grid";
 }
 
 function cancelEditBonusRate() {
-    const viewTag = document.querySelector("#bonusRate-view-area");
-    const editTag = document.querySelector("#bonusRate-edit-area");
+    const viewTag = getEl("#bonusRate-view-area");
+    const editTag = getEl("#bonusRate-edit-area");
 
     if (viewTag) viewTag.style.display = "grid";
     if (editTag) editTag.style.display = "none";
@@ -517,7 +462,7 @@ function cancelEditBonusRate() {
 
 async function saveBonusRate() {
     try {
-        const bonusRate = document.querySelector("#bonusRate-input").value.trim();
+        const bonusRate = getValue("#bonusRate-input").trim();
 
         if (!currentPosCode) {
             alert("직급 정보가 없습니다.");
@@ -532,9 +477,9 @@ async function saveBonusRate() {
         const resp = await fetch(`/pos/${currentPosCode}/bonusRate`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({ bonusRate }),
+            body: JSON.stringify({ bonusRate })
         });
 
         if (!resp.ok) {
@@ -542,49 +487,44 @@ async function saveBonusRate() {
         }
 
         const data = await resp.json();
-
         if (data.result != 1) {
             alert("보너스율 수정 실패");
             return;
         }
 
-        document.querySelector("#modal-pos-bonusRate").innerText = bonusRate;
+        getEl("#modal-pos-bonusRate").innerText = bonusRate;
         cancelEditBonusRate();
 
         alert("보너스율 수정 완료");
         await reloadPosListKeepingState();
-        loadPosList();
-
     } catch (error) {
         console.log(error);
         alert("보너스율 수정 중 오류 발생 ...");
     }
 }
 
-/* =========================================================
-   10. 직급 등록
-   ========================================================= */
+/* ================= 등록 ================= */
 function openInsertPosModal() {
-    document.querySelector("#insert-pos-code").value = "";
-    document.querySelector("#insert-pos-name").value = "";
-    document.querySelector("#insert-pos-baseSalary").value = "";
-    document.querySelector("#insert-pos-bonusRate").value = "";
-    document.querySelector("#insert-pos-desc").value = "";
+    getEl("#insert-pos-code").value = "";
+    getEl("#insert-pos-name").value = "";
+    getEl("#insert-pos-baseSalary").value = "";
+    getEl("#insert-pos-bonusRate").value = "";
+    getEl("#insert-pos-desc").value = "";
 
-    document.querySelector("#pos-insert-modal-wrap").style.display = "flex";
+    showModal("#pos-insert-modal-wrap");
 }
 
 function closeInsertPosModal() {
-    document.querySelector("#pos-insert-modal-wrap").style.display = "none";
+    hideModal("#pos-insert-modal-wrap");
 }
 
 async function insertPos() {
     try {
-        const posCode = document.querySelector("#insert-pos-code").value.trim();
-        const posName = document.querySelector("#insert-pos-name").value.trim();
-        const baseSalary = document.querySelector("#insert-pos-baseSalary").value.trim();
-        const bonusRate = document.querySelector("#insert-pos-bonusRate").value.trim();
-        const posDesc = document.querySelector("#insert-pos-desc").value.trim();
+        const posCode = getValue("#insert-pos-code").trim();
+        const posName = getValue("#insert-pos-name").trim();
+        const baseSalary = getValue("#insert-pos-baseSalary").trim();
+        const bonusRate = getValue("#insert-pos-bonusRate").trim();
+        const posDesc = getValue("#insert-pos-desc").trim();
 
         if (posCode === "") {
             alert("직급코드를 입력하세요.");
@@ -599,15 +539,15 @@ async function insertPos() {
         const resp = await fetch("/pos", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 posCode,
                 posName,
                 baseSalary,
                 bonusRate,
-                posDesc,
-            }),
+                posDesc
+            })
         });
 
         if (!resp.ok) {
@@ -615,7 +555,6 @@ async function insertPos() {
         }
 
         const data = await resp.json();
-
         if (data.result != 1) {
             alert("직급 등록 실패");
             return;
@@ -624,18 +563,15 @@ async function insertPos() {
         alert("직급 등록 완료 !");
         closeInsertPosModal();
         await loadPosList(1);
-        
-        loadPosList();
-
     } catch (error) {
         console.log(error);
         alert("직급 등록 중 오류 발생 ...");
     }
 }
 
-
+/* ================= 페이징 ================= */
 function renderPagination(pvo) {
-    const area = document.querySelector("#pos-pagination-area");
+    const area = getEl("#pos-pagination-area");
     if (!area) return;
 
     if (!pvo) {

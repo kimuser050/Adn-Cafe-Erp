@@ -6,11 +6,13 @@
     <meta charset="UTF-8">
     <title>급여등록</title>
 
+    <!-- 공통 스타일 -->
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
     <link rel="stylesheet" href="/css/common/component.css">
 
+    <!-- HR 공통 / 급여등록 전용 -->
     <link rel="stylesheet" href="/css/hr/org/orgCommon.css">
     <link rel="stylesheet" href="/css/hr/pay/payInsert.css">
 
@@ -26,7 +28,11 @@
             <div class="pay-insert-wrap">
                 <div class="pay-insert-card">
 
-                    <!-- 상단 헤더 -->
+                    <!-- =========================================================
+                         1. 상단 헤더
+                         - 화면 제목
+                         - 현재 선택한 직원 / 지급월 표시
+                         ========================================================= -->
                     <div class="pay-insert-header">
                         <div class="pay-header-left">
                             <h1 class="pay-insert-title">급여 등록</h1>
@@ -41,24 +47,26 @@
                         </div>
                     </div>
 
-                    <!-- 본문 -->
+                    <!-- =========================================================
+                         2. 본문 레이아웃
+                         - 좌측 : 지급월 / 직원검색 / 직원정보
+                         - 우측 : 급여항목 입력 / 합계 / 저장
+                         ========================================================= -->
                     <div class="pay-main-layout">
 
-                        <!-- 좌측 -->
+                        <!-- 좌측 사이드 -->
                         <aside class="pay-side-column">
 
-                            <!-- 지급월 -->
+                            <!-- 지급월 선택 -->
                             <section class="pay-panel pay-month-panel">
                                 <h3 class="panel-title">지급월 선택</h3>
 
                                 <div class="month-row">
                                     <input type="month" id="pay-month" class="form-input month-input">
                                 </div>
-
-        
                             </section>
 
-                            <!-- 직원검색 -->
+                            <!-- 직원 검색 -->
                             <section class="pay-panel pay-search-panel">
                                 <h3 class="panel-title">직원검색</h3>
 
@@ -74,7 +82,7 @@
                                 </div>
                             </section>
 
-                            <!-- 직원정보 -->
+                            <!-- 선택 직원 정보 -->
                             <section class="pay-panel pay-emp-panel">
                                 <h3 class="panel-title">직원정보</h3>
 
@@ -107,12 +115,13 @@
                             </section>
                         </aside>
 
-                        <!-- 우측 -->
+                        <!-- 우측 콘텐츠 -->
                         <section class="pay-content-column">
                             <div class="pay-panel pay-item-panel">
+
+                                <!-- 급여 항목 입력 영역 -->
                                 <div class="pay-panel-head">
                                     <h3 class="panel-title">급여 항목 입력</h3>
-                                    
                                 </div>
 
                                 <div class="pay-table-wrap">
@@ -134,6 +143,7 @@
                                     </table>
                                 </div>
 
+                                <!-- 하단 요약 / 버튼 -->
                                 <div class="pay-bottom-row">
                                     <div class="summary-box" id="summary-box">
                                         <div class="summary-line">
@@ -151,11 +161,11 @@
                                     </div>
 
                                     <div class="pay-action-area">
-                                        
                                         <button type="button" class="btn btn-dark btn-lg" id="save-btn">저장하기</button>
                                         <button type="button" class="btn btn-outline btn-lg" id="cancel-btn">취소</button>
                                     </div>
                                 </div>
+
                             </div>
                         </section>
 

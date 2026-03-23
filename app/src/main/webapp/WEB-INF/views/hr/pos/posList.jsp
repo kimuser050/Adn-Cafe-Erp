@@ -31,7 +31,7 @@
                 <button type="button" class="tab-btn active">직급관리</button>
             </div>
 
-            <!-- 요약 카드 -->
+            <!-- 요약 -->
             <div class="org-summary-area">
                 <div class="summary-card">
                     <div class="summary-title">총 직급 수</div>
@@ -44,10 +44,10 @@
                 </div>
             </div>
 
-            <!-- 목록 카드 -->
+            <!-- 목록 -->
             <div class="org-table-card">
 
-                <!-- 툴바 -->
+                <!-- 검색줄 -->
                 <div class="org-toolbar">
                     <div class="toolbar-left"></div>
 
@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                <!-- 테이블 -->
+                <!-- 목록 테이블 -->
                 <table class="org-table pos-table">
                     <thead>
                     <tr>
@@ -83,11 +83,9 @@
                     <tbody id="pos-list"></tbody>
                 </table>
 
-                <!-- 하단 -->
+                <!-- 아래쪽 -->
                 <div class="org-bottom-area">
-                    
-                        <div class="pagination" id="pos-pagination-area"></div>
-
+                    <div class="pagination" id="pos-pagination-area"></div>
 
                     <button type="button" class="btn btn-sm btn-mid register-btn" onclick="openInsertPosModal()">
                         +직급등록
@@ -95,7 +93,7 @@
                 </div>
             </div>
 
-            <!-- 상세조회 모달 -->
+            <!-- 상세 모달 -->
             <div id="pos-modal-wrap" class="org-modal-wrap" onclick="closePosModal()">
                 <div class="org-modal" onclick="event.stopPropagation()">
                     <div class="org-modal-header">
@@ -162,6 +160,7 @@
 
                         <hr class="org-divider">
 
+                        <!-- 소속인원 -->
                         <div class="pos-detail-section">
                             <h3 class="pos-detail-section-title">소속인원</h3>
                             <table class="pos-member-table">

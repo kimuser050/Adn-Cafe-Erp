@@ -1,27 +1,19 @@
 /* =========================================================
    부서관리 JS
-   - 요약 카드
-   - 전체 목록 조회
-   - 검색
-   - 상세조회 모달
-   - 활성화 / 비활성화
-   - 근무위치 수정
-   - 관리자 수정
-   - 부서 등록
    ========================================================= */
 
 /* =========================================================
-   0. 전역 변수
+   0. 전역 상태값
    ========================================================= */
 let currentPage = 1;
 let currentSearchType = "all";
 let currentKeyword = "";
-let currentDeptCode = null;     // 현재 보고 있는 부서코드
-let currentUseYn = null;        // 현재 보고 있는 부서의 사용여부
-let currentMemberList = [];     // 현재 부서 소속 인원 목록
+let currentDeptCode = null;
+let currentUseYn = null;
+let currentMemberList = [];
 
 /* =========================================================
-   1. 페이지 진입 시 실행
+   1. 시작
    ========================================================= */
 window.addEventListener("DOMContentLoaded", async function () {
     try {
@@ -38,21 +30,33 @@ window.addEventListener("DOMContentLoaded", async function () {
 /* =========================================================
    2. 공통 함수
    ========================================================= */
-
-// 날짜를 YYYY-MM-DD 형태로 잘라서 보여주는 함수
-function formatDate(value) {
-    if (!value) {
-        return "";
-    }
-
-    if (value.length >= 10) {
-        return value.substring(0, 10);
-    }
-
-    return value;
+function getEl(selector) {
+    return document.querySelector(selector);
 }
 
-// useYn 값을 화면용 상태 텍스트/클래스로 변환
+function getValue(selector) {
+    return getEl(selector)?.value ?? "";
+}
+
+function showModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "flex";
+    }
+}
+
+function hideModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "none";
+    }
+}
+
+function formatDate(value) {
+    if (!value) return "";
+    return String(value).length >= 10 ? String(value).substring(0, 10) : value;
+}
+
 function getUseYnInfo(useYn) {
     if (useYn === "Y") {
         return { text: "사용", statusClass: "status-confirmed" };
@@ -60,7 +64,6 @@ function getUseYnInfo(useYn) {
     return { text: "미사용", statusClass: "status-pending" };
 }
 
-// 직급코드를 직급명으로 바꾸는 함수
 function changePosCode(posCode) {
     if (posCode == "100001") return "대표";
     if (posCode == "100002") return "부장";
@@ -69,15 +72,14 @@ function changePosCode(posCode) {
     if (posCode == "100005") return "주임";
     if (posCode == "100006") return "사원";
     if (posCode == "100011") return "점주";
-
     return posCode;
 }
 
-function initSearchPlaceholder(){
-    const type = document.querySelector("#search-type")?.value;
-    const input = document.querySelector("#keyword");
+function initSearchPlaceholder() {
+    const type = getValue("#search-type");
+    const input = getEl("#keyword");
 
-    if(!input) return;
+    if (!input) return;
 
     if (type === "deptName") {
         input.placeholder = "부서명을 입력하세요";
@@ -88,42 +90,68 @@ function initSearchPlaceholder(){
     }
 }
 
-initSearchPlaceholder();
+function bindDeptEvents() {
+    const searchTypeTag = getEl("#search-type");
+    const keywordTag = getEl("#keyword");
+    const searchBtn = getEl("#search-btn");
+
+    if (searchTypeTag) {
+        searchTypeTag.addEventListener("change", async function () {
+            initSearchPlaceholder();
+
+            const keyword = getValue("#keyword").trim();
+            if (keyword === "") {
+                currentSearchType = "all";
+                currentKeyword = "";
+                await loadDeptList(1);
+            }
+        });
+    }
+
+    if (keywordTag) {
+        keywordTag.addEventListener("keydown", async function (e) {
+            if (e.key === "Enter") {
+                await searchDept(1);
+            }
+        });
+    }
+
+    if (searchBtn) {
+        searchBtn.addEventListener("click", async function () {
+            await searchDept(1);
+        });
+    }
+}
 
 /* =========================================================
    3. 요약 카드
-   - 검색결과와 상관없이 항상 전체 기준
    ========================================================= */
-
-// 상단 요약 카드용 전체 목록 조회
 async function loadDeptSummary() {
     try {
         const resp = await fetch("/dept");
-
         if (!resp.ok) {
             throw new Error("부서 요약 조회 실패 ...");
         }
 
         const data = await resp.json();
         const voList = data.voList ?? [];
-
         renderSummary(voList);
-
     } catch (error) {
         console.log(error);
         alert("부서 요약 조회 중 오류 발생 ...");
     }
 }
 
-// 요약 카드 숫자 세팅
-function renderSummary(voList){
-    const totalDeptTag = document.querySelector("#dept-count");
-    const memberCountTag = document.querySelector("#member-count");
+function renderSummary(voList) {
+    const totalDeptTag = getEl("#dept-count");
+    const memberCountTag = getEl("#member-count");
+
+    if (!totalDeptTag || !memberCountTag) return;
 
     totalDeptTag.innerText = voList.length;
 
     let total = 0;
-    for(const vo of voList){
+    for (const vo of voList) {
         total += (vo.memberCount ?? 0);
     }
 
@@ -133,8 +161,6 @@ function renderSummary(voList){
 /* =========================================================
    4. 목록 조회
    ========================================================= */
-
-// 전체 부서 목록 가져오기
 async function loadDeptList(page = 1) {
     try {
         currentPage = page;
@@ -142,7 +168,6 @@ async function loadDeptList(page = 1) {
         currentKeyword = "";
 
         const resp = await fetch(`/dept?currentPage=${page}`);
-
         if (!resp.ok) {
             throw new Error("부서 목록 조회 실패 ...");
         }
@@ -152,16 +177,14 @@ async function loadDeptList(page = 1) {
 
         renderTable(voList, data.pvo);
         renderPagination(data.pvo);
-
     } catch (error) {
         console.log(error);
         alert("부서 목록 조회 중 오류 발생 ...");
     }
 }
 
-// 목록 테이블 렌더링
 function renderTable(voList, pvo) {
-    const tbody = document.querySelector("#dept-list");
+    const tbody = getEl("#dept-list");
     if (!tbody) return;
 
     if (!voList || voList.length === 0) {
@@ -202,36 +225,10 @@ function renderTable(voList, pvo) {
 
 /* =========================================================
    5. 검색
-   - pos.js와 같은 방식
    ========================================================= */
-// 검색 placeholder 변경
-const searchTypeTag = document.querySelector("#search-type");
-
-if (searchTypeTag) {
-    searchTypeTag.addEventListener("change", function () {
-
-        const keywordInput = document.querySelector("#keyword");
-
-        if (this.value === "deptName") {
-            keywordInput.placeholder = "부서명을 입력하세요";
-        } else if (this.value === "useYn") {
-            keywordInput.placeholder = "사용 / 미사용 입력";
-        } else {
-            keywordInput.placeholder = "검색어를 입력하세요";
-        }
-
-        const keyword = keywordInput.value.trim();
-        if (keyword === "") {
-            loadDeptList();
-        }
-    });
-}
-
-   
-// 검색 버튼 클릭 시 분기
 async function searchDept(page = 1) {
-    const searchType = document.querySelector("#search-type")?.value ?? "all";
-    const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
+    const searchType = getValue("#search-type") || "all";
+    const keyword = getValue("#keyword").trim();
 
     currentPage = page;
     currentSearchType = searchType;
@@ -249,10 +246,9 @@ async function searchDept(page = 1) {
     }
 }
 
-// 부서명으로 검색
 async function loadDeptListByName(page = 1) {
     try {
-        const keyword = document.querySelector("#keyword").value.trim();
+        const keyword = getValue("#keyword").trim();
 
         if (keyword === "") {
             alert("검색어를 입력하세요.");
@@ -264,7 +260,6 @@ async function loadDeptListByName(page = 1) {
         currentKeyword = keyword;
 
         const resp = await fetch(`/dept/search/name?keyword=${encodeURIComponent(keyword)}&currentPage=${page}`);
-
         if (!resp.ok) {
             throw new Error("부서명 검색 실패 ...");
         }
@@ -274,17 +269,15 @@ async function loadDeptListByName(page = 1) {
 
         renderTable(voList, data.pvo);
         renderPagination(data.pvo);
-
     } catch (error) {
         console.log(error);
         alert("부서명 검색 중 오류 발생 ...");
     }
 }
 
-// 사용여부로 검색
 async function loadDeptListByUseYn(page = 1) {
     try {
-        const keyword = document.querySelector("#keyword").value.trim();
+        const keyword = getValue("#keyword").trim();
 
         if (keyword === "") {
             alert("검색어를 입력하세요.");
@@ -307,7 +300,6 @@ async function loadDeptListByUseYn(page = 1) {
         currentKeyword = keyword;
 
         const resp = await fetch(`/dept/search/useYn?useYn=${useYn}&currentPage=${page}`);
-
         if (!resp.ok) {
             throw new Error("사용여부 검색 실패 ...");
         }
@@ -317,32 +309,18 @@ async function loadDeptListByUseYn(page = 1) {
 
         renderTable(voList, data.pvo);
         renderPagination(data.pvo);
-
     } catch (error) {
         console.log(error);
         alert("사용여부 검색 중 오류 발생 ...");
     }
 }
 
-// 검색창 엔터 처리
-const deptKeywordTag = document.querySelector("#keyword");
-if (deptKeywordTag) {
-    deptKeywordTag.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            searchDept();
-        }
-    });
-}
-
 /* =========================================================
    6. 상세조회 모달
    ========================================================= */
-
-// 부서 상세조회 모달 열기
 async function openDeptModal(deptCode) {
     try {
         const resp = await fetch(`/dept/${deptCode}`);
-
         if (!resp.ok) {
             throw new Error("부서 상세조회 실패 ...");
         }
@@ -355,51 +333,35 @@ async function openDeptModal(deptCode) {
         currentUseYn = vo.useYn;
         currentMemberList = memberList;
 
-        // 부서 상세정보 채우기
-        document.querySelector("#modal-dept-name").innerText = vo.deptName ?? "-";
-        document.querySelector("#modal-dept-manager").innerText = vo.managerName ?? "-";
-        document.querySelector("#modal-dept-address").innerText = vo.deptAddress ?? "-";
-        document.querySelector("#modal-dept-emp").innerText = (vo.memberCount ?? 0) + "명";
-        document.querySelector("#modal-created-at").innerText = formatDate(vo.createdAt);
+        getEl("#modal-dept-name").innerText = vo.deptName ?? "-";
+        getEl("#modal-dept-manager").innerText = vo.managerName ?? "-";
+        getEl("#modal-dept-address").innerText = vo.deptAddress ?? "-";
+        getEl("#modal-dept-emp").innerText = `${vo.memberCount ?? 0}명`;
+        getEl("#modal-created-at").innerText = formatDate(vo.createdAt);
 
         const statusInfo = getUseYnInfo(vo.useYn);
-        const modalUseYnTag = document.querySelector("#modal-use-yn");
+        const modalUseYnTag = getEl("#modal-use-yn");
         modalUseYnTag.className = `status ${statusInfo.statusClass}`;
         modalUseYnTag.innerText = statusInfo.text;
-        
 
-        // 활성/비활성 버튼 문구 세팅
-        const toggleBtn = document.querySelector("#toggle-use-btn");
+        const toggleBtn = getEl("#toggle-use-btn");
         if (toggleBtn) {
-            if (vo.useYn === "Y") {
-                toggleBtn.innerText = "비활성화";
-            } else {
-                toggleBtn.innerText = "활성화";
-            }
+            toggleBtn.innerText = (vo.useYn === "Y") ? "비활성화" : "활성화";
         }
 
-        // 소속 인원 목록 채우기
         renderDeptMemberList(memberList);
-
-        // 수정 UI 초기화
         cancelEditAddress();
         cancelEditManager();
-
-        document.querySelector("#dept-modal-wrap").style.display = "flex";
-
+        showModal("#dept-modal-wrap");
     } catch (error) {
         console.log(error);
         alert("부서 상세조회 실패 ...");
     }
 }
 
-// 소속 인원 테이블 렌더링
 function renderDeptMemberList(memberList) {
-    const tbody = document.querySelector("#modal-member-list");
-
-    if (!tbody) {
-        return;
-    }
+    const tbody = getEl("#modal-member-list");
+    if (!tbody) return;
 
     if (!memberList || memberList.length === 0) {
         tbody.innerHTML = `
@@ -430,16 +392,13 @@ function renderDeptMemberList(memberList) {
     tbody.innerHTML = str;
 }
 
-// 상세조회 모달 닫기
 function closeDeptModal() {
-    document.querySelector("#dept-modal-wrap").style.display = "none";
+    hideModal("#dept-modal-wrap");
 }
 
 /* =========================================================
    7. 활성화 / 비활성화
    ========================================================= */
-
-// 현재 부서 사용여부 토글
 async function toggleDeptUseYn() {
     try {
         if (currentDeptCode == null || currentUseYn == null) {
@@ -459,20 +418,14 @@ async function toggleDeptUseYn() {
         }
 
         const ok = confirm(msg);
-        if (!ok) {
-            return;
-        }
+        if (!ok) return;
 
-        const resp = await fetch(url, {
-            method: "PUT",
-        });
-
+        const resp = await fetch(url, { method: "PUT" });
         if (!resp.ok) {
             throw new Error("상태 변경 실패 ...");
         }
 
         const data = await resp.json();
-
         if (data.result != 1) {
             alert("처리 실패");
             return;
@@ -480,9 +433,8 @@ async function toggleDeptUseYn() {
 
         alert("처리 완료");
         closeDeptModal();
-        loadDeptSummary();
-        loadDeptList();
-
+        await loadDeptSummary();
+        await reloadDeptListKeepingState();
     } catch (error) {
         console.log(error);
         alert("상태 변경 중 오류 발생 ...");
@@ -492,29 +444,25 @@ async function toggleDeptUseYn() {
 /* =========================================================
    8. 근무위치 수정
    ========================================================= */
-
-// 근무위치 수정 시작
 function startEditAddress() {
-    const currentAddress = document.querySelector("#modal-dept-address").innerText;
+    const currentAddress = getEl("#modal-dept-address").innerText;
 
-    document.querySelector("#address-input").value = currentAddress;
-    document.querySelector("#address-view-area").style.display = "none";
-    document.querySelector("#address-edit-area").style.display = "grid";
+    getEl("#address-input").value = currentAddress;
+    getEl("#address-view-area").style.display = "none";
+    getEl("#address-edit-area").style.display = "grid";
 }
 
-// 근무위치 수정 취소
 function cancelEditAddress() {
-    const viewTag = document.querySelector("#address-view-area");
-    const editTag = document.querySelector("#address-edit-area");
+    const viewTag = getEl("#address-view-area");
+    const editTag = getEl("#address-edit-area");
 
     if (viewTag) viewTag.style.display = "grid";
     if (editTag) editTag.style.display = "none";
 }
 
-// 근무위치 수정 저장
 async function saveAddress() {
     try {
-        const deptAddress = document.querySelector("#address-input").value;
+        const deptAddress = getEl("#address-input").value;
 
         if (!currentDeptCode) {
             alert("부서 정보가 없습니다.");
@@ -523,10 +471,8 @@ async function saveAddress() {
 
         const resp = await fetch(`/dept/${currentDeptCode}/address`, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ deptAddress }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ deptAddress })
         });
 
         if (!resp.ok) {
@@ -534,18 +480,16 @@ async function saveAddress() {
         }
 
         const data = await resp.json();
-
         if (data.result != 1) {
             alert("근무위치 수정 실패");
             return;
         }
 
-        document.querySelector("#modal-dept-address").innerText = deptAddress;
+        getEl("#modal-dept-address").innerText = deptAddress;
         cancelEditAddress();
 
         alert("근무위치 수정 완료");
-        loadDeptList();
-
+        await reloadDeptListKeepingState();
     } catch (error) {
         console.log(error);
         alert("근무위치 수정 중 오류 발생 ...");
@@ -555,42 +499,36 @@ async function saveAddress() {
 /* =========================================================
    9. 관리자 수정
    ========================================================= */
-
-// 관리자 수정 시작
 function startEditManager() {
-    const selectTag = document.querySelector("#manager-select");
+    const selectTag = getEl("#manager-select");
+    const currentManagerName = getEl("#modal-dept-manager").innerText;
+
     selectTag.innerHTML = "";
 
     for (let i = 0; i < currentMemberList.length; i++) {
         const member = currentMemberList[i];
-        let selected = "";
-
-        if (member.empName === document.querySelector("#modal-dept-manager").innerText) {
-            selected = "selected";
-        }
+        const selected = member.empName === currentManagerName ? "selected" : "";
 
         selectTag.innerHTML += `
             <option value="${member.empNo}" ${selected}>${member.empName}</option>
         `;
     }
 
-    document.querySelector("#manager-view-area").style.display = "none";
-    document.querySelector("#manager-edit-area").style.display = "grid";
+    getEl("#manager-view-area").style.display = "none";
+    getEl("#manager-edit-area").style.display = "grid";
 }
 
-// 관리자 수정 취소
 function cancelEditManager() {
-    const viewTag = document.querySelector("#manager-view-area");
-    const editTag = document.querySelector("#manager-edit-area");
+    const viewTag = getEl("#manager-view-area");
+    const editTag = getEl("#manager-edit-area");
 
     if (viewTag) viewTag.style.display = "grid";
     if (editTag) editTag.style.display = "none";
 }
 
-// 관리자 수정 저장
 async function saveManager() {
     try {
-        const managerEmpNo = document.querySelector("#manager-select").value;
+        const managerEmpNo = getEl("#manager-select").value;
 
         if (!currentDeptCode) {
             alert("부서 정보가 없습니다.");
@@ -599,10 +537,8 @@ async function saveManager() {
 
         const resp = await fetch(`/dept/${currentDeptCode}/manager`, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ managerEmpNo }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ managerEmpNo })
         });
 
         if (!resp.ok) {
@@ -610,20 +546,18 @@ async function saveManager() {
         }
 
         const data = await resp.json();
-
         if (data.result != 1) {
             alert("관리자 수정 실패");
             return;
         }
 
-        const selectedText = document.querySelector("#manager-select").selectedOptions[0].text;
-        document.querySelector("#modal-dept-manager").innerText = selectedText;
+        const selectedText = getEl("#manager-select").selectedOptions[0].text;
+        getEl("#modal-dept-manager").innerText = selectedText;
 
         cancelEditManager();
 
         alert("관리자 수정 완료");
-        loadDeptList();
-
+        await reloadDeptListKeepingState();
     } catch (error) {
         console.log(error);
         alert("관리자 수정 중 오류 발생 ...");
@@ -633,27 +567,23 @@ async function saveManager() {
 /* =========================================================
    10. 부서 등록
    ========================================================= */
-
-// 등록 모달 열기
 function openInsertDeptModal() {
-    document.querySelector("#insert-dept-code").value = "";
-    document.querySelector("#insert-dept-name").value = "";
-    document.querySelector("#insert-dept-address").value = "";
+    getEl("#insert-dept-code").value = "";
+    getEl("#insert-dept-name").value = "";
+    getEl("#insert-dept-address").value = "";
 
-    document.querySelector("#dept-insert-modal-wrap").style.display = "flex";
+    showModal("#dept-insert-modal-wrap");
 }
 
-// 등록 모달 닫기
 function closeInsertDeptModal() {
-    document.querySelector("#dept-insert-modal-wrap").style.display = "none";
+    hideModal("#dept-insert-modal-wrap");
 }
 
-// 부서 등록
 async function insertDept() {
     try {
-        const deptCode = document.querySelector("#insert-dept-code").value.trim();
-        const deptName = document.querySelector("#insert-dept-name").value.trim();
-        const deptAddress = document.querySelector("#insert-dept-address").value.trim();
+        const deptCode = getEl("#insert-dept-code").value.trim();
+        const deptName = getEl("#insert-dept-name").value.trim();
+        const deptAddress = getEl("#insert-dept-address").value.trim();
 
         if (deptCode === "") {
             alert("부서코드를 입력하세요.");
@@ -672,14 +602,12 @@ async function insertDept() {
 
         const resp = await fetch("/dept", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 deptCode,
                 deptName,
-                deptAddress,
-            }),
+                deptAddress
+            })
         });
 
         if (!resp.ok) {
@@ -687,7 +615,6 @@ async function insertDept() {
         }
 
         const data = await resp.json();
-
         if (data.result != 1) {
             alert("부서 등록 실패");
             return;
@@ -695,61 +622,19 @@ async function insertDept() {
 
         alert("부서 등록 완료 !");
         closeInsertDeptModal();
-
-        loadDeptSummary();
-        loadDeptList();
-
+        await loadDeptSummary();
+        await loadDeptList(1);
     } catch (error) {
         console.log(error);
         alert("부서 등록 중 오류 발생 ...");
     }
 }
 
-
-function bindDeptEvents() {
-    const searchTypeTag = document.querySelector("#search-type");
-    const keywordTag = document.querySelector("#keyword");
-    const searchBtn = document.querySelector("#search-btn");
-
-    if (searchTypeTag) {
-        searchTypeTag.addEventListener("change", async function () {
-            const keywordInput = document.querySelector("#keyword");
-
-            if (this.value === "deptName") {
-                keywordInput.placeholder = "부서명을 입력하세요";
-            } else if (this.value === "useYn") {
-                keywordInput.placeholder = "사용 / 미사용 입력";
-            } else {
-                keywordInput.placeholder = "검색어를 입력하세요";
-            }
-
-            const keyword = keywordInput.value.trim();
-            if (keyword === "") {
-                currentSearchType = "all";
-                currentKeyword = "";
-                await loadDeptList(1);
-            }
-        });
-    }
-
-    if (keywordTag) {
-        keywordTag.addEventListener("keydown", async function (e) {
-            if (e.key === "Enter") {
-                await searchDept(1);
-            }
-        });
-    }
-
-    if (searchBtn) {
-        searchBtn.addEventListener("click", async function () {
-            await searchDept(1);
-        });
-    }
-}
-
-
+/* =========================================================
+   11. 페이징
+   ========================================================= */
 function renderPagination(pvo) {
-    const pageArea = document.querySelector("#dept-pagination-area");
+    const pageArea = getEl("#dept-pagination-area");
     if (!pageArea) return;
 
     if (!pvo) {
@@ -760,7 +645,6 @@ function renderPagination(pvo) {
     }
 
     let str = "";
-
     const start = pvo.startPage || 1;
     const end = pvo.endPage || 1;
 
@@ -790,7 +674,6 @@ function renderPagination(pvo) {
 
     pageArea.innerHTML = str;
 }
-
 
 function getDeptPageMoveFunction(page) {
     if (currentSearchType === "all" || currentKeyword === "") {

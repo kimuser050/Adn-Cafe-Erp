@@ -1,9 +1,12 @@
 /* =========================================================
-   급여등록 - UI 폴리싱 최종본
-   컬러 제한:
-   #5C3F2A / #9C785D / #D9B189
+   급여등록 전용 스타일
    ========================================================= */
 
+/* =========================================================
+   1. 컬러 / 공통 변수
+   ---------------------------------------------------------
+   프로젝트에서 이번 급여등록 화면에만 쓰는 톤
+   ========================================================= */
 :root {
     --pay-dark: #5C3F2A;
     --pay-mid: #9C785D;
@@ -12,6 +15,7 @@
     --pay-bg: #f6f3ef;
     --pay-panel: rgba(255, 255, 255, 0.82);
     --pay-panel-strong: rgba(255, 255, 255, 0.92);
+
     --pay-border: rgba(156, 120, 93, 0.22);
     --pay-border-strong: rgba(156, 120, 93, 0.38);
 
@@ -30,7 +34,9 @@
 }
 
 /* =========================================================
-   1. 전체 구조
+   2. 페이지 전체 뼈대
+   ---------------------------------------------------------
+   급여등록 화면 전체 배치
    ========================================================= */
 .pay-insert-page,
 .pay-insert-page *,
@@ -46,7 +52,11 @@
     overflow: hidden;
     padding: 16px 24px !important;
     background:
-        linear-gradient(180deg, rgba(217, 177, 137, 0.18) 0%, rgba(217, 177, 137, 0.10) 100%),
+        linear-gradient(
+            180deg,
+            rgba(217, 177, 137, 0.18) 0%,
+            rgba(217, 177, 137, 0.10) 100%
+        ),
         var(--pay-bg);
 }
 
@@ -62,26 +72,34 @@
     display: flex;
     flex-direction: column;
     padding: 20px 24px;
-    border-radius: 28px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.72) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(217, 177, 137, 0.18);
-    box-shadow: var(--pay-shadow-lg);
     overflow: hidden;
+
+    border-radius: 28px;
+    border: 1px solid rgba(217, 177, 137, 0.18);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.84) 0%,
+        rgba(255, 255, 255, 0.72) 100%
+    );
+    backdrop-filter: blur(10px);
+    box-shadow: var(--pay-shadow-lg);
 }
 
 /* =========================================================
-   2. 헤더
+   3. 상단 헤더
+   ---------------------------------------------------------
+   제목 / 설명 / 우측 뱃지
    ========================================================= */
 .pay-insert-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     gap: 18px;
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid rgba(156, 120, 93, 0.14);
     flex-shrink: 0;
+
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(156, 120, 93, 0.14);
 }
 
 .pay-header-left {
@@ -114,26 +132,32 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     min-height: 36px;
     padding: 0 14px;
     border-radius: 999px;
+
     font-size: 12px;
     font-weight: 700;
     color: var(--pay-mid);
+
     background: rgba(255, 255, 255, 0.88);
     border: 1px solid rgba(156, 120, 93, 0.18);
     box-shadow: 0 4px 12px rgba(92, 63, 42, 0.04);
 }
 
 /* =========================================================
-   3. 메인 레이아웃
+   4. 메인 레이아웃
+   ---------------------------------------------------------
+   좌측 패널 / 우측 입력 테이블
    ========================================================= */
 .pay-main-layout {
+    flex: 1;
+    min-height: 0;
+
     display: grid;
     grid-template-columns: 360px minmax(0, 1fr);
     gap: 24px;
-    flex: 1;
-    min-height: 0;
 }
 
 .pay-side-column,
@@ -146,24 +170,26 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    min-height: 0;
 }
 
 .pay-content-column {
     display: flex;
     flex-direction: column;
-    min-height: 0;
 }
 
 /* =========================================================
-   4. 공통 패널
+   5. 공통 패널
+   ---------------------------------------------------------
+   좌측 카드 / 우측 카드 공통 느낌
    ========================================================= */
 .pay-panel {
-    background: var(--pay-panel);
-    border-radius: 20px;
     padding: 18px;
+    border-radius: 20px;
+
+    background: var(--pay-panel);
     border: 1px solid rgba(156, 120, 93, 0.12);
     box-shadow: var(--pay-shadow-sm);
+
     transition:
         box-shadow 0.22s ease,
         border-color 0.22s ease,
@@ -180,11 +206,12 @@
     display: flex;
     align-items: center;
     gap: 8px;
+
     margin: 0 0 12px;
     font-size: 14px;
     font-weight: 800;
-    color: var(--pay-dark);
     letter-spacing: -0.01em;
+    color: var(--pay-dark);
 }
 
 .panel-title::before {
@@ -204,14 +231,18 @@
 }
 
 /* =========================================================
-   5. 공통 입력 / 버튼
+   6. 공통 입력 / 버튼
+   ---------------------------------------------------------
+   입력칸, 버튼 공통 미감
    ========================================================= */
 .form-input {
     width: 100%;
     border-radius: 12px;
     border: 1px solid rgba(156, 120, 93, 0.18);
-    background: rgba(255,255,255,0.88);
+
+    background: rgba(255, 255, 255, 0.88);
     color: var(--pay-text);
+
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease,
@@ -221,7 +252,7 @@
 
 .form-input:hover {
     border-color: rgba(156, 120, 93, 0.34);
-    background: rgba(255,255,255,0.96);
+    background: rgba(255, 255, 255, 0.96);
 }
 
 .form-input:focus {
@@ -270,7 +301,7 @@
 }
 
 .btn-outline {
-    background: rgba(255,255,255,0.92) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
     border: 1px solid rgba(156, 120, 93, 0.30) !important;
     color: var(--pay-dark) !important;
 }
@@ -287,7 +318,7 @@
 }
 
 /* =========================================================
-   6. 좌측 - 지급월 / 검색 / 정보
+   7. 좌측 - 지급월 영역
    ========================================================= */
 .month-row {
     display: flex;
@@ -299,6 +330,9 @@
     padding: 0 14px;
 }
 
+/* =========================================================
+   8. 좌측 - 직원검색 영역
+   ========================================================= */
 .pay-search-panel {
     display: flex;
     flex-direction: column;
@@ -321,17 +355,22 @@
     border-radius: 12px;
 }
 
-/* 검색 결과 영역 */
+/* 검색 결과 박스 */
 .emp-search-result {
     margin-top: 10px;
     height: 144px;
     overflow-y: auto;
     padding: 8px;
     border-radius: 16px;
+
     border: 1px solid rgba(156, 120, 93, 0.14);
-    background:
-        linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 100%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.96) 0%,
+        rgba(255, 255, 255, 0.82) 100%
+    );
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
     scroll-behavior: smooth;
 }
 
@@ -340,31 +379,38 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     border-radius: 12px;
     background: rgba(217, 177, 137, 0.06);
+
     color: var(--pay-text-faint);
     font-size: 12px;
     text-align: center;
 }
 
-/* 직원 선택 카드 */
+/* 직원 검색 결과 한 줄 카드 */
 .emp-result-item {
     position: relative;
+
     display: grid;
     grid-template-columns: 86px 74px 1fr 54px;
     gap: 10px;
     align-items: center;
+
     min-height: 48px;
     padding: 0 14px;
     border-radius: 14px;
     border: 1px solid transparent;
+
     background: rgba(217, 177, 137, 0.05);
     cursor: pointer;
+
     transition:
         transform 0.22s ease,
         box-shadow 0.22s ease,
         border-color 0.22s ease,
         background-color 0.22s ease;
+
     animation: empResultIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -384,7 +430,11 @@
 }
 
 .emp-result-item.selected {
-    background: linear-gradient(180deg, rgba(217, 177, 137, 0.22) 0%, rgba(217, 177, 137, 0.14) 100%);
+    background: linear-gradient(
+        180deg,
+        rgba(217, 177, 137, 0.22) 0%,
+        rgba(217, 177, 137, 0.14) 100%
+    );
     border-color: rgba(156, 120, 93, 0.42);
     box-shadow: 0 10px 18px rgba(92, 63, 42, 0.10);
 }
@@ -406,9 +456,11 @@
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+
     padding: 3px 8px;
     border-radius: 999px;
-    background: rgba(255,255,255,0.92);
+
+    background: rgba(255, 255, 255, 0.92);
     color: var(--pay-mid);
     font-size: 10px;
     font-weight: 800;
@@ -441,18 +493,9 @@
     display: none;
 }
 
-@keyframes empResultIn {
-    0% {
-        opacity: 0;
-        transform: translateY(6px) scale(0.985);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* 직원정보 */
+/* =========================================================
+   9. 좌측 - 직원정보 영역
+   ========================================================= */
 .emp-info-grid.compact {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -461,14 +504,17 @@
 
 .info-row {
     min-height: 84px;
-    padding: 12px 14px;
-    border-radius: 14px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 6px;
-    background: rgba(255,255,255,0.56);
+
+    padding: 12px 14px;
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.56);
     border: 1px solid rgba(156, 120, 93, 0.10);
+
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease,
@@ -477,14 +523,14 @@
 
 .info-row:hover {
     border-color: rgba(156, 120, 93, 0.20);
-    background: rgba(255,255,255,0.74);
+    background: rgba(255, 255, 255, 0.74);
 }
 
 .info-label {
     font-size: 10px;
     font-weight: 700;
-    color: var(--pay-text-faint);
     letter-spacing: 0.01em;
+    color: var(--pay-text-faint);
 }
 
 .info-value {
@@ -498,10 +544,16 @@
 .info-row-accent {
     grid-column: 1 / -1;
     min-height: 60px;
+
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
-    background: linear-gradient(180deg, rgba(217, 177, 137, 0.24) 0%, rgba(217, 177, 137, 0.16) 100%) !important;
+
+    background: linear-gradient(
+        180deg,
+        rgba(217, 177, 137, 0.24) 0%,
+        rgba(217, 177, 137, 0.16) 100%
+    ) !important;
     border-color: rgba(156, 120, 93, 0.20) !important;
 }
 
@@ -518,7 +570,7 @@
 }
 
 /* =========================================================
-   7. 우측 - 테이블
+   10. 우측 - 입력 테이블 전체 영역
    ========================================================= */
 .pay-content-column .pay-panel {
     display: flex;
@@ -531,8 +583,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
     gap: 12px;
+    margin-bottom: 10px;
 }
 
 .pay-table-wrap {
@@ -540,31 +592,41 @@
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
+
     border-radius: 16px;
     border: 1px solid rgba(156, 120, 93, 0.14);
-    background: rgba(255,255,255,0.86);
+    background: rgba(255, 255, 255, 0.86);
 }
 
-/* 표 전체 */
+/* =========================================================
+   11. 우측 - 테이블 본체
+   ========================================================= */
 .pay-item-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
-    table-layout: fixed;
 }
 
 .pay-item-table thead th {
     position: sticky;
     top: 0;
     z-index: 2;
+
     padding: 13px 12px;
-    background: linear-gradient(180deg, rgba(92, 63, 42, 0.96) 0%, rgba(92, 63, 42, 0.92) 100%);
+    text-align: center;
+
+    background: linear-gradient(
+        180deg,
+        rgba(92, 63, 42, 0.96) 0%,
+        rgba(92, 63, 42, 0.92) 100%
+    );
     color: #fff;
     font-size: 12px;
     font-weight: 700;
-    text-align: center;
     letter-spacing: -0.01em;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .pay-item-table thead th:first-child {
@@ -576,11 +638,13 @@
 }
 
 .pay-item-table tbody td {
-    padding: 10px 12px;
     height: 58px;
-    border-bottom: 1px solid rgba(156, 120, 93, 0.10);
+    padding: 10px 12px;
     vertical-align: middle;
-    background: rgba(255,255,255,0.40);
+
+    border-bottom: 1px solid rgba(156, 120, 93, 0.10);
+    background: rgba(255, 255, 255, 0.40);
+
     font-size: 13px;
     color: var(--pay-text);
 }
@@ -603,31 +667,34 @@
     color: var(--pay-text-faint);
 }
 
-/* 표 텍스트 미감 */
+/* =========================================================
+   12. 우측 - 테이블 안 텍스트 / 뱃지
+   ========================================================= */
 .pay-item-name {
+    text-align: center;
     font-size: 13px;
     font-weight: 700;
-    color: var(--pay-dark);
-    text-align: center;
     letter-spacing: -0.01em;
+    color: var(--pay-dark);
 }
 
 .pay-item-type {
+    text-align: center;
     font-size: 12px;
     font-weight: 600;
     color: var(--pay-text-soft);
-    text-align: center;
 }
 
-/* 과세 뱃지 */
 .tax-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     min-width: 62px;
     height: 28px;
     padding: 0 10px;
     border-radius: 999px;
+
     font-size: 11px;
     font-weight: 700;
     letter-spacing: -0.01em;
@@ -643,15 +710,19 @@
     background: rgba(217, 177, 137, 0.16);
 }
 
-/* 입력칸 */
+/* =========================================================
+   13. 우측 - 금액 / 비고 입력칸
+   ========================================================= */
 .amount-input,
 .note-input {
     height: 38px !important;
     border-radius: 10px !important;
     border: 1px solid rgba(156, 120, 93, 0.14) !important;
-    background: rgba(255,255,255,0.92) !important;
+
+    background: rgba(255, 255, 255, 0.92) !important;
     color: var(--pay-text) !important;
     box-shadow: none !important;
+
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease,
@@ -685,50 +756,63 @@
     background: #fff !important;
 }
 
-/* readonly를 확실히 "자동반영 값"처럼 */
+/* 자동반영 항목(수정불가) */
 .amount-input[readonly] {
-    background:
-        linear-gradient(180deg, rgba(217, 177, 137, 0.16) 0%, rgba(217, 177, 137, 0.10) 100%) !important;
+    background: linear-gradient(
+        180deg,
+        rgba(217, 177, 137, 0.16) 0%,
+        rgba(217, 177, 137, 0.10) 100%
+    ) !important;
     border: 1px dashed rgba(156, 120, 93, 0.36) !important;
     color: var(--pay-dark) !important;
     font-weight: 800 !important;
     cursor: not-allowed !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
 }
 
 .amount-input[readonly]:hover,
 .amount-input[readonly]:focus {
     transform: none !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55) !important;
-    background:
-        linear-gradient(180deg, rgba(217, 177, 137, 0.18) 0%, rgba(217, 177, 137, 0.12) 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+    background: linear-gradient(
+        180deg,
+        rgba(217, 177, 137, 0.18) 0%,
+        rgba(217, 177, 137, 0.12) 100%
+    ) !important;
 }
 
-/* 자동 채워진 비고도 살짝 구분 */
+/* 자동 계산 후 채워졌다는 정도만 살짝 표시 */
 .note-input.auto-filled,
 .amount-input.auto-filled {
     border-color: rgba(156, 120, 93, 0.30) !important;
 }
 
 /* =========================================================
-   8. 하단 요약/버튼
+   14. 하단 요약 / 저장 버튼 영역
    ========================================================= */
 .pay-bottom-row {
     margin-top: 14px;
+    flex-shrink: 0;
+
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: 18px;
-    flex-shrink: 0;
 }
 
 .summary-box {
     display: flex;
     align-items: center;
     gap: 26px;
+
     padding: 16px 22px;
-    background: linear-gradient(180deg, rgba(92, 63, 42, 0.96) 0%, rgba(92, 63, 42, 0.92) 100%);
     border-radius: 18px;
+
+    background: linear-gradient(
+        180deg,
+        rgba(92, 63, 42, 0.96) 0%,
+        rgba(92, 63, 42, 0.92) 100%
+    );
     color: #fff;
     box-shadow: 0 14px 26px rgba(92, 63, 42, 0.14);
 }
@@ -742,20 +826,20 @@
 .summary-line span {
     font-size: 12px;
     font-weight: 600;
-    color: rgba(255,255,255,0.72);
+    color: rgba(255, 255, 255, 0.72);
 }
 
 .summary-line strong {
     font-size: 16px;
     font-weight: 800;
-    color: var(--pay-light);
     letter-spacing: -0.01em;
+    color: var(--pay-light);
 }
 
 .summary-line.net {
     margin-left: auto;
     padding-left: 18px;
-    border-left: 1px solid rgba(255,255,255,0.12);
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .summary-line.net strong {
@@ -770,7 +854,9 @@
 }
 
 /* =========================================================
-   9. 스크롤바
+   15. 스크롤바
+   ---------------------------------------------------------
+   검색결과 / 입력테이블 공통 스크롤바
    ========================================================= */
 .emp-search-result::-webkit-scrollbar,
 .pay-table-wrap::-webkit-scrollbar {
@@ -785,7 +871,11 @@
 
 .emp-search-result::-webkit-scrollbar-thumb,
 .pay-table-wrap::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(217, 177, 137, 0.92) 0%, rgba(156, 120, 93, 0.88) 100%);
+    background: linear-gradient(
+        180deg,
+        rgba(217, 177, 137, 0.92) 0%,
+        rgba(156, 120, 93, 0.88) 100%
+    );
     border-radius: 999px;
     border: 2px solid transparent;
     background-clip: padding-box;
@@ -793,7 +883,11 @@
 
 .emp-search-result::-webkit-scrollbar-thumb:hover,
 .pay-table-wrap::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(156, 120, 93, 0.96) 0%, rgba(92, 63, 42, 0.94) 100%);
+    background: linear-gradient(
+        180deg,
+        rgba(156, 120, 93, 0.96) 0%,
+        rgba(92, 63, 42, 0.94) 100%
+    );
     background-clip: padding-box;
 }
 
@@ -804,7 +898,7 @@
 }
 
 /* =========================================================
-   10. 미세 애니메이션
+   16. 미세 인터랙션 / 공통 애니메이션용 transition
    ========================================================= */
 .summary-box,
 .info-row,
@@ -822,6 +916,7 @@
     transform: translateY(-1px);
 }
 
+/* 버튼에 쓸어가는 광택 효과 */
 #auto-calc-btn,
 .pay-action-area .btn {
     position: relative;
@@ -835,9 +930,9 @@
     inset: 0;
     background: linear-gradient(
         120deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.18) 48%,
-        rgba(255,255,255,0) 100%
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.18) 48%,
+        rgba(255, 255, 255, 0) 100%
     );
     transform: translateX(-120%);
     transition: transform 0.6s ease;
@@ -848,8 +943,20 @@
     transform: translateX(120%);
 }
 
+/* 검색결과 등장 애니메이션 */
+@keyframes empResultIn {
+    0% {
+        opacity: 0;
+        transform: translateY(6px) scale(0.985);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 /* =========================================================
-   11. 반응형
+   17. 반응형
    ========================================================= */
 @media (max-width: 1600px) {
     .pay-main-layout {

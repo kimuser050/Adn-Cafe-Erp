@@ -1,11 +1,6 @@
-/* =========================================================
-   직급관리 전용 스타일
-   - 부서관리(deptList.css)와 같은 결로 통일
-   ========================================================= */
+/* 직급관리 */
 
-/* =========================================================
-   1. 목록 카드 / 테이블
-   ========================================================= */
+/* 목록 */
 .pos-page .org-table-card {
     min-height: 420px;
     animation: posCardFloatIn 0.6s ease;
@@ -48,13 +43,11 @@
 }
 
 .pos-table tbody tr:hover {
-    background: rgba(255,255,255,0.65);
+    background: rgba(255, 255, 255, 0.65);
     transform: translateY(-1px);
 }
 
-/* =========================================================
-   2. 검색 UI
-   ========================================================= */
+/* 검색 */
 .pos-page .search-select {
     min-width: 92px;
 }
@@ -67,9 +60,7 @@
     width: 200px;
 }
 
-/* =========================================================
-   3. 공통 모달 효과
-   ========================================================= */
+/* 모달 공통 */
 .org-modal-wrap {
     backdrop-filter: blur(5px);
     animation: posBackdropFade 0.25s ease;
@@ -80,12 +71,10 @@
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(92, 63, 42, 0.18);
-    animation: posModalPop 0.34s cubic-bezier(.2,.8,.2,1);
+    animation: posModalPop 0.34s cubic-bezier(.2, .8, .2, 1);
 }
 
-/* =========================================================
-   4. 상세조회 모달
-   ========================================================= */
+/* 상세 모달 */
 #pos-modal-wrap .org-modal {
     max-width: 980px;
 }
@@ -148,6 +137,55 @@
     margin: 0;
 }
 
+/* 상세 수정줄 */
+#baseSalary-view-area,
+#bonusRate-view-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+#baseSalary-edit-area,
+#bonusRate-edit-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+#modal-pos-baseSalary,
+#modal-pos-bonusRate {
+    display: block;
+    min-width: 0;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-overflow: clip;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+}
+
+#baseSalary-input,
+#bonusRate-input {
+    width: 100%;
+    min-width: 0;
+}
+
+#pos-modal-wrap .org-detail-value .btn {
+    flex-shrink: 0;
+    height: 30px;
+    padding: 0 11px;
+    border-radius: 9px;
+}
+
+#pos-modal-wrap .detail-action-btn {
+    min-width: 52px;
+}
+
+/* 소속인원 */
 .pos-detail-section {
     border: 1px solid #efe8e0;
     border-radius: 14px;
@@ -164,9 +202,6 @@
     margin-bottom: 12px;
 }
 
-/* =========================================================
-   5. 소속인원 테이블
-   ========================================================= */
 .pos-member-table {
     width: 100%;
     table-layout: fixed;
@@ -224,9 +259,7 @@
     background: #faf6f2;
 }
 
-/* =========================================================
-   6. 등록 모달
-   ========================================================= */
+/* 등록 모달 */
 #pos-insert-modal-wrap {
     align-items: flex-start !important;
     padding-top: 72px;
@@ -292,9 +325,7 @@
     height: 36px;
 }
 
-/* =========================================================
-   7. 모달 내부 input/select
-   ========================================================= */
+/* input */
 .org-modal input,
 .org-modal select {
     height: 36px;
@@ -313,59 +344,7 @@
     outline: none;
 }
 
-/* =========================================================
-   8. 상세조회 액션 영역
-   ========================================================= */
-#baseSalary-view-area,
-#bonusRate-view-area {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-}
-
-#baseSalary-edit-area,
-#bonusRate-edit-area {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-}
-
-#modal-pos-baseSalary,
-#modal-pos-bonusRate {
-    display: block;
-    min-width: 0;
-    white-space: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    text-overflow: clip;
-    padding-bottom: 2px;
-    scrollbar-width: thin;
-}
-
-#baseSalary-input,
-#bonusRate-input {
-    width: 100%;
-    min-width: 0;
-}
-
-#pos-modal-wrap .org-detail-value .btn {
-    flex-shrink: 0;
-    height: 30px;
-    padding: 0 11px;
-    border-radius: 9px;
-}
-
-#pos-modal-wrap .detail-action-btn {
-    min-width: 52px;
-}
-
-/* =========================================================
-   9. footer 버튼
-   ========================================================= */
+/* footer */
 #pos-modal-wrap .org-modal-footer .btn,
 #pos-insert-modal-wrap .org-modal-footer .btn {
     transition: transform 0.18s ease, box-shadow 0.18s ease;
@@ -377,9 +356,7 @@
     box-shadow: 0 10px 16px rgba(92, 63, 42, 0.12);
 }
 
-/* =========================================================
-   10. 기존 소속인원 테이블 클래스 대응
-   ========================================================= */
+/* 기존 대응 */
 .member-box {
     margin-top: 8px;
 }
@@ -391,9 +368,7 @@
     color: var(--color-dark);
 }
 
-/* =========================================================
-   11. 애니메이션
-   ========================================================= */
+/* 애니메이션 */
 @keyframes posModalPop {
     0% {
         opacity: 0;
