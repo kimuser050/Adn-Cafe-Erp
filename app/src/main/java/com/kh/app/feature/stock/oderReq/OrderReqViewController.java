@@ -19,7 +19,8 @@ public class OrderReqViewController {
 
         // 1. 로그인 및 권한 체크
         if (loginMemberVo == null ||
-                (!"310102".equals(loginMemberVo.getDeptCode()) && !"310104".equals(loginMemberVo.getDeptCode()))) {
+                (!"310102".equals(loginMemberVo.getDeptCode()) && !"310104".equals(loginMemberVo.getDeptCode())&&
+                        !"310100".equals(loginMemberVo.getDeptCode()))) {
             ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
             return "redirect:/home";
         }
