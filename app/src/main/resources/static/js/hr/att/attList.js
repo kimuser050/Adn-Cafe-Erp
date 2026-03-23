@@ -1,7 +1,4 @@
-/* =========================================================
-   근태관리 JS
-   ========================================================= */
-
+/* ================= 전역 ================= */
 let attList = [];
 let currentMonth = "";
 let currentEmpNo = null;
@@ -11,87 +8,37 @@ let currentPage = 1;
 let currentSearchType = "all";
 let currentKeyword = "";
 
-/* =========================================================
-   1. 시작
-   ========================================================= */
+/* ================= 시작 ================= */
 window.addEventListener("DOMContentLoaded", async function () {
     try {
         initDefaultMonth();
         bindEvents();
-        await loadAttList();
+        await loadAttList(1);
     } catch (error) {
         console.log(error);
         alert("근태관리 페이지 로딩 실패 ...");
     }
 });
 
-/* =========================================================
-   2. 초기설정 / 이벤트
-   ========================================================= */
-function initDefaultMonth() {
-    const monthTag = document.querySelector("#month");
-    if (!monthTag) return;
-
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    currentMonth = `${year}-${month}`;
-    monthTag.value = currentMonth;
+/* ================= 공통 ================= */
+function getEl(selector) {
+    return document.querySelector(selector);
 }
 
-function bindEvents() {
-    const monthTag = document.querySelector("#month");
-    const keywordTag = document.querySelector("#keyword");
-    const searchBtn = document.querySelector("#search-btn");
-    const searchTypeTag = document.querySelector("#search-type");
-
-    if (monthTag) {
-    monthTag.addEventListener("change", async function () {
-        currentMonth = this.value;
-        currentSearchType = "all";
-        currentKeyword = "";
-
-        const keywordInput = document.querySelector("#keyword");
-        const searchTypeTag = document.querySelector("#search-type");
-        if (keywordInput) keywordInput.value = "";
-        if (searchTypeTag) searchTypeTag.value = "all";
-
-        await loadAttList(1);
-    });
-}
-    
-
-    if (keywordTag) {
-    keywordTag.addEventListener("keydown", async function (e) {
-        if (e.key === "Enter") {
-            await searchAtt(1);
-        }
-    });
-
-    }
-
-   if (searchBtn) {
-    searchBtn.addEventListener("click", async function () {
-        await searchAtt(1);
-    });
-    }
-
-    if (searchTypeTag) {
-    searchTypeTag.addEventListener("change", async function () {
-        const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
-
-        if (keyword === "") {
-            currentSearchType = "all";
-            currentKeyword = "";
-            await loadAttList(1);
-        }
-    });
-    }
+function getValue(selector) {
+    return getEl(selector)?.value ?? "";
 }
 
-/* =========================================================
-   3. 공통 함수
-   ========================================================= */
+function showModal(selector) {
+    const tag = getEl(selector);
+    if (tag) tag.style.display = "flex";
+}
+
+function hideModal(selector) {
+    const tag = getEl(selector);
+    if (tag) tag.style.display = "none";
+}
+
 function nvl(value) {
     if (value === null || value === undefined || value === "") {
         return "-";
@@ -117,6 +64,7 @@ function escapeHtml(value) {
 
 function formatMonthLabel(month) {
     if (!month || month.length < 7) return "-";
+
     const [year, mon] = month.split("-");
     return `${year}-${mon}-01 ~ ${year}-${mon}-${getLastDateOfMonth(year, mon)}`;
 }
@@ -139,18 +87,71 @@ function formatDateShort(workDate) {
     return `${month}/${day}(${dayName})`;
 }
 
-function toDateTimeString(workDate, timeValue) {
-    if (!timeValue || timeValue === "-") {
-        return null;
-    }
-    return `${workDate} ${timeValue}:00`;
+/* ================= 처음 세팅 ================= */
+function initDefaultMonth() {
+    const monthTag = getEl("#month");
+    if (!monthTag) return;
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+
+    currentMonth = `${year}-${month}`;
+    monthTag.value = currentMonth;
 }
 
-/* =========================================================
-   4. 목록 조회
-   ========================================================= */
+function bindEvents() {
+    const monthTag = getEl("#month");
+    const keywordTag = getEl("#keyword");
+    const searchBtn = getEl("#search-btn");
+    const searchTypeTag = getEl("#search-type");
+
+    if (monthTag) {
+        monthTag.addEventListener("change", async function () {
+            currentMonth = this.value;
+            currentSearchType = "all";
+            currentKeyword = "";
+
+            const keywordInput = getEl("#keyword");
+            const searchTypeInput = getEl("#search-type");
+
+            if (keywordInput) keywordInput.value = "";
+            if (searchTypeInput) searchTypeInput.value = "all";
+
+            await loadAttList(1);
+        });
+    }
+
+    if (keywordTag) {
+        keywordTag.addEventListener("keydown", async function (e) {
+            if (e.key === "Enter") {
+                await searchAtt(1);
+            }
+        });
+    }
+
+    if (searchBtn) {
+        searchBtn.addEventListener("click", async function () {
+            await searchAtt(1);
+        });
+    }
+
+    if (searchTypeTag) {
+        searchTypeTag.addEventListener("change", async function () {
+            const keyword = getValue("#keyword").trim();
+
+            if (keyword === "") {
+                currentSearchType = "all";
+                currentKeyword = "";
+                await loadAttList(1);
+            }
+        });
+    }
+}
+
+/* ================= 목록 ================= */
 async function loadAttList(page = 1) {
-    const month = document.querySelector("#month")?.value || currentMonth;
+    const month = getValue("#month") || currentMonth;
 
     currentPage = page;
     currentSearchType = "all";
@@ -171,14 +172,11 @@ async function loadAttList(page = 1) {
     renderPagination(data.pvo);
 }
 
-/* =========================================================
-   5. 검색
-   - 백엔드 검색 API가 없으므로 프론트에서 현재 월 목록 필터링
-   ========================================================= */
+/* ================= 검색 ================= */
 async function searchAtt(page = 1) {
-    const month = document.querySelector("#month")?.value || currentMonth;
-    const searchType = document.querySelector("#search-type")?.value ?? "all";
-    const keyword = document.querySelector("#keyword")?.value.trim() ?? "";
+    const month = getValue("#month") || currentMonth;
+    const searchType = getValue("#search-type") || "all";
+    const keyword = getValue("#keyword").trim();
 
     currentPage = page;
     currentSearchType = searchType;
@@ -210,27 +208,24 @@ async function searchAtt(page = 1) {
     currentMonth = month;
     attList = data.voList ?? [];
 
-    // 검색 결과에서는 summary를 다시 계산하지 않음
     renderTable(attList, data.pvo);
     renderPagination(data.pvo);
 }
 
-/* =========================================================
-   6. 요약 렌더링
-   ========================================================= */
+/* ================= 요약 ================= */
 function renderSummary(summary) {
-    document.querySelector("#total-workingDay-count").innerText = numberOrZero(summary?.attendanceCount);
-    document.querySelector("#total-lateDay-count").innerText = numberOrZero(summary?.lateCount);
-    document.querySelector("#total-absentDay-count").innerText = numberOrZero(summary?.absentCount);
-    document.querySelector("#total-vacationDay-count").innerText = numberOrZero(summary?.vacationCount);
-    document.querySelector("#total-overWorkHour-count").innerText = numberOrZero(summary?.otHours);
+    const safe = summary || {};
+
+    getEl("#total-workingDay-count").innerText = numberOrZero(safe.attendanceCount);
+    getEl("#total-lateDay-count").innerText = numberOrZero(safe.lateCount);
+    getEl("#total-absentDay-count").innerText = numberOrZero(safe.absentCount);
+    getEl("#total-vacationDay-count").innerText = numberOrZero(safe.vacationCount);
+    getEl("#total-overWorkHour-count").innerText = numberOrZero(safe.otHours);
 }
 
-/* =========================================================
-   7. 테이블 렌더링
-   ========================================================= */
+/* ================= 테이블 ================= */
 function renderTable(list, pvo) {
-    const tbodyTag = document.querySelector("#att-list");
+    const tbodyTag = getEl("#att-list");
     if (!tbodyTag) return;
 
     if (!list || list.length === 0) {
@@ -270,9 +265,7 @@ function renderTable(list, pvo) {
     tbodyTag.innerHTML = str;
 }
 
-/* =========================================================
-   8. 상세조회 모달 열기
-   ========================================================= */
+/* ================= 상세 ================= */
 async function openAttDetail(empNo) {
     try {
         const resp = await fetch(`/att/${empNo}?month=${encodeURIComponent(currentMonth)}`);
@@ -287,51 +280,41 @@ async function openAttDetail(empNo) {
 
         renderAttDetail(data);
         renderAttHistory(data.historyList ?? []);
-
-        const modalWrap = document.querySelector("#att-modal-wrap");
-        if (modalWrap) {
-            modalWrap.style.display = "flex";
-        }
+        showModal("#att-modal-wrap");
     } catch (error) {
         console.log(error);
         alert("근태 상세조회 실패...");
     }
 }
 
-/* =========================================================
-   9. 상세조회 기본정보 출력
-   ========================================================= */
 function renderAttDetail(data) {
     const memberInfo = data.memberInfo ?? {};
     const summary = data.summary ?? {};
 
-    document.querySelector("#modal-att-empName").innerText = nvl(memberInfo.empName);
-    document.querySelector("#modal-att-dept").innerText = nvl(memberInfo.deptName);
-    document.querySelector("#modal-att-empNo").innerText = nvl(memberInfo.empNo);
-    document.querySelector("#modal-att-pos").innerText = nvl(memberInfo.posName);
+    getEl("#modal-att-empName").innerText = nvl(memberInfo.empName);
+    getEl("#modal-att-dept").innerText = nvl(memberInfo.deptName);
+    getEl("#modal-att-empNo").innerText = nvl(memberInfo.empNo);
+    getEl("#modal-att-pos").innerText = nvl(memberInfo.posName);
 
-    document.querySelector("#modal-workingDay-count").innerText = numberOrZero(summary.attendanceCount);
-    document.querySelector("#modal-lateDay-count").innerText = numberOrZero(summary.lateCount);
-    document.querySelector("#modal-absentDay-count").innerText = numberOrZero(summary.absentCount);
-    document.querySelector("#modal-vacationDay-count").innerText = numberOrZero(summary.vacationCount);
-    document.querySelector("#modal-overWorkHour-count").innerText = numberOrZero(summary.otHours);
+    getEl("#modal-workingDay-count").innerText = numberOrZero(summary.attendanceCount);
+    getEl("#modal-lateDay-count").innerText = numberOrZero(summary.lateCount);
+    getEl("#modal-absentDay-count").innerText = numberOrZero(summary.absentCount);
+    getEl("#modal-vacationDay-count").innerText = numberOrZero(summary.vacationCount);
+    getEl("#modal-overWorkHour-count").innerText = numberOrZero(summary.otHours);
 
-    const monthLabelTag = document.querySelector("#modal-att-month-label");
+    const monthLabelTag = getEl("#modal-att-month-label");
     if (monthLabelTag) {
         monthLabelTag.innerText = `조회기간: ${formatMonthLabel(currentMonth)}`;
     }
 
-    const historyTitleTag = document.querySelector("#modal-history-title");
+    const historyTitleTag = getEl("#modal-history-title");
     if (historyTitleTag) {
         historyTitleTag.innerText = `${currentMonth} 근태이력`;
     }
 }
 
-/* =========================================================
-   10. 상세조회 이력 리스트 출력
-   ========================================================= */
 function renderAttHistory(historyList) {
-    const tbody = document.querySelector("#att-history-list");
+    const tbody = getEl("#att-history-list");
     if (!tbody) return;
 
     if (!historyList || historyList.length === 0) {
@@ -361,19 +344,11 @@ function renderAttHistory(historyList) {
     tbody.innerHTML = str;
 }
 
-/* =========================================================
-   11. 상세조회 모달 닫기
-   ========================================================= */
 function closeAttModal() {
-    const modalWrap = document.querySelector("#att-modal-wrap");
-    if (modalWrap) {
-        modalWrap.style.display = "none";
-    }
+    hideModal("#att-modal-wrap");
 }
 
-/* =========================================================
-   12. 수정 모달 열기
-   ========================================================= */
+/* ================= 수정 ================= */
 function openEditModal() {
     if (!currentDetailData) {
         alert("수정할 근태 정보가 없습니다.");
@@ -382,33 +357,16 @@ function openEditModal() {
 
     closeAttModal();
     renderAttEditList(currentDetailData.historyList ?? []);
-
-    const editModalWrap = document.querySelector("#att-edit-modal-wrap");
-    if (editModalWrap) {
-        editModalWrap.style.display = "flex";
-    }
+    showModal("#att-edit-modal-wrap");
 }
 
-/* =========================================================
-   13. 수정 모달 취소
-   ========================================================= */
 function cancelEditModal() {
-    const editModalWrap = document.querySelector("#att-edit-modal-wrap");
-    if (editModalWrap) {
-        editModalWrap.style.display = "none";
-    }
-
-    const detailModalWrap = document.querySelector("#att-modal-wrap");
-    if (detailModalWrap) {
-        detailModalWrap.style.display = "flex";
-    }
+    hideModal("#att-edit-modal-wrap");
+    showModal("#att-modal-wrap");
 }
 
-/* =========================================================
-   14. 수정 모달 리스트 출력
-   ========================================================= */
 function renderAttEditList(historyList) {
-    const tbody = document.querySelector("#att-edit-list");
+    const tbody = getEl("#att-edit-list");
     if (!tbody) return;
 
     if (!historyList || historyList.length === 0) {
@@ -453,11 +411,6 @@ function renderAttEditList(historyList) {
     tbody.innerHTML = str;
 }
 
-/* =========================================================
-   15. 수정 저장
-   - 현재 백엔드는 1행씩 수정하는 구조
-   - 그래서 행마다 PUT 요청
-   ========================================================= */
 async function saveAttEdit() {
     try {
         const rowList = document.querySelectorAll("#att-edit-list tr[data-att-no]");
@@ -500,23 +453,18 @@ async function saveAttEdit() {
 
         alert("근태 수정 완료");
 
-        const editModalWrap = document.querySelector("#att-edit-modal-wrap");
-        if (editModalWrap) {
-            editModalWrap.style.display = "none";
-        }
-
-        await loadAttList();
+        hideModal("#att-edit-modal-wrap");
+        await reloadAttListKeepingState();
         await openAttDetail(currentEmpNo);
-
     } catch (error) {
         console.log(error);
         alert("근태 수정 실패...");
     }
 }
 
-
+/* ================= 페이징 ================= */
 function renderPagination(pvo) {
-    const pageArea = document.querySelector("#att-pagination-area");
+    const pageArea = getEl("#att-pagination-area");
     if (!pageArea) return;
 
     if (!pvo) {
@@ -531,9 +479,7 @@ function renderPagination(pvo) {
             <button
                 type="button"
                 class="page-btn"
-                onclick="${currentSearchType === "all"
-                    ? `loadAttList(${pvo.startPage - 1})`
-                    : `searchAtt(${pvo.startPage - 1})`}"
+                onclick="${getPageMoveFunction(pvo.startPage - 1)}"
             >
                 &lt;
             </button>
@@ -545,9 +491,7 @@ function renderPagination(pvo) {
             <button
                 type="button"
                 class="page-btn ${i === pvo.currentPage ? "active" : ""}"
-                onclick="${currentSearchType === "all"
-                    ? `loadAttList(${i})`
-                    : `searchAtt(${i})`}"
+                onclick="${getPageMoveFunction(i)}"
             >
                 ${i}
             </button>
@@ -559,9 +503,7 @@ function renderPagination(pvo) {
             <button
                 type="button"
                 class="page-btn"
-                onclick="${currentSearchType === "all"
-                    ? `loadAttList(${pvo.endPage + 1})`
-                    : `searchAtt(${pvo.endPage + 1})`}"
+                onclick="${getPageMoveFunction(pvo.endPage + 1)}"
             >
                 &gt;
             </button>
@@ -569,4 +511,19 @@ function renderPagination(pvo) {
     }
 
     pageArea.innerHTML = str;
+}
+
+function getPageMoveFunction(page) {
+    if (currentSearchType === "all" || currentKeyword === "") {
+        return `loadAttList(${page})`;
+    }
+    return `searchAtt(${page})`;
+}
+
+async function reloadAttListKeepingState() {
+    if (currentSearchType === "all" || currentKeyword === "") {
+        await loadAttList(currentPage);
+    } else {
+        await searchAtt(currentPage);
+    }
 }

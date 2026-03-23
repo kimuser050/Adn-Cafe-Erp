@@ -24,7 +24,7 @@
 
             <div class="att-top-spacer"></div>
 
-            <!-- 요약 카드 -->
+            <!-- 요약 -->
             <div class="org-summary-area">
                 <div class="summary-card">
                     <div class="summary-title">출근</div>
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <!-- 근태 목록 -->
+            <!-- 목록 -->
             <div class="org-table-card">
                 <div class="org-toolbar">
                     <div class="toolbar-left att-toolbar-left">
@@ -95,14 +95,13 @@
                     </tr>
                     </tbody>
                 </table>
+
                 <div class="org-bottom-area">
                     <div id="att-pagination-area" class="pagination"></div>
                 </div>
             </div>
 
-            <!-- ========================= 상세조회 모달 ========================= -->
-            
-            
+            <!-- 상세 -->
             <div id="att-modal-wrap" class="org-modal-wrap" style="display:none;">
                 <div class="org-modal att-detail-modal">
                     <div class="org-modal-header">
@@ -111,7 +110,6 @@
                     </div>
 
                     <div class="org-modal-body att-detail-body">
-                        <!-- 직원 정보 -->
                         <div class="attInfo-section">
                             <div class="attInfo-profile-area">
                                 <div class="attInfo-profile-img">
@@ -142,7 +140,6 @@
                             </div>
                         </div>
 
-                        <!-- 월 요약 -->
                         <div class="attInfo-section">
                             <h3 class="attInfo-section-title">상태요약</h3>
                             <div class="attInfo-grid att-summary-grid">
@@ -169,27 +166,27 @@
                             </div>
                         </div>
 
-                        <!-- 월 이력 -->
                         <div class="attInfo-section">
                             <h3 class="attInfo-section-title" id="modal-history-title">월 근태이력</h3>
+
                             <div class="att-table-scroll">
-                            <table class="org-table att-history-table">
-                                <thead>
-                                <tr>
-                                    <th>날짜</th>
-                                    <th>상태</th>
-                                    <th>출근시간</th>
-                                    <th>퇴근시간</th>
-                                    <th>연장근무시간(h)</th>
-                                    <th>비고</th>
-                                </tr>
-                                </thead>
-                                <tbody id="att-history-list">
-                                <tr>
-                                    <td colspan="6">이력 없음</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                <table class="org-table att-history-table">
+                                    <thead>
+                                    <tr>
+                                        <th>날짜</th>
+                                        <th>상태</th>
+                                        <th>출근시간</th>
+                                        <th>퇴근시간</th>
+                                        <th>연장근무시간(h)</th>
+                                        <th>비고</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="att-history-list">
+                                    <tr>
+                                        <td colspan="6">이력 없음</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -201,7 +198,7 @@
                 </div>
             </div>
 
-            <!-- ========================= 수정 모달 ========================= -->
+            <!-- 수정 -->
             <div id="att-edit-modal-wrap" class="org-modal-wrap" style="display:none;">
                 <div class="org-modal att-edit-modal">
                     <div class="org-modal-header">
@@ -211,23 +208,23 @@
 
                     <div class="org-modal-body att-edit-body">
                         <div class="att-table-scroll">
-                        <table class="org-table att-edit-table">
-                            <thead>
-                            <tr>
-                                <th>날짜</th>
-                                <th>상태</th>
-                                <th>출근시간</th>
-                                <th>퇴근시간</th>
-                                <th>연장근무시간(h)</th>
-                                <th>비고</th>
-                            </tr>
-                            </thead>
-                            <tbody id="att-edit-list">
-                            <tr>
-                                <td colspan="6">수정할 데이터가 없습니다.</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                            <table class="org-table att-edit-table">
+                                <thead>
+                                <tr>
+                                    <th>날짜</th>
+                                    <th>상태</th>
+                                    <th>출근시간</th>
+                                    <th>퇴근시간</th>
+                                    <th>연장근무시간(h)</th>
+                                    <th>비고</th>
+                                </tr>
+                                </thead>
+                                <tbody id="att-edit-list">
+                                <tr>
+                                    <td colspan="6">수정할 데이터가 없습니다.</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
