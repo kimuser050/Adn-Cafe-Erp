@@ -19,11 +19,13 @@ public class ReqViewController {
 
         // 1. 로그인 및 권한 체크
         if (loginMemberVo == null ||
-                (!"310102".equals(loginMemberVo.getDeptCode()) && !"310104".equals(loginMemberVo.getDeptCode()))) {
-            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
-            return "redirect:/main";
-        }
+                (!"310102".equals(loginMemberVo.getDeptCode())
+                        && !"310104".equals(loginMemberVo.getDeptCode())
+                        && !"310100".equals(loginMemberVo.getDeptCode()))) {
 
+            ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:home";
+        }
         // 2. [중요] 사번(empNo)을 모델에 담습니다.
         model.addAttribute("loginEmpNo", loginMemberVo.getEmpNo());
 
