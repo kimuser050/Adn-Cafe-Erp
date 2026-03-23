@@ -1,10 +1,4 @@
-/* =========================================================
-   직원관리 JS
-   - 목록
-   - 상세조회 모달
-   - 수정 모달
-========================================================= */
-
+/* ================= 전역 ================= */
 let empList = [];
 let currentEmp = null;
 let currentEmpHistoryList = [];
@@ -16,33 +10,54 @@ let currentPage = 1;
 let currentSearchType = "all";
 let currentKeyword = "";
 
-
-/* =========================================================
-   1. 시작
-========================================================= */
+/* ================= 시작 ================= */
 window.addEventListener("DOMContentLoaded", async function () {
     try {
+        bindEvents();
         await loadEmpSummary();
         await loadEmpList(1);
         await loadCodeData();
-
-        const keywordTag = document.querySelector("#keyword");
-        if (keywordTag) {
-            keywordTag.addEventListener("keydown", function (e) {
-                if (e.key === "Enter") {
-                    searchEmp();
-                }
-            });
-        }
     } catch (error) {
         console.log(error);
         alert("직원 페이지 로딩 실패 ...");
     }
 });
 
-/* =========================================================
-   2. 공통 함수
-========================================================= */
+/* ================= 공통 ================= */
+function getEl(selector) {
+    return document.querySelector(selector);
+}
+
+function getValue(selector) {
+    return getEl(selector)?.value ?? "";
+}
+
+function showModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "flex";
+    }
+}
+
+function hideModal(selector) {
+    const target = getEl(selector);
+    if (target) {
+        target.style.display = "none";
+    }
+}
+
+function bindEvents() {
+    getEl("#keyword")?.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            searchEmp();
+        }
+    });
+
+    getEl("#search-btn")?.addEventListener("click", function () {
+        searchEmp();
+    });
+}
+
 function formatDate(value) {
     if (!value) return "-";
     return String(value).length >= 10 ? String(value).substring(0, 10) : value;
@@ -92,9 +107,26 @@ function getOrgName(vo) {
     return vo.deptName ?? "-";
 }
 
-/* =========================================================
-   3. 코드 데이터 조회
-========================================================= */
+function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function escapeAttr(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* ================= 코드값 ================= */
 async function loadCodeData() {
     const [posResp, deptResp, statusResp] = await Promise.all([
         fetch("/pos"),
@@ -115,9 +147,36 @@ async function loadCodeData() {
     statusList = statusData.statusList ?? [];
 }
 
-/* =========================================================
-   4. 직원 목록 조회
-========================================================= */
+/* ================= 요약 ================= */
+async function loadEmpSummary() {
+    const resp = await fetch("/emp/summary");
+
+    if (!resp.ok) {
+        throw new Error("직원 요약 조회 실패 ...");
+    }
+
+    const data = await resp.json();
+    renderSummary(data);
+}
+
+function renderSummary(summary) {
+    const workingTag = getEl("#working-count");
+    const businessTripTag = getEl("#business-trip-count");
+    const trainingTag = getEl("#training-count");
+    const leaveTag = getEl("#leave-count");
+
+    const workingCount = summary.workingCount ?? summary.WORKINGCOUNT ?? 0;
+    const businessTripCount = summary.businessTripCount ?? summary.BUSINESSTRIPCOUNT ?? 0;
+    const trainingCount = summary.trainingCount ?? summary.TRAININGCOUNT ?? 0;
+    const leaveCount = summary.leaveCount ?? summary.LEAVECOUNT ?? 0;
+
+    if (workingTag) workingTag.textContent = workingCount;
+    if (businessTripTag) businessTripTag.textContent = businessTripCount;
+    if (trainingTag) trainingTag.textContent = trainingCount;
+    if (leaveTag) leaveTag.textContent = leaveCount;
+}
+
+/* ================= 목록 ================= */
 async function loadEmpList(page = 1) {
     const resp = await fetch(`/emp?currentPage=${page}`);
 
@@ -133,30 +192,12 @@ async function loadEmpList(page = 1) {
 
     empList = data.voList ?? [];
 
-    
     renderTable(empList, data.pvo);
     renderPagination(data.pvo);
 }
 
-function renderSummary(summary) {
-    const workingTag = document.querySelector("#working-count");
-    const businessTripTag = document.querySelector("#business-trip-count");
-    const trainingTag = document.querySelector("#training-count");
-    const leaveTag = document.querySelector("#leave-count");
-
-    const workingCount = summary.workingCount ?? summary.WORKINGCOUNT ?? 0;
-    const businessTripCount = summary.businessTripCount ?? summary.BUSINESSTRIPCOUNT ?? 0;
-    const trainingCount = summary.trainingCount ?? summary.TRAININGCOUNT ?? 0;
-    const leaveCount = summary.leaveCount ?? summary.LEAVECOUNT ?? 0;
-
-    if (workingTag) workingTag.textContent = workingCount;
-    if (businessTripTag) businessTripTag.textContent = businessTripCount;
-    if (trainingTag) trainingTag.textContent = trainingCount;
-    if (leaveTag) leaveTag.textContent = leaveCount;
-}
-
 function renderTable(voList, pvo) {
-    const tbody = document.querySelector("#emp-list");
+    const tbody = getEl("#emp-list");
     if (!tbody) return;
 
     if (!voList || voList.length === 0) {
@@ -197,19 +238,20 @@ function renderTable(voList, pvo) {
     tbody.innerHTML = str;
 }
 
-/* =========================================================
-   5. 검색
-========================================================= */
+/* ================= 검색 ================= */
 function searchEmp() {
-    const searchType = document.querySelector("#search-type").value;
-    const keyword = document.querySelector("#keyword").value.trim().toLowerCase();
+    const searchType = getValue("#search-type");
+    const keyword = getValue("#keyword").trim().toLowerCase();
+
+    currentSearchType = searchType;
+    currentKeyword = keyword;
 
     if (searchType === "all" || keyword === "") {
         renderTable(empList);
         return;
     }
 
-    const filteredList = empList.filter(vo => {
+    const filteredList = empList.filter(function (vo) {
         const empName = String(vo.empName ?? "").toLowerCase();
         const posName = String(vo.posName ?? "").toLowerCase();
         const statusText = getEmpStatusInfo(vo).text.toLowerCase();
@@ -224,9 +266,7 @@ function searchEmp() {
     renderTable(filteredList);
 }
 
-/* =========================================================
-   6. 상세조회 모달
-========================================================= */
+/* ================= 상세 ================= */
 async function openEmpModal(empNo) {
     try {
         const resp = await fetch(`/emp/${empNo}`);
@@ -247,11 +287,7 @@ async function openEmpModal(empNo) {
 
         renderEmpDetail(vo);
         renderEmpHistory(empHistoryList);
-
-        const modalWrap = document.querySelector("#emp-modal-wrap");
-        if (modalWrap) {
-            modalWrap.style.display = "flex";
-        }
+        showModal("#emp-modal-wrap");
     } catch (error) {
         console.log(error);
         alert("직원 상세조회 실패 ...");
@@ -259,8 +295,8 @@ async function openEmpModal(empNo) {
 }
 
 function renderEmpDetail(vo) {
-    const setText = (selector, value) => {
-        const tag = document.querySelector(selector);
+    const setText = function (selector, value) {
+        const tag = getEl(selector);
         if (tag) tag.innerText = value;
     };
 
@@ -275,16 +311,17 @@ function renderEmpDetail(vo) {
     setText("#modal-resign-date", formatDate(vo.resignDate));
 
     const statusInfo = getEmpStatusInfo(vo);
-    const statusTag = document.querySelector("#modal-emp-status");
-        if (statusTag) {
-            statusTag.className = `detail-value status ${statusInfo.statusClass}`;
-            statusTag.innerText = statusInfo.text;
-        }
+    const statusTag = getEl("#modal-emp-status");
+    if (statusTag) {
+        statusTag.className = `detail-value status ${statusInfo.statusClass}`;
+        statusTag.innerText = statusInfo.text;
+    }
+
     setText("#modal-base-salary", formatNumber(vo.baseSalary));
     setText("#modal-bonus-rate", nvl(vo.bonusRate));
     setText("#modal-expected-salary", formatNumber(vo.expectedSalary));
 
-    const profileImgTag = document.querySelector("#modal-profile-img");
+    const profileImgTag = getEl("#modal-profile-img");
     if (profileImgTag) {
         if (vo.profileChangeName) {
             profileImgTag.src = `/upload/profile/${vo.profileChangeName}`;
@@ -295,7 +332,7 @@ function renderEmpDetail(vo) {
 }
 
 function renderEmpHistory(historyList) {
-    const tbody = document.querySelector("#emp-history-list");
+    const tbody = getEl("#emp-history-list");
     if (!tbody) return;
 
     if (!historyList || historyList.length === 0) {
@@ -323,15 +360,10 @@ function renderEmpHistory(historyList) {
 }
 
 function closeEmpModal() {
-    const modalWrap = document.querySelector("#emp-modal-wrap");
-    if (modalWrap) {
-        modalWrap.style.display = "none";
-    }
+    hideModal("#emp-modal-wrap");
 }
 
-/* =========================================================
-   7. 수정 모달 열기/닫기
-========================================================= */
+/* ================= 수정 모달 ================= */
 function openEditModal() {
     if (!currentEmp) {
         alert("직원 정보가 없습니다.");
@@ -340,43 +372,36 @@ function openEditModal() {
 
     closeEmpModal();
     fillEditModal();
-
-    const editModalWrap = document.querySelector("#emp-edit-modal-wrap");
-    if (editModalWrap) {
-        editModalWrap.style.display = "flex";
-    }
+    showModal("#emp-edit-modal-wrap");
 }
 
 function closeEditModal() {
-    const editModalWrap = document.querySelector("#emp-edit-modal-wrap");
-    if (editModalWrap) {
-        editModalWrap.style.display = "none";
-    }
+    hideModal("#emp-edit-modal-wrap");
 }
 
 function fillEditModal() {
     const vo = currentEmp;
     const historyList = currentEmpHistoryList ?? [];
 
-    document.querySelector("#edit-emp-no").value = vo.empNo;
-    document.querySelector("#edit-emp-no-view").value = vo.empNo;
-    document.querySelector("#edit-emp-name").value = nvl(vo.empName);
-    document.querySelector("#edit-hire-date").value = formatDate(vo.hireDate);
+    getEl("#edit-emp-no").value = vo.empNo;
+    getEl("#edit-emp-no-view").value = vo.empNo;
+    getEl("#edit-emp-name").value = nvl(vo.empName);
+    getEl("#edit-hire-date").value = formatDate(vo.hireDate);
 
     renderEditSelectOptions();
 
-    document.querySelector("#edit-pos-code").value = vo.posCode ?? "";
-    document.querySelector("#edit-dept-code").value = vo.deptCode ?? "";
-    document.querySelector("#edit-emp-status-no").value = vo.empStatusNo ?? "";
+    getEl("#edit-pos-code").value = vo.posCode ?? "";
+    getEl("#edit-dept-code").value = vo.deptCode ?? "";
+    getEl("#edit-emp-status-no").value = vo.empStatusNo ?? "";
 
     renderHistoryEditRows(historyList);
 }
 
 function renderEditSelectOptions() {
-    const posTag = document.querySelector("#edit-pos-code");
-    const deptTag = document.querySelector("#edit-dept-code");
-    const statusTag = document.querySelector("#edit-emp-status-no");
-    
+    const posTag = getEl("#edit-pos-code");
+    const deptTag = getEl("#edit-dept-code");
+    const statusTag = getEl("#edit-emp-status-no");
+
     if (posTag) {
         let posStr = "";
         for (const vo of posList) {
@@ -402,11 +427,9 @@ function renderEditSelectOptions() {
     }
 }
 
-/* =========================================================
-   8. 인사이력 수정/추가
-========================================================= */
+/* ================= 인사이력 ================= */
 function renderHistoryEditRows(historyList) {
-    const tbody = document.querySelector("#history-edit-body");
+    const tbody = getEl("#history-edit-body");
     if (!tbody) return;
 
     if (!historyList || historyList.length === 0) {
@@ -442,7 +465,7 @@ function renderHistoryEditRows(historyList) {
 }
 
 function addHistoryRow() {
-    const tbody = document.querySelector("#history-edit-body");
+    const tbody = getEl("#history-edit-body");
     if (!tbody) return;
 
     const tr = document.createElement("tr");
@@ -470,17 +493,14 @@ function addHistoryRow() {
     tbody.appendChild(tr);
 }
 
-/* =========================================================
-   9. 저장
-========================================================= */
+/* ================= 저장 ================= */
 async function saveEmpEdit() {
     try {
-        const empNo = document.querySelector("#edit-emp-no").value;
-        const posCode = document.querySelector("#edit-pos-code").value;
-        const deptCode = document.querySelector("#edit-dept-code").value;
-        const empStatusNo = document.querySelector("#edit-emp-status-no").value;
+        const empNo = getValue("#edit-emp-no");
+        const posCode = getValue("#edit-pos-code");
+        const deptCode = getValue("#edit-dept-code");
+        const empStatusNo = getValue("#edit-emp-status-no");
 
-        // 1. 직원 기본정보 수정
         const resp = await fetch(`/emp/${empNo}`, {
             method: "PUT",
             headers: {
@@ -502,7 +522,6 @@ async function saveEmpEdit() {
             throw new Error("직원 기본정보 수정 실패");
         }
 
-        // 2. 인사이력 수정 / 추가
         const rows = document.querySelectorAll(".history-row");
 
         for (const row of rows) {
@@ -536,7 +555,6 @@ async function saveEmpEdit() {
                 if (editData.result != 1) {
                     throw new Error("인사이력 수정 실패");
                 }
-
             } else {
                 const insertResp = await fetch(`/emp/${empNo}/history`, {
                     method: "POST",
@@ -565,15 +583,15 @@ async function saveEmpEdit() {
         closeEditModal();
         await loadEmpList(currentPage);
         await openEmpModal(empNo);
-
     } catch (error) {
         console.log(error);
         alert("직원 수정 실패 ...");
     }
 }
 
+/* ================= 페이징 ================= */
 function renderPagination(pvo) {
-    const pageArea = document.querySelector("#emp-pagination-area");
+    const pageArea = getEl("#emp-pagination-area");
     if (!pageArea) return;
 
     if (!pvo) {
@@ -610,35 +628,4 @@ function renderPagination(pvo) {
     }
 
     pageArea.innerHTML = str;
-}
-
-async function loadEmpSummary() {
-    const resp = await fetch("/emp/summary");
-
-    if (!resp.ok) {
-        throw new Error("직원 요약 조회 실패 ...");
-    }
-
-    const data = await resp.json();
-
-    renderSummary(data);
-}
-
-function escapeHtml(value) {
-    if (value === null || value === undefined) return "";
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-}
-
-function escapeAttr(value) {
-    if (value === null || value === undefined) return "";
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
 }
