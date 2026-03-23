@@ -41,44 +41,12 @@
 
                 <div id="pagination" class="pagination-container"></div>
 
-                <div class="action-buttons">
-                    <button class="btn-register" onclick="openInsertModal()">등록 하기</button>
-                </div>
+                
             </section>
         </main>
     </div>
 
-    <div id="productModal" class="modal-overlay">
-        <div class="modal-window">
-            <div class="modal-header">
-                <h3 id="modalTitle">제품 정보</h3>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="m-productsNo">
-                <div class="input-form">
-                    <div class="input-group">
-                        <label>제품명</label>
-                        <input type="text" id="m-productsName">
-                    </div>
-                    <div class="input-group">
-                        <label>금액</label>
-                        <input type="number" id="m-salePrice">
-                    </div>
-                   <div class="input-group">
-                    <label>사용여부</label>
-                    <div class="status-btn-group">
-                        <button type="button" class="btn-status" data-value="Y" onclick="selectStatus('Y')">Y</button>
-                        <button type="button" class="btn-status" data-value="N" onclick="selectStatus('N')">N</button>
-                        <input type="hidden" id="m-useYn" value="Y"> </div>
-                </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-save" id="btn-insert" onclick="submitProduct('POST')">등록하기</button>
-                    <button type="button" class="btn-edit" id="btn-update" onclick="submitProduct('PUT')">수정하기</button>
-                    <button type="button" class="btn-delete" id="btn-delete" onclick="deleteProduct()">삭제하기</button>
-                </div>
-            </div>
+   
         </div>
     </div>
 </body>
