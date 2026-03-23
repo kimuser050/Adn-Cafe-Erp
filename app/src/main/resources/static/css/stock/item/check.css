@@ -1,4 +1,4 @@
-/* [1] 레이아웃 및 브라우저 스크롤 차단 (공통 레이아웃 유지) */
+/* [1] 레이아웃 및 브라우저 스크롤 차단 */
 html, body {
     height: 100%;
     margin: 0;
@@ -54,7 +54,7 @@ html, body {
     z-index: 2;
 }
 
-/* [3] 컨테이너 및 검색창 섹션 (입고 스타일) */
+/* [3] 컨테이너 및 검색창 섹션 */
 .content-container {
     background-color: #f9f7f2; 
     border: 1px solid #dcdcdc;
@@ -96,23 +96,71 @@ html, body {
     transition: 0.2s;
 }
 
-/* [4] 테이블 영역 */
+.search-btn:hover { background-color: #3e2723; }
+
+/* [4] 테이블 영역 (첫 번째 이미지의 베이지 테마 적용) */
 .table-wrapper {
     min-height: 200px;
     max-height: 600px;
     overflow-y: auto;
     background-color: #fff;
-    border: 1px solid #eee;
+    /* 테두리를 더 연하고 부드럽게 */
+    border: 1px solid #e8e4db; 
+    border-radius: 8px;
 }
 
-.item-table { width: 100%; border-collapse: collapse; background: #fff; table-layout: fixed; }
+.item-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: #fff; 
+    table-layout: fixed;
+}
+
 .item-table th { 
-    background-color: #d9d9d9; padding: 12px; border-bottom: 1px solid #ccc; 
-    font-size: 14px; position: sticky; top: 0; z-index: 10; color: #333;
+    /* 첫 번째 이미지의 헤더 배경색 (#ede7db 또는 #ece6da 계열) */
+    background-color: #ece6da; 
+    padding: 15px 12px; 
+    /* 헤더 텍스트 색상을 브라운 톤으로 */
+    color: #6b5a4c;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #e0dace; 
+    position: sticky; 
+    top: 0; 
+    z-index: 10; 
 }
-.item-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; color: #555; font-size: 14px; }
 
-/* [5] 페이징 디자인 (버튼 밀착형) */
+.item-table td { 
+    padding: 14px 12px; 
+    /* 행 사이 구분선을 아주 연한 점선 또는 실선으로 */
+    border-bottom: 1px solid #f0ede7; 
+    text-align: center; 
+    color: #4f4a45; 
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 마우스 올렸을 때 행 강조색도 베이지 톤으로 변경 */
+.item-table tr:hover { 
+    background-color: #fcfbf9; 
+}
+
+/* 테이블 내부 스크롤바 커스텀 (필요 시) */
+.table-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #d6cfc7;
+    border-radius: 10px;
+}
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f5f2ed;
+}
+.item-table tr:hover { background-color: #fcfaf7; }
+
+/* [5] 페이징 디자인 (버튼 밀착형 + 호버효과) */
 .pagination-wrapper {
     display: flex;
     justify-content: center;
@@ -130,6 +178,11 @@ html, body {
     border-radius: 0 !important; 
     margin-left: -1px !important; 
     font-size: 14px;
+    transition: 0.2s;
+}
+
+.pagination-wrapper button:hover:not(.active) {
+    background-color: #f2f0eb !important;
 }
 
 .pagination-wrapper button.active {
@@ -140,36 +193,34 @@ html, body {
     z-index: 1; 
 }
 
-/* [6] 모달 배경 및 강제 절단 (완전 해결판) */
+/* [6] 모달 배경 및 본체 (중앙 정렬 + 스크롤 안전장치) */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.4);
-    display: none; /* JS 제어: flex로 변경됨 */
+    display: none; /* JS에서 flex로 변경 */
     justify-content: center;
-    align-items: center; /* 세로 늘어남 방지 */
+    align-items: center; 
     z-index: 2000;
 }
 
-/* 모달 본체 하단 빈 공간 강제 절단 */
 .modal-content {
     background: #fff;
     width: 520px;
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     overflow: hidden;
-    
-    /* 💡 내용물 크기에 딱 맞춤 */
     display: block !important; 
     height: fit-content !important; 
-    min-height: 0 !important;
+    max-height: 90vh; /* 화면 높이 초과 방지 */
+    overflow-y: auto; /* 내용 많으면 내부 스크롤 */
     margin: 0 !important;
 }
 
 .modal-header {
     padding: 15px 20px;
-    background: #614e41; /* 헤더 브라운 톤 */
+    background: #614e41; 
     color: #fff;
     display: flex;
     justify-content: space-between;
@@ -181,7 +232,6 @@ html, body {
 
 .modal-body { padding: 25px; background-color: #fff; }
 
-/* 모달 그리드 레이아웃 */
 .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 .modal-grid .full { grid-column: span 2; }
 
@@ -218,7 +268,7 @@ html, body {
 .btn-outline { background-color: #fff; color: #614e41; border: 1px solid #614e41; }
 .btn-outline:hover { background-color: #f2f0eb; }
 
-/* [8] 상태별 뱃지 스타일 (노란색/초록색/빨간색) */
+/* [8] 상태별 뱃지 스타일 (노란색/초록색/빨간색 불) */
 .status {
     display: inline-flex;
     align-items: center;

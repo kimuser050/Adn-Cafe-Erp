@@ -38,12 +38,12 @@
                     <table class="item-table">
                         <thead>
                             <tr>
-                                <th style="width: 80px;">번호</th>
-                                <th style="text-align: left; padding-left: 20px;">상품명</th>
-                                <th style="width: 140px;">매장명</th>
-                                <th style="width: 120px;">상태</th>
-                                <th style="width: 120px;">처리결과</th>
-                                <th style="width: 180px;">신청일</th>
+                                <th>번호</th>
+                                <th>상품명</th>
+                                <th >매장명</th>
+                                <th >상태</th>
+                                <th >처리결과</th>
+                                <th>신청일</th>
                             </tr>
                         </thead>
                         <tbody id="list-body">
