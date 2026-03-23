@@ -66,26 +66,6 @@ async function updateDoc() {
     const workDate = document.querySelector("#workDate")?.value;
     const workHour = document.querySelector("#workHour")?.value;
 
-    if (!title) {
-        alert("제목을 입력하세요.");
-        return;
-    }
-
-    if (!deptCode) {
-        alert("참조부서를 선택하세요.");
-        return;
-    }
-
-    if (!approverNo) {
-        alert("결재자를 선택하세요.");
-        return;
-    }
-
-    if (!content) {
-        alert("내용을 입력하세요.");
-        return;
-    }
-
     const payload = {
         categoryNo,
         title,
@@ -98,7 +78,7 @@ async function updateDoc() {
         workDate
     };
 
-    const resp = await fetch(`/api/approval/document/update/${docNo}`, {
+    const resp = await fetch(`/api/approval/document/edit/${docNo}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -110,31 +90,116 @@ async function updateDoc() {
 
     if (resp.ok) {
         alert("문서가 수정되었습니다.");
-        location.href = `/approval/document/detail/${docNo}`;
+        location.href = `/approval/document/myDocList`;
     } else {
         alert(result || "문서 수정 실패");
     }
 }
 
-/* 기존 찾기 모달 재사용 */
-function openDeptModal() {
-    // 기존 참조부서 찾기 모달 함수 연결
-    // 예: document.querySelector("#dept-modal").classList.remove("hidden");
-    openReferenceDeptModal();
+
+/* =========================
+   참조부서 모달
+========================= */
+async function openDeptModal() {
+    document.querySelector("#deptModal").classList.remove("hidden");
+
+    try {
+        const resp = await fetch(`/api/approval/document/deptList`);
+        const data = await resp.json();
+        renderDeptList(data);
+    } catch (error) {
+        console.error(error);
+        alert("부서 목록 조회 중 오류 발생");
+    }
 }
 
-function openApproverModal() {
-    // 기존 결재자 찾기 모달 함수 연결
-    openApproverSearchModal();
+function closeDeptModal() {
+    document.querySelector("#deptModal").classList.add("hidden");
 }
 
-/* 기존 모달에서 선택 완료 후 이 함수들 호출하도록 맞추면 됨 */
-function setReferenceDept(deptCode, deptName) {
+function renderDeptList(deptList) {
+    const tbody = document.querySelector("#deptTbody");
+    tbody.innerHTML = "";
+
+    let str = "";
+    for (const dept of deptList) {
+        str += `
+            <tr>
+                <td>${dept.deptName}</td>
+                <td>
+                    <button type="button" onclick="selectDept('${dept.deptCode}', '${dept.deptName}')">선택</button>
+                </td>
+            </tr>
+        `;
+    }
+
+    tbody.innerHTML = str;
+}
+
+function selectDept(deptCode, deptName) {
     document.querySelector("#referenceDeptCode").value = deptCode;
     document.querySelector("#referenceDeptName").value = deptName;
+    closeDeptModal();
 }
 
-function setApprover(empNo, empName) {
-    document.querySelector("#approverNo").value = empNo;
-    document.querySelector("#approverName").value = empName;
+/* =========================
+   결재자 모달
+========================= */
+async function openApproverModal() {
+    document.querySelector("#approverModal").classList.remove("hidden");
+
+    try {
+        const resp = await fetch(`/api/approval/document/approverList`);
+        const data = await resp.json();
+        renderApproverList(data);
+    } catch (error) {
+        console.error(error);
+        alert("결재자 목록 조회 중 오류 발생");
+    }
 }
+
+function closeApproverModal() {
+    document.querySelector("#approverModal").classList.add("hidden");
+}
+
+function renderApproverList(approverList) {
+    const tbody = document.querySelector("#approverTbody");
+    tbody.innerHTML = "";
+
+    let str = "";
+    for (const approver of approverList) {
+        str += `
+            <tr>
+                <td>${approver.empName}</td>
+                <td>${approver.deptName}</td>
+                <td>${approver.posName}</td>
+                <td>
+                    <button type="button"
+                        onclick="selectApprover('${approver.empNo}', '${approver.empName}', '${approver.deptName}', '${approver.posName}')">
+                        선택
+                    </button>
+                </td>
+            </tr>
+        `;
+    }
+
+    tbody.innerHTML = str;
+}
+
+function selectApprover(empNo, empName, deptName, positionName) {
+    document.querySelector("#approverNo").value = empNo;
+    document.querySelector("#approverName").value = `${empName} / ${deptName} / ${positionName}`;
+    closeApproverModal();
+}
+
+
+// /* 기존 모달에서 선택 완료 후 이 함수들 호출하도록 맞추면 됨 */
+// function setReferenceDept(deptCode, deptName) {
+//     document.querySelector("#referenceDeptCode").value = deptCode;
+//     document.querySelector("#referenceDeptName").value = deptName;
+// }
+
+// function setApprover(empNo, empName) {
+//     document.querySelector("#approverNo").value = empNo;
+//     document.querySelector("#approverName").value = empName;
+// }

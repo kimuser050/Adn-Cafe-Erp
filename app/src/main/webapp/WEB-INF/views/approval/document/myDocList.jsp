@@ -51,14 +51,14 @@
                 <!-- 검색바 -->
                 <div id="search-area">
                     <form id="search-form">
-                        <select name="statusCode" class="form-select" id="statusCode">
+                        <select name="statusCode" class="form-select search-select" id="statusCode">
                             <option value="">전체</option>
                             <option value="1" selected>대기</option>
                             <option value="2">승인</option>
                             <option value="3">반려</option>
                         </select>
 
-                        <select name="category" class="form-select" id="categoryNo">
+                        <select name="category" class="form-select search-select" id="categoryNo">
                             <option value="">전체</option>
                             <option value="1">휴가</option>
                             <option value="2">연장근무</option>
@@ -67,7 +67,7 @@
                         <input type="date" name="startDate" id="startDate" class="form-input">
                         <input type="date" name="endDate" id="endDate" class="form-input">
     
-                        <button type="button" class="btn" onclick="searchMyDoc();">검색</button>
+                        <button type="button" class="btn search-btn" onclick="searchMyDoc();">검색</button>
                     </form>
                 </div>
                 <table class="doc-table">
@@ -144,14 +144,14 @@
                     <tr>
                         <th>제목</th>
                         <td colspan="3">
-                            <div class="form-value" id="detail-title">-</div>
+                            <div class="form-value form-input" id="detail-title">-</div>
                         </td>
                     </tr>
 
                     <tr>
                         <th>참조부서</th>
                         <td colspan="3">
-                            <div class="form-value" id="detail-referenceDept">-</div>
+                            <div class="form-value form-input" id="detail-referenceDept">-</div>
                         </td>
                     </tr>
 
@@ -159,9 +159,9 @@
                         <th>시작일 - 종료일</th>
                         <td colspan="3">
                             <div class="date-range-wrap">
-                                <span class="form-value short" id="detail-startDate">-</span>
+                                <span class="form-value short form-input" id="detail-startDate">-</span>
                                 <span class="date-tilde">~</span>
-                                <span class="form-value short" id="detail-endDate">-</span>
+                                <span class="form-value short form-input" id="detail-endDate">-</span>
                             </div>
                         </td>
                     </tr>
@@ -169,18 +169,18 @@
                     <tr class="detail-row detail-row-overtime">
                         <th>연장근무 날짜</th>
                         <td>
-                            <div class="form-value short" id="detail-workDate">-</div>
+                            <div class="form-value short form-input" id="detail-workDate">-</div>
                         </td>
                         <th>연장근무 시간</th>
                         <td>
-                            <div class="radio-view-wrap" id="detail-workHour">-</div>
+                            <div class="radio-view-wrap form-input" id="detail-workHour">-</div>
                         </td>
                     </tr>
 
                     <tr class="content-row">
                         <th>내용</th>
                         <td colspan="3">
-                            <div class="form-textarea-view" id="detail-content">-</div>
+                            <div class="form-textarea-view form-textarea" id="detail-content">-</div>
                         </td>
                     </tr>
                 </table>
@@ -189,7 +189,7 @@
             <!-- 결재 의견 -->
             <div class="approval-comment-box" id="approval-comment-box">
                 <div class="approval-comment-title">결재의견</div>
-                <textarea id="approval-comment" class="approval-comment-textarea"></textarea>
+                <textarea id="approval-comment" class="approval-comment-textarea form-textarea"></textarea>
             </div>
 
             <!-- 하단 버튼 -->

@@ -67,22 +67,7 @@ public class ApprovalDocRestController {
         map.put("result" , result + "");
         return ResponseEntity.ok(map);
     }
-    // 문서 작성
-//    @PostMapping("write")
-//    public ResponseEntity<Map<String, String>> insert(@RequestBody ApprovalDocVo vo){
-//        int result = approvalDocService.insert(vo);
-//
-//        if(result != 1){
-//            String errMsg = "insert fail";
-//            log.error(errMsg);
-//            throw new IllegalStateException(errMsg);
-//        }
-//
-//        Map<String, String> map = new HashMap<>();
-//        map.put("result" , result + "");
-//        return ResponseEntity.ok(map);
-//
-//    }
+
     // 내 문서함
     @GetMapping("selectMyDocumentList")
     public ResponseEntity<Map<String, Object>> selectMyDocumentList(@RequestParam(required = false , defaultValue = "1") int currentPage , HttpSession session){
@@ -171,11 +156,16 @@ public class ApprovalDocRestController {
     }
 
     // 문서 수정 (기안자)
-    @PutMapping("/{docNo}")
-    public ResponseEntity<Map<String, Object>> editDocument(@PathVariable String docNo , @RequestBody ApprovalDocVo vo){
-
+    @PutMapping("edit/{docNo}")
+    public ResponseEntity<Map<String, Object>> updateDoc(@PathVariable String docNo ,
+                                                    @RequestBody ApprovalDocVo vo ,
+                                                    HttpSession session){
+        System.out.println("vo = " + vo);
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
         vo.setDocNo(docNo);
-        int result = approvalDocService.editDocument(vo);
+        vo.setWriterNo(loginMemberVo.getEmpNo());
+        vo.setStatusCode("1");
+        int result = approvalDocService.updateDoc(vo);
 
         if(result != 1){
             String errMsg = "update error";
