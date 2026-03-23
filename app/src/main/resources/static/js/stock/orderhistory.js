@@ -19,13 +19,13 @@ function loadHistoryList(page) {
     .then(data => {
         if (data && data.voList) {
             renderHistoryTable(data.voList);
-            renderPagination(data.pagingInfo);
+            renderPagination(data.pagingInfo || data.pvo); // 서버 변수명 확인 (pagingInfo 또는 pvo)
         }
     })
     .catch(err => console.error("History Load Error:", err));
 }
 
-// 테이블 렌더링
+// [수정] 테이블 렌더링 (상태 뱃지 불 들어오게 수정)
 function renderHistoryTable(list) {
     const body = document.getElementById('orderBody');
     if(!body) return;
@@ -35,55 +35,57 @@ function renderHistoryTable(list) {
         const tr = document.createElement('tr');
         tr.onclick = () => openOrderDetail(item.orderNo);
         
-        // [수정] 고정된 '본사' 텍스트를 삭제하고 DB 데이터를 넣습니다.
         const storeName = item.storeName || item.STORE_NAME || '미등록';
+        
+        // 상태값 판별 로직
+        let statusClass = "";
+        let statusText = "";
+        
+        const rawStatus = (item.status || 'W').toUpperCase();
+        
+        if (rawStatus === 'F') {
+            statusClass = "status-on";  // 파란불 (완료)
+            statusText = "완료";
+        } else if (rawStatus === 'C') {
+            statusClass = "status-off"; // 빨간불 (취소)
+            statusText = "취소";
+        } else {
+            // 'W'이거나 다른 값이면 모두 노란불 (대기)
+            statusClass = "status-wait"; 
+            statusText = "대기";
+        }
 
         tr.innerHTML = `
             <td>${item.orderNo}</td>
             <td style="text-align:left; padding-left:20px;">${item.itemName}</td>
-            <td>${storeName}</td>  <td>${Number(item.quantity).toLocaleString()}</td>
-            <td><b style="color:#5D4037">${getStatusText(item.status)}</b></td>
+            <td>${storeName}</td>  
+            <td>${Number(item.quantity).toLocaleString()}</td>
+            <td><span class="status ${statusClass}">${statusText}</span></td>
             <td>${item.requestDate || '-'}</td>
         `;
         body.appendChild(tr);
     });
 }
-function getStatusText(status) {
-    const map = { 'W': '대기', 'F': '완료', 'C': '취소' };
-    const rawStatus = (status || 'W').toUpperCase();
-    return map[rawStatus] || '대기';
-}
 
-// 페이징 렌더링
+// [수정] 페이징 렌더링 (화살표 제거 버전)
 function renderPagination(paging) {
     const pgn = document.getElementById('pagination');
     if (!pgn || !paging) return;
     pgn.innerHTML = '';
 
-    // 이전
-    const prevBtn = document.createElement('button');
-    prevBtn.className = 'page-btn';
-    prevBtn.innerText = '<';
-    prevBtn.disabled = paging.currentPage === 1;
-    prevBtn.onclick = () => loadHistoryList(paging.currentPage - 1);
-    pgn.appendChild(prevBtn);
+    // [제거] 이전 버튼(<) 삭제 완료
 
-    // 숫자
+    // 숫자 버튼만 생성
     for (let i = paging.startPage; i <= paging.endPage; i++) {
         const numBtn = document.createElement('button');
+        numBtn.type = 'button';
         numBtn.className = `page-btn ${i === paging.currentPage ? 'active' : ''}`;
         numBtn.innerText = i;
         numBtn.onclick = () => loadHistoryList(i);
         pgn.appendChild(numBtn);
     }
 
-    // 다음
-    const nextBtn = document.createElement('button');
-    nextBtn.className = 'page-btn';
-    nextBtn.innerText = '>';
-    nextBtn.disabled = paging.currentPage === paging.maxPage || paging.maxPage === 0;
-    nextBtn.onclick = () => loadHistoryList(paging.currentPage + 1);
-    pgn.appendChild(nextBtn);
+    // [제거] 다음 버튼(>) 삭제 완료
 }
 
 // 모달 제어
@@ -98,7 +100,6 @@ function openOrderDetail(orderNo) {
         document.getElementById('detailQuantity').value = vo.quantity;
         document.getElementById('detailStatus').value = vo.status;
         
-        // [참고] 모달에 매장 이름 필드가 있다면 아래처럼 넣어줄 수 있습니다.
         const detailStore = document.getElementById('detailStoreName');
         if(detailStore) detailStore.value = vo.storeName || vo.STORE_NAME || '본사';
 
@@ -130,7 +131,7 @@ function updateOrderStatus() {
         if(data.result > 0) {
             alert("수정 완료");
             closeOrderModal();
-            loadHistoryList(1); // 목록 새로고침
+            loadHistoryList(1); 
         } else {
             alert("수정 실패");
         }

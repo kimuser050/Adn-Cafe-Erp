@@ -19,19 +19,23 @@ async function itemVoList(page = 1) {
         let str = "";
 
         if(!voList || voList.length === 0) {
-            str = `<tr><td colspan="7" style="padding: 100px 0;">조회된 품목이 없습니다.</td></tr>`;
+            str = `<tr><td colspan="7" style="padding: 100px 0; text-align: center;">조회된 품목이 없습니다.</td></tr>`;
         } else {
             voList.forEach(vo => {
-                const rowClass = vo.activeYn === 'N' ? 'class="inactive"' : '';
+                // 상태 뱃지 적용 (component.css 규칙)
+                const statusHtml = (vo.activeYn === 'N') 
+                    ? `<span class="status status-off">비활성</span>` 
+                    : `<span class="status status-on">활성</span>`;
+
                 str += `
-                    <tr onclick="showDetail(${vo.itemNo})" ${rowClass}>
+                    <tr>
                         <td>${vo.itemNo}</td>
-                        <td>${vo.itemName}</td>
+                        <td class="link-text" onclick="showDetail(${vo.itemNo})">${vo.itemName}</td>
                         <td>${Number(vo.unitPrice).toLocaleString()}</td>
-                        <td>2026/03/03</td> 
+                        <td>2026/03/23</td> 
                         <td>${vo.stock}</td>
-                        <td>${vo.location}</td>
-                        <td>${vo.activeYn ?? 'Y'}</td>
+                        <td>${vo.location || '-'}</td>
+                        <td>${statusHtml}</td>
                     </tr>`;
             });
         }
@@ -45,25 +49,24 @@ async function itemVoList(page = 1) {
     }
 }
 
-// [2] 페이징 버튼 생성
+// [2] 페이징 버튼 생성 (숫자만 남기기)
 function drawPagination(pvo) {
     const pArea = document.querySelector("#paginationArea");
     if(!pArea) return;
 
     let str = "";
-    // 이전 버튼
-    if(pvo.startPage > 1) {
-        str += `<button type="button" onclick="itemVoList(${pvo.startPage - 1})">&lt;</button>`;
-    }
-    // 페이지 번호
+    
+    // 이전 버튼(<) 코드를 제거했습니다.
+
+    // 페이지 번호 생성
     for(let i = pvo.startPage; i <= pvo.endPage; i++) {
-        str += `<button type="button" class="${pvo.currentPage == i ? 'active' : ''}" 
+        const activeClass = (pvo.currentPage == i) ? 'active' : '';
+        str += `<button type="button" class="page-btn ${activeClass}" 
                         onclick="itemVoList(${i})">${i}</button>`;
     }
-    // 다음 버튼
-    if(pvo.endPage < pvo.maxPage) {
-        str += `<button type="button" onclick="itemVoList(${pvo.endPage + 1})">&gt;</button>`;
-    }
+
+    // 다음 버튼(>) 코드를 제거했습니다.
+
     pArea.innerHTML = str;
 }
 
@@ -105,8 +108,8 @@ async function updateItem() {
         
         if(resp.ok) {
             alert("수정 되었습니다.");
-            document.querySelector("#itemDetailModal").style.display = "none";
-            itemVoList(); 
+            closeAllModals();
+            itemVoList(1); 
         } else {
             alert("수정 실패");
         }
@@ -115,27 +118,21 @@ async function updateItem() {
     }
 }
 
-// [5] 등록 모달 열기
+// [5] 등록 모달 열기 및 등록 처리
 function openInsertModal() {
-    document.querySelector("#itemInsertForm").reset();
+    const form = document.querySelector("#itemInsertForm");
+    if(form) form.reset();
     document.querySelector("#itemInsertModal").style.display = "block";
 }
 
 function insertItem() {
-    // 1. 데이터 가져오기
-    const itemName = document.querySelector("#insertItemName").value;
-    const unitPrice = document.querySelector("#insertUnitPrice").value;
-    const stock = document.querySelector("#insertStock").value;
-    const locationName = document.querySelector("#insertLocation").value;
-
     const data = {
-        itemName: itemName,
-        unitPrice: unitPrice,
-        stock: stock,
-        location: locationName
+        itemName: document.querySelector("#insertItemName").value,
+        unitPrice: document.querySelector("#insertUnitPrice").value,
+        stock: document.querySelector("#insertStock").value,
+        location: document.querySelector("#insertLocation").value
     };
 
-    // 2. 서버 통신
     fetch("/api/stock/insert", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -146,12 +143,12 @@ function insertItem() {
         return resp.json();
     })
     .then(data => {
-        // 서버 컨트롤러에서 map.put("result", result + "") 로 보냈으므로 data.result 확인
         if(data.result === "1") { 
             alert("신규 품목이 등록되었습니다! 🎉");
-            location.reload(); // 페이지 새로고침해서 목록 갱신
+            closeAllModals();
+            itemVoList(1);
         } else {
-            alert("등록에 실패했습니다. 다시 시도해주세요.");
+            alert("등록에 실패했습니다.");
         }
     })
     .catch(err => {
@@ -160,13 +157,21 @@ function insertItem() {
     });
 }
 
+// [6] 모달 닫기 공통 함수
+function closeAllModals() {
+    const detailModal = document.querySelector("#itemDetailModal");
+    const insertModal = document.querySelector("#itemInsertModal");
+    if(detailModal) detailModal.style.display = "none";
+    if(insertModal) insertModal.style.display = "none";
+}
+
 // [7] 이벤트 바인딩 및 초기화
 document.addEventListener("DOMContentLoaded", () => {
     // 초기 로딩
     itemVoList();
 
     // 검색 클릭 이벤트
-    const searchBtn = document.querySelector(".btn-brown-search");
+    const searchBtn = document.querySelector(".search-btn");
     if(searchBtn) searchBtn.onclick = () => itemVoList(1);
 
     // 검색 엔터 이벤트
@@ -175,21 +180,13 @@ document.addEventListener("DOMContentLoaded", () => {
         searchInput.onkeyup = (e) => { if(e.key === 'Enter') itemVoList(1); };
     }
 
-    // 상세 모달 닫기
-    document.querySelectorAll(".close-modal, .btn-gray-close-modal").forEach(btn => {
-        btn.onclick = () => document.querySelector("#itemDetailModal").style.display = "none";
-    });
-
-    // 등록 모달 닫기
-    document.querySelectorAll(".close-insert-modal, .btn-gray-close-insert").forEach(btn => {
-        btn.onclick = () => document.querySelector("#itemInsertModal").style.display = "none";
+    // 모든 닫기 버튼에 이벤트 바인딩
+    document.querySelectorAll(".close-modal, .close-insert-modal, .btn-gray-close-modal").forEach(btn => {
+        btn.onclick = closeAllModals;
     });
 
     // 모달 바깥쪽 클릭 시 닫기
     window.onclick = (e) => {
-        const detailModal = document.querySelector("#itemDetailModal");
-        const insertModal = document.querySelector("#itemInsertModal");
-        if(e.target === detailModal) detailModal.style.display = "none";
-        if(e.target === insertModal) insertModal.style.display = "none";
+        if(e.target.classList.contains('modal')) closeAllModals();
     };
 });

@@ -1,126 +1,172 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // 첫 페이지 로드
-    loadList(1);
-});
+/**
+ * 반품 검수 관리 스크립트
+ * [목록 조회, 상세조회(모달), 검수 수정, 페이징]
+ */
 
-// 1. 목록 로드 (페이징 데이터 포함)
-function loadList(page) {
-    fetch(`/api/itemcheck/list?currentPage=${page}`)
-        .then(res => res.json())
-        .then(data => {
-            const listBody = document.querySelector("#list-body");
-            if (!listBody) return;
-            
-            listBody.innerHTML = "";
+// [1] 반품 검수 목록 조회 (페이징 + 검색)
+async function loadList(page = 1) {
+    try {
+        const keyword = document.querySelector("#checkSearch")?.value || "";
+        const searchType = document.querySelector("#searchType")?.value || "productName";
+        
+        const url = `/api/itemcheck/list?currentPage=${page}&keyword=${encodeURIComponent(keyword)}&searchType=${searchType}`;
 
-            // 서버에서 넘어온 voList 반복 처리
-            data.voList.forEach(vo => {
-                const tr = document.createElement("tr");
-                // 상태값 한글 변환 매핑
-                const statusMap = { 'W': '대기', 'A': '승인', 'R': '반려' };
+        const resp = await fetch(url);
+        if(!resp.ok) throw new Error("데이터 조회 실패");
+
+        const data = await resp.json();
+        const { voList, pvo } = data; 
+
+        const tbodyTag = document.querySelector("#list-body");
+        let str = "";
+
+        if(!voList || voList.length === 0) {
+            str = `<tr><td colspan="6" style="padding: 100px 0; text-align: center;">조회된 검수 내역이 없습니다.</td></tr>`;
+        } else {
+            voList.forEach(vo => {
+                const status = (vo.status || 'W').toUpperCase();
+                let statusHtml = "";
                 
-                tr.innerHTML = `
-                    <td>${vo.returnNo}</td>
-                    <td>${vo.itemName || '이름 없음'}</td>
-                    <td>${vo.storeName}</td>
-                    <td><span class="status-badge ${vo.status}">${statusMap[vo.status] || vo.status}</span></td>
-                    <td>${vo.processResult || '-'}</td>
-                    <td>${vo.createdAt || '-'}</td>
-                `;
-                // 행 클릭 시 상세 보기 호출
-                tr.onclick = () => loadDetail(vo.returnNo);
-                listBody.appendChild(tr);
+                if(status === 'A') {
+                    statusHtml = `<span class="status status-on">승인</span>`;
+                } else if(status === 'R') {
+                    statusHtml = `<span class="status status-off">반려</span>`;
+                } else {
+                    statusHtml = `<span class="status status-pending">대기</span>`;
+                }
+
+                str += `
+                    <tr onclick="loadDetail(${vo.returnNo})" style="cursor:pointer;">
+                        <td>${vo.returnNo}</td>
+                        <td style="text-align:left; padding-left:20px;" class="link-text">${vo.productName || vo.itemName}</td>
+                        <td>${vo.storeName}</td>
+                        <td>${statusHtml}</td>
+                        <td>${vo.processResult || '-'}</td>
+                        <td>${vo.regDate || vo.createdAt}</td>
+                    </tr>`;
             });
+        }
+        tbodyTag.innerHTML = str;
 
-            // 페이징 버튼 생성 함수 호출
-            renderPagination(data.pvo);
-        })
-        .catch(err => console.error("목록 로드 실패:", err));
+        renderPagination(pvo);
+
+    } catch (err) {
+        console.error("목록 조회 중 에러 발생:", err);
+    }
 }
 
-// 2. 상세 조회
-function loadDetail(no) {
-    fetch(`/api/itemcheck/${no}`)
-        .then(res => res.json())
-        .then(data => {
-            const vo = data.vo;
-            
-            // JSP의 각 input id에 데이터 매칭
-            document.querySelector("#returnNo").value = vo.returnNo;
-            document.querySelector("#storeName").value = vo.storeName;
-            document.querySelector("#productName").value = vo.itemName; // 상품번호 대신 이름 출력
-            document.querySelector("#quantity").value = vo.quantity;
-            document.querySelector("#createdAt").value = vo.createdAt;
-            document.querySelector("#reason").value = vo.reason;
-            document.querySelector("#status").value = vo.status;
+// [2] 페이징 버튼 생성
+function renderPagination(pvo) {
+    const pArea = document.querySelector("#paginationArea");
+    if(!pArea || !pvo) return;
 
-            // 섹션 전환
-            document.querySelector("#list-section").style.display = "none";
-            document.querySelector("#detail-section").style.display = "block";
+    let str = "";
+    if (pvo.totalCount === 0) {
+        pArea.innerHTML = "";
+        return;
+    }
+
+    if(pvo.startPage > 1) {
+        str += `<button type="button" onclick="loadList(${pvo.startPage - 1})"><</button>`;
+    }
+
+    for(let i = pvo.startPage; i <= pvo.endPage; i++) {
+        const activeClass = (Number(pvo.currentPage) === i) ? 'active' : '';
+        str += `<button type="button" class="${activeClass}" onclick="loadList(${i})">${i}</button>`;
+    }
+
+    if(pvo.endPage < pvo.maxPage) {
+        str += `<button type="button" onclick="loadList(${pvo.endPage + 1})">></button>`;
+    }
+
+    pArea.innerHTML = str;
+}
+
+// [3] 상세 조회
+async function loadDetail(no) {
+    if(!no) return;
+
+    try {
+        const resp = await fetch(`/api/itemcheck/${no}`);
+        if(!resp.ok) throw new Error("상세 데이터 로드 실패");
+        
+        const data = await resp.json();
+        const vo = data.vo || data;
+        
+        document.querySelector("#returnNo").value = vo.returnNo;
+        document.querySelector("#storeName").value = vo.storeName;
+        document.querySelector("#productName").value = vo.productName || vo.itemName;
+        document.querySelector("#itemQty").value = vo.itemQty || vo.quantity;
+        document.querySelector("#regDate").value = vo.regDate || vo.createdAt;
+        document.querySelector("#checkReason").value = vo.checkReason || "";
+        
+        // 🔥 핵심 수정 (A/R/W 맞춤)
+        let statusVal = vo.status;
+
+        if(statusVal === "A") statusVal = "A";
+        else if(statusVal === "R") statusVal = "R";
+        else statusVal = "W";
+
+        const statusSelect = document.querySelector("#checkStatus");
+        if(statusSelect) statusSelect.value = statusVal;
+        
+        const modal = document.querySelector("#checkModal");
+        if(modal) modal.style.display = "flex";
+        
+    } catch (err) {
+        console.error("상세조회 에러:", err);
+    }
+}
+
+// [4] 검수 결과 저장
+async function saveCheck() {
+    const returnNo = document.querySelector("#returnNo").value;
+    const status = document.querySelector("#checkStatus").value;
+    const reason = document.querySelector("#checkReason").value;
+    
+    if(!confirm("검수 결과를 저장하시겠습니까?")) return;
+
+    const payload = { returnNo, status, reason };
+
+    try {
+        const resp = await fetch("/api/itemcheck", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
         });
-}
-
-// 3. 수정 저장 (PUT)
-function saveCheck() {
-    const data = {
-        returnNo: document.querySelector("#returnNo").value,
-        status: document.querySelector("#status").value
-    };
-
-    if(!confirm("검수 상태를 저장하시겠습니까?")) return;
-
-    fetch("/api/itemcheck", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(result => {
-        if(result.result == 1) { 
-            alert("검수 상태가 변경되었습니다.");
+        
+        if(resp.ok) {
+            alert("검수 처리가 완료되었습니다. 🎉");
             closeDetail();
-            loadList(1); // 1페이지로 새로고침
+            loadList(1);
         } else {
             alert("저장에 실패했습니다.");
         }
-    });
+    } catch (err) {
+        console.error("저장 에러:", err);
+    }
 }
 
-// 4. 상세 닫기
+// [5] 모달 닫기
 function closeDetail() {
-    document.querySelector("#list-section").style.display = "block";
-    document.querySelector("#detail-section").style.display = "none";
+    const modal = document.querySelector("#checkModal");
+    if(modal) modal.style.display = "none";
 }
 
-// 5. 페이징 버튼 생성 (중요: pvo 객체 사용)
-function renderPagination(pvo) {
-    const container = document.querySelector("#pagination");
-    if (!container) return;
-    
-    container.innerHTML = "";
+// [6] 이벤트
+document.addEventListener("DOMContentLoaded", () => {
+    loadList();
 
-    // 이전 페이지 버튼 (필요 시)
-    if (pvo.startPage > 1) {
-        const prevBtn = document.createElement("button");
-        prevBtn.innerText = "이전";
-        prevBtn.onclick = () => loadList(pvo.startPage - 1);
-        container.appendChild(prevBtn);
-    }
+    document.querySelector("#checkSearch")?.addEventListener("keyup", (e) => {
+        if(e.key === "Enter") loadList(1);
+    });
 
-    // 숫자 버튼 생성 루프
-    for (let i = pvo.startPage; i <= pvo.endPage; i++) {
-        const btn = document.createElement("button");
-        btn.innerText = i;
-        btn.className = (i === pvo.currentPage) ? "page-btn active" : "page-btn";
-        btn.onclick = () => loadList(i);
-        container.appendChild(btn);
-    }
+    document.querySelector(".search-btn")?.addEventListener("click", () => {
+        loadList(1);
+    });
 
-    // 다음 페이지 버튼 (필요 시)
-    if (pvo.endPage < pvo.maxPage) {
-        const nextBtn = document.createElement("button");
-        nextBtn.innerText = "다음";
-        nextBtn.onclick = () => loadList(pvo.endPage + 1);
-        container.appendChild(nextBtn);
-    }
-}
+    window.onclick = (e) => {
+        const modal = document.querySelector("#checkModal");
+        if(e.target === modal) closeDetail();
+    };
+});

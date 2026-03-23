@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
-    <link rel="stylesheet" href="/css/stock/item/main.css">
+    <link rel="stylesheet" href="/css/common/component.css"> <link rel="stylesheet" href="/css/stock/item/main.css">
     <script defer src="/js/stock/inbound.js"></script>
 </head>
 <body>
@@ -15,43 +15,51 @@
         <%@ include file="/WEB-INF/views/stock/common/itemSidebar.jsp" %>
 
         <main class="page-shell">
-            <section class="page-content">
-                <div class="tab-wrapper">
-                    <a href="/stock/item" class="tab-btn">관리 품목</a>
-                    <a href="/stock/inbound" class="tab-btn active">입고 내역</a>
-                </div>
+            <div class="tab-wrapper">
+                <a href="/stock/item" class="tab-btn">관리 품목</a>
+                <a href="/stock/inbound" class="tab-btn active">입고 내역</a>
+            </div>
 
-                <div class="content-container">
-                    <div class="search-section">
-                        <div class="search-inner">
-                            <label>상품 명</label>
-                            <input type="text" id="incomingSearch" placeholder="입고된 품목명을 입력하세요">
-                            <button class="btn-brown-search">검색</button>
+            <div class="content-container panel">
+                <div class="search-section">
+                    <div class="search-inner">
+                        <select class="form-select search-select" id="searchType">
+                            <option value="name">상품명</option>
+                            <option value="no">품목코드</option>
+                        </select>
+                        
+                        <div class="search-box">
+                            <input type="text" id="incomingSearch" class="search-box-input" placeholder="입고된 품목명을 입력하세요" onkeyup="if(window.event.keyCode==13){searchInbound()}">
+                            <button type="button" class="search-btn" onclick="searchInbound()">⌕</button>
                         </div>
                     </div>
-
-                    <div class="table-wrapper">
-                        <table class="item-table">
-                            <thead>
-                                <tr>
-                                    <th>번호</th>
-                                    <th>이름</th>
-                                    <th>단가</th>
-                                    <th >수량</th>
-                                    <th >총금액</th>
-                                    <th >입고일</th>
-                                    <th >품목코드</th>
-                                    <th>상태</th>
-                                </tr>
-                            </thead>
-                            <tbody id="incomingList">
-                                </tbody>
-                        </table>
-                    </div>
-
-                    <div id="paginationArea" class="pagination-wrapper"></div>
+                    
+                    <div class="action-inner">
+                        </div>
                 </div>
-            </section>
+
+                <div class="table-wrapper">
+                    <table class="item-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">번호</th>
+                                <th>이름</th>
+                                <th>단가</th>
+                                <th>수량</th>
+                                <th>총금액</th>
+                                <th>입고일</th>
+                                <th>품목코드</th>
+                                <th style="width: 120px;">상태</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incomingList">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="paginationArea" class="pagination-wrapper">
+                </div>
+            </div>
         </main>
     </div>
 </body>

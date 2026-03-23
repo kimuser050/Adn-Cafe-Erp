@@ -251,3 +251,12 @@ html, body {
     margin: 0 !important;
     padding: 0 !important;
 }
+/* 대기 상태 - 노란색 점 */
+.status.status-wait::before {
+    background-color: #ffc107; /* 선명한 노란색 */
+    box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
+}
+
+.status.status-wait {
+    color: #856404; /* 가독성을 위해 진한 갈색톤 글자 */
+}
