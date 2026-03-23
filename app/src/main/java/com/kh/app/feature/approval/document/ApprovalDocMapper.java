@@ -227,17 +227,18 @@ public interface ApprovalDocMapper {
     @Update("""
         UPDATE APPROVAL_DOC
             SET
-                DEPT_CODE = #{deptCode}
-                , TITLE = #{title}
-                , CONTENT = #{content}
+                TITLE = #{title}
+                , DEPT_CODE = #{deptCode}
                 , APPROVER_NO = #{approverNo}
+                , CONTENT = #{content}
                 , SUBMITTED_AT = SYSDATE
             WHERE STATUS_CODE = 1
+            AND DOC_NO = #{docNo}
             AND WRITER_NO = #{writerNo}
             AND DEL_YN = 'N'
                 
     """)
-    int editDocument(ApprovalDocVo vo);
+    int updateDoc(ApprovalDocVo vo);
 
 //    @Delete("""
 //        DELETE FROM APPROVAL_DOC
@@ -415,5 +416,20 @@ public interface ApprovalDocMapper {
             </script>
             """)
     int searchMyDocCount(ApprovalDocVo vo , @Param("loginEmpNo") String loginEmpNo);
-
+    @Update("""
+    UPDATE VACATION_DOC
+        SET 
+            START_DATE = #{startDate},
+            END_DATE = #{endDate}
+    WHERE DOC_NO = #{docNo}
+    """)
+    int updateVacationDetail(ApprovalDocVo vo);
+    @Update("""
+        UPDATE VACATION_DOC
+            SET 
+                WORK_DATE = #{workDate},
+                WORK_HOUR = #{workHour}
+        WHERE DOC_NO = #{docNo}
+    """)
+    int updateOvertimeDetail(ApprovalDocVo vo);
 }

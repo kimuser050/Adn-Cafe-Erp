@@ -88,13 +88,29 @@ public class ApprovalDocService {
 
 
     @Transactional
-    public int editDocument(ApprovalDocVo vo) {
-        if ("1".equals(vo.getStatusCode())){
-            int result = approvalDocMapper.editDocument(vo);
-            if(result != 1){
-                throw new IllegalStateException("문서 수정 실패");
+    public int updateDoc(ApprovalDocVo vo) {
+        System.out.println("vo = " + vo);
+        if (!"1".equals(vo.getStatusCode())) {
+            throw new IllegalStateException("대기중 문서만 수정할 수 있습니다.");
+        }
+
+        int result1 = approvalDocMapper.updateDoc(vo);
+        if (result1 != 1) {
+            throw new IllegalStateException("공통문서 수정 실패");
+        }
+
+        if ("1".equals(vo.getCategoryNo())) {
+            int result2 = approvalDocMapper.updateVacationDetail(vo);
+            if (result2 != 1) {
+                throw new IllegalStateException("휴가상세 수정 실패");
+            }
+        } else if ("2".equals(vo.getCategoryNo())) {
+            int result2 = approvalDocMapper.updateOvertimeDetail(vo);
+            if (result2 != 1) {
+                throw new IllegalStateException("연장근무상세 수정 실패");
             }
         }
+
         return 1;
     }
 //    @Transactional

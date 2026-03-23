@@ -39,7 +39,7 @@ function renderDocList(voList) {
         const statusClass = getStatusInfo(vo.statusCode);
         str += `
             <tr>
-                <td><a href="#" onclick="openDocModal(event, ${vo.docNo})">${vo.docNo}</a></td>
+                <td><a href="#" onclick="openDocModal(event, ${vo.docNo})" class="link-text">${vo.docNo}</a></td>
                 <td>${vo.categoryName}</td>
                 <td>${vo.title}</td>
                 <td>${vo.writerName}</td>
@@ -213,11 +213,11 @@ function renderModalButtons(doc){
     let str = '';
     
     if(doc.canEdit){
-        str += `<button class="modal-btn btn-edit" onclick="editDoc(${doc.docNo})">수정</button>`;
-        str += `<button class="modal-btn btn-delete" onclick="deleteDoc(${doc.docNo})">삭제</button>`;
+        str += `<button class="btn btn-dark" onclick="editDoc(${doc.docNo})">수정</button>`;
+        str += `<button class="btn btn-dark" onclick="deleteDoc(${doc.docNo})">삭제</button>`;
     }
 
-    str += `<button class="modal-btn btn-close" onclick="closeDocModal()">닫기</button>`;
+    str += `<button class="btn btn-outline" onclick="closeDocModal()">닫기</button>`;
 
     footer.innerHTML = str;
 }
