@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
     <link rel="stylesheet" href="/css/common/component.css">
+    <link rel="stylesheet" href="/css/hr/org/orgCommon.css">
 </head>
 <body>
 
@@ -28,12 +29,12 @@
     <div class="form-select-box">
         <div class="form-select-title">결재양식</div>
         <div class="form-card-wrap">
-            <button type="button" class="form-card active" data-type="VACATION">
+            <button type="button" class="form-card active category-btn" data-type="VACATION">
                 <div class="form-card-icon">📄</div>
                 <div class="form-card-text">휴가신청</div>
             </button>
 
-            <button type="button" class="form-card" data-type="OVERTIME">
+            <button type="button" class="form-card category-btn" data-type="OVERTIME">
                 <div class="form-card-icon">📄</div>
                 <div class="form-card-text">연장근무신청</div>
             </button>
