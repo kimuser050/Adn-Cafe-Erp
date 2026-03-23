@@ -21,7 +21,7 @@ public class ReqViewController {
         if (loginMemberVo == null ||
                 (!"310102".equals(loginMemberVo.getDeptCode()) && !"310104".equals(loginMemberVo.getDeptCode()))) {
             ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
-            return "redirect:/main";
+            return "redirect:/home";
         }
 
         // 2. [중요] 사번(empNo)을 모델에 담습니다.
