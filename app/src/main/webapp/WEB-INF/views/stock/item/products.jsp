@@ -74,10 +74,11 @@
                 </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-save" id="btn-insert" onclick="submitProduct('POST')">등록하기</button>
-                    <button type="button" class="btn-edit" id="btn-update" onclick="submitProduct('PUT')">수정하기</button>
-                    <button type="button" class="btn-delete" id="btn-delete" onclick="deleteProduct()">삭제하기</button>
-                </div>
+    <button type="button" class="btn-save" id="btn-insert" onclick="submitProduct('POST')">등록하기</button>
+
+    <button type="button" class="btn-edit" id="btn-update" onclick="submitProduct('PUT')">수정하기</button>
+
+    </div>
             </div>
         </div>
     </div>

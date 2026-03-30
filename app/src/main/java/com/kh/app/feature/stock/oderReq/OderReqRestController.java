@@ -38,6 +38,7 @@ public class OderReqRestController {
             HttpSession session) {
 
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+        // ... 이하 로직 동일
         String empNo = (loginMemberVo != null) ? loginMemberVo.getEmpNo() : "";
 
         int listCount = oderReqService.selectCount(keyword);
@@ -54,15 +55,29 @@ public class OderReqRestController {
 
     /**
      * [발주 이력 조회]
+     * 수정: storeCode 파라미터 제거 및 세션 방어 로직 강화
      */
     @GetMapping("/history")
     public ResponseEntity<Map<String, Object>> selectHistory(
             @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String empNo,
+            HttpSession session) {
 
-        int listCount = oderReqService.selectHistoryCount(keyword);
+        // 1. 세션에서 로그인 정보 가져오기 (JS에서 누락될 경우 대비)
+        MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
+        // 2. 사번이 넘어오지 않았거나 "false"인 경우 세션값으로 대체
+        if (empNo == null || empNo.isEmpty() || "false".equals(empNo)) {
+            empNo = (loginMemberVo != null) ? loginMemberVo.getEmpNo() : "";
+        }
+
+        log.info("발주 이력 조회 요청 - empNo: {}, keyword: {}", empNo, keyword);
+
+        // 3. 서비스 호출 (이제 Mapper 내부에서 empNo로 본사/지점 판별함)
+        int listCount = oderReqService.selectHistoryCount(keyword, empNo);
         PageVo pagingInfo = new PageVo(listCount, currentPage, 5, 10);
-        List<OderReqVo> voList = oderReqService.selectHistory(pagingInfo, keyword);
+        List<OderReqVo> voList = oderReqService.selectHistory(pagingInfo, keyword, empNo);
 
         Map<String, Object> map = new HashMap<>();
         map.put("pagingInfo", pagingInfo);
@@ -101,7 +116,6 @@ public class OderReqRestController {
 
     /**
      * [다중 발주 등록]
-     * 수정 포인트: 서비스 호출 시 사번(empNo)을 함께 넘겨줍니다.
      */
     @PostMapping("/bulk")
     public ResponseEntity<Map<String, Object>> orderReqBulk(
@@ -117,14 +131,9 @@ public class OderReqRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMap);
         }
 
-        // JS에서 넘어온 부서코드(310104)를 세팅 (기본값)
-        for (OderReqVo vo : voList) {
-            vo.setStoreCode(loginMemberVo.getDeptCode());
-        }
-
         log.info("다중 발주 요청 처리 시작: {}건, 신청자: {}", voList.size(), loginMemberVo.getEmpNo());
 
-        // [중요] 서비스 호출 시 로그인 유저의 사번을 인자로 전달합니다.
+        // 서비스 내부에서 empNo를 이용해 진짜 STORE_CODE를 찾아서 insert 하도록 설계됨
         int result = oderReqService.orderReqBulk(voList, loginMemberVo.getEmpNo());
 
         Map<String, Object> resultMap = new HashMap<>();
