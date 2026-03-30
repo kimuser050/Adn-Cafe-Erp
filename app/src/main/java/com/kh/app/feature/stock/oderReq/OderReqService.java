@@ -15,7 +15,6 @@ public class OderReqService {
 
     private final OderReqMapper oderReqMapper;
 
-
     /**
      * 1. [발주 신청 탭] 품목 개수 조회 (검색 포함)
      */
@@ -41,10 +40,13 @@ public class OderReqService {
      * 4. [발주 상태 탭] 상태 수정 & 완료('F') 시 재고 차감
      */
     public int updateStatus(OderReqVo vo) {
+        // 1. 상태 업데이트 실행
         int result = oderReqMapper.updateByNo(vo);
 
+        // 2. 상태가 완료('F')일 때만 재고 차감 로직 실행
         if ("F".equals(vo.getStatus())) {
             int stockResult = oderReqMapper.decreaseStock(vo.getOrderNo());
+            // 재고 부족 등의 이유로 차감이 안 되면 트랜잭션 롤백 유도 (RuntimeException)
             if (stockResult < 1) {
                 throw new RuntimeException("재고 반영에 실패했습니다. (재고 부족 등)");
             }
@@ -54,15 +56,14 @@ public class OderReqService {
 
     /**
      * 5. [발주 신청 탭] 다중 품목 일괄 주문 등록
-     * [수정 포인트] 파라미터에 loginEmpNo를 추가하여 Mapper가 진짜 매장코드를 찾게 합니다.
      */
     public int orderReqBulk(List<OderReqVo> voList, String loginEmpNo) {
         if (voList == null || voList.isEmpty()) return 0;
 
         int totalResult = 0;
         for (OderReqVo vo : voList) {
-            // [중요] 로그인한 사용자의 사번을 Vo에 세팅합니다.
-            // Mapper에서 이 empNo를 사용해 STORE 테이블의 진짜 STORE_CODE를 조회합니다.
+            // [중요] 로그인한 사용자의 사번을 Vo에 세팅
+            // OderReqVo에 private String empNo; 필드가 있어야 합니다.
             vo.setEmpNo(loginEmpNo);
 
             totalResult += oderReqMapper.insertOrder(vo);
@@ -74,15 +75,19 @@ public class OderReqService {
 
     /**
      * 6. [발주 상태 탭] 이력 개수 조회
+     * 수정: storeCode 파라미터 제거
      */
-    public int selectHistoryCount(String keyword) {
-        return oderReqMapper.selectHistoryCount(keyword);
+    public int selectHistoryCount(String keyword, String empNo) {
+        // 매퍼 인터페이스에서도 파라미터 개수가 일치해야 합니다.
+        return oderReqMapper.selectHistoryCount(keyword, empNo);
     }
 
     /**
-     * 7. [발주 상태 탭] 이력 목록 조회 (페이징 + 검색)
+     * 7. [발주 상태 탭] 이력 목록 조회
+     * 수정: storeCode 파라미터 제거
      */
-    public List<OderReqVo> selectHistory(PageVo pagingInfo, String keyword) {
-        return oderReqMapper.selectHistory(pagingInfo, keyword);
+    public List<OderReqVo> selectHistory(PageVo pagingInfo, String keyword, String empNo) {
+        // 매퍼 인터페이스에서도 파라미터 개수가 일치해야 합니다.
+        return oderReqMapper.selectHistory(pagingInfo, keyword, empNo);
     }
 }

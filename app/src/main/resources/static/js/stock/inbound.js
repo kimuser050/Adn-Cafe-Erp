@@ -1,14 +1,16 @@
 /**
- * 입고 내역 관리 스크립트
+ * 반품 검수 관리 스크립트
  */
 
-// [1] 입고 목록 조회 (페이징 + 검색)
-async function inboundList(page = 1) {
+// [1] 목록 조회
+async function loadList(page = 1) {
     try {
-        const keyword = document.querySelector("#incomingSearch")?.value || "";
-        // JSP의 searchType 셀렉트 박스 값이 있다면 포함 (없으면 기본값)
-        const searchType = document.querySelector("#searchType")?.value || "name";
-        const url = `/api/inbound/selectList?currentPage=${page}&keyword=${encodeURIComponent(keyword)}&searchType=${searchType}`;
+        const keyword = document.getElementById("searchKeyword")?.value.trim() || "";
+        const searchType = document.getElementById("searchType")?.value || "itemName";
+
+        const url = `/api/itemcheck/list?currentPage=${page}`
+                  + `&keyword=${encodeURIComponent(keyword)}`
+                  + `&searchType=${encodeURIComponent(searchType)}`;
 
         const resp = await fetch(url);
         if(!resp.ok) throw new Error("데이터 조회 실패");
@@ -16,81 +18,149 @@ async function inboundList(page = 1) {
         const data = await resp.json();
         const { voList, pvo } = data;
 
-        const tbodyTag = document.querySelector("#incomingList");
-        let str = "";
+        const tbodyTag = document.getElementById("list-body");
+        if (!tbodyTag) return;
 
+        let str = "";
         if(!voList || voList.length === 0) {
-            str = `<tr><td colspan="8" style="padding: 100px 0; text-align: center;">조회된 입고 내역이 없습니다.</td></tr>`;
+            str = `<tr><td colspan="6" style="padding: 100px 0; text-align: center;">조회된 검수 내역이 없습니다.</td></tr>`;
         } else {
             voList.forEach(vo => {
-                // [수정] 상태 뱃지 적용: '정상'일 때 파란불(status-on)이 나오도록 변경
-                const statusHtml = (vo.deletedYn === 'N' || !vo.deletedYn) 
-                    ? `<span class="status status-on">정상</span>` 
-                    : `<span class="status status-off">삭제</span>`;
+                const rawStatus = (vo.status || 'W').toUpperCase().charAt(0);
+                const statusMap = {
+                    'A': { text: '승인', class: 'status-on' },
+                    'R': { text: '반려', class: 'status-off' },
+                    'W': { text: '대기', class: 'status-wait' }
+                };
+                const current = statusMap[rawStatus] || statusMap['W'];
 
                 str += `
-                    <tr>
-                        <td>${vo.inNo}</td>
-                        <td style="text-align: left; padding-left: 20px;">${vo.itemName}</td>
-                        <td>${Number(vo.unitPrice || 0).toLocaleString()}</td>
-                        <td>${Number(vo.quantity || 0).toLocaleString()}</td>
-                        <td style="font-weight: bold; color: #4a382e;">
-                            ${Number(vo.totalPrice || 0).toLocaleString()}
+                    <tr onclick="loadDetail(${vo.returnNo})" style="cursor:pointer;">
+                        <td>${vo.returnNo}</td>
+                        <td style="text-align:left; padding-left:20px;">${vo.itemName || vo.productName || '-'}</td>
+                        <td>${vo.storeName || '-'}</td>
+                        <td>
+                            <span class="status ${current.class}">${current.text}</span>
                         </td>
-                        <td>${vo.inDate || '-'}</td>
-                        <td>${vo.itemNo || '-'}</td>
-                        <td>${statusHtml}</td>
+                        <td>${vo.processResult || '-'}</td>
+                        <td>${vo.regDate || vo.createdAt || '-'}</td>
                     </tr>`;
             });
         }
         tbodyTag.innerHTML = str;
-        
-        // 페이징 그리기
-        drawPagination(pvo);
+
+        renderPagination(pvo);
 
     } catch (err) {
-        console.error("입고 목록 조회 에러:", err);
+        console.error("목록 조회 중 에러 발생:", err);
     }
 }
 
-// [2] 페이징 버튼 생성 (화살표 <, > 제거 버전)
-function drawPagination(pvo) {
-    const pArea = document.querySelector("#paginationArea");
-    if(!pArea || !pvo) return;
-
-    let str = "";
-    
-    // 이전 화살표(&lt;) 제거 완료
-
-    // 페이지 번호만 생성
-    for(let i = pvo.startPage; i <= pvo.endPage; i++) {
-        const activeClass = (pvo.currentPage == i) ? 'active' : '';
-        str += `<button type="button" 
-                        class="page-btn ${activeClass}" 
-                        onclick="inboundList(${i})">${i}</button>`;
+// [2] 페이징 렌더링
+function renderPagination(pvo) {
+    const pArea = document.getElementById("paginationArea");
+    if(!pArea || !pvo || pvo.totalCount === 0) {
+        if(pArea) pArea.innerHTML = "";
+        return;
     }
 
-    // 다음 화살표(&gt;) 제거 완료
+    let str = "";
+    if(pvo.startPage > 1) {
+        str += `<button type="button" class="page-btn" onclick="loadList(${pvo.startPage - 1})">&lt;</button>`;
+    }
 
+    for(let i = pvo.startPage; i <= pvo.endPage; i++) {
+        const activeClass = (Number(pvo.currentPage) === i) ? 'active' : '';
+        str += `<button type="button" class="page-btn ${activeClass}" onclick="loadList(${i})">${i}</button>`;
+    }
+
+    if(pvo.endPage < pvo.maxPage) {
+        str += `<button type="button" class="page-btn" onclick="loadList(${pvo.endPage + 1})">&gt;</button>`;
+    }
     pArea.innerHTML = str;
 }
 
-// [3] 이벤트 바인딩 및 초기화
-document.addEventListener("DOMContentLoaded", () => {
-    // 초기 로드
-    inboundList();
+// [3] 상세 조회 (모달 열기)
+async function loadDetail(no) {
+    if(!no) return;
+    try {
+        const resp = await fetch(`/api/itemcheck/${no}`);
+        if(!resp.ok) throw new Error("상세 데이터 로드 실패");
 
-    // 검색 버튼 클릭 (JSP의 .search-btn 클래스에 맞춤)
-    const searchBtn = document.querySelector(".search-btn");
-    if(searchBtn) {
-        searchBtn.addEventListener("click", () => inboundList(1));
+        const data = await resp.json();
+        const vo = data.vo || data;
+
+        // JSP ID와 데이터 바인딩
+        document.getElementById("returnNo").value = vo.returnNo || "";
+        document.getElementById("storeName").value = vo.storeName || "";
+        document.getElementById("productName").value = vo.itemName || vo.productName || "";
+        document.getElementById("itemQty").value = vo.quantity || vo.itemQty || 0;
+        document.getElementById("regDate").value = vo.regDate || vo.createdAt || "";
+
+        const statusSelect = document.getElementById("checkStatus");
+        if(statusSelect) {
+            statusSelect.value = (vo.status || "W").toUpperCase().charAt(0);
+        }
+
+        // 모달 표시
+        const modal = document.getElementById("checkModal");
+        if(modal) modal.style.display = "flex";
+
+    } catch (err) {
+        console.error("상세조회 에러:", err);
     }
+}
 
-    // 검색창 엔터키 이벤트
-    const searchInput = document.querySelector("#incomingSearch");
-    if(searchInput) {
-        searchInput.addEventListener("keyup", (e) => {
-            if(e.key === 'Enter') inboundList(1);
+// [4] 결과 저장
+async function saveCheck() {
+    const returnNo = document.getElementById("returnNo")?.value;
+    const status = document.getElementById("checkStatus")?.value;
+
+    if(!returnNo) return;
+    if(!confirm("검수 결과를 저장하시겠습니까?")) return;
+
+    try {
+        const resp = await fetch("/api/itemcheck", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                returnNo: returnNo,
+                status: status
+            })
+        });
+
+        if(resp.ok) {
+            alert("검수 처리가 완료되었습니다.");
+            closeDetail();
+            loadList(1);
+        } else {
+            alert("저장에 실패했습니다.");
+        }
+    } catch (err) {
+        console.error("저장 에러:", err);
+    }
+}
+
+// [5] 모달 닫기
+function closeDetail() {
+    const modal = document.getElementById("checkModal");
+    if(modal) modal.style.display = "none";
+    document.getElementById("check-form").reset();
+}
+
+// [6] 초기화 및 검색창 엔터 이벤트
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. 페이지 로드 시 첫 번째 페이지 데이터 조회
+    loadList(1);
+
+    // 2. 검색창에서 엔터키 누르면 검색 실행
+    const searchInput = document.getElementById("searchKeyword");
+    if (searchInput) {
+        searchInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                loadList(1);
+            }
         });
     }
 });

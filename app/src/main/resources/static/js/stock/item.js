@@ -23,8 +23,8 @@ async function itemVoList(page = 1) {
         } else {
             voList.forEach(vo => {
                 // 상태 뱃지 적용 (component.css 규칙)
-                const statusHtml = (vo.activeYn === 'N') 
-                    ? `<span class="status status-off">비활성</span>` 
+                const statusHtml = (vo.activeYn === 'N')
+                    ? `<span class="status status-off">비활성</span>`
                     : `<span class="status status-on">활성</span>`;
 
                 str += `
@@ -32,7 +32,7 @@ async function itemVoList(page = 1) {
                         <td>${vo.itemNo}</td>
                         <td class="link-text" onclick="showDetail(${vo.itemNo})">${vo.itemName}</td>
                         <td>${Number(vo.unitPrice).toLocaleString()}</td>
-                        <td>2026/03/23</td> 
+                        <td>2026/03/23</td>
                         <td>${vo.stock}</td>
                         <td>${vo.location || '-'}</td>
                         <td>${statusHtml}</td>
@@ -55,13 +55,13 @@ function drawPagination(pvo) {
     if(!pArea) return;
 
     let str = "";
-    
+
     // 이전 버튼(<) 코드를 제거했습니다.
 
     // 페이지 번호 생성
     for(let i = pvo.startPage; i <= pvo.endPage; i++) {
         const activeClass = (pvo.currentPage == i) ? 'active' : '';
-        str += `<button type="button" class="page-btn ${activeClass}" 
+        str += `<button type="button" class="page-btn ${activeClass}"
                         onclick="itemVoList(${i})">${i}</button>`;
     }
 
@@ -82,7 +82,7 @@ function showDetail(itemNo) {
         document.querySelector("#modalStock").value = vo.stock;
         document.querySelector("#modalLocation").value = vo.location;
         document.querySelector("#modalActiveYn").value = vo.activeYn ?? 'Y';
-        
+
         document.querySelector("#itemDetailModal").style.display = "block";
     })
     .catch(err => console.error("상세조회 에러:", err));
@@ -98,18 +98,18 @@ async function updateItem() {
         location: document.querySelector("#modalLocation").value,
         activeYn: document.querySelector("#modalActiveYn").value
     };
-    
+
     try {
         const resp = await fetch("/api/stock", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(vo)
         });
-        
+
         if(resp.ok) {
             alert("수정 되었습니다.");
             closeAllModals();
-            itemVoList(1); 
+            itemVoList(1);
         } else {
             alert("수정 실패");
         }
@@ -143,7 +143,7 @@ function insertItem() {
         return resp.json();
     })
     .then(data => {
-        if(data.result === "1") { 
+        if(data.result === "1") {
             alert("신규 품목이 등록되었습니다! 🎉");
             closeAllModals();
             itemVoList(1);

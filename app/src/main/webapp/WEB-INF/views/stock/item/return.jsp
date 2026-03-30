@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="/css/common/reset.css">
     <link rel="stylesheet" href="/css/common/layout.css">
     <link rel="stylesheet" href="/css/common/sidebar.css">
-    <link rel="stylesheet" href="/css/stock/item/return.css"> 
-    
+    <link rel="stylesheet" href="/css/stock/item/return.css">
+
     <script defer src="/js/stock/return.js"></script>
 </head>
 <body>
@@ -49,7 +49,7 @@
 
                             <div class="form-group">
                                 <label>접수일</label>
-                                <input type="text" id="enrollDate" value="2026-03-22" readonly class="input-readonly">
+                                   <input type="text" id="enrollDate" readonly class="input-readonly">
                             </div>
                         </div>
 

@@ -1,9 +1,13 @@
+/* =========================================================
+   반품 검수 전용 스타일 (Coffee Prince ERP) - 복구 및 교정본
+   ========================================================= */
+
 /* [1] 레이아웃 및 브라우저 스크롤 차단 */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; 
+    overflow: hidden;
     background-color: #f2f0eb;
     font-family: 'Pretendard', sans-serif;
 }
@@ -18,26 +22,26 @@ html, body {
 .page-shell {
     flex: 1;
     height: 100%;
-    overflow-y: auto; 
-    padding: 20px 40px; 
+    overflow-y: auto;
+    padding: 20px 40px;
     box-sizing: border-box;
 }
 
-/* [2] 탭 디자인 (브라운 테마) */
-.tab-wrapper { 
-    display: flex; 
-    gap: 2px; 
-    margin-bottom: -1px; 
+/* [2] 탭 디자인 */
+.tab-wrapper {
+    display: flex;
+    gap: 2px;
+    margin-bottom: -1px;
 }
 
 .tab-btn {
     display: inline-block;
-    padding: 12px 30px; 
+    padding: 12px 30px;
     border: 1px solid #dcdcdc;
     border-bottom: none;
     cursor: pointer;
-    background-color: #614e41; 
-    color: #ffffff !important; 
+    background-color: #614e41;
+    color: #ffffff !important;
     font-size: 15px;
     text-decoration: none;
     text-align: center;
@@ -45,34 +49,38 @@ html, body {
     transition: 0.2s;
 }
 
-.tab-btn.active { 
-    background-color: #f9f7f2; 
-    color: #614e41 !important; 
-    font-weight: bold; 
-    border-bottom: 1px solid #f9f7f2; 
+.tab-btn.active {
+    background-color: #f9f7f2;
+    color: #614e41 !important;
+    font-weight: bold;
+    border-bottom: 1px solid #f9f7f2;
     position: relative;
     z-index: 2;
 }
 
-/* [3] 컨테이너 및 검색창 섹션 */
+/* [3] 컨테이너 및 검색창 (맨 처음 레이아웃 복구) */
 .content-container {
-    background-color: #f9f7f2; 
+    background-color: #f9f7f2;
     border: 1px solid #dcdcdc;
-    padding: 30px; 
+    padding: 30px;
     border-radius: 0 8px 8px 8px;
     position: relative;
     z-index: 1;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-.search-section { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 25px; 
+.search-section {
+    display: flex;
+    justify-content: flex-start; /* 다시 왼쪽 정렬로 복구 */
+    align-items: center;
+    margin-bottom: 25px;
 }
 
-.search-inner { display: flex; align-items: center; gap: 10px; }
+.search-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
 .search-select {
     height: 38px;
@@ -90,13 +98,15 @@ html, body {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 20px;
-    padding: 0 5px 0 15px;
+    padding: 0 10px 0 15px;
+    height: 38px;
+    box-sizing: border-box;
 }
 
 .search-box-input {
     border: none;
-    padding: 8px 0;
-    width: 220px;
+    padding: 0;
+    width: 220px; /* 너비 적절히 유지 */
     outline: none;
     font-size: 14px;
 }
@@ -105,103 +115,73 @@ html, body {
     background: transparent;
     color: #614e41;
     border: none;
-    padding: 8px 12px;
+    padding: 0 5px;
     cursor: pointer;
     font-size: 18px;
-    transition: 0.2s;
+    display: flex;
+    align-items: center;
 }
 
-/* [4] 테이블 영역 (이미지 베이지 테마 정밀 반영) */
+/* [4] 테이블 영역 */
 .table-wrapper {
     min-height: 200px;
     max-height: 600px;
     overflow-y: auto;
     background-color: #fff;
-    border: 1px solid #e0dace; 
+    border: 1px solid #e0dace;
     border-radius: 8px;
 }
 
-.item-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    background: #fff; 
+.item-table {
+    width: 100%;
+    border-collapse: collapse;
     table-layout: fixed;
 }
 
-.item-table th { 
-    background-color: #ede7db !important; /* 이미지 헤더 배경색 */
-    padding: 15px 12px; 
-    color: #5d5048 !important;   /* 이미지 헤더 글자색 */
+.item-table th {
+    background-color: #ede7db !important;
+    padding: 15px 12px;
+    color: #5d5048 !important;
     font-size: 14px;
     font-weight: 700;
-    border-bottom: 1px solid #e0dace !important; 
-    position: sticky; 
-    top: 0; 
-    z-index: 10; 
+    border-bottom: 1px solid #e0dace !important;
+    position: sticky; top: 0; z-index: 10;
 }
 
-.item-table td { 
-    padding: 14px 12px; 
-    border-bottom: 1px solid #f0ede7 !important; 
-    text-align: center; 
-    color: #4f4a45; 
+.item-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #f0ede7 !important;
+    text-align: center;
+    color: #4f4a45;
     font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-.item-table tr:hover { 
-    background-color: #fcfaf7 !important; 
-}
-
-/* 스크롤바 디자인 */
-.table-wrapper::-webkit-scrollbar { width: 8px; }
-.table-wrapper::-webkit-scrollbar-thumb { background: #d6cfc7; border-radius: 10px; }
-.table-wrapper::-webkit-scrollbar-track { background: #f5f2ed; }
-
-/* [5] 페이징 디자인 */
+/* [5] 페이징 중앙 정렬 (이건 꼭 유지!) */
 .pagination-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0 !important; 
-    padding: 25px 0 10px 0;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px;
+    width: 100% !important;
+    margin-top: 30px !important;
+    padding-bottom: 10px;
 }
 
-.pagination-wrapper button {
-    border: 1px solid #dcdcdc !important; 
-    background-color: #fff !important;
-    color: #5d5048 !important;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 0 !important; 
-    margin-left: -1px !important; 
-    font-size: 14px;
-}
-
-.pagination-wrapper button.active {
-    background-color: #614e41 !important;
-    color: #fff !important;
-    border-color: #614e41 !important;
-    z-index: 1; 
-}
-
-/* [6] 모달 디자인 */
+/* [6] 모달 레이아웃 (의견창 제거 버전) */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.4);
-    display: none; 
+    display: none;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
     z-index: 2000;
 }
 
 .modal-content {
     background: #fff;
-    width: 520px;
+    width: 550px;
     border-radius: 12px;
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     overflow: hidden;
@@ -209,56 +189,81 @@ html, body {
 
 .modal-header {
     padding: 18px 20px;
-    background: #614e41; 
+    background: #614e41;
     color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.modal-footer { 
-    padding: 20px; 
-    background-color: #f9f7f2; 
-    border-top: 1px solid #eee; 
-    display: flex; 
-    justify-content: center; 
-    gap: 10px; 
+.modal-body {
+    padding: 25px;
 }
 
-/* [8] 상태별 뱃지 스타일 (이미지 정밀 색상 반영) */
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 20px;
+}
+
+.f-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.f-group.full {
+    grid-column: span 2;
+}
+
+.form-input, .form-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.input-readonly {
+    background-color: #f8f9fa !important;
+    color: #888 !important;
+}
+
+.modal-footer {
+    padding: 18px;
+    background-color: #f9f7f2;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* [7] 버튼 스타일 */
+.btn {
+    padding: 10px 25px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-dark { background: #614e41; color: #fff; }
+.btn-outline { background: #fff; color: #614e41; border: 1px solid #614e41; }
+
+/* [8] 상태별 뱃지 */
 .status {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-weight: 500;
-    font-size: 13px;
+    font-weight: 600;
 }
 
 .status::before {
     content: '';
-    width: 7px;
-    height: 7px;
+    width: 8px; height: 8px;
     border-radius: 50%;
-    flex-shrink: 0;
 }
 
-/* 대기 - 이미지의 따뜻한 노란색 */
-.status.status-pending::before {
-    background-color: #f1b02e;
-    box-shadow: 0 0 4px rgba(241, 176, 46, 0.4);
-}
-.status.status-pending { color: #8c6d1f; }
-
-/* 완료/승인 - 이미지의 산뜻한 초록색 */
-.status.status-on::before {
-    background-color: #42b983;
-    box-shadow: 0 0 4px rgba(66, 185, 131, 0.4);
-}
-.status.status-on { color: #2d7a57; }
-
-/* 취소/반려 - 이미지의 차분한 빨간색 */
-.status.status-off::before {
-    background-color: #d9534f;
-    box-shadow: 0 0 4px rgba(217, 83, 79, 0.4);
-}
-.status.status-off { color: #a94442; }
+.status.status-wait::before { background-color: #f1b02e; }
+.status.status-on::before { background-color: #42b983; }
+.status.status-off::before { background-color: #d9534f; }

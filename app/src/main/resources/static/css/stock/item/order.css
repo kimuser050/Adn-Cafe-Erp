@@ -1,86 +1,133 @@
-/* 수량 조절 박스 (- 1 +) */
-.qty-control {
+/* order.css */
+
+/* [1] 탭 디자인: 패널과 자연스럽게 연결 (붕 뜨는 현상 완벽 해결) */
+.tab-wrapper {
+    display: flex;
+    gap: 0;
+    margin-bottom: -1px; /* 패널 테두리와 겹치게 하여 일체감 부여 */
+    position: relative;
+    z-index: 10;
+    padding-left: 0;
+}
+
+.tab-btn {
+    all: unset; /* 브라우저 기본 버튼 스타일 완전 제거 */
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    background: #fdfcf9;
-    border: 1px solid #dcdcdc;
+    height: 42px;
+    padding: 0 30px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-muted);
+    background: #e0ddd7; /* 비활성 탭 색상 */
+    border: 1px solid var(--color-border);
+    border-radius: 10px 10px 0 0;
+    transition: 0.2s;
+}
+
+.tab-btn.active {
+    background: #fff; /* 활성 탭은 패널과 같은 흰색 */
+    color: var(--color-dark);
+    /* 아래쪽 보더를 흰색으로 칠해 패널 선을 가림 */
+    border-bottom: 2px solid #fff;
+    font-weight: 800;
+    height: 43px; /* 1px 더 크게 만들어 패널 테두리를 확실히 덮음 */
+}
+
+/* [2] 테이블 레이아웃 강제 정렬 */
+.item-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* 헤더-바디 너비 일치 핵심 */
+    background: #fff;
+}
+
+.item-table th {
+    background-color: #f8f6f2;
+    color: var(--color-dark);
+    font-size: 13px;
+    padding: 15px 0;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.item-table td {
+    padding: 15px 0;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+/* 상품명(이름) 컬럼 좌측 정렬 및 강조 */
+.item-table td:nth-child(3) {
+    text-align: left !important;
+    padding-left: 20px;
+    font-weight: 700;
+}
+
+/* [3] 수량 조절 버튼 (알약 모양 디자인) */
+.qty-control {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
     border-radius: 20px;
-    width: 90px;
-    margin: 0 auto;
+    background-color: #fff;
     padding: 2px 5px;
+    width: 90px;
+    height: 30px;
+    margin: 0 auto;
 }
 
 .qty-btn {
-    background: none;
-    border: none;
-    font-size: 16px;
+    all: unset;
+    color: var(--color-dark);
     font-weight: bold;
-    color: #5D4037;
+    font-size: 16px;
     cursor: pointer;
-    padding: 0 5px;
+    width: 25px;
+    text-align: center;
 }
 
 .qty-input {
-    width: 25px;
+    all: unset;
+    width: 30px !important;
     text-align: center;
-    border: none;
-    background: none;
-    font-weight: bold;
-    color: #333;
+    font-weight: 700;
+    font-size: 14px;
+    outline: none;
 }
 
-/* 하단 주문 버튼 영역 */
-.order-action-bar {
-    margin-top: 25px;
+/* [4] 페이징 버튼 디자인 (화살표 제거 후 숫자 전용) */
+.pagination-wrapper {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 40px;
 }
 
-.btn-final-order {
-    background-color: #4A382E; /* 2번 이미지 진한 밤색 */
-    color: #fff;
-    border: none;
-    padding: 12px 50px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 4px;
+.page-btn {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--color-dark);
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: 0.2s;
 }
 
-.btn-final-order:hover {
-    background-color: #382a22;
-    transform: translateY(-1px);
-}
-/* [10] 수량 조절 컨트롤 (qty-control) */
-.qty-control {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 15px; /* 알약 모양 */
-    background-color: #fff;
-    padding: 2px 8px;
-    gap: 5px;
-}
-
-.qty-btn {
-    background: none;
-    border: none;
-    color: #614e41;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 0 5px;
-}
-
-.qty-input {
-    width: 30px;
-    border: none;
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
-    outline: none;
-    background: none;
+.page-btn.active {
+    background: var(--color-dark) !important;
+    color: #fff !important;
+    border-color: var(--color-dark) !important;
 }

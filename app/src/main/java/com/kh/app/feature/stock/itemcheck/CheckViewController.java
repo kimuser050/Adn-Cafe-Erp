@@ -16,6 +16,7 @@ public class CheckViewController {
     @GetMapping("check")
     public String check(HttpSession session, RedirectAttributes ra, org.springframework.ui.Model model){
         MemberVo loginMemberVo = (MemberVo) session.getAttribute("loginMemberVo");
+
         if(loginMemberVo == null || (!"310103".equals(loginMemberVo.getDeptCode())
                 && !"310100".equals(loginMemberVo.getDeptCode()))){
             ra.addFlashAttribute("alertMsg", "권한이 없습니다.");
@@ -23,7 +24,7 @@ public class CheckViewController {
         }
 
 
-        return "stock/item/itemCheck";
+        return "stock/item/Check";
 
     }
     //매장관리

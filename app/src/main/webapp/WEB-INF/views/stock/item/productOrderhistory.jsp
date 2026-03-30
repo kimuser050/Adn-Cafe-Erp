@@ -1,93 +1,61 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <!DOCTYPE html>
-    <html>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>발주 상태 관리 | Coffee Prince ERP</title>
+    <link rel="stylesheet" href="/css/common/reset.css">
+    <link rel="stylesheet" href="/css/common/layout.css">
+    <link rel="stylesheet" href="/css/common/sidebar.css">
+    <link rel="stylesheet" href="/css/common/component.css">
+    <link rel="stylesheet" href="/css/stock/item/orderhistory2.css">
 
-    <head>
-        <meta charset="UTF-8">
-        <title>발주 상태 관리(점주) | Coffee Prince ERP</title>
-        <link rel="stylesheet" href="/css/common/reset.css">
-        <link rel="stylesheet" href="/css/common/layout.css">
-        <link rel="stylesheet" href="/css/common/sidebar.css">
-        <link rel="stylesheet" href="/css/stock/item/orderhistory.css">
-        <script defer src="/js/stock/orderhistory.js"></script>
-    </head>
+    <script>
+        var loginEmpNo = "${loginMember.empNo}" || "";
+        var loginStoreCode = "${loginMember.deptCode}" || "";
+    </script>
+    <script defer src="/js/stock/orderhistory.js"></script>
+</head>
 
-    <body>
-        <div class="app-shell">
-            <%@ include file="/WEB-INF/views/stock/common/productOrderhistorySidebar.jsp" %>
+<body>
+    <div class="app-shell">
+        <%@ include file="/WEB-INF/views/stock/common/productOrderhistorySidebar.jsp" %>
 
-                <main class="page-shell">
-                    <section class="page-content">
-                        <div class="tab-wrapper">
-                             <button type="button" class="tab-btn active">발주 신청</button>
-                            <button type="button" class="tab-btn active">발주 상태</button>
-                        </div>
-
-                        <div class="content-container">
-                            <div class="search-section">
-                                <div class="search-inner">
-                                    <label for="orderKeyword">상품 명</label>
-                                    <input type="text" id="orderKeyword" placeholder="검색어를 입력하세요">
-                                    <button class="btn-brown-search" onclick="loadOrderList(1)">검색</button>
-                                </div>
-                            </div>
-
-                            <div class="table-wrapper">
-                                <table class="item-table">
-                                    <thead>
-                                        <tr>
-                                            <th>번호</th>
-                                            <th>이름</th>
-                                            <th>매장</th>
-                                            <th>수량</th>
-                                            <th>상태</th>
-                                            <th>요청일</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="orderBody">
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div id="pagination" class="pagination-wrapper"></div>
-                        </div>
-                    </section>
-                </main>
-        </div>
-
-        <div id="orderDetailModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>발주 상세 정보</h3>
-                    <span class="close-modal" onclick="closeOrderModal()" style="cursor:pointer;">&times;</span>
+        <main class="page-shell">
+            <section class="page-content">
+                <div class="tab-wrapper">
+                    <button type="button" class="tab-btn" onclick="location.href='/stock/order'">발주 신청</button>
+                    <button type="button" class="tab-btn active" onclick="location.href='/stock/product/history'">발주 상태</button>
                 </div>
 
-                <form id="orderDetailForm">
-                    <div class="modal-body">
-                        <div class="form-row">
-                            <label>품목 명</label>
-                            <input type="text" id="detailItemName" readonly>
-                        </div>
-                        <div class="form-row">
-                            <label>수량</label>
-                            <input type="text" id="detailQuantity" readonly>
-                        </div>
-                        <div class="form-row">
-                            <label>상태 수정</label>
-                            <select id="detailStatus">
-                                <option value="W">대기 (Wait)</option>
-                                <option value="F">완료 (Finish)</option>
-                                <option value="C">취소 (Cancel)</option>
-                            </select>
+                <div class="content-container panel">
+                    <div class="search-section">
+                        <div class="search-box">
+                            <input type="text" id="orderKeyword" class="search-box-input" placeholder="상품명을 입력하세요">
+                            <button type="button" class="search-btn" onclick="loadHistoryList(1)">⌕</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn-action-brown" onclick="updateOrderStatus()">저장하기</button>
-                        <button type="button" class="btn-gray-close-modal" onclick="closeOrderModal()">닫기</button>
-                    </div>  
-                </form>
-            </div>
-        </div>
-    </body>
 
-    </html>
+                    <div class="table-wrapper">
+                        <table class="item-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 80px;">번호</th>
+                                    <th style="width: auto;">이름</th>
+                                    <th style="width: 150px;">매장</th>
+                                    <th style="width: 100px;">수량</th>
+                                    <th style="width: 120px;">상태</th>
+                                    <th style="width: 180px;">요청일</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="pagination" class="pagination-wrapper"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
