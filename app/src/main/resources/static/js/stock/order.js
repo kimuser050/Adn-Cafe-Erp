@@ -1,166 +1,162 @@
 /**
- * 반품 검수 관리 스크립트
+ * [Coffee Prince ERP - 발주 신청 전용 JS]
+ * 기능: 목록 조회, 페이징, 수량 조절, 일괄 주문 제출
  */
 
-// [1] 목록 조회
-async function loadList(page = 1) {
-    try {
-        const keyword = document.getElementById("searchKeyword")?.value.trim() || "";
-        const searchType = document.getElementById("searchType")?.value || "itemName";
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. 초기 로드
+    loadOrderList(1);
 
-        const url = `/api/itemcheck/list?currentPage=${page}`
-                  + `&keyword=${encodeURIComponent(keyword)}`
-                  + `&searchType=${encodeURIComponent(searchType)}`;
+    // 2. 검색창 엔터 이벤트
+    document.getElementById('orderKeyword')?.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') loadOrderList(1);
+    });
+
+    // 3. 전체 선택 체크박스 로직
+    document.getElementById('checkAll')?.addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        document.querySelectorAll('input[name="orderCheck"]').forEach(cb => {
+            cb.checked = isChecked;
+        });
+    });
+});
+
+/**
+ * [목록 로드] 상품 리스트와 페이징 처리
+ */
+async function loadOrderList(page = 1) {
+    try {
+        const keyword = document.getElementById('orderKeyword')?.value.trim() || "";
+        const url = `/api/order/list?currentPage=${page}&keyword=${encodeURIComponent(keyword)}`;
 
         const resp = await fetch(url);
-        if(!resp.ok) throw new Error("데이터 조회 실패");
+        if (!resp.ok) throw new Error("네트워크 응답 에러");
 
         const data = await resp.json();
-        const { voList, pvo } = data;
 
-        const tbodyTag = document.getElementById("list-body");
-        if (!tbodyTag) return;
+        // 서버 데이터 구조에 맞춰 pvo 또는 pagingInfo 선택
+        const list = data.voList || [];
+        const pvo = data.pvo || data.pagingInfo;
 
-        let str = "";
-        if(!voList || voList.length === 0) {
-            str = `<tr><td colspan="6" style="padding: 100px 0; text-align: center;">조회된 검수 내역이 없습니다.</td></tr>`;
-        } else {
-            voList.forEach(vo => {
-                const rawStatus = (vo.status || 'W').toUpperCase().charAt(0);
-                const statusMap = {
-                    'A': { text: '승인', class: 'status-on' },
-                    'R': { text: '반려', class: 'status-off' },
-                    'W': { text: '대기', class: 'status-wait' }
-                };
-                const current = statusMap[rawStatus] || statusMap['W'];
+        const body = document.getElementById('orderBody');
+        if (!body) return;
 
-                str += `
-                    <tr onclick="loadDetail(${vo.returnNo})" style="cursor:pointer;">
-                        <td>${vo.returnNo}</td>
-                        <td style="text-align:left; padding-left:20px;">${vo.itemName || vo.productName || '-'}</td>
-                        <td>${vo.storeName || '-'}</td>
-                        <td>
-                            <span class="status ${current.class}">${current.text}</span>
-                        </td>
-                        <td>${vo.processResult || '-'}</td>
-                        <td>${vo.regDate || vo.createdAt || '-'}</td>
-                    </tr>`;
-            });
+        if (list.length === 0) {
+            body.innerHTML = '<tr><td colspan="6" style="padding: 100px 0; text-align: center;">신청 가능한 상품이 없습니다.</td></tr>';
+            return;
         }
-        tbodyTag.innerHTML = str;
+
+        body.innerHTML = list.map(vo => `
+            <tr>
+                <td><input type="checkbox" name="orderCheck" value="${vo.itemNo}"></td>
+                <td>${vo.itemNo}</td>
+                <td style="text-align:left; padding-left:20px; font-weight:600;">${vo.itemName}</td>
+                <td>${vo.storeName || '대전점'}</td>
+                <td>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <button type="button" class="page-btn" onclick="changeQty(this, -1)" style="width:28px; height:28px; line-height:1;">-</button>
+                        <input type="number" name="orderQty" value="0" min="0"
+                               style="width: 45px; text-align: center; border: 1px solid #ddd; border-radius: 4px; height: 26px;">
+                        <button type="button" class="page-btn" onclick="changeQty(this, 1)" style="width:28px; height:28px; line-height:1;">+</button>
+                    </div>
+                </td>
+                <td style="color: #888;">${new Date().toLocaleDateString()}</td>
+            </tr>
+        `).join('');
 
         renderPagination(pvo);
 
     } catch (err) {
-        console.error("목록 조회 중 에러 발생:", err);
+        console.error("목록 로드 실패:", err);
     }
 }
 
-// [2] 페이징 렌더링
+/**
+ * [수량 조절] 버튼 클릭 시 수량 변경 및 체크박스 연동
+ */
+function changeQty(btn, delta) {
+    const input = btn.parentElement.querySelector('input[name="orderQty"]');
+    let val = (parseInt(input.value) || 0) + delta;
+    if (val < 0) val = 0;
+    input.value = val;
+
+    const row = btn.closest('tr');
+    const checkbox = row.querySelector('input[name="orderCheck"]');
+    if (checkbox) checkbox.checked = (val > 0);
+}
+
+/**
+ * [페이징 렌더링] 하단 번호 생성
+ */
 function renderPagination(pvo) {
-    const pArea = document.getElementById("paginationArea");
-    if(!pArea || !pvo || pvo.totalCount === 0) {
-        if(pArea) pArea.innerHTML = "";
+    const pgn = document.getElementById('pagination');
+    if (!pgn) return;
+    pgn.innerHTML = '';
+
+    if (!pvo || pvo.maxPage <= 0) return;
+
+    let html = "";
+    if (pvo.startPage > 1) {
+        html += `<button type="button" class="page-btn" onclick="loadOrderList(${pvo.startPage - 1})">&lt;</button>`;
+    }
+
+    for (let i = pvo.startPage; i <= pvo.endPage; i++) {
+        const activeClass = (Number(pvo.currentPage) === i) ? 'active' : '';
+        html += `<button type="button" class="page-btn ${activeClass}" onclick="loadOrderList(${i})">${i}</button>`;
+    }
+
+    if (pvo.endPage < pvo.maxPage) {
+        html += `<button type="button" class="page-btn" onclick="loadOrderList(${pvo.endPage + 1})">&gt;</button>`;
+    }
+    pgn.innerHTML = html;
+}
+
+/**
+ * [일괄 주문] 주문 버튼 클릭 시 서버 전송
+ */
+function submitBulkOrder() {
+    const rows = document.querySelectorAll('#orderBody tr');
+    const orderList = [];
+
+    rows.forEach(row => {
+        const checkbox = row.querySelector('input[name="orderCheck"]');
+        const qtyInput = row.querySelector('input[name="orderQty"]');
+
+        if (checkbox && checkbox.checked) {
+            const qty = parseInt(qtyInput.value) || 0;
+            if (qty > 0) {
+                orderList.push({
+                    itemNo: checkbox.value,
+                    quantity: qty
+                });
+            }
+        }
+    });
+
+    if (orderList.length === 0) {
+        alert("주문할 상품을 선택하고 수량을 입력해주세요.");
         return;
     }
 
-    let str = "";
-    if(pvo.startPage > 1) {
-        str += `<button type="button" class="page-btn" onclick="loadList(${pvo.startPage - 1})">&lt;</button>`;
-    }
+    if (!confirm(`${orderList.length}건의 항목을 주문하시겠습니까?`)) return;
 
-    for(let i = pvo.startPage; i <= pvo.endPage; i++) {
-        const activeClass = (Number(pvo.currentPage) === i) ? 'active' : '';
-        str += `<button type="button" class="page-btn ${activeClass}" onclick="loadList(${i})">${i}</button>`;
-    }
-
-    if(pvo.endPage < pvo.maxPage) {
-        str += `<button type="button" class="page-btn" onclick="loadList(${pvo.endPage + 1})">&gt;</button>`;
-    }
-    pArea.innerHTML = str;
-}
-
-// [3] 상세 조회 (모달 열기)
-async function loadDetail(no) {
-    if(!no) return;
-    try {
-        const resp = await fetch(`/api/itemcheck/${no}`);
-        if(!resp.ok) throw new Error("상세 데이터 로드 실패");
-
-        const data = await resp.json();
-        const vo = data.vo || data;
-
-        // JSP ID와 데이터 바인딩
-        document.getElementById("returnNo").value = vo.returnNo || "";
-        document.getElementById("storeName").value = vo.storeName || "";
-        document.getElementById("productName").value = vo.itemName || vo.productName || "";
-        document.getElementById("itemQty").value = vo.quantity || vo.itemQty || 0;
-        document.getElementById("regDate").value = vo.regDate || vo.createdAt || "";
-
-        const statusSelect = document.getElementById("checkStatus");
-        if(statusSelect) {
-            statusSelect.value = (vo.status || "W").toUpperCase().charAt(0);
-        }
-
-        // 모달 표시
-        const modal = document.getElementById("checkModal");
-        if(modal) modal.style.display = "flex";
-
-    } catch (err) {
-        console.error("상세조회 에러:", err);
-    }
-}
-
-// [4] 결과 저장
-async function saveCheck() {
-    const returnNo = document.getElementById("returnNo")?.value;
-    const status = document.getElementById("checkStatus")?.value;
-
-    if(!returnNo) return;
-    if(!confirm("검수 결과를 저장하시겠습니까?")) return;
-
-    try {
-        const resp = await fetch("/api/itemcheck", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                returnNo: returnNo,
-                status: status
-            })
-        });
-
-        if(resp.ok) {
-            alert("검수 처리가 완료되었습니다.");
-            closeDetail();
-            loadList(1);
+    // 서버 POST 요청 (URL은 실제 컨트롤러 매핑 주소 확인 필요)
+    fetch('/api/order/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderList)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.result > 0 || data.success) {
+            alert("주문이 성공적으로 완료되었습니다.");
+            location.href = '/stock/product/history'; // 주문 상태 탭으로 이동
         } else {
-            alert("저장에 실패했습니다.");
+            alert("주문 처리에 실패했습니다.");
         }
-    } catch (err) {
-        console.error("저장 에러:", err);
-    }
+    })
+    .catch(err => {
+        console.error("주문 에러:", err);
+        alert("통신 중 에러가 발생했습니다.");
+    });
 }
-
-// [5] 모달 닫기
-function closeDetail() {
-    const modal = document.getElementById("checkModal");
-    if(modal) modal.style.display = "none";
-    document.getElementById("check-form").reset();
-}
-
-// [6] 초기화 및 검색창 엔터 이벤트
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. 페이지 로드 시 첫 번째 페이지 데이터 조회
-    loadList(1);
-
-    // 2. 검색창에서 엔터키 누르면 검색 실행
-    const searchInput = document.getElementById("searchKeyword");
-    if (searchInput) {
-        searchInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                loadList(1);
-            }
-        });
-    }
-});
