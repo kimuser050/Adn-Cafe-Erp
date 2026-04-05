@@ -50,7 +50,7 @@
                 <div class="nav-sub">
                     <a href="/dailySales/listDaily">매출등록</a>
                      <a href="/stock/return">반품 신청</a>
-                      <a href="/stock/checkList">반품 상태</a>
+                      <a href="/stock/checksList">반품 상태</a>
                        <a href="/stock/order"  >발주관리</a>
                        <a href="/stock/productsList" class="active">제품조회</a>
                 </div>
